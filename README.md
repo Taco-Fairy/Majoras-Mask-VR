@@ -47,54 +47,6 @@ This is an independent fan project. Nintendo does not make or endorse it. Ninten
 
 This release is **version 0.1 beta**. It is intended to be fully playable, but a complete playthrough and every possible scenario have not been verified. Game systems, items, masks and functions have undergone development testing; that is not a guarantee that every combination or situation is free of bugs. Quest performance is not yet perfect and may vary by area and configuration. Please report reproducible issues, including your platform and build version.
 
-## PC runtime and headset setup
-
-A working Windows OpenXR runtime, tracked headset, two suitable controllers and a compatible D3D11 graphics adapter are required. Connect Steam Link through SteamVR; connect Virtual Desktop through the runtime you intend to use.
-
-For **ALVR**, establish the headset stream to its PC server, start SteamVR and confirm the headset is tracked there before launching the game through SteamVR's OpenXR runtime. ALVR is an untested streaming route for this build.
-
-Whatever runtime you have set as default, is the runtime that the game will launch into.
-
-OpenXR supplies headset poses, stereo projection and recommended render dimensions. Suggested controller profiles include Touch, Index, Vive wands, WMR/Odyssey/Reverb, Vive Cosmos/Focus, PICO, YVR, Varjo, Generic and Steam Frame profiles when supported by the runtime. This is implemented profile coverage, **not universal hardware certification**. Standalone support on an unrelated headset does not follow from PC OpenXR support.
-
-Touch names are used below. Index left A/B correspond to X/Y; firm left trackpad press pauses. Vive wand left-pad clicks up/down/center provide fairy/pause/recenter; right-pad click down provides B and other sectors A; left/right menu provide lock-on/VR menu. WMR uses sticks plus pad/button equivalents. Generic controllers may use left-stick click for pause; System > Recenter remains available. The Controls tab displays names for the active detected profile.
-
-PC defaults to **Uncapped**, still paced by the XR runtime. The application cap also offers 90, 80 and 72 FPS. Set headset/streaming refresh in its own software. System displays runtime/headset, reported display rate, app cadence and eye dimensions; encoder/transport rate is not universally exposed by OpenXR.
-
-## PC files, mods and updates
-
-Put compatible packs inside `mods` or `texturepacks` beside `2ship.exe`, with subfolders if desired. For example: `mods/My Mod/pack.o2r` and `texturepacks/My Textures/pack.otr`. Extract download ZIPs first.
-
-Open **System > Mod library**, choose **Refresh mods and texture packs**, then expand **Mods** or **Texture Packs** and their folder groups. Each individual pack has an enable/disable checkbox. Restart the game after changing packs; refresh rebuilds the list rather than live-reloading all assets. Packs must target this native port's resource format. Desktop executable/DLL mods and loose texture folders are not automatically compatible resource packs. Do not install the same pack twice in both categories.
-No mods have been tested, though I have tested a single texture pack and it worked great.
-
-The normal portable installation stores settings, `saves`, mods and state files with the app's data. Back up the whole data folder before a major upgrade. Other upstream app-directory configurations may redirect storage.
-
-**System > Updates** offers **Check for updates** and **Install available update**. The updater uses this project's GitHub beta channel and selects the Windows download for a newer build. Draft releases are not available to the updater; it becomes usable when the release and channel feed are published. The updater stages and verifies app files, preserves user data, backs up replaced files under `updates/rollback`, and closes/restarts the game for installation. Manual upgrades should preserve `mm.o2r`, settings, saves and mods. Do not substitute another project's feed.
-## Quest files, mods and updates
-
-Create/use the shared folder **`/sdcard/MMVR`** (internal shared storage, not a removable SD card):
-
-- `MMVR/mods`: compatible `.o2r`/`.otr` mods, including subfolders.
-- `MMVR/texturepacks`: compatible texture/resource packs, including subfolders.
-- `MMVR/exports`: user-accessible exports.
-- `MMVR/cache/shaders`: reserved directory; its presence does not mean persistent compiled shader binaries are implemented.
-
-Extract downloaded ZIPs first. For example, `MMVR/texturepacks/My Pack/pack.o2r` is valid; loose PNGs or a ZIP alone are not equivalent to a native resource pack. Do not duplicate the same pack in both categories.
-
-In **System > Mod library**, select **Connect MMVR shared folder (Quest)** and grant the Android folder picker access to the `MMVR` folder. This is a folder permission step, not a mod toggle. Then select **Refresh mods and texture packs** in that section. Expand **Mods** or **Texture Packs**, expand the nested folders and toggle individual pack checkboxes. Restart the game to load the selected set. The app copies shared packs into its private loader cache; allow refresh/import to finish. Refresh scans the granted folder, so reconnect the root `MMVR` folder if an earlier grant covered only one subfolder.
-
-Ordinary saves, global settings, the extracted game archive and exact states live in the app's external-files data directory, normally `/sdcard/Android/data/com.fulldivegames.majorasmaskvr/files`. Exact states are in `saves/save-states` there. Android may restrict direct file-manager access. The shared mod folder is separate from that private game data.
-
-**System > Updates** offers check/install actions. The updater uses this project's GitHub beta channel and selects the Quest APK for a newer build. Draft releases are not available to the updater; it becomes usable when the release and channel feed are published. Installation still needs Android's install permission/confirmation and a matching signing identity. For manual upgrades install the newer APK over the existing app; **do not uninstall to update**, because uninstalling can remove saves/settings/app data. Keep separate backups.
-
-## Quest refresh and comfort
-
-The default application cap is **90 FPS**; available caps are Uncapped, 90, 80 and 72. An existing saved preference survives updates, so change it in **Graphics > Frame timing** if necessary. A cap is not a guaranteed achieved rate.
-
-Eye resolution scale defaults to 1.0 of the runtime-recommended eye size. Leave it at 1.0 initially. The system recenter function is supported; the in-game recenter action and System menu provide alternatives. Recenter from your intended neutral position.
-## How to play: saving and resuming
-
 **Save states are available on both PCVR and Quest.** During gameplay, click the right thumbstick to open the VR menu, then go to **System > Save states**. Choose **Save slot 1, 2 or 3** to capture your current game state, and the matching **Load slot** to resume it. Loading replaces your current progress with that state. Keep ordinary in-game saves too; exact states require compatible game data and state layouts. See [Exact save states and ordinary saves](#exact-save-states-and-ordinary-saves) below for compatibility and backup details.
 
 An in-game guide is available under **Controls > How to play tutorial** in the VR menu, including before entering a save. Expand it and scroll with the left stick to read controls, item use, physical gestures, forms, songs and saving. It uses default Touch button names; your custom bindings still apply.
@@ -194,6 +146,54 @@ During gameplay, open **System > Save states**. There are three Save entries and
 Save states only load with the matching game build, platform and mounted content. An update or a change to mods, texture packs or their load order can make a state unusable, even when its file is still present. Make a normal in-game save before updating and keep backups of state files with their matching build and content.
 
 Keep ordinary game saves as your long-term progress backup. Exact states are separate files in `saves/save-states/slot-1.mmstate` through `slot-3.mmstate` under the app's data folder. They can be large (sampled scenes approximately 65 MB per slot), and capture/load briefly pauses play. Current VR settings and current headset origin remain current when loading. Release controls after loading before starting another gesture. Automated coverage is substantial but does not certify every mod, boss, cutscene or mid-action combination.
+
+## PC runtime and headset setup
+
+A working Windows OpenXR runtime, tracked headset, two suitable controllers and a compatible D3D11 graphics adapter are required. Connect Steam Link through SteamVR; connect Virtual Desktop through the runtime you intend to use.
+
+For **ALVR**, establish the headset stream to its PC server, start SteamVR and confirm the headset is tracked there before launching the game through SteamVR's OpenXR runtime. ALVR is an untested streaming route for this build.
+
+Whatever runtime you have set as default, is the runtime that the game will launch into.
+
+OpenXR supplies headset poses, stereo projection and recommended render dimensions. Suggested controller profiles include Touch, Index, Vive wands, WMR/Odyssey/Reverb, Vive Cosmos/Focus, PICO, YVR, Varjo, Generic and Steam Frame profiles when supported by the runtime. This is implemented profile coverage, **not universal hardware certification**. Standalone support on an unrelated headset does not follow from PC OpenXR support.
+
+Touch names are used below. Index left A/B correspond to X/Y; firm left trackpad press pauses. Vive wand left-pad clicks up/down/center provide fairy/pause/recenter; right-pad click down provides B and other sectors A; left/right menu provide lock-on/VR menu. WMR uses sticks plus pad/button equivalents. Generic controllers may use left-stick click for pause; System > Recenter remains available. The Controls tab displays names for the active detected profile.
+
+PC defaults to **Uncapped**, still paced by the XR runtime. The application cap also offers 90, 80 and 72 FPS. Set headset/streaming refresh in its own software. System displays runtime/headset, reported display rate, app cadence and eye dimensions; encoder/transport rate is not universally exposed by OpenXR.
+
+## PC files, mods and updates
+
+Put compatible packs inside `mods` or `texturepacks` beside `2ship.exe`, with subfolders if desired. For example: `mods/My Mod/pack.o2r` and `texturepacks/My Textures/pack.otr`. Extract download ZIPs first.
+
+Open **System > Mod library**, choose **Refresh mods and texture packs**, then expand **Mods** or **Texture Packs** and their folder groups. Each individual pack has an enable/disable checkbox. Restart the game after changing packs; refresh rebuilds the list rather than live-reloading all assets. Packs must target this native port's resource format. Desktop executable/DLL mods and loose texture folders are not automatically compatible resource packs. Do not install the same pack twice in both categories.
+No mods have been tested, though I have tested a single texture pack and it worked great.
+
+The normal portable installation stores settings, `saves`, mods and state files with the app's data. Back up the whole data folder before a major upgrade. Other upstream app-directory configurations may redirect storage.
+
+**System > Updates** offers **Check for updates** and **Install available update**. The updater uses this project's GitHub beta channel and selects the Windows download for a newer build. Draft releases are not available to the updater; it becomes usable when the release and channel feed are published. The updater stages and verifies app files, preserves user data, backs up replaced files under `updates/rollback`, and closes/restarts the game for installation. Manual upgrades should preserve `mm.o2r`, settings, saves and mods. Do not substitute another project's feed.
+## Quest files, mods and updates
+
+Create/use the shared folder **`/sdcard/MMVR`** (internal shared storage, not a removable SD card):
+
+- `MMVR/mods`: compatible `.o2r`/`.otr` mods, including subfolders.
+- `MMVR/texturepacks`: compatible texture/resource packs, including subfolders.
+- `MMVR/exports`: user-accessible exports.
+- `MMVR/cache/shaders`: reserved directory; its presence does not mean persistent compiled shader binaries are implemented.
+
+Extract downloaded ZIPs first. For example, `MMVR/texturepacks/My Pack/pack.o2r` is valid; loose PNGs or a ZIP alone are not equivalent to a native resource pack. Do not duplicate the same pack in both categories.
+
+In **System > Mod library**, select **Connect MMVR shared folder (Quest)** and grant the Android folder picker access to the `MMVR` folder. This is a folder permission step, not a mod toggle. Then select **Refresh mods and texture packs** in that section. Expand **Mods** or **Texture Packs**, expand the nested folders and toggle individual pack checkboxes. Restart the game to load the selected set. The app copies shared packs into its private loader cache; allow refresh/import to finish. Refresh scans the granted folder, so reconnect the root `MMVR` folder if an earlier grant covered only one subfolder.
+
+Ordinary saves, global settings, the extracted game archive and exact states live in the app's external-files data directory, normally `/sdcard/Android/data/com.fulldivegames.majorasmaskvr/files`. Exact states are in `saves/save-states` there. Android may restrict direct file-manager access. The shared mod folder is separate from that private game data.
+
+**System > Updates** offers check/install actions. The updater uses this project's GitHub beta channel and selects the Quest APK for a newer build. Draft releases are not available to the updater; it becomes usable when the release and channel feed are published. Installation still needs Android's install permission/confirmation and a matching signing identity. For manual upgrades install the newer APK over the existing app; **do not uninstall to update**, because uninstalling can remove saves/settings/app data. Keep separate backups.
+
+## Quest refresh and comfort
+
+The default application cap is **90 FPS**; available caps are Uncapped, 90, 80 and 72. An existing saved preference survives updates, so change it in **Graphics > Frame timing** if necessary. A cap is not a guaranteed achieved rate.
+
+Eye resolution scale defaults to 1.0 of the runtime-recommended eye size. Leave it at 1.0 initially. The system recenter function is supported; the in-game recenter action and System menu provide alternatives. Recenter from your intended neutral position.
+## How to play: saving and resuming
 
 ## Troubleshooting and limits
 
