@@ -45,7 +45,7 @@ This is an independent fan project. Nintendo does not make or endorse it. Ninten
 
 ## Beta release status
 
-This release is **version 0.1 beta**. It is intended to be fully playable, but a complete playthrough and every possible scenario have not been verified. Game systems, items, masks and functions have undergone development testing; that is not a guarantee that every combination or situation is free of bugs. Quest performance is not yet perfect and may vary by area and configuration. Please report reproducible issues, including your platform and build version.
+This release is **version 0.1 beta**. It is intended to be fully playable, but a complete playthrough and every possible scenario have not been verified. Game systems, items, masks and functions have undergone heavy development testing but that isnt a guarantee that every combination or situation is free of bugs. Quest 2 performance is untested, but Quest 3 is a stable 90 FPS with the ability to uncap the framerate. Please report reproducible issues, including your platform and build version.
 
 ## How to play: saving and resuming
 **Save states are available on both PCVR and Quest.** During gameplay, click the right thumbstick to open the VR menu, then go to **System > Save states**. Choose **Save slot 1, 2 or 3** to capture your current game state, and the matching **Load slot** to resume it. Loading replaces your current progress with that state. Keep ordinary in-game saves too; exact states require compatible game data and state layouts. See [Exact save states and ordinary saves](#exact-save-states-and-ordinary-saves) below for compatibility and backup details.
@@ -53,7 +53,7 @@ This release is **version 0.1 beta**. It is intended to be fully playable, but a
 An in-game guide is available under **Controls > How to play tutorial** in the VR menu, including before entering a save. Expand it and scroll with the left stick to read controls, item use, physical gestures, forms, songs and saving. It uses default Touch button names; your custom bindings still apply.
 
 ## Default controls
-
+I recommend playing with default settings for the most part, but they are highly customizable.
 These are Touch-style names. In **Hands > Dominant hand and size**, **Left dominant hand** swaps sword, selected-item, wheel, shield and bow ownership. It does not change menu controls: the left stick always navigates, while the right stick adjusts, points or assigns. Physical A/B/X/Y labels also stay fixed. Rebinding is separate.
 
 | Input | Action |
