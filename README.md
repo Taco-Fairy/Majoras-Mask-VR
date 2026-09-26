@@ -1,13 +1,16 @@
 # Majora's Mask VR
-Full Motion Majora's Mask VR mod, made by Full Dive Games.
+Full Motion Majora's Mask VR mod, made by FullDiveGames.
 
-Disclaimer: This is made using Vibe coding. I make no money from this mod, and I've put a lot of time and testing into making it polished, fun, and fully playable.
+Disclaimer: This mod is made with using Vibe coding. I make no money from this mod, I've put a lot of time and testing into making it polished, fun, and fully playable. I don't support all AI, but I don't mind using it for non profit mods for the games I love. Sorry if this fact bothers anyone, I hope you enjoy!
 
 One project for **Windows PCVR** and **standalone Meta Quest**. Choose the download for your platform.
 
 **Release preparation:** the VR downloads are not public yet. This guide describes the upcoming version 0.1 beta. The repository currently contains the upstream source; the VR source update is still being prepared.
 
 [Installation](#first-installation) · [Controls](#default-controls) · [Physical items](#physical-items-and-combat) · [Forms and gestures](#forms-movement-and-songs) · [Save states](#exact-save-states-and-ordinary-saves)
+
+
+## Scroll for gameplay instructions
 
 ## First installation
 
@@ -32,9 +35,9 @@ Download the platform asset from this repository's **Releases** page once availa
 3. Open **Majora's Mask VR**, normally in the headset's Unknown Sources app list. In setup, select **Choose Majora's Mask ROM**, browse to the file and confirm. Extraction runs on the headset; the source file is not modified. Importing a compatible existing `mm.o2r` is also supported.
 4. Keep controllers awake and complete normal headset system prompts. Use right-stick click for VR settings before or after entering a save.
 
-No Nintendo game ROM or extracted archive (`mm.o2r`) is included. Supply your own legally obtained dump; the release contains the port support files, not the game. Do not share your ROM or extracted archive. The package excludes saves, personal settings and signing keys. This guide cannot verify the contents of third-party repacks.
+No Nintendo game ROM or extracted archive (`mm.o2r`) is included. Supply your own legally obtained dump; the release contains the port support files, not the game. Do not share your ROM or extracted archive. The package excludes saves, personal settings and signing keys. This guide cannot verify the contents of third-party repacks. I provide no Nintendo assets within my download. I make nothing from this mod in any way.
 
-This is an independent fan project. Nintendo does not make or endorse it. Nintendo and The Legend of Zelda/Majora's Mask belong to their respective owners. Keep the included component license notices with the release.
+This is an independent fan project. Nintendo does not make or endorse it. Nintendo and The Legend of Zelda/Majora's Mask belong to their respective owners.
 
 ## Before updating
 
@@ -48,9 +51,9 @@ This release is **version 0.1 beta**. It is intended to be fully playable, but a
 
 A working Windows OpenXR runtime, tracked headset, two suitable controllers and a compatible D3D11 graphics adapter are required. Connect Steam Link through SteamVR; connect Virtual Desktop through the runtime you intend to use.
 
-For **ALVR**, establish the headset stream to its PC server, start SteamVR and confirm the headset is tracked there before launching the game through SteamVR's OpenXR runtime. ALVR is an untested streaming route for this build; do not assume that another streamer's working configuration certifies it.
+For **ALVR**, establish the headset stream to its PC server, start SteamVR and confirm the headset is tracked there before launching the game through SteamVR's OpenXR runtime. ALVR is an untested streaming route for this build.
 
-The launcher honors an explicit runtime override first. In Auto, an already-running SteamVR with a successfully detected headset is preferred, then the default runtime, then an available running Virtual Desktop fallback. It does not rewrite your system runtime or streaming preferences. To force a choice, launch from PowerShell in the install folder with `./launch-mmvr.ps1 -Runtime SteamVR` or `-Runtime VDXR`. Relaunch after changing runtime. Opening `2ship.exe` directly bypasses launcher selection.
+Whatever runtime you have set as default, is the runtime that the game will launch into.
 
 OpenXR supplies headset poses, stereo projection and recommended render dimensions. Suggested controller profiles include Touch, Index, Vive wands, WMR/Odyssey/Reverb, Vive Cosmos/Focus, PICO, YVR, Varjo, Generic and Steam Frame profiles when supported by the runtime. This is implemented profile coverage, **not universal hardware certification**. Standalone support on an unrelated headset does not follow from PC OpenXR support.
 
@@ -58,21 +61,12 @@ Touch names are used below. Index left A/B correspond to X/Y; firm left trackpad
 
 PC defaults to **Uncapped**, still paced by the XR runtime. The application cap also offers 90, 80 and 72 FPS. Set headset/streaming refresh in its own software. System displays runtime/headset, reported display rate, app cadence and eye dimensions; encoder/transport rate is not universally exposed by OpenXR.
 
-## Desktop recording view
-
-The desktop window shows one widescreen view from the headset's left eye, including the in-game HUD and VR panels. It does not blend the two eye images or render a separate spectator camera. Capture this window for a normal single-image recording; the headset still receives distinct stereoscopic eye views. Theater screens use a 16:9 canvas independent of the desktop window shape.
-
-## Gaming laptops and GPUs
-
-Desktop and laptop GPUs use the same D3D11 shader path; there is no NVIDIA-only shader requirement. In VR startup the game asks the selected OpenXR runtime which GPU it requires and creates the graphics device on that adapter, rather than blindly using the integrated/default GPU. This matters on hybrid laptops and external-GPU setups. A runtime-selected integrated GPU is still hardware, but it must meet that runtime's feature and performance requirements. Software/CPU rendering is not used as a fallback in this VR build.
-
-Install current GPU and headset-runtime drivers. On a hybrid laptop, ensure the streamer/runtime uses the intended VR-capable GPU; connect wired headsets to a port supported by that GPU. If the required GPU cannot initialize, correct the driver/runtime setup rather than expecting a CPU fallback. Individual NVIDIA, AMD and Intel laptop configurations still require hardware testing; OpenXR compatibility does not guarantee sufficient performance on every GPU.
-
 ## PC files, mods and updates
 
 Put compatible packs inside `mods` or `texturepacks` beside `2ship.exe`, with subfolders if desired. For example: `mods/My Mod/pack.o2r` and `texturepacks/My Textures/pack.otr`. Extract download ZIPs first.
 
 Open **System > Mod library**, choose **Refresh mods and texture packs**, then expand **Mods** or **Texture Packs** and their folder groups. Each individual pack has an enable/disable checkbox. Restart the game after changing packs; refresh rebuilds the list rather than live-reloading all assets. Packs must target this native port's resource format. Desktop executable/DLL mods and loose texture folders are not automatically compatible resource packs. Do not install the same pack twice in both categories.
+No mods have been tested, though I have tested a single texture pack and it worked great.
 
 The normal portable installation stores settings, `saves`, mods and state files with the app's data. Back up the whole data folder before a major upgrade. Other upstream app-directory configurations may redirect storage.
 
