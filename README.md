@@ -5,7 +5,7 @@ Disclaimer: This mod is made with using Vibe coding. I make no money from this m
 
 One project for **Windows PCVR** and **standalone Meta Quest**. Choose the download for your platform.
 
-**Release preparation:** the VR downloads are not public yet. This guide describes the upcoming version 0.1 beta. The repository currently contains the upstream source; the VR source update is still being prepared.
+**Version 0.1 beta downloads:** [Windows PCVR ZIP](https://github.com/fulldivegames/Majoras-Mask-VR/releases/download/v0.1.0-beta.2/MMVR-Windows-0.1.0-beta.2.zip) | [Quest standalone APK](https://github.com/fulldivegames/Majoras-Mask-VR/releases/download/v0.1.0-beta.2/MMVR-Quest-0.1.0-beta.2.apk) | [Release notes](https://github.com/fulldivegames/Majoras-Mask-VR/releases/tag/v0.1.0-beta.2)
 
 [Installation](#first-installation) · [Controls](#default-controls) · [Physical items](#physical-items-and-combat) · [Forms and gestures](#forms-movement-and-songs) · [Save states](#exact-save-states-and-ordinary-saves)
 
