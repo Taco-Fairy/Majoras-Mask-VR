@@ -90,7 +90,7 @@ Ordinary saves, global settings, the extracted game archive and exact states liv
 
 ## Quest refresh and comfort
 
-The default application cap is **90 FPS**; available caps are Uncapped, 90, 80 and 72. An existing saved preference survives updates, so change it in **Graphics > Frame timing** if necessary. A cap is not a guaranteed achieved rate. Runtime refresh and Quest Games Optimizer overrides may differ from the application's request; System shows the reported display rate and app cadence. Overclocked results are not a stock-Quest performance guarantee.
+The default application cap is **90 FPS**; available caps are Uncapped, 90, 80 and 72. An existing saved preference survives updates, so change it in **Graphics > Frame timing** if necessary. A cap is not a guaranteed achieved rate.
 
 Eye resolution scale defaults to 1.0 of the runtime-recommended eye size. Leave it at 1.0 initially. The system recenter function is supported; the in-game recenter action and System menu provide alternatives. Recenter from your intended neutral position.
 ## How to play: saving and resuming
