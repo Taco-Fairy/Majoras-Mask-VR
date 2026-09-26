@@ -1,0 +1,14 @@
+{
+  "source": "overlays/actors/ovl_En_Zob/z_en_zob.c",
+  "include": "6018cd47503f652b.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_30cafbbeaa702108",
+      "original": "D_80BA1120",
+      "function": "EnZob_PostLimbDraw",
+      "line": 767,
+      "at": 27104
+    }
+  ],
+  "sourceSha256": "242f23c52c32e55d86e19332c9ce0a5f0300236561c79c114bed69b88d71d21f"
+}

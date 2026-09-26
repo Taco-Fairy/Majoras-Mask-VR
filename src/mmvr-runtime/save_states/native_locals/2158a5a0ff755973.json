@@ -1,0 +1,14 @@
+{
+  "source": "overlays/actors/ovl_Obj_Mure3/z_obj_mure3.c",
+  "include": "2158a5a0ff755973.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_c5eceec4a037ec50",
+      "original": "sSpawnFuncs",
+      "function": "func_8098F5E4",
+      "line": 176,
+      "at": 5472
+    }
+  ],
+  "sourceSha256": "9897b480c7671f55ffde16591d117a5b912ee1754aac161544d3107487cb9304"
+}

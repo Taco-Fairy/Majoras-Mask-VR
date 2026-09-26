@@ -1,0 +1,42 @@
+{
+  "source": "overlays/actors/ovl_En_Jso2/z_en_jso2.c",
+  "include": "0dc1478399e18aec.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_7bf863516add2279",
+      "original": "sSwordTipOffset",
+      "function": "EnJso2_PostLimbDraw",
+      "line": 1727,
+      "at": 75872
+    },
+    {
+      "name": "mmvr_local_6fa04014dd21ec3d",
+      "original": "sSwordBaseOffset",
+      "function": "EnJso2_PostLimbDraw",
+      "line": 1728,
+      "at": 75933
+    },
+    {
+      "name": "mmvr_local_349a8f2d7e7b448a",
+      "original": "sSwordTipQuadOffset",
+      "function": "EnJso2_PostLimbDraw",
+      "line": 1729,
+      "at": 75992
+    },
+    {
+      "name": "mmvr_local_5ab7a034b6f8e84f",
+      "original": "sSwordBaseQuadOffset",
+      "function": "EnJso2_PostLimbDraw",
+      "line": 1730,
+      "at": 76057
+    },
+    {
+      "name": "mmvr_local_dfba55a317b74f83",
+      "original": "sAfterimageAlpha",
+      "function": "EnJso2_Draw",
+      "line": 1836,
+      "at": 81811
+    }
+  ],
+  "sourceSha256": "0dc482598fb2e2d1e3c4955a3e2ef1ac24d81681c8fa304b4715cc2bf4882913"
+}

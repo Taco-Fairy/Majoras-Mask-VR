@@ -1,0 +1,105 @@
+{
+  "source": "overlays/actors/ovl_En_Knight/z_en_knight.c",
+  "include": "f74caf6665c61504.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_168d3e3a5e052b3d",
+      "original": "sPrimColor",
+      "function": "EnKnight_SpawnDust",
+      "line": 1977,
+      "at": 73139
+    },
+    {
+      "name": "mmvr_local_db11987a5f595704",
+      "original": "sEnvColor",
+      "function": "EnKnight_SpawnDust",
+      "line": 1978,
+      "at": 73197
+    },
+    {
+      "name": "mmvr_local_36bcb3f96b107ea9",
+      "original": "sPrimColor",
+      "function": "EnKnight_SpawnIceShards",
+      "line": 3181,
+      "at": 124101
+    },
+    {
+      "name": "mmvr_local_ed7026e5ffea968e",
+      "original": "sEnvColor",
+      "function": "EnKnight_SpawnIceShards",
+      "line": 3182,
+      "at": 124162
+    },
+    {
+      "name": "mmvr_local_f3ae9db91ad973a8",
+      "original": "sAccel",
+      "function": "EnKnight_SpawnIceShards",
+      "line": 3183,
+      "at": 124216
+    },
+    {
+      "name": "mmvr_local_77c2953e46b0dcf7",
+      "original": "sFocusPosModelOffset",
+      "function": "EnKnight_PostLimbDraw",
+      "line": 4047,
+      "at": 160682
+    },
+    {
+      "name": "mmvr_local_a655d16d69bbec0f",
+      "original": "sShieldColliderModelOffset",
+      "function": "EnKnight_PostLimbDraw",
+      "line": 4048,
+      "at": 160747
+    },
+    {
+      "name": "mmvr_local_c89aa98a237578ed",
+      "original": "sShieldParticlesModelOffset",
+      "function": "EnKnight_PostLimbDraw",
+      "line": 4049,
+      "at": 160818
+    },
+    {
+      "name": "mmvr_local_3ac170682551bac6",
+      "original": "sSwordColliderModelOffset",
+      "function": "EnKnight_PostLimbDraw",
+      "line": 4050,
+      "at": 160893
+    },
+    {
+      "name": "mmvr_local_773f99a523ac7884",
+      "original": "sLimbToBodyParts",
+      "function": "EnKnight_PostLimbDraw",
+      "line": 4051,
+      "at": 160961
+    },
+    {
+      "name": "mmvr_local_8114eca3953305d7",
+      "original": "sBreathBaseModelOffset",
+      "function": "EnKnight_PostLimbDraw",
+      "line": 4083,
+      "at": 161950
+    },
+    {
+      "name": "mmvr_local_8a42aaf2c33fcbd0",
+      "original": "sBodyCollider0ModelOffset",
+      "function": "EnKnight_PostLimbDraw",
+      "line": 4084,
+      "at": 162019
+    },
+    {
+      "name": "mmvr_local_2cb4cf83c81e736b",
+      "original": "sBodyCollider1ModelOffset",
+      "function": "EnKnight_PostLimbDraw",
+      "line": 4085,
+      "at": 162090
+    },
+    {
+      "name": "mmvr_local_c6d32f7fc9e0068c",
+      "original": "sFocusPosModelOffset",
+      "function": "EnKnight_PostLimbDrawHead",
+      "line": 4132,
+      "at": 163967
+    }
+  ],
+  "sourceSha256": "798006ade43a7eb26a2d6fac48f0b7a87639aec5019999397609f58a8690efe8"
+}

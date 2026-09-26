@@ -1,0 +1,21 @@
+{
+  "source": "overlays/actors/ovl_Door_Warp1/z_door_warp1.c",
+  "include": "c945959276f9dc32.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_7cd883eadfe59350",
+      "original": "sVelocity",
+      "function": "func_808BB8D4",
+      "line": 1124,
+      "at": 42855
+    },
+    {
+      "name": "mmvr_local_efe560242f8c83d0",
+      "original": "sAccel",
+      "function": "func_808BB8D4",
+      "line": 1125,
+      "at": 42908
+    }
+  ],
+  "sourceSha256": "1b550a5ec377342e4e0395f71e7c7f42c0d03af0b4a4c077a10ca3967edcb32a"
+}

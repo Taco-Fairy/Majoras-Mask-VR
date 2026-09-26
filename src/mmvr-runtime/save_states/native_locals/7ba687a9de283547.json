@@ -1,0 +1,14 @@
+{
+  "source": "overlays/actors/ovl_Obj_Nozoki/z_obj_nozoki.c",
+  "include": "7ba687a9de283547.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_5e27e58664d8b44d",
+      "original": "D_80BA34F0",
+      "function": "func_80BA2C94",
+      "line": 334,
+      "at": 11637
+    }
+  ],
+  "sourceSha256": "2bdc17dcfff3e6eb0bc4094b24a594523c45fe432f94ebf6945ecc50bd2ad2f6"
+}

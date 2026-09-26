@@ -1,0 +1,21 @@
+{
+  "source": "overlays/actors/ovl_En_Sob1/z_en_sob1.c",
+  "include": "254b53bb70d4f754.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_36c00136cd8c088f",
+      "original": "sZoraShopkeeperEyeTextures",
+      "function": "EnSob1_ZoraShopkeeper_Draw",
+      "line": 1686,
+      "at": 62763
+    },
+    {
+      "name": "mmvr_local_d3d1cb89382a492a",
+      "original": "sGoronShopkeeperEyeTextures",
+      "function": "EnSob1_GoronShopkeeper_Draw",
+      "line": 1711,
+      "at": 63939
+    }
+  ],
+  "sourceSha256": "2572813e3a367c00c7b692273a1e94c4c588d2a533e2ec04ee84a3cc4992a5dc"
+}

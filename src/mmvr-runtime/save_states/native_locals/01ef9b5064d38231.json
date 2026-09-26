@@ -1,0 +1,91 @@
+{
+  "source": "code/z_effect_soft_sprite_old_init.c",
+  "include": "01ef9b5064d38231.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_f2d1f528840da5ff",
+      "original": "sPrimColor",
+      "function": "EffectSsBlast_SpawnWhiteCustomScale",
+      "line": 328,
+      "at": 15017
+    },
+    {
+      "name": "mmvr_local_d8ac134510a963d7",
+      "original": "sEnvColor",
+      "function": "EffectSsBlast_SpawnWhiteCustomScale",
+      "line": 329,
+      "at": 15078
+    },
+    {
+      "name": "mmvr_local_9260fc4d5d73b279",
+      "original": "sPrimColor",
+      "function": "EffectSsBlast_SpawnWhiteShockwave",
+      "line": 340,
+      "at": 15641
+    },
+    {
+      "name": "mmvr_local_ee78948f68c99ecb",
+      "original": "sEnvColor",
+      "function": "EffectSsBlast_SpawnWhiteShockwave",
+      "line": 341,
+      "at": 15702
+    },
+    {
+      "name": "mmvr_local_c4b1a7113b930b08",
+      "original": "sAccel",
+      "function": "EffectSsIcePiece_SpawnBurst",
+      "line": 768,
+      "at": 31009
+    },
+    {
+      "name": "mmvr_local_54b3e329dba1a4d5",
+      "original": "sVecScales",
+      "function": "EffectSsIcePiece_SpawnBurst",
+      "line": 769,
+      "at": 31058
+    },
+    {
+      "name": "mmvr_local_463d83b68173e371",
+      "original": "sPrimColor",
+      "function": "func_800B2B44",
+      "line": 824,
+      "at": 32925
+    },
+    {
+      "name": "mmvr_local_30652ba20103e406",
+      "original": "sEnvColor",
+      "function": "func_800B2B44",
+      "line": 825,
+      "at": 32986
+    },
+    {
+      "name": "mmvr_local_252ae63f6bc03452",
+      "original": "sPrimColor",
+      "function": "EffectSsFireTail_SpawnFlame",
+      "line": 875,
+      "at": 34901
+    },
+    {
+      "name": "mmvr_local_d8c45a09cbecc926",
+      "original": "sEnvColor",
+      "function": "EffectSsFireTail_SpawnFlame",
+      "line": 876,
+      "at": 34960
+    },
+    {
+      "name": "mmvr_local_b30f4707c9bda065",
+      "original": "sPrimColor",
+      "function": "func_800B3030",
+      "line": 974,
+      "at": 38403
+    },
+    {
+      "name": "mmvr_local_b68b195effacdeb4",
+      "original": "sEnvColors",
+      "function": "func_800B3030",
+      "line": 975,
+      "at": 38464
+    }
+  ],
+  "sourceSha256": "8ba8657f2b204a66a33053f9fdb0a3a951e14ca6955ec8cecdad34f68faa75f1"
+}

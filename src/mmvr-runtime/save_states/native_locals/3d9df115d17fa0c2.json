@@ -1,0 +1,49 @@
+{
+  "source": "code/z_map_disp.c",
+  "include": "3d9df115d17fa0c2.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_bcd28de9d7e4c299",
+      "original": "sCustomBottomStorey",
+      "function": "MapDisp_InitSceneFloorData",
+      "line": 775,
+      "at": 34550
+    },
+    {
+      "name": "mmvr_local_00b4eee16fdea989",
+      "original": "sUnvisitedRoomPal",
+      "function": "MapDisp_DrawRooms",
+      "line": 1592,
+      "at": 67672
+    },
+    {
+      "name": "mmvr_local_c0409f3ac9ca1e36",
+      "original": "sVisitedRoomPal",
+      "function": "MapDisp_DrawRooms",
+      "line": 1596,
+      "at": 67998
+    },
+    {
+      "name": "mmvr_local_47fb77e05a118c0a",
+      "original": "sCurrentRoomPal",
+      "function": "MapDisp_DrawRooms",
+      "line": 1600,
+      "at": 68322
+    },
+    {
+      "name": "mmvr_local_9519df59893b28b9",
+      "original": "sDungeonMapFloorTextures",
+      "function": "MapDisp_GetDungeonMapFloorTexture",
+      "line": 1953,
+      "at": 84201
+    },
+    {
+      "name": "mmvr_local_a8c14ef5cae0ac1f",
+      "original": "sCustomMapOffset",
+      "function": "MapDisp_DrawDungeonMap",
+      "line": 2121,
+      "at": 90485
+    }
+  ],
+  "sourceSha256": "b14111fb71ca81ac00c1735b964ac1ee7afd31eb6701ef8bf04a69cee8336139"
+}

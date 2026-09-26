@@ -1,0 +1,35 @@
+{
+  "source": "overlays/actors/ovl_En_Goroiwa/z_en_goroiwa.c",
+  "include": "6fc412434151a2cb.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_c14729c19d1ddc4a",
+      "original": "D_80942E94",
+      "function": "func_80941A10",
+      "line": 1125,
+      "at": 37167
+    },
+    {
+      "name": "mmvr_local_3228c6809a6ccfb2",
+      "original": "D_80942E9C",
+      "function": "func_80941A10",
+      "line": 1129,
+      "at": 37256
+    },
+    {
+      "name": "mmvr_local_21592cb966b68f52",
+      "original": "D_80942EAC",
+      "function": "func_80941EB4",
+      "line": 1243,
+      "at": 41494
+    },
+    {
+      "name": "mmvr_local_7a3893f40663f31b",
+      "original": "D_80942EB4",
+      "function": "EnGoroiwa_Draw",
+      "line": 1607,
+      "at": 54459
+    }
+  ],
+  "sourceSha256": "8cc0cb1672d2f1c3c251c4b4f926c699fb46acf012bf34931e2b5cf90ce69ff7"
+}

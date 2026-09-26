@@ -1,0 +1,119 @@
+{
+  "source": "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_collect.c",
+  "include": "e68713369ad9038a.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_e10b7c3464d9b231",
+      "original": "sQuestRemainsColorTimer",
+      "function": "KaleidoScope_DrawQuestStatus",
+      "line": 67,
+      "at": 2242
+    },
+    {
+      "name": "mmvr_local_787e02d925828fb9",
+      "original": "sQuestRemainsColorTimerIndex",
+      "function": "KaleidoScope_DrawQuestStatus",
+      "line": 68,
+      "at": 2288
+    },
+    {
+      "name": "mmvr_local_032f001f42af3eb0",
+      "original": "sQuestHpPrimRed",
+      "function": "KaleidoScope_DrawQuestStatus",
+      "line": 69,
+      "at": 2338
+    },
+    {
+      "name": "mmvr_local_c4a1efa4677be50e",
+      "original": "sQuestHpPrimGreen",
+      "function": "KaleidoScope_DrawQuestStatus",
+      "line": 70,
+      "at": 2375
+    },
+    {
+      "name": "mmvr_local_509010eae022c0bb",
+      "original": "sQuestHpPrimBlue",
+      "function": "KaleidoScope_DrawQuestStatus",
+      "line": 71,
+      "at": 2414
+    },
+    {
+      "name": "mmvr_local_ecea4f07e0182762",
+      "original": "sQuestHpPrimAlpha",
+      "function": "KaleidoScope_DrawQuestStatus",
+      "line": 72,
+      "at": 2452
+    },
+    {
+      "name": "mmvr_local_01b4aa6a4ef2834b",
+      "original": "sQuestHpColorTimer",
+      "function": "KaleidoScope_DrawQuestStatus",
+      "line": 73,
+      "at": 2491
+    },
+    {
+      "name": "mmvr_local_1db47aaae920301f",
+      "original": "sQuestHpPrimColorTargetIndex",
+      "function": "KaleidoScope_DrawQuestStatus",
+      "line": 74,
+      "at": 2532
+    },
+    {
+      "name": "mmvr_local_3517b78dd3579245",
+      "original": "sOcarinaButtonTextures",
+      "function": "KaleidoScope_DrawQuestStatus",
+      "line": 75,
+      "at": 2589
+    },
+    {
+      "name": "mmvr_local_b9bf77ee63c2de12",
+      "original": "sQuestSongsPrimRed",
+      "function": "KaleidoScope_DrawQuestStatus",
+      "line": 78,
+      "at": 2736
+    },
+    {
+      "name": "mmvr_local_9d46aaefb23d63b9",
+      "original": "sQuestSongsPrimGreen",
+      "function": "KaleidoScope_DrawQuestStatus",
+      "line": 92,
+      "at": 3202
+    },
+    {
+      "name": "mmvr_local_3f2d6cc83e5e062c",
+      "original": "sQuestSongsPrimBlue",
+      "function": "KaleidoScope_DrawQuestStatus",
+      "line": 106,
+      "at": 3670
+    },
+    {
+      "name": "mmvr_local_072e473202e2f010",
+      "original": "sQuestUpgradeTextures",
+      "function": "KaleidoScope_DrawQuestStatus",
+      "line": 120,
+      "at": 4144
+    },
+    {
+      "name": "mmvr_local_5cd8d58fe761f131",
+      "original": "sQuestUpgrades",
+      "function": "KaleidoScope_DrawQuestStatus",
+      "line": 124,
+      "at": 4392
+    },
+    {
+      "name": "mmvr_local_da9551c5850f35da",
+      "original": "sQuestSongPlaybackDelayTimer",
+      "function": "KaleidoScope_UpdateQuestCursor",
+      "line": 573,
+      "at": 25260
+    },
+    {
+      "name": "mmvr_local_9c8d529118f291e7",
+      "original": "sCursorPointLinks",
+      "function": "KaleidoScope_UpdateQuestCursor",
+      "line": 574,
+      "at": 25327
+    }
+  ],
+  "sourceSha256": "717c234c9b775b9ec313fd23828afebf787822fc3719402b44320a7105de274d"
+}

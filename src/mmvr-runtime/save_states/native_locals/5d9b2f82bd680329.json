@@ -1,0 +1,42 @@
+{
+  "source": "overlays/actors/ovl_En_Bom/z_en_bom.c",
+  "include": "5d9b2f82bd680329.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_29d3f3391d2df27a",
+      "original": "D_80872E68",
+      "function": "EnBom_Move",
+      "line": 198,
+      "at": 5851
+    },
+    {
+      "name": "mmvr_local_0a10c866070604bb",
+      "original": "D_80872E8C",
+      "function": "EnBom_Explode",
+      "line": 333,
+      "at": 11230
+    },
+    {
+      "name": "mmvr_local_baae30246b9e92f1",
+      "original": "D_80872E90",
+      "function": "EnBom_Explode",
+      "line": 334,
+      "at": 11283
+    },
+    {
+      "name": "mmvr_local_c138d13ca0046048",
+      "original": "D_80872E94",
+      "function": "EnBom_Explode",
+      "line": 335,
+      "at": 11343
+    },
+    {
+      "name": "mmvr_local_b3c19f0e7d6cc77c",
+      "original": "D_80872ED4",
+      "function": "EnBom_Update",
+      "line": 493,
+      "at": 16963
+    }
+  ],
+  "sourceSha256": "92254cc2cf686605c855e378cbdb3d5d8ed17888d3e103ac1206b3002df171db"
+}

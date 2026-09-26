@@ -1,0 +1,119 @@
+{
+  "source": "overlays/actors/ovl_Boss_07/z_boss_07.c",
+  "include": "3e9eac1c011da813.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_5d46a04a01d8813e",
+      "original": "sDustPrimColor",
+      "function": "Boss07_Incarnation_SpawnDust",
+      "line": 1186,
+      "at": 48800
+    },
+    {
+      "name": "mmvr_local_93add7e64ad02a31",
+      "original": "sDustEnvColor",
+      "function": "Boss07_Incarnation_SpawnDust",
+      "line": 1187,
+      "at": 48862
+    },
+    {
+      "name": "mmvr_local_d980429f6b4c4811",
+      "original": "sDustPrimColor",
+      "function": "Boss07_Wrath_SpawnDustAtPos",
+      "line": 1228,
+      "at": 50416
+    },
+    {
+      "name": "mmvr_local_36bcc183699a1402",
+      "original": "sDustEnvColor",
+      "function": "Boss07_Wrath_SpawnDustAtPos",
+      "line": 1229,
+      "at": 50478
+    },
+    {
+      "name": "mmvr_local_6b5b709e450fc90c",
+      "original": "sMajoraRemainsParams",
+      "function": "Boss07_Init",
+      "line": 1356,
+      "at": 55061
+    },
+    {
+      "name": "mmvr_local_51484858a04483b4",
+      "original": "sTopTireMarkInit",
+      "function": "Boss07_Init",
+      "line": 1419,
+      "at": 57867
+    },
+    {
+      "name": "mmvr_local_6921ab4542e17692",
+      "original": "sMaskTireMarkInit",
+      "function": "Boss07_Init",
+      "line": 1452,
+      "at": 59754
+    },
+    {
+      "name": "mmvr_local_ebd0073d1b0ca278",
+      "original": "sCamPoints",
+      "function": "Boss07_Wrath_IntroCutscene",
+      "line": 1616,
+      "at": 67389
+    },
+    {
+      "name": "mmvr_local_8f49cd15269bda64",
+      "original": "sIcePrimColor",
+      "function": "Boss07_Wrath_Thaw",
+      "line": 3025,
+      "at": 126059
+    },
+    {
+      "name": "mmvr_local_cd7c3be433c87011",
+      "original": "sIceEnvColor",
+      "function": "Boss07_Wrath_Thaw",
+      "line": 3026,
+      "at": 126123
+    },
+    {
+      "name": "mmvr_local_9caa888f3017d327",
+      "original": "sIceAccel",
+      "function": "Boss07_Wrath_Thaw",
+      "line": 3027,
+      "at": 126180
+    },
+    {
+      "name": "mmvr_local_30f575986d6a3b80",
+      "original": "sWhipOffset",
+      "function": "Boss07_Wrath_PostLimbDraw",
+      "line": 3617,
+      "at": 153227
+    },
+    {
+      "name": "mmvr_local_1ede419897c041f6",
+      "original": "sTauntAnimations",
+      "function": "Boss07_Incarnation_SetupTaunt",
+      "line": 4309,
+      "at": 185841
+    },
+    {
+      "name": "mmvr_local_36e46cf329785bef",
+      "original": "sPrevLightSettings",
+      "function": "Boss07_Incarnation_Update",
+      "line": 4916,
+      "at": 210971
+    },
+    {
+      "name": "mmvr_local_c94dd2027adddf92",
+      "original": "sLightSettings",
+      "function": "Boss07_Incarnation_Update",
+      "line": 4917,
+      "at": 211041
+    },
+    {
+      "name": "mmvr_local_c7842a554525d87f",
+      "original": "sMaskEyeTextures",
+      "function": "Boss07_Mask_Draw",
+      "line": 6756,
+      "at": 297822
+    }
+  ],
+  "sourceSha256": "4f0ab05f3ba097e29254a76c4a274cb8894e702aa5469b67369841ce29927e3f"
+}

@@ -1,0 +1,21 @@
+{
+  "source": "overlays/actors/ovl_En_Ani/z_en_ani.c",
+  "include": "9e5f9d98c585df46.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_8f479719eac52465",
+      "original": "D_809686A4",
+      "function": "EnAni_PostLimbDraw",
+      "line": 331,
+      "at": 12234
+    },
+    {
+      "name": "mmvr_local_3eb092ec12feafeb",
+      "original": "sEyeTextures",
+      "function": "EnAni_Draw",
+      "line": 339,
+      "at": 12458
+    }
+  ],
+  "sourceSha256": "40b9eda8add0050aa25f6c0a24d54e655abdd159941c4ffcdca774abd548cd9e"
+}

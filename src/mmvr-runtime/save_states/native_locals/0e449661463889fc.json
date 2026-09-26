@@ -1,0 +1,28 @@
+{
+  "source": "overlays/actors/ovl_En_Zod/z_en_zod.c",
+  "include": "0e449661463889fc.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_525866056428c51b",
+      "original": "D_80BB0580",
+      "function": "EnZod_PostLimbDraw",
+      "line": 576,
+      "at": 19832
+    },
+    {
+      "name": "mmvr_local_c207c6feca7066c9",
+      "original": "sTijoDrumsDLs",
+      "function": "EnZod_DrawDrums",
+      "line": 583,
+      "at": 20055
+    },
+    {
+      "name": "mmvr_local_010c773ee40cab24",
+      "original": "sTijoEyeTextures",
+      "function": "EnZod_Draw",
+      "line": 629,
+      "at": 21896
+    }
+  ],
+  "sourceSha256": "c3328295a230ba20dc6d9024555e958c52b6c2c9342c0b7f241aaba6d97bdb65"
+}

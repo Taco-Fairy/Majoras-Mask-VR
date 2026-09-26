@@ -1,0 +1,21 @@
+{
+  "source": "code/z_lights.c",
+  "include": "1532b6aee1d6576a.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_2e87dbeb835b7226",
+      "original": "sBindFuncs",
+      "function": "Lights_BindAll",
+      "line": 212,
+      "at": 7473
+    },
+    {
+      "name": "mmvr_local_d2eae58d2c9d90ec",
+      "original": "sBindFuncsLegacy",
+      "function": "Lights_BindAll",
+      "line": 217,
+      "at": 7634
+    }
+  ],
+  "sourceSha256": "e6e0b6a3964895e98b031e5d1b683abec5d9872fe6a43f2c575d36af93d57648"
+}

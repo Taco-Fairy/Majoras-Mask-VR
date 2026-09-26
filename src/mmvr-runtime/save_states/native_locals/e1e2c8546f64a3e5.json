@@ -1,0 +1,21 @@
+{
+  "source": "overlays/actors/ovl_En_Nwc/z_en_nwc.c",
+  "include": "e1e2c8546f64a3e5.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_b0a0ec706a162f78",
+      "original": "sPrimColor",
+      "function": "EnNwc_SpawnDust",
+      "line": 90,
+      "at": 3210
+    },
+    {
+      "name": "mmvr_local_1dba2554203ccbd3",
+      "original": "sEnvColor",
+      "function": "EnNwc_SpawnDust",
+      "line": 91,
+      "at": 3271
+    }
+  ],
+  "sourceSha256": "0237882556676a5dda2b7f8936f87de3a885c9e854485f87670582942effb235"
+}

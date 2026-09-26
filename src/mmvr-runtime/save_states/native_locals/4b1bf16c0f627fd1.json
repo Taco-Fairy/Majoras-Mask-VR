@@ -1,0 +1,28 @@
+{
+  "source": "overlays/actors/ovl_Boss_04/z_boss_04.c",
+  "include": "4b1bf16c0f627fd1.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_cf858365aeb4bed7",
+      "original": "D_809EE1F8",
+      "function": "Boss04_Init",
+      "line": 143,
+      "at": 4649
+    },
+    {
+      "name": "mmvr_local_f25165f0db701410",
+      "original": "D_809EE228",
+      "function": "Boss04_PostLimbDraw",
+      "line": 804,
+      "at": 28940
+    },
+    {
+      "name": "mmvr_local_3920753cc5d7abc4",
+      "original": "D_809EE234",
+      "function": "Boss04_PostLimbDraw",
+      "line": 805,
+      "at": 28996
+    }
+  ],
+  "sourceSha256": "b282ffe45e42a6731f1ea811c07e97c897c95db2af743a0e09c2c6a52634e3fa"
+}

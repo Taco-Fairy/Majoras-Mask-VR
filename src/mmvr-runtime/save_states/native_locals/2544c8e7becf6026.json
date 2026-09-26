@@ -1,0 +1,28 @@
+{
+  "source": "overlays/actors/ovl_En_Pp/z_en_pp.c",
+  "include": "2544c8e7becf6026.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_35e1df213fb0cec4",
+      "original": "sLedgeCheckAngles",
+      "function": "EnPp_CheckCollision",
+      "line": 493,
+      "at": 19413
+    },
+    {
+      "name": "mmvr_local_4196aa16cbd122ed",
+      "original": "sVertexOffset1",
+      "function": "EnPp_PostLimbDraw",
+      "line": 1497,
+      "at": 61466
+    },
+    {
+      "name": "mmvr_local_d612a24c94549b00",
+      "original": "sVertexOffset2",
+      "function": "EnPp_PostLimbDraw",
+      "line": 1498,
+      "at": 61523
+    }
+  ],
+  "sourceSha256": "9f90f9ff36801455173423a8ea0b009e79f6e28b1178af59cb6ff57cfe596db1"
+}

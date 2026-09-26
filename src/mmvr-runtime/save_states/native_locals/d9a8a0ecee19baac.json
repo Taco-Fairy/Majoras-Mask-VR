@@ -1,0 +1,28 @@
+{
+  "source": "overlays/actors/ovl_En_Kitan/z_en_kitan.c",
+  "include": "d9a8a0ecee19baac.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_dfc9de62d851db05",
+      "original": "sEffPrimColor",
+      "function": "EnKitan_SpawnEffects",
+      "line": 88,
+      "at": 2567
+    },
+    {
+      "name": "mmvr_local_03014b91a3c51500",
+      "original": "sEffEnvColor",
+      "function": "EnKitan_SpawnEffects",
+      "line": 89,
+      "at": 2631
+    },
+    {
+      "name": "mmvr_local_da412749d5886c11",
+      "original": "sFocusOffset",
+      "function": "EnKitan_PostLimbDraw",
+      "line": 377,
+      "at": 13250
+    }
+  ],
+  "sourceSha256": "005c783342050e13033687718152f9564ddce945a9dccd41b5bdeafda323a1c1"
+}

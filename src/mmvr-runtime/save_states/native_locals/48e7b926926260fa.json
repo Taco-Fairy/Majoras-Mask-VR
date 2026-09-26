@@ -1,0 +1,35 @@
+{
+  "source": "code/z_map_exp.c",
+  "include": "48e7b926926260fa.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_e0c6ff739e5b4e45",
+      "original": "sDungeonAndBossSceneIds",
+      "function": "Map_GetDungeonSceneIndex",
+      "line": 14,
+      "at": 373
+    },
+    {
+      "name": "mmvr_local_fa2b9dbb4effb25c",
+      "original": "sDungeonSceneIds",
+      "function": "Map_GetDungeonSceneIndexForDungeon",
+      "line": 62,
+      "at": 2117
+    },
+    {
+      "name": "mmvr_local_5030c3ed9780f419",
+      "original": "sBossSceneIds",
+      "function": "Map_GetDungeonSceneIndexForBoss",
+      "line": 99,
+      "at": 3371
+    },
+    {
+      "name": "mmvr_local_e1e543c55e8bea56",
+      "original": "sSceneIds",
+      "function": "Map_GetMapIndexForOverworld",
+      "line": 135,
+      "at": 4539
+    }
+  ],
+  "sourceSha256": "c41fbb1241b7e155aebeed96c248db56521191c73f7bd5694a30edb72e0562ed"
+}

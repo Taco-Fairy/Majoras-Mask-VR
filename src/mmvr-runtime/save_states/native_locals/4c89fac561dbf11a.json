@@ -1,0 +1,77 @@
+{
+  "source": "overlays/actors/ovl_En_Dodongo/z_en_dodongo.c",
+  "include": "4c89fac561dbf11a.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_4726fda7946cd927",
+      "original": "D_80879308",
+      "function": "EnDodongo_Init",
+      "line": 281,
+      "at": 8521
+    },
+    {
+      "name": "mmvr_local_21b6ca7a2f114f52",
+      "original": "D_8087932C",
+      "function": "func_80876930",
+      "line": 356,
+      "at": 11398
+    },
+    {
+      "name": "mmvr_local_22960c360b83849f",
+      "original": "D_80879330",
+      "function": "func_80876930",
+      "line": 357,
+      "at": 11459
+    },
+    {
+      "name": "mmvr_local_cf07878be5939c21",
+      "original": "D_80879334",
+      "function": "func_80876930",
+      "line": 358,
+      "at": 11520
+    },
+    {
+      "name": "mmvr_local_6ab1f3d4a23a2b4a",
+      "original": "D_80879338",
+      "function": "func_80876930",
+      "line": 359,
+      "at": 11580
+    },
+    {
+      "name": "mmvr_local_2978bd071e85a645",
+      "original": "D_8087933C",
+      "function": "func_80876930",
+      "line": 360,
+      "at": 11633
+    },
+    {
+      "name": "mmvr_local_550d5925ceb0dc07",
+      "original": "D_80879348",
+      "function": "func_8087784C",
+      "line": 646,
+      "at": 22263
+    },
+    {
+      "name": "mmvr_local_e209eca533d2387f",
+      "original": "D_80879354",
+      "function": "func_8087784C",
+      "line": 647,
+      "at": 22316
+    },
+    {
+      "name": "mmvr_local_7c5e9497ebc91ed0",
+      "original": "D_80879360",
+      "function": "func_80877E60",
+      "line": 717,
+      "at": 25070
+    },
+    {
+      "name": "mmvr_local_fad44f2600467b41",
+      "original": "D_8087936C",
+      "function": "func_80877E60",
+      "line": 718,
+      "at": 25129
+    }
+  ],
+  "sourceSha256": "faf5df1febfbadd6eb22c6d8786daf5a1d4767f835d289750309996ec367addc"
+}

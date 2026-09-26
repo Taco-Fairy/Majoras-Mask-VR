@@ -1,0 +1,14 @@
+{
+  "source": "overlays/actors/ovl_En_Dnk/z_en_dnk.c",
+  "include": "281843dee8f1a3eb.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_3fed806aa45c6bc8",
+      "original": "D_80A5245C",
+      "function": "func_80A51CB8",
+      "line": 368,
+      "at": 14397
+    }
+  ],
+  "sourceSha256": "fbc6d9786abc0ab40768579ae5e28f16e70d1598443c801c508ada680253c7bf"
+}

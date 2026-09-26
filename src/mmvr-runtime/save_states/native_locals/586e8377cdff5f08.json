@@ -1,0 +1,21 @@
+{
+  "source": "overlays/actors/ovl_En_Dinofos/z_en_dinofos.c",
+  "include": "586e8377cdff5f08.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_b7a532caad79797d",
+      "original": "sTexturesDesegmented",
+      "function": "EnDinofos_Init",
+      "line": 274,
+      "at": 10270
+    },
+    {
+      "name": "mmvr_local_0ea22b6973285da8",
+      "original": "sBlureInit",
+      "function": "EnDinofos_Init",
+      "line": 275,
+      "at": 10329
+    }
+  ],
+  "sourceSha256": "9235fc5443cd484a889b2bdd579b2fbc50273176929104f1d85c20924973dd90"
+}

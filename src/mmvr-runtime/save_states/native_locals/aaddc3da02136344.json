@@ -1,0 +1,28 @@
+{
+  "source": "overlays/actors/ovl_En_Dekubaba/z_en_dekubaba.c",
+  "include": "aaddc3da02136344.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_a523f97b11c62ce9",
+      "original": "sDustPrimColor",
+      "function": "EnDekubaba_Lunge",
+      "line": 595,
+      "at": 23993
+    },
+    {
+      "name": "mmvr_local_6727aee81f665ac7",
+      "original": "sDustEnvColor",
+      "function": "EnDekubaba_Lunge",
+      "line": 596,
+      "at": 24058
+    },
+    {
+      "name": "mmvr_local_2ac6f098a10b3fdf",
+      "original": "sStemDLists",
+      "function": "EnDekubaba_DrawStemExtended",
+      "line": 1249,
+      "at": 49804
+    }
+  ],
+  "sourceSha256": "b4c618b7ea78d9b7dee717526a0d1235df5f77ab75d92c07d9ecc3f6e37c5405"
+}

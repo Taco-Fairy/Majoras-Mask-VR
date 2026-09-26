@@ -1,0 +1,14 @@
+{
+  "source": "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_item.c",
+  "include": "26081016ff9229bc.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_27203549a35d8f49",
+      "original": "sEquipMagicArrowBowSlotHoldTimer",
+      "function": "KaleidoScope_UpdateItemEquip",
+      "line": 1493,
+      "at": 84286
+    }
+  ],
+  "sourceSha256": "0a713d6b67848cabae1971cb7a9555fb21a99b2230e2b7cd09451f1d57fefdb1"
+}

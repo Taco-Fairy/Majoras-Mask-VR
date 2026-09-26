@@ -1,0 +1,259 @@
+{
+  "source": "code/z_message.c",
+  "include": "aa1c2ae6c4218fa7.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_214d5b1d77b220e1",
+      "original": "sIconPrimColors",
+      "function": "Message_DrawTextboxIcon",
+      "line": 414,
+      "at": 15812
+    },
+    {
+      "name": "mmvr_local_619cd2fc0265d3dd",
+      "original": "sIconEnvColors",
+      "function": "Message_DrawTextboxIcon",
+      "line": 418,
+      "at": 15918
+    },
+    {
+      "name": "mmvr_local_9c536d4b1ca2f9ea",
+      "original": "sIconPrimR",
+      "function": "Message_DrawTextboxIcon",
+      "line": 422,
+      "at": 16011
+    },
+    {
+      "name": "mmvr_local_d60a6694aaaf9f0e",
+      "original": "sIconPrimG",
+      "function": "Message_DrawTextboxIcon",
+      "line": 423,
+      "at": 16043
+    },
+    {
+      "name": "mmvr_local_f2407ccb7204d81e",
+      "original": "sIconPrimB",
+      "function": "Message_DrawTextboxIcon",
+      "line": 424,
+      "at": 16076
+    },
+    {
+      "name": "mmvr_local_f8a285a4b3c93b5f",
+      "original": "sIconFlashTimer",
+      "function": "Message_DrawTextboxIcon",
+      "line": 425,
+      "at": 16110
+    },
+    {
+      "name": "mmvr_local_530aace53c562d68",
+      "original": "sIconFlashColorIndex",
+      "function": "Message_DrawTextboxIcon",
+      "line": 426,
+      "at": 16148
+    },
+    {
+      "name": "mmvr_local_267bcf08da2eb75e",
+      "original": "sIconEnvR",
+      "function": "Message_DrawTextboxIcon",
+      "line": 427,
+      "at": 16190
+    },
+    {
+      "name": "mmvr_local_1a3010d697248445",
+      "original": "sIconEnvG",
+      "function": "Message_DrawTextboxIcon",
+      "line": 428,
+      "at": 16221
+    },
+    {
+      "name": "mmvr_local_2165d30854f9a8a5",
+      "original": "sIconEnvB",
+      "function": "Message_DrawTextboxIcon",
+      "line": 429,
+      "at": 16252
+    },
+    {
+      "name": "mmvr_local_c969e1c28db50ebc",
+      "original": "D_801CFD10",
+      "function": "func_80147F18",
+      "line": 519,
+      "at": 19711
+    },
+    {
+      "name": "mmvr_local_ed7d89c973d7909d",
+      "original": "D_801CFD1C",
+      "function": "func_80147F18",
+      "line": 523,
+      "at": 19812
+    },
+    {
+      "name": "mmvr_local_c6f4a4fed5157caa",
+      "original": "D_801CFD28",
+      "function": "func_80147F18",
+      "line": 527,
+      "at": 19901
+    },
+    {
+      "name": "mmvr_local_bf7eb920bf610083",
+      "original": "D_801CFD2C",
+      "function": "func_80147F18",
+      "line": 528,
+      "at": 19933
+    },
+    {
+      "name": "mmvr_local_296bdc83518f3462",
+      "original": "D_801CFD30",
+      "function": "func_80147F18",
+      "line": 529,
+      "at": 19966
+    },
+    {
+      "name": "mmvr_local_e2274c4247403ca6",
+      "original": "D_801CFD34",
+      "function": "func_80147F18",
+      "line": 530,
+      "at": 20000
+    },
+    {
+      "name": "mmvr_local_344c86a5b65ee875",
+      "original": "D_801CFD38",
+      "function": "func_80147F18",
+      "line": 531,
+      "at": 20033
+    },
+    {
+      "name": "mmvr_local_8e5f566c3edafc46",
+      "original": "D_801CFD3C",
+      "function": "func_80147F18",
+      "line": 532,
+      "at": 20065
+    },
+    {
+      "name": "mmvr_local_66ace78cfbff13f5",
+      "original": "D_801CFD40",
+      "function": "func_80147F18",
+      "line": 533,
+      "at": 20097
+    },
+    {
+      "name": "mmvr_local_95c583f77a2dabff",
+      "original": "D_801CFD44",
+      "function": "func_80147F18",
+      "line": 534,
+      "at": 20129
+    },
+    {
+      "name": "mmvr_local_31db56ce2dc78b93",
+      "original": "D_801CFD48",
+      "function": "func_80148558",
+      "line": 617,
+      "at": 22792
+    },
+    {
+      "name": "mmvr_local_3bbf3af66efdc1e0",
+      "original": "D_801CFD54",
+      "function": "func_80148558",
+      "line": 621,
+      "at": 22893
+    },
+    {
+      "name": "mmvr_local_67e0ff9a111f0eb3",
+      "original": "D_801CFD60",
+      "function": "func_80148558",
+      "line": 625,
+      "at": 22982
+    },
+    {
+      "name": "mmvr_local_778c747c07904232",
+      "original": "D_801CFD64",
+      "function": "func_80148558",
+      "line": 626,
+      "at": 23014
+    },
+    {
+      "name": "mmvr_local_c047c8b2319484bf",
+      "original": "D_801CFD68",
+      "function": "func_80148558",
+      "line": 627,
+      "at": 23047
+    },
+    {
+      "name": "mmvr_local_601a579483026497",
+      "original": "D_801CFD6C",
+      "function": "func_80148558",
+      "line": 628,
+      "at": 23081
+    },
+    {
+      "name": "mmvr_local_679870a3eabb8384",
+      "original": "D_801CFD70",
+      "function": "func_80148558",
+      "line": 629,
+      "at": 23114
+    },
+    {
+      "name": "mmvr_local_d2acff37febb47c8",
+      "original": "D_801CFD74",
+      "function": "func_80148558",
+      "line": 630,
+      "at": 23146
+    },
+    {
+      "name": "mmvr_local_5d70b2b8185ec938",
+      "original": "D_801CFD78",
+      "function": "func_80148558",
+      "line": 631,
+      "at": 23178
+    },
+    {
+      "name": "mmvr_local_d78bab714385b4f4",
+      "original": "D_801CFD7C",
+      "function": "func_80148558",
+      "line": 632,
+      "at": 23210
+    },
+    {
+      "name": "mmvr_local_d6eda0e82b13ca75",
+      "original": "sAnalogStickHeld",
+      "function": "Message_HandleChoiceSelection",
+      "line": 715,
+      "at": 25864
+    },
+    {
+      "name": "mmvr_local_fec7d9862b8a91b0",
+      "original": "sAnalogStickHeld",
+      "function": "func_80148D64",
+      "line": 753,
+      "at": 27121
+    },
+    {
+      "name": "mmvr_local_e70efc585582945a",
+      "original": "sAnalogStickHeld",
+      "function": "func_801491DC",
+      "line": 830,
+      "at": 30748
+    },
+    {
+      "name": "mmvr_local_a50e555b0b3aa3bf",
+      "original": "sAnalogStickHeld",
+      "function": "func_80149454",
+      "line": 877,
+      "at": 32745
+    },
+    {
+      "name": "mmvr_local_08220273d8da992e",
+      "original": "sAnalogStickHeld",
+      "function": "func_801496C8",
+      "line": 924,
+      "at": 34741
+    },
+    {
+      "name": "mmvr_local_f4259b54f1b4efb9",
+      "original": "D_801D0468",
+      "function": "Message_Update",
+      "line": 5600,
+      "at": 244576
+    }
+  ],
+  "sourceSha256": "6b6b00386deb584c64f5a8cc4cb47fa7f94aa134604dfd25ac4645adf22b5c30"
+}

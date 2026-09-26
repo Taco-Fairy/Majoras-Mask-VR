@@ -1,0 +1,35 @@
+{
+  "source": "overlays/actors/ovl_En_Boom/z_en_boom.c",
+  "include": "24e3dc30c0f0964e.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_937897d896640e81",
+      "original": "D_808A3068",
+      "function": "EnBoom_Init",
+      "line": 113,
+      "at": 3597
+    },
+    {
+      "name": "mmvr_local_966eba43949b680d",
+      "original": "D_808A306C",
+      "function": "EnBoom_Init",
+      "line": 114,
+      "at": 3652
+    },
+    {
+      "name": "mmvr_local_facd36c83cbb51a0",
+      "original": "D_808A3070",
+      "function": "EnBoom_Init",
+      "line": 115,
+      "at": 3706
+    },
+    {
+      "name": "mmvr_local_9e6f53b65fc6f27f",
+      "original": "D_808A3074",
+      "function": "EnBoom_Init",
+      "line": 116,
+      "at": 3759
+    }
+  ],
+  "sourceSha256": "5277faef4f2d6ee966e096626f46ff9f83e9fe1e7e69ee4f8b4cb7a65e81fc03"
+}

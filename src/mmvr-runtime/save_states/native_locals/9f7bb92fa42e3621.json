@@ -1,0 +1,35 @@
+{
+  "source": "code/z_actor.c",
+  "include": "9f7bb92fa42e3621.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_c51ca3808db112b2",
+      "original": "sColor",
+      "function": "ActorShadow_DrawWhiteCircle",
+      "line": 186,
+      "at": 7002
+    },
+    {
+      "name": "mmvr_local_cd804ed3e4d6d297",
+      "original": "sPrimColor",
+      "function": "Actor_SpawnIceEffects",
+      "line": 5735,
+      "at": 225629
+    },
+    {
+      "name": "mmvr_local_a732a205a7df0549",
+      "original": "sEnvColor",
+      "function": "Actor_SpawnIceEffects",
+      "line": 5736,
+      "at": 225690
+    },
+    {
+      "name": "mmvr_local_f52fcb46569ca266",
+      "original": "sAccel",
+      "function": "Actor_SpawnIceEffects",
+      "line": 5737,
+      "at": 225744
+    }
+  ],
+  "sourceSha256": "be79338d03044808b1e56ecbfd24819481b8c6886f43f890435f8d4cc02920c3"
+}

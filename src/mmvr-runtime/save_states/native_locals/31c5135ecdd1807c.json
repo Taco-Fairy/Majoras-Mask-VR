@@ -1,0 +1,21 @@
+{
+  "source": "overlays/actors/ovl_En_Horse/z_en_horse.c",
+  "include": "31c5135ecdd1807c.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_f2ccc314ba0923b7",
+      "original": "D_80889204",
+      "function": "EnHorse_OverrideLimbDraw",
+      "line": 4676,
+      "at": 183323
+    },
+    {
+      "name": "mmvr_local_f965d5d942d21540",
+      "original": "D_80889210",
+      "function": "EnHorse_OverrideLimbDraw",
+      "line": 4681,
+      "at": 183446
+    }
+  ],
+  "sourceSha256": "615e712bfecbc70b09c004d1480a1e2a4ab230fd9200a87087fd08c21ef93335"
+}

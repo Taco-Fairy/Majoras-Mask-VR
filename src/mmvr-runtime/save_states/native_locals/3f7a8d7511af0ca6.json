@@ -1,0 +1,28 @@
+{
+  "source": "overlays/actors/ovl_En_Elfbub/z_en_elfbub.c",
+  "include": "3f7a8d7511af0ca6.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_1a84198b004a7423",
+      "original": "sPrimColor",
+      "function": "EnElfbub_Pop",
+      "line": 94,
+      "at": 3073
+    },
+    {
+      "name": "mmvr_local_20701451cb23238c",
+      "original": "sEnvColor",
+      "function": "EnElfbub_Pop",
+      "line": 95,
+      "at": 3134
+    },
+    {
+      "name": "mmvr_local_52ea4a3de2478006",
+      "original": "sAccel",
+      "function": "EnElfbub_Pop",
+      "line": 96,
+      "at": 3186
+    }
+  ],
+  "sourceSha256": "6a8c61d19d0c32dc5bf9376dc44dbe3913ae313b4f6aa13aa5d77b3fc1141cd5"
+}

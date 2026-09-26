@@ -1,0 +1,14 @@
+{
+  "source": "overlays/actors/ovl_En_Stone_heishi/z_en_stone_heishi.c",
+  "include": "72d9572e5b2698d5.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_f836089b7965f9ab",
+      "original": "sLeftHandPos",
+      "function": "EnStoneheishi_PostLimbDraw",
+      "line": 497,
+      "at": 18797
+    }
+  ],
+  "sourceSha256": "1bf25fc3fdca6fb387c57de01e160034c45533c8d8ff9176a515990c66876178"
+}

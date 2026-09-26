@@ -1,0 +1,28 @@
+{
+  "source": "overlays/actors/ovl_En_Fu/z_en_fu.c",
+  "include": "093272d7ec0c6b68.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_e5c7301ab79ac812",
+      "original": "D_80964C24",
+      "function": "func_80963350",
+      "line": 872,
+      "at": 29240
+    },
+    {
+      "name": "mmvr_local_779bdb224458a1c5",
+      "original": "D_80964C28",
+      "function": "EnFu_PostLimbDraw",
+      "line": 1411,
+      "at": 48206
+    },
+    {
+      "name": "mmvr_local_36ca90e9a38bb507",
+      "original": "D_80964C34",
+      "function": "EnFu_PostLimbDraw",
+      "line": 1412,
+      "at": 48263
+    }
+  ],
+  "sourceSha256": "01fa2aa839d05dbd35de7e35fb44e01fa9f4ba196eae18bb5131b673fb3e4ac5"
+}

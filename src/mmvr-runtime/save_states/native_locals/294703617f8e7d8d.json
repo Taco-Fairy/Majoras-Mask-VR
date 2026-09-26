@@ -1,0 +1,21 @@
+{
+  "source": "overlays/actors/ovl_En_Tanron2/z_en_tanron2.c",
+  "include": "294703617f8e7d8d.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_528e432521795b1a",
+      "original": "sPrimColor",
+      "function": "func_80BB71C8",
+      "line": 357,
+      "at": 12732
+    },
+    {
+      "name": "mmvr_local_d6b15b1d6cec763e",
+      "original": "sEnvColor",
+      "function": "func_80BB71C8",
+      "line": 358,
+      "at": 12793
+    }
+  ],
+  "sourceSha256": "59c453c5c4bc5cc4de28410730c51a426d3fecf56aa4d0a99f29f4c180a0ad51"
+}

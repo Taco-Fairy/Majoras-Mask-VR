@@ -1,0 +1,28 @@
+{
+  "source": "overlays/actors/ovl_En_Po_Sisters/z_en_po_sisters.c",
+  "include": "22f0b373ba965d91.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_a40ee5d6ab06ed56",
+      "original": "gPoSisterBodyDisplayLists",
+      "function": "EnPoSisters_OverrideLimbDraw",
+      "line": 1073,
+      "at": 45182
+    },
+    {
+      "name": "mmvr_local_868c7c6191511484",
+      "original": "gPoSisterFaceDisplayLists",
+      "function": "EnPoSisters_OverrideLimbDraw",
+      "line": 1079,
+      "at": 45367
+    },
+    {
+      "name": "mmvr_local_9dd321550d216a2c",
+      "original": "gPoSisterColors",
+      "function": "EnPoSisters_OverrideLimbDraw",
+      "line": 1085,
+      "at": 45559
+    }
+  ],
+  "sourceSha256": "9d7cd7dd2e2c3be5a18e6a3c5cba39fac130bc5bb9e3a0b5b899bb49d93066a6"
+}

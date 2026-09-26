@@ -1,0 +1,56 @@
+{
+  "source": "overlays/actors/ovl_En_Test7/z_en_test7.c",
+  "include": "2f1388d2f079b014.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_e1172254c9f02b8b",
+      "original": "sFeatherIndex",
+      "function": "EnTest7_AddAndChooseFeather",
+      "line": 138,
+      "at": 4903
+    },
+    {
+      "name": "mmvr_local_8f7fcbe79437c55c",
+      "original": "sUnitVecY",
+      "function": "EnTest7_UpdateFeatherType1",
+      "line": 164,
+      "at": 5676
+    },
+    {
+      "name": "mmvr_local_f798859e7f99561e",
+      "original": "sUnitVecZ",
+      "function": "EnTest7_UpdateFeatherType1",
+      "line": 165,
+      "at": 5728
+    },
+    {
+      "name": "mmvr_local_c10853a85a147462",
+      "original": "sFeatherRotMf",
+      "function": "EnTest7_UpdateFeatherType1",
+      "line": 166,
+      "at": 5779
+    },
+    {
+      "name": "mmvr_local_23a1bbb88722a7cb",
+      "original": "sFeatherAccel",
+      "function": "EnTest7_UpdateFeatherType1",
+      "line": 167,
+      "at": 5812
+    },
+    {
+      "name": "mmvr_local_cb6e7ea5cf0d71e7",
+      "original": "sFeatherUnused",
+      "function": "EnTest7_UpdateFeatherType1",
+      "line": 168,
+      "at": 5845
+    },
+    {
+      "name": "mmvr_local_b26a255db5ef8328",
+      "original": "sSubCamAtOffset",
+      "function": "EnTest7_UpdateSubCamArrivalCs1",
+      "line": 783,
+      "at": 28919
+    }
+  ],
+  "sourceSha256": "7887c86cb475a94853eba32798756089759336bfcc01672f1e210df0f49c205b"
+}

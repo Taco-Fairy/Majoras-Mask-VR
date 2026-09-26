@@ -1,0 +1,14 @@
+{
+  "source": "code/z_vimode.c",
+  "include": "5f4a045afd900954.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_e11d1c08a74ab811",
+      "original": "D_801DF0C0",
+      "function": "ViMode_Configure",
+      "line": 122,
+      "at": 4867
+    }
+  ],
+  "sourceSha256": "ae1f4e92f83fd27676a0f2c1a7fb3db73b64aece4baed590ab60799da7779fb6"
+}

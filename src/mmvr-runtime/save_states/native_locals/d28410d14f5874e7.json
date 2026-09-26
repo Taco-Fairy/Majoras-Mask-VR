@@ -1,0 +1,49 @@
+{
+  "source": "overlays/actors/ovl_Obj_Lupygamelift/z_obj_lupygamelift.c",
+  "include": "d28410d14f5874e7.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_f2fc489a94aed7c4",
+      "original": "D_80AF0750",
+      "function": "func_80AF0394",
+      "line": 93,
+      "at": 3558
+    },
+    {
+      "name": "mmvr_local_5ac01985a1711411",
+      "original": "D_80AF0754",
+      "function": "func_80AF0394",
+      "line": 94,
+      "at": 3595
+    },
+    {
+      "name": "mmvr_local_d8d325a35e8d6025",
+      "original": "D_80AF0758",
+      "function": "func_80AF0394",
+      "line": 95,
+      "at": 3632
+    },
+    {
+      "name": "mmvr_local_70b6e4b75427dc52",
+      "original": "D_80AF075C",
+      "function": "func_80AF0394",
+      "line": 96,
+      "at": 3667
+    },
+    {
+      "name": "mmvr_local_09aec64deee44078",
+      "original": "D_80AF0760",
+      "function": "func_80AF0394",
+      "line": 97,
+      "at": 3703
+    },
+    {
+      "name": "mmvr_local_f2286c0b05d97fe1",
+      "original": "D_80AF0764",
+      "function": "func_80AF0394",
+      "line": 98,
+      "at": 3741
+    }
+  ],
+  "sourceSha256": "d425d2dbe3cf2cf6c6efdbb03cb90f654f165e19d8af939264a6fb4a6627f1d3"
+}

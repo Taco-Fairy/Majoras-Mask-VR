@@ -1,0 +1,14 @@
+{
+  "source": "code/stubs.c",
+  "include": "9f9956f63fa1773f.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_53bc1a164eb793fa",
+      "original": "D_80097F90",
+      "function": "guRotateF",
+      "line": 806,
+      "at": 28792
+    }
+  ],
+  "sourceSha256": "43c64213ba19273a87831fa2cf09e9d89ebfa0a7101bcf0bbd1b4009fb55f512"
+}

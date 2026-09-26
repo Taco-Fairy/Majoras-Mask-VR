@@ -1,0 +1,84 @@
+{
+  "source": "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_map.c",
+  "include": "6d8ece1da09835c8.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_28a7c403119f4cdd",
+      "original": "sStrayFairyIconTimer",
+      "function": "KaleidoScope_DrawDungeonMap",
+      "line": 122,
+      "at": 5417
+    },
+    {
+      "name": "mmvr_local_44f0bfe71b042a24",
+      "original": "sStrayFairyIconIndex",
+      "function": "KaleidoScope_DrawDungeonMap",
+      "line": 123,
+      "at": 5460
+    },
+    {
+      "name": "mmvr_local_6b91081527a997c9",
+      "original": "sStrayFairyIconAlphaScaleTimer",
+      "function": "KaleidoScope_DrawDungeonMap",
+      "line": 124,
+      "at": 5502
+    },
+    {
+      "name": "mmvr_local_f87ebb9c5fd7dbc8",
+      "original": "sStrayFairyIconAlphaScaleState",
+      "function": "KaleidoScope_DrawDungeonMap",
+      "line": 125,
+      "at": 5555
+    },
+    {
+      "name": "mmvr_local_7807bedb7c2539bc",
+      "original": "sStrayFairyIconAlpha",
+      "function": "KaleidoScope_DrawDungeonMap",
+      "line": 126,
+      "at": 5607
+    },
+    {
+      "name": "mmvr_local_13f76581054a0663",
+      "original": "sStrayFairyIconScale",
+      "function": "KaleidoScope_DrawDungeonMap",
+      "line": 127,
+      "at": 5651
+    },
+    {
+      "name": "mmvr_local_8585ef3d427302e5",
+      "original": "sStrayFairyIconTextures",
+      "function": "KaleidoScope_DrawDungeonMap",
+      "line": 128,
+      "at": 5705
+    },
+    {
+      "name": "mmvr_local_328dba10f2306546",
+      "original": "sStrayFairyIconPrimColors",
+      "function": "KaleidoScope_DrawDungeonMap",
+      "line": 142,
+      "at": 6565
+    },
+    {
+      "name": "mmvr_local_1bebb2c5b2279f63",
+      "original": "sStrayFairyIconEnvColors",
+      "function": "KaleidoScope_DrawDungeonMap",
+      "line": 148,
+      "at": 6895
+    },
+    {
+      "name": "mmvr_local_374283a995a7c0d1",
+      "original": "sStrayFairyIconRectS",
+      "function": "KaleidoScope_DrawDungeonMap",
+      "line": 154,
+      "at": 7225
+    },
+    {
+      "name": "mmvr_local_2802f57c18daa552",
+      "original": "sStickAdjTimer",
+      "function": "KaleidoScope_UpdateWorldMapCursor",
+      "line": 1037,
+      "at": 52020
+    }
+  ],
+  "sourceSha256": "6ef03ef09dcd9ff330cd64bc8521392b77f0094ea34fcf3b9401fd5d7419b490"
+}

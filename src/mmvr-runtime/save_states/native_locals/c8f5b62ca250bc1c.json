@@ -1,0 +1,21 @@
+{
+  "source": "overlays/actors/ovl_En_Dragon/z_en_dragon.c",
+  "include": "c8f5b62ca250bc1c.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_ba6f483ff27d44ce",
+      "original": "sBubbleVelocity",
+      "function": "EnDragon_SpawnBubbles",
+      "line": 303,
+      "at": 11183
+    },
+    {
+      "name": "mmvr_local_495335179e44ddee",
+      "original": "sBubbleAccel",
+      "function": "EnDragon_SpawnBubbles",
+      "line": 304,
+      "at": 11241
+    }
+  ],
+  "sourceSha256": "4f5bac15c56dfebf6b2272a6c46904b9eb724f157c59e8a7cc89d08cfe93a0b9"
+}

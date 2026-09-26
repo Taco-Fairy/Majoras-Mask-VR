@@ -1,0 +1,21 @@
+{
+  "source": "overlays/actors/ovl_Obj_Snowball/z_obj_snowball.c",
+  "include": "5c732a77c31dbae4.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_3bc6e2b96eee79a8",
+      "original": "D_80B04FD8",
+      "function": "func_80B047C0",
+      "line": 654,
+      "at": 21738
+    },
+    {
+      "name": "mmvr_local_effdd4508701e296",
+      "original": "D_80B04FE4",
+      "function": "func_80B047C0",
+      "line": 655,
+      "at": 21791
+    }
+  ],
+  "sourceSha256": "9373070dae71ed0bf881dcfe6282200b434db1750a605fc21529f8861b1d7d5c"
+}

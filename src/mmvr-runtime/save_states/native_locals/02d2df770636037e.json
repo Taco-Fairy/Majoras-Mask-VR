@@ -1,0 +1,42 @@
+{
+  "source": "overlays/actors/ovl_En_Syateki_Okuta/z_en_syateki_okuta.c",
+  "include": "02d2df770636037e.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_714c509ca859da20",
+      "original": "sSmokePrimColor",
+      "function": "EnSyatekiOkuta_SpawnSmoke",
+      "line": 126,
+      "at": 4798
+    },
+    {
+      "name": "mmvr_local_4954813363f6280a",
+      "original": "sSmokeEnvColor",
+      "function": "EnSyatekiOkuta_SpawnSmoke",
+      "line": 127,
+      "at": 4864
+    },
+    {
+      "name": "mmvr_local_07672f4d01029b1a",
+      "original": "sBubbleAccel",
+      "function": "EnSyatekiOkuta_Die",
+      "line": 289,
+      "at": 11757
+    },
+    {
+      "name": "mmvr_local_d674660721010d61",
+      "original": "sBubblePrimColor",
+      "function": "EnSyatekiOkuta_Die",
+      "line": 290,
+      "at": 11819
+    },
+    {
+      "name": "mmvr_local_59621dbe03141ba1",
+      "original": "sBubbleEnvColor",
+      "function": "EnSyatekiOkuta_Die",
+      "line": 291,
+      "at": 11886
+    }
+  ],
+  "sourceSha256": "01c7eb81403858ba500b4d054cd3e32cf55b2823781f0b92b290d51d67506629"
+}

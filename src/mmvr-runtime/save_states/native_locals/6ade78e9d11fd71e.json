@@ -1,0 +1,21 @@
+{
+  "source": "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_debug.c",
+  "include": "6ade78e9d11fd71e.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_d9aea27aabb98e41",
+      "original": "sPrevDBtnInput",
+      "function": "KaleidoScope_UpdateInventoryEditor",
+      "line": 660,
+      "at": 23562
+    },
+    {
+      "name": "mmvr_local_c0324d590a0e67c2",
+      "original": "sHeldDBtnTimer",
+      "function": "KaleidoScope_UpdateInventoryEditor",
+      "line": 661,
+      "at": 23598
+    }
+  ],
+  "sourceSha256": "1b687c78c26c6b0fdf28bd81f76eb865e41a77e0e5ca7c0e8c116f0d260e90b6"
+}

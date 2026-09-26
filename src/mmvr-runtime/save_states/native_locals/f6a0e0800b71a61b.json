@@ -1,0 +1,21 @@
+{
+  "source": "overlays/gamestates/ovl_opening/z_opening.c",
+  "include": "f6a0e0800b71a61b.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_4789c8e62133ac27",
+      "original": "sOpeningEntrances",
+      "function": "TitleSetup_SetupTitleScreen",
+      "line": 17,
+      "at": 384
+    },
+    {
+      "name": "mmvr_local_9512c26df53b3c63",
+      "original": "sOpeningCutscenes",
+      "function": "TitleSetup_SetupTitleScreen",
+      "line": 18,
+      "at": 472
+    }
+  ],
+  "sourceSha256": "c07ac4a301a34e93c06b75654efc473f0692a6d7dace1733ca3a847283e1438b"
+}

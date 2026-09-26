@@ -1,0 +1,14 @@
+{
+  "source": "overlays/effects/ovl_Effect_Ss_Fhg_Flash/z_eff_ss_fhg_flash.c",
+  "include": "f9bcf6bd7c1821ec.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_1ba4d99ca9abdd8a",
+      "original": "sZeroVec",
+      "function": "EffectSsFhgFlash_Init",
+      "line": 28,
+      "at": 918
+    }
+  ],
+  "sourceSha256": "7073a03f006164d8acb10b14875916e67c09968c66c3a232c56978b44a24194c"
+}

@@ -1,0 +1,28 @@
+{
+  "source": "code/z_quake.c",
+  "include": "d908edb56d0fe0a3.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_bb1de5769a54a17e",
+      "original": "depthPhase",
+      "function": "Distortion_Update",
+      "line": 544,
+      "at": 15601
+    },
+    {
+      "name": "mmvr_local_1f82e0642cd079fa",
+      "original": "screenPlanePhase",
+      "function": "Distortion_Update",
+      "line": 545,
+      "at": 15637
+    },
+    {
+      "name": "mmvr_local_e5b7a2a9ba397f50",
+      "original": "duration",
+      "function": "Distortion_Update",
+      "line": 546,
+      "at": 15679
+    }
+  ],
+  "sourceSha256": "8b088a4306eae06155ada2ad1ef48acc734a1c0a3725e15f42f60c53bf1fb194"
+}

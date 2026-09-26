@@ -1,0 +1,28 @@
+{
+  "source": "overlays/actors/ovl_En_Bomjima/z_en_bomjima.c",
+  "include": "b24e55b0a82104b9.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_41216459937a65cd",
+      "original": "D_80C00B28",
+      "function": "EnBomjima_Draw",
+      "line": 1151,
+      "at": 40706
+    },
+    {
+      "name": "mmvr_local_74e04b318807342e",
+      "original": "D_80C00B3C",
+      "function": "EnBomjima_Draw",
+      "line": 1155,
+      "at": 40887
+    },
+    {
+      "name": "mmvr_local_425fb909c4ac2a77",
+      "original": "D_80C00B48",
+      "function": "EnBomjima_Draw",
+      "line": 1160,
+      "at": 41028
+    }
+  ],
+  "sourceSha256": "33ea49ddea66b97e88aad0d9ed88cd79cb13305e6eb30b0704a03d68fce78505"
+}

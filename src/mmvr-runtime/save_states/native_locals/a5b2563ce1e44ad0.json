@@ -1,0 +1,70 @@
+{
+  "source": "overlays/actors/ovl_Boss_Hakugin/z_boss_hakugin.c",
+  "include": "a5b2563ce1e44ad0.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_fd3abd2a219da912",
+      "original": "sTexturesDesegmented",
+      "function": "BossHakugin_Init",
+      "line": 560,
+      "at": 22145
+    },
+    {
+      "name": "mmvr_local_e288be8a30cb399f",
+      "original": "sInitChain",
+      "function": "BossHakugin_Init",
+      "line": 561,
+      "at": 22202
+    },
+    {
+      "name": "mmvr_local_ec82a81118a93231",
+      "original": "sSubCamAt",
+      "function": "BossHakugin_EntranceCutscene",
+      "line": 1591,
+      "at": 71212
+    },
+    {
+      "name": "mmvr_local_281ffbe1b4ece2a0",
+      "original": "sSubCamAt",
+      "function": "BossHakugin_SetupIntroCutsceneWakeUp",
+      "line": 1725,
+      "at": 76058
+    },
+    {
+      "name": "mmvr_local_be77598ef622cf83",
+      "original": "sSubCamEye",
+      "function": "BossHakugin_SetupIntroCutsceneWakeUp",
+      "line": 1726,
+      "at": 76118
+    },
+    {
+      "name": "mmvr_local_66115a19c7c1c25b",
+      "original": "sSubCamAt",
+      "function": "BossHakugin_IntroCutsceneWakeUp",
+      "line": 1752,
+      "at": 77451
+    },
+    {
+      "name": "mmvr_local_6cee17af3a94b02b",
+      "original": "sSubCamEye",
+      "function": "BossHakugin_IntroCutsceneWakeUp",
+      "line": 1753,
+      "at": 77511
+    },
+    {
+      "name": "mmvr_local_3811fef1edd43686",
+      "original": "sCurrentMalfunctionType",
+      "function": "BossHakugin_OverrideLimbDraw",
+      "line": 3135,
+      "at": 140315
+    },
+    {
+      "name": "mmvr_local_ab7cbc53d6654688",
+      "original": "sCurrentLimbIndex",
+      "function": "BossHakugin_OverrideLimbDraw",
+      "line": 3136,
+      "at": 140389
+    }
+  ],
+  "sourceSha256": "a74e3fa6f234a8f21b0d0b3acee592dc1af3c9085082266301fcd52c41e1ca70"
+}

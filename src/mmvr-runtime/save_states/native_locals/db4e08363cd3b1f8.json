@@ -1,0 +1,21 @@
+{
+  "source": "overlays/actors/ovl_Demo_Effect/z_demo_effect.c",
+  "include": "db4e08363cd3b1f8.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_6f54b5e03e7d34d1",
+      "original": "sEffectTypeObjectIds",
+      "function": "DemoEffect_Init",
+      "line": 40,
+      "at": 1361
+    },
+    {
+      "name": "mmvr_local_5d0760bc0b2c91ce",
+      "original": "sAlphaTypes",
+      "function": "DemoEffect_SetPerVertexAlpha",
+      "line": 166,
+      "at": 5765
+    }
+  ],
+  "sourceSha256": "b38f0b846f340de70b7fef5ed703d1a71400344259a61eff5d00ffdfeb7d30dd"
+}

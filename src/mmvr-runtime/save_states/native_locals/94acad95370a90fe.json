@@ -1,0 +1,14 @@
+{
+  "source": "overlays/actors/ovl_En_Jc_Mato/z_en_jc_mato.c",
+  "include": "94acad95370a90fe.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_ac8379919b7b069e",
+      "original": "sOffset",
+      "function": "EnJcMato_Draw",
+      "line": 147,
+      "at": 4917
+    }
+  ],
+  "sourceSha256": "e221498fb0502127ffb2ab6d6893628d78fc87e4400a7eea3d35e1ba1aa5510d"
+}

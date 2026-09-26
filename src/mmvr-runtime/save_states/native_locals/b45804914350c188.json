@@ -1,0 +1,28 @@
+{
+  "source": "overlays/actors/ovl_En_Dns/z_en_dns.c",
+  "include": "b45804914350c188.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_9d2c2ef6536650d2",
+      "original": "D_8092DE00",
+      "function": "func_8092CE38",
+      "line": 361,
+      "at": 12318
+    },
+    {
+      "name": "mmvr_local_ec92ee1a97f53608",
+      "original": "sCsAnimIndex",
+      "function": "EnDns_HandleCutscene",
+      "line": 529,
+      "at": 18932
+    },
+    {
+      "name": "mmvr_local_49a0ef9d4cff0dda",
+      "original": "sEyeTextures",
+      "function": "EnDns_Draw",
+      "line": 686,
+      "at": 24205
+    }
+  ],
+  "sourceSha256": "68410a35c9557fc5a5de4b52b44cb636783d0cb5e9a7234b6037aa7e285a0d3b"
+}

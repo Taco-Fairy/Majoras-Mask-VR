@@ -1,0 +1,203 @@
+{
+  "source": "code/sys_math3d.c",
+  "include": "148383c2ed92299a.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_62d1477c205d4753",
+      "original": "sPlaneIntersectLine",
+      "function": "Math3D_PlaneVsLineSegClosestPoint",
+      "line": 47,
+      "at": 1553
+    },
+    {
+      "name": "mmvr_local_ff4e4b89f9ea1346",
+      "original": "sPlaneIntersectSeg",
+      "function": "Math3D_PlaneVsLineSegClosestPoint",
+      "line": 48,
+      "at": 1592
+    },
+    {
+      "name": "mmvr_local_0ee8959978925e25",
+      "original": "sPlaneIntersect",
+      "function": "Math3D_PlaneVsPlaneVsLineClosestPoint",
+      "line": 215,
+      "at": 8744
+    },
+    {
+      "name": "mmvr_local_499dad8414a240a7",
+      "original": "sTriVtx0",
+      "function": "Math3D_LineVsCube",
+      "line": 753,
+      "at": 22339
+    },
+    {
+      "name": "mmvr_local_821fd19bcb9bed5d",
+      "original": "sTriVtx1",
+      "function": "Math3D_LineVsCube",
+      "line": 754,
+      "at": 22367
+    },
+    {
+      "name": "mmvr_local_c894e74de616a36f",
+      "original": "sTriVtx2",
+      "function": "Math3D_LineVsCube",
+      "line": 755,
+      "at": 22395
+    },
+    {
+      "name": "mmvr_local_1e2b9e183c369d10",
+      "original": "sIntersectPoint",
+      "function": "Math3D_LineVsCube",
+      "line": 756,
+      "at": 22423
+    },
+    {
+      "name": "mmvr_local_f95b1f09add1cdb5",
+      "original": "sMinF",
+      "function": "Math3D_LineVsCubeShort",
+      "line": 939,
+      "at": 28004
+    },
+    {
+      "name": "mmvr_local_9d847b683000530b",
+      "original": "sMaxF",
+      "function": "Math3D_LineVsCubeShort",
+      "line": 940,
+      "at": 28029
+    },
+    {
+      "name": "mmvr_local_15a8f90ad2f90039",
+      "original": "sAF",
+      "function": "Math3D_LineVsCubeShort",
+      "line": 941,
+      "at": 28054
+    },
+    {
+      "name": "mmvr_local_0ecabbf7022322e6",
+      "original": "sBF",
+      "function": "Math3D_LineVsCubeShort",
+      "line": 942,
+      "at": 28077
+    },
+    {
+      "name": "mmvr_local_ff00e1151b7039a5",
+      "original": "sNormal",
+      "function": "Math3D_DefPlane",
+      "line": 976,
+      "at": 29141
+    },
+    {
+      "name": "mmvr_local_84ee463d0b56779d",
+      "original": "sPlanePos",
+      "function": "Math3D_TriChkLineSegParaXIntersect",
+      "line": 1313,
+      "at": 41747
+    },
+    {
+      "name": "mmvr_local_e5eeffa031e7aba7",
+      "original": "sPlanePos",
+      "function": "Math3D_TriChkLineSegParaZIntersect",
+      "line": 1433,
+      "at": 45623
+    },
+    {
+      "name": "mmvr_local_9ac57ea3d73a2e04",
+      "original": "sSphLinePerpendicularPoint",
+      "function": "Math3D_LineVsSph",
+      "line": 1686,
+      "at": 53981
+    },
+    {
+      "name": "mmvr_local_41b2e3aa2f363173",
+      "original": "sV0V1Center",
+      "function": "Math3D_GetSphVsTriIntersectPoint",
+      "line": 1727,
+      "at": 55637
+    },
+    {
+      "name": "mmvr_local_b74298dad991cf57",
+      "original": "sSphereCenter",
+      "function": "Math3D_GetSphVsTriIntersectPoint",
+      "line": 1728,
+      "at": 55668
+    },
+    {
+      "name": "mmvr_local_bb7476dfee8095b3",
+      "original": "sTriTestLine",
+      "function": "Math3D_TriVsSphIntersect",
+      "line": 1754,
+      "at": 56719
+    },
+    {
+      "name": "mmvr_local_a978edc58b4faa5b",
+      "original": "sSphereCenter",
+      "function": "Math3D_TriVsSphIntersect",
+      "line": 1755,
+      "at": 56751
+    },
+    {
+      "name": "mmvr_local_6e2af0bb7febcd29",
+      "original": "sSphPlanePos",
+      "function": "Math3D_TriVsSphIntersect",
+      "line": 1756,
+      "at": 56784
+    },
+    {
+      "name": "mmvr_local_2c0d06fef72de389",
+      "original": "sTopSphere",
+      "function": "Math3D_CylTriVsIntersect",
+      "line": 2056,
+      "at": 68076
+    },
+    {
+      "name": "mmvr_local_c11e31679a61d6be",
+      "original": "sBottomSphere",
+      "function": "Math3D_CylTriVsIntersect",
+      "line": 2057,
+      "at": 68109
+    },
+    {
+      "name": "mmvr_local_a4d08421b271e094",
+      "original": "sCylIntersectA",
+      "function": "Math3D_CylTriVsIntersect",
+      "line": 2058,
+      "at": 68142
+    },
+    {
+      "name": "mmvr_local_e6ba18a2f071d222",
+      "original": "sCylIntersectB",
+      "function": "Math3D_CylTriVsIntersect",
+      "line": 2059,
+      "at": 68176
+    },
+    {
+      "name": "mmvr_local_30c65a7b02c82be3",
+      "original": "sCylf",
+      "function": "Math3D_SphVsCylOverlapCenterDist",
+      "line": 2210,
+      "at": 73850
+    },
+    {
+      "name": "mmvr_local_2be7268f9fb1842c",
+      "original": "sSphf",
+      "function": "Math3D_SphVsCylOverlapCenterDist",
+      "line": 2211,
+      "at": 73877
+    },
+    {
+      "name": "mmvr_local_13278975847fca80",
+      "original": "sCaf",
+      "function": "Math3D_CylVsCylOverlapCenterDist",
+      "line": 2266,
+      "at": 75696
+    },
+    {
+      "name": "mmvr_local_35c1040a464f2a73",
+      "original": "sCbf",
+      "function": "Math3D_CylVsCylOverlapCenterDist",
+      "line": 2267,
+      "at": 75724
+    }
+  ],
+  "sourceSha256": "5dd3783d0d076a360aa6d0c0f8332a4ff5617e9ae409e18ace797b294e9c1eba"
+}

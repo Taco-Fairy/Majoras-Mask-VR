@@ -1,0 +1,175 @@
+{
+  "source": "code/z_player_lib.c",
+  "include": "29e90abd7070492d.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_9e4c1f5e1113df1e",
+      "original": "D_801C094C",
+      "function": "Player_DrawHookshotReticle",
+      "line": 2278,
+      "at": 87340
+    },
+    {
+      "name": "mmvr_local_06f96d1402be9f07",
+      "original": "vrBladeTips",
+      "function": "MMVR_NativeSwordLength",
+      "line": 3036,
+      "at": 117987
+    },
+    {
+      "name": "mmvr_local_2ff09e49265aedd4",
+      "original": "sBubbleVelocity",
+      "function": "Player_DrawCircusLeadersMask",
+      "line": 3377,
+      "at": 132264
+    },
+    {
+      "name": "mmvr_local_911e2be8239ccdb2",
+      "original": "sBubbleAccel",
+      "function": "Player_DrawCircusLeadersMask",
+      "line": 3378,
+      "at": 132322
+    },
+    {
+      "name": "mmvr_local_c7a3f96d89dd3a2c",
+      "original": "D_801C0BC0",
+      "function": "Player_DrawBlastMask",
+      "line": 3443,
+      "at": 134466
+    },
+    {
+      "name": "mmvr_local_f6421f7cf9c96b9e",
+      "original": "D_801C0BD0",
+      "function": "Player_DrawBlastMask",
+      "line": 3447,
+      "at": 134578
+    },
+    {
+      "name": "mmvr_local_271a335309f99623",
+      "original": "D_801C0D60",
+      "function": "Player_PostLimbDrawGameplay",
+      "line": 3932,
+      "at": 151495
+    },
+    {
+      "name": "mmvr_local_794e27bf9aa66438",
+      "original": "D_801C0D6C",
+      "function": "Player_PostLimbDrawGameplay",
+      "line": 3933,
+      "at": 151571
+    },
+    {
+      "name": "mmvr_local_40b3102530d61ba0",
+      "original": "D_801C0D94",
+      "function": "Player_PostLimbDrawGameplay",
+      "line": 3979,
+      "at": 153759
+    },
+    {
+      "name": "mmvr_local_e7ecd2799f75d996",
+      "original": "D_801C0D98",
+      "function": "Player_PostLimbDrawGameplay",
+      "line": 3980,
+      "at": 153831
+    },
+    {
+      "name": "mmvr_local_e41aed5e47b1e149",
+      "original": "D_801C0DA4",
+      "function": "Player_PostLimbDrawGameplay",
+      "line": 3982,
+      "at": 153926
+    },
+    {
+      "name": "mmvr_local_8c136009e9e90484",
+      "original": "sRightHandLimbModelShieldQuadVertices",
+      "function": "Player_PostLimbDrawGameplay",
+      "line": 4030,
+      "at": 156055
+    },
+    {
+      "name": "mmvr_local_d811093ca290e44d",
+      "original": "D_801C0DD8",
+      "function": "Player_PostLimbDrawGameplay",
+      "line": 4040,
+      "at": 156613
+    },
+    {
+      "name": "mmvr_local_548825be1cb98d0f",
+      "original": "D_801C0DE4",
+      "function": "Player_PostLimbDrawGameplay",
+      "line": 4045,
+      "at": 156808
+    },
+    {
+      "name": "mmvr_local_048c3998c0ad277a",
+      "original": "D_801C0DF0",
+      "function": "Player_PostLimbDrawGameplay",
+      "line": 4092,
+      "at": 159529
+    },
+    {
+      "name": "mmvr_local_8c2adfce288f6837",
+      "original": "D_801C0E04",
+      "function": "Player_PostLimbDrawGameplay",
+      "line": 4167,
+      "at": 163037
+    },
+    {
+      "name": "mmvr_local_20aca60bfa9acb12",
+      "original": "D_801C0E2C",
+      "function": "Player_PostLimbDrawGameplay",
+      "line": 4219,
+      "at": 165616
+    },
+    {
+      "name": "mmvr_local_23b17371a981f87e",
+      "original": "D_801C0E40",
+      "function": "Player_PostLimbDrawGameplay",
+      "line": 4289,
+      "at": 168481
+    },
+    {
+      "name": "mmvr_local_c091232ba49bd1f5",
+      "original": "sPlayerFocusHeadLimbModelPos",
+      "function": "Player_PostLimbDrawGameplay",
+      "line": 4316,
+      "at": 169731
+    },
+    {
+      "name": "mmvr_local_5504c8081c3edcec",
+      "original": "D_801C0E88",
+      "function": "Player_PostLimbDrawGameplay",
+      "line": 4317,
+      "at": 169816
+    },
+    {
+      "name": "mmvr_local_d99eeb2d88033d87",
+      "original": "D_801C0E94",
+      "function": "Player_PostLimbDrawGameplay",
+      "line": 4323,
+      "at": 170112
+    },
+    {
+      "name": "mmvr_local_2a7d6832bf04d1bf",
+      "original": "D_801C0EA0",
+      "function": "Player_PostLimbDrawGameplay",
+      "line": 4331,
+      "at": 170699
+    },
+    {
+      "name": "mmvr_local_3e1ab9be92927eff",
+      "original": "sSheathLimbModelShieldOnBackPos",
+      "function": "Player_PostLimbDrawGameplay",
+      "line": 4393,
+      "at": 173578
+    },
+    {
+      "name": "mmvr_local_2bcb314e522e79e2",
+      "original": "sSheathLimbModelShieldOnBackZyxRot",
+      "function": "Player_PostLimbDrawGameplay",
+      "line": 4394,
+      "at": 173670
+    }
+  ],
+  "sourceSha256": "0bd7eaefa9e8e9cfb04f665993ec6907a11ed79b83b0e2df85836b2716202a0f"
+}

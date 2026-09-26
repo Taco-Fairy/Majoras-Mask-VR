@@ -1,0 +1,21 @@
+{
+  "source": "overlays/actors/ovl_En_Bubble/z_en_bubble.c",
+  "include": "2a8514eaf31f0c42.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_4844fd7bf780cbad",
+      "original": "sEffectPrimColor",
+      "function": "EnBubble_Explosion",
+      "line": 118,
+      "at": 3311
+    },
+    {
+      "name": "mmvr_local_4d94d4dd62219197",
+      "original": "sEffectEnvColor",
+      "function": "EnBubble_Explosion",
+      "line": 119,
+      "at": 3378
+    }
+  ],
+  "sourceSha256": "9f6e7abf27e2a881119721fd35b5c57f6b1a99f6fea05ae3c1283f4f5a714a31"
+}

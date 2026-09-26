@@ -1,0 +1,21 @@
+{
+  "source": "overlays/actors/ovl_En_And/z_en_and.c",
+  "include": "a045da49063037a7.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_50932df6b4c8360f",
+      "original": "sMouthTextures",
+      "function": "EnAnd_Draw",
+      "line": 186,
+      "at": 6907
+    },
+    {
+      "name": "mmvr_local_8e35e8288a14b075",
+      "original": "sEyeTextures",
+      "function": "EnAnd_Draw",
+      "line": 187,
+      "at": 6993
+    }
+  ],
+  "sourceSha256": "97421021c78c151f68155062e64cb11bfa6efc855228cb9e3d72ef7f0ecc65ee"
+}

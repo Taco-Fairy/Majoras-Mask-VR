@@ -1,0 +1,21 @@
+{
+  "source": "overlays/actors/ovl_En_Tru_Mt/z_en_tru_mt.c",
+  "include": "42e03958958e7638.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_a32331d061a38335",
+      "original": "D_80B7765C",
+      "function": "EnTruMt_OverrideLimbDraw",
+      "line": 492,
+      "at": 17398
+    },
+    {
+      "name": "mmvr_local_3ae0f32ea61cd821",
+      "original": "D_80B77668",
+      "function": "EnTruMt_PostLimbDraw",
+      "line": 506,
+      "at": 17831
+    }
+  ],
+  "sourceSha256": "f9fdd8317347eac6fde92534c4e4afd193af9873e0b143e2506cf69f6fc7e8c8"
+}

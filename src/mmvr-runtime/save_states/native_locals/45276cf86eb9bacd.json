@@ -1,0 +1,21 @@
+{
+  "source": "overlays/actors/ovl_En_Dnp/z_en_dnp.c",
+  "include": "45276cf86eb9bacd.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_15126a7000776dd2",
+      "original": "sCsAnimIndex",
+      "function": "func_80B3D11C",
+      "line": 303,
+      "at": 12852
+    },
+    {
+      "name": "mmvr_local_2531be4004028360",
+      "original": "sEyeTextures",
+      "function": "EnDnp_Draw",
+      "line": 553,
+      "at": 22808
+    }
+  ],
+  "sourceSha256": "8482f0399be1c536a6cd2063370ba194cd39e7cafb02943916f8d5e711520cee"
+}

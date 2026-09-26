@@ -1,0 +1,14 @@
+{
+  "source": "overlays/actors/ovl_En_Rd/z_en_rd.c",
+  "include": "f79c0f23e4603c5d.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_f1e8ece81b1fd38e",
+      "original": "sScale",
+      "function": "EnRd_Draw",
+      "line": 1336,
+      "at": 53958
+    }
+  ],
+  "sourceSha256": "87f497ce06278764ced1a5e4e4452eb08e839a2e49d7ec89023be42c7ef8469d"
+}

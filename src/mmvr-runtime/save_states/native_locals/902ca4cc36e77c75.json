@@ -1,0 +1,14 @@
+{
+  "source": "overlays/actors/ovl_En_Tsn/z_en_tsn.c",
+  "include": "902ca4cc36e77c75.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_f0e9f93a5f10cb6c",
+      "original": "D_80AE11C8",
+      "function": "EnTsn_Draw",
+      "line": 636,
+      "at": 22401
+    }
+  ],
+  "sourceSha256": "4f63870af074cd76b70e81fc2265a12909fc7df208329b1b603277724ade7c14"
+}

@@ -1,0 +1,217 @@
+{
+  "source": "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c",
+  "include": "e819b48a39b39298.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_20f17447ab16dbc2",
+      "original": "gMapNameStatics",
+      "function": "Kaleido_LoadMapNameStatic",
+      "line": 265,
+      "at": 9971
+    },
+    {
+      "name": "mmvr_local_cb4437382fbe53ae",
+      "original": "gItemNameStatics",
+      "function": "Kaleido_LoadItemNameStatic",
+      "line": 293,
+      "at": 11308
+    },
+    {
+      "name": "mmvr_local_b4e6e7d3a6cd7281",
+      "original": "sCursorColorTimer",
+      "function": "KaleidoScope_DrawPages",
+      "line": 654,
+      "at": 25927
+    },
+    {
+      "name": "mmvr_local_53de66521ec79676",
+      "original": "sCursorColorTargetIndex",
+      "function": "KaleidoScope_DrawPages",
+      "line": 655,
+      "at": 25967
+    },
+    {
+      "name": "mmvr_local_5c930d6f5ef7b98d",
+      "original": "sPauseZRCursorColorTargets",
+      "function": "KaleidoScope_DrawInfoPanel",
+      "line": 1087,
+      "at": 47648
+    },
+    {
+      "name": "mmvr_local_af79c669ab289c2a",
+      "original": "sPauseZRCursorColorTimer",
+      "function": "KaleidoScope_DrawInfoPanel",
+      "line": 1091,
+      "at": 47774
+    },
+    {
+      "name": "mmvr_local_92cc1fc71ec1120f",
+      "original": "sPauseZRCursorColorIndex",
+      "function": "KaleidoScope_DrawInfoPanel",
+      "line": 1092,
+      "at": 47821
+    },
+    {
+      "name": "mmvr_local_8e358668581431f3",
+      "original": "sPauseZRCursorRed",
+      "function": "KaleidoScope_DrawInfoPanel",
+      "line": 1093,
+      "at": 47867
+    },
+    {
+      "name": "mmvr_local_1817c08ff6f366cd",
+      "original": "sPauseZRCursorGreen",
+      "function": "KaleidoScope_DrawInfoPanel",
+      "line": 1094,
+      "at": 47902
+    },
+    {
+      "name": "mmvr_local_bcf7c5e48746fdd9",
+      "original": "sPauseZRCursorBlue",
+      "function": "KaleidoScope_DrawInfoPanel",
+      "line": 1095,
+      "at": 47939
+    },
+    {
+      "name": "mmvr_local_0b972c4673a25832",
+      "original": "sPauseZRCursorAlpha",
+      "function": "KaleidoScope_DrawInfoPanel",
+      "line": 1096,
+      "at": 47975
+    },
+    {
+      "name": "mmvr_local_e9756c4e3ad4670e",
+      "original": "sPauseZRCursorColorTargets",
+      "function": "KaleidoScope_DrawOwlWarpInfoPanel",
+      "line": 1543,
+      "at": 69553
+    },
+    {
+      "name": "mmvr_local_e71c9afd92f887e3",
+      "original": "sPauseZRCursorColorTimer",
+      "function": "KaleidoScope_DrawOwlWarpInfoPanel",
+      "line": 1547,
+      "at": 69679
+    },
+    {
+      "name": "mmvr_local_5abfb53476478075",
+      "original": "sPauseZRCursorColorIndex",
+      "function": "KaleidoScope_DrawOwlWarpInfoPanel",
+      "line": 1548,
+      "at": 69726
+    },
+    {
+      "name": "mmvr_local_b1e41e2e444ff136",
+      "original": "sPauseZRCursorRed",
+      "function": "KaleidoScope_DrawOwlWarpInfoPanel",
+      "line": 1549,
+      "at": 69772
+    },
+    {
+      "name": "mmvr_local_1079b915eead44e6",
+      "original": "sPauseZRCursorGreen",
+      "function": "KaleidoScope_DrawOwlWarpInfoPanel",
+      "line": 1550,
+      "at": 69807
+    },
+    {
+      "name": "mmvr_local_20d218dea0b9df48",
+      "original": "sPauseZRCursorBlue",
+      "function": "KaleidoScope_DrawOwlWarpInfoPanel",
+      "line": 1551,
+      "at": 69844
+    },
+    {
+      "name": "mmvr_local_38690d7cb8201703",
+      "original": "sPauseZRCursorAlpha",
+      "function": "KaleidoScope_DrawOwlWarpInfoPanel",
+      "line": 1552,
+      "at": 69880
+    },
+    {
+      "name": "mmvr_local_32780a07b16a0e4d",
+      "original": "prevX",
+      "function": "KaleidoScope_DrawCursor",
+      "line": 3047,
+      "at": 141688
+    },
+    {
+      "name": "mmvr_local_8ae202e1d6fd0f68",
+      "original": "prevY",
+      "function": "KaleidoScope_DrawCursor",
+      "line": 3048,
+      "at": 141715
+    },
+    {
+      "name": "mmvr_local_715ba38b26fc7369",
+      "original": "cursorInterpState",
+      "function": "KaleidoScope_DrawCursor",
+      "line": 3049,
+      "at": 141741
+    },
+    {
+      "name": "mmvr_local_fb73ec93f826b8ea",
+      "original": "sGameOverUlt",
+      "function": "KaleidoScope_DrawGameOver",
+      "line": 3097,
+      "at": 144139
+    },
+    {
+      "name": "mmvr_local_490012403c0d7274",
+      "original": "sUnpausedHudVisibility",
+      "function": "KaleidoScope_Update",
+      "line": 3300,
+      "at": 153542
+    },
+    {
+      "name": "mmvr_local_695fde3cf8deee03",
+      "original": "sNextMainState",
+      "function": "KaleidoScope_Update",
+      "line": 3301,
+      "at": 153604
+    },
+    {
+      "name": "mmvr_local_f4e59895d7610786",
+      "original": "sDelayTimer",
+      "function": "KaleidoScope_Update",
+      "line": 3302,
+      "at": 153660
+    },
+    {
+      "name": "mmvr_local_3325dc0ee556fd9a",
+      "original": "sGameOverColorTimer",
+      "function": "KaleidoScope_Update",
+      "line": 3303,
+      "at": 153694
+    },
+    {
+      "name": "mmvr_local_dd01a1ddd4d65773",
+      "original": "sStickXRepeatTimer",
+      "function": "KaleidoScope_Update",
+      "line": 3304,
+      "at": 153735
+    },
+    {
+      "name": "mmvr_local_06fc1a427173e200",
+      "original": "sStickYRepeatTimer",
+      "function": "KaleidoScope_Update",
+      "line": 3305,
+      "at": 153775
+    },
+    {
+      "name": "mmvr_local_a56e1380cbc61c10",
+      "original": "sStickXRepeatState",
+      "function": "KaleidoScope_Update",
+      "line": 3306,
+      "at": 153815
+    },
+    {
+      "name": "mmvr_local_67cce1a34a977c57",
+      "original": "sStickYRepeatState",
+      "function": "KaleidoScope_Update",
+      "line": 3307,
+      "at": 153855
+    }
+  ],
+  "sourceSha256": "da1b8b66c1b0d656cc27b254be23dc1a3d4b87b344b560c6ca9c084c15031ad7"
+}

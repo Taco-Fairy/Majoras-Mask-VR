@@ -1,0 +1,28 @@
+{
+  "source": "overlays/actors/ovl_En_Elf/z_en_elf.c",
+  "include": "faa1d44cd309b7a0.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_6a78e1592e8041bc",
+      "original": "sSparkleVelocity",
+      "function": "func_8088F5F4",
+      "line": 1256,
+      "at": 42826
+    },
+    {
+      "name": "mmvr_local_9bd8c406fb8b20f5",
+      "original": "sSparkleAccel",
+      "function": "func_8088F5F4",
+      "line": 1257,
+      "at": 42887
+    },
+    {
+      "name": "mmvr_local_7d4480699b71bced",
+      "original": "sZeroVec",
+      "function": "EnElf_OverrideLimbDraw",
+      "line": 1571,
+      "at": 53802
+    }
+  ],
+  "sourceSha256": "dee4c06c9ebbdf91c9fa9ddd4419a0f04955292f4c68b89257aa881e94fdc687"
+}

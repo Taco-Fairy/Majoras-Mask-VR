@@ -1,0 +1,45 @@
+#pragma once
+inline void StateTrackingChecks() {
+    using namespace mmvr;
+    ItemTrigger trigger;
+    trigger.Rebase(100,2,true,1);
+    check(trigger.Update(100,2,true,1)==0);
+    check(trigger.Update(100.01,2,true,0)==-1);
+    check(trigger.Update(100.02,2,true,0)==0);
+    trigger.Rebase(200,3,true,0);
+    check(trigger.Update(200.01,3,true,0)==0);
+    check(trigger.Update(200.02,3,true,1)==1);
+    trigger.Rebase(300,4,false,1);
+    check(trigger.Update(300.01,4,true,1)==0);
+    check(trigger.Update(300.02,4,true,0)==0);
+    ContactWindow contact;contact.Arm(10,.2);contact.Rebase(10.1,2000);
+    check(contact.Active(2000)&&contact.Active(2000.09)&&!contact.Active(2000.11));
+    contact.Rebase(2001,4);check(!contact.Active(4));
+    BowDraw bow;
+    bow.Update(10,1,true,0,0,0,.2,.1,.5);
+    bow.Update(10.01,1,true,0,0,0,.2,.1,.5);
+    bow.Update(10.02,1,true,1,0,0,.2,.1,.5);
+    bow.Update(10.03,1,true,1,.5,.5,.2,.1,.5);check(bow.drawing);
+    auto held=bow;bow.Rebase(10.03,100,50,false);
+    check(!bow.drawing&&!bow.Update(100.01,50,true,0,.5,.5,.2,.1,.5));
+    held.Rebase(10.03,100,50,true);check(held.drawing);
+    check(!held.Update(100.01,50,true,1,.5,.5,.2,.1,.5));
+    check(held.Update(100.02,50,true,0,.5,.5,.2,.1,.5));
+    SpinAttack spin;spin.epoch=1;spin.time=10;spin.held=true;spin.pressedAt=9;spin.charge=.5f;
+    spin.Rebase(10,2000,4,1,true);spin.Update(2000.01,4,true,1,1,.5,true,2);
+    check(spin.held&&spin.charge>.5f&&spin.charge<.52f&&spin.pendingTier<0);
+    spin.Rebase(2000.01,5,9,2,false);spin.Update(5.01,9,true,0,2,.5,true,2);
+    check(!spin.held&&spin.pendingTier<0&&!spin.turning);
+    spin.turning=true;spin.turnProgress=.3f;spin.pendingTier=2;spin.chargeUntil=6;
+    spin.Rebase(5.01,20,10,1,false);check(spin.turning&&close(spin.turnProgress,.3f)&&spin.TakeTier()==2);
+    ClimbPull climb;climb.grip.latched=true;climb.grip.epoch=1;climb.have=true;climb.previous={10,0,2,0};
+    climb.Rebase(10,true);auto first=climb.Update({100,0,1,0},10,1,true,true);
+    check(climb.grip.latched&&first==std::array<float,3>{});
+    auto second=climb.Update({100.01,0,.99f,0},10,1,true,true);check(close(second[1],.01f));
+    climb.Rebase(11,false);check(!climb.grip.latched);
+    SwingGate gate;SwingTuning tune;bool triggered=false;
+    for(int i=0;i<12;++i)triggered|=gate.Update({10+i*.01,0,0,float(i)*.03f},1,true,tune);
+    check(triggered);const auto serial=gate.serial;gate.Rebase(10.11,100,2);
+    check(!gate.Update({100.01,20,30,40},2,true,tune)&&gate.serial==serial);
+    check(!gate.Update({100.02,20,30,40},2,true,tune));
+}

@@ -1,0 +1,42 @@
+{
+  "source": "overlays/actors/ovl_En_Test4/z_en_test4.c",
+  "include": "141e4682eb7afa5c.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_d5194a1ce6d882d9",
+      "original": "sNightOfTextIds",
+      "function": "EnTest4_HandleDayNightSwapFromInit",
+      "line": 55,
+      "at": 1732
+    },
+    {
+      "name": "mmvr_local_2e4577bb5dddba87",
+      "original": "sDawnOfTextIds",
+      "function": "EnTest4_HandleDayNightSwapFromInit",
+      "line": 57,
+      "at": 1857
+    },
+    {
+      "name": "mmvr_local_5c22cbcb8fb03286",
+      "original": "sNightOfTextIds",
+      "function": "EnTest4_HandleDayNightSwap",
+      "line": 130,
+      "at": 5133
+    },
+    {
+      "name": "mmvr_local_90f76dbff149ab74",
+      "original": "sDawnOfTextIds",
+      "function": "EnTest4_HandleDayNightSwap",
+      "line": 132,
+      "at": 5258
+    },
+    {
+      "name": "mmvr_local_eaa306d2f5cfdfa0",
+      "original": "sDayNightTransitionTimes",
+      "function": "EnTest4_HandleEvents",
+      "line": 441,
+      "at": 19295
+    }
+  ],
+  "sourceSha256": "30489bedb4097c6db50da0231afc167c600c1220f496feb9e26bdb70e43f8e8a"
+}

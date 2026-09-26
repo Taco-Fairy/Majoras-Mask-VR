@@ -1,0 +1,20 @@
+plugins { id 'com.android.application' }
+// Match the actual native library configuration; public/missing config fails closed.
+def nativeCache = rootProject.file('../../build/android-quest/CMakeCache.txt')
+def privateTools = nativeCache.isFile() && nativeCache.getText('UTF-8').readLines().any { it == 'MMVR_LOCAL_TEST_TOOLS:BOOL=ON' }
+
+def releaseInfo = new groovy.json.JsonSlurper().parse(rootProject.file("../version.json"))
+def signingProperties = new Properties()
+rootProject.file('../../toolchains/quest-signing/signing.properties').withInputStream { signingProperties.load(it) }
+android {
+ buildFeatures { buildConfig true }
+ testBuildType "release"
+ namespace 'com.fulldivegames.majorasmaskvr'
+ compileSdk 35
+ buildToolsVersion '35.0.0'
+ defaultConfig { buildConfigField 'boolean', 'MMVR_PRIVATE_TOOLS', privateTools.toString(); applicationId 'com.fulldivegames.majorasmaskvr'; testInstrumentationRunner 'com.fulldivegames.majorasmaskvr.RomImportInstrumentation'; minSdk 32; targetSdk 32; versionCode = Integer.parseInt((project.findProperty("mmvrBuild") ?: releaseInfo.build).toString()); versionName = (project.findProperty("mmvrVersion") ?: releaseInfo.version).toString(); ndk { abiFilters 'arm64-v8a' } }
+ signingConfigs { standalone { storeFile rootProject.file('../../toolchains/quest-signing/mmvr.jks'); storePassword signingProperties['storePassword']; keyAlias 'mmvr'; keyPassword signingProperties['storePassword'] } }
+ buildTypes { release { signingConfig signingConfigs.standalone; minifyEnabled false; debuggable privateTools } }
+ sourceSets { androidTest { jniLibs.srcDirs = ['../../../build/quest-tests/jniLibs'] }; main { java.srcDirs += ['../../../build/android-quest/_deps/sdl2-src/android-project/app/src/main/java']; jniLibs.srcDirs = ['../../../build/quest-package/jniLibs']; assets.srcDirs = ['../../../build/quest-package/assets'] } }
+ packaging { jniLibs { useLegacyPackaging = true } }
+}

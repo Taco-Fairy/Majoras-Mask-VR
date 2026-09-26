@@ -1,0 +1,14 @@
+{
+  "source": "overlays/actors/ovl_En_Fish2/z_en_fish2.c",
+  "include": "5d90053ff57de27d.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_f8a4a332a1a05c1b",
+      "original": "D_80B2B3A8",
+      "function": "EnFish2_Update",
+      "line": 957,
+      "at": 33209
+    }
+  ],
+  "sourceSha256": "06d687ac370e68c0e773f43b0d39aba7772b96102a79d1a68cbe49c5ce90c57f"
+}

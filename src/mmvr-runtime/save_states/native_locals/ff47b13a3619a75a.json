@@ -1,0 +1,70 @@
+{
+  "source": "overlays/actors/ovl_En_Arrow/z_en_arrow.c",
+  "include": "ff47b13a3619a75a.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_a9b140e405399d9e",
+      "original": "D_8088C234",
+      "function": "EnArrow_Init",
+      "line": 66,
+      "at": 1902
+    },
+    {
+      "name": "mmvr_local_180979b4c686fce1",
+      "original": "D_8088C258",
+      "function": "EnArrow_Init",
+      "line": 81,
+      "at": 2281
+    },
+    {
+      "name": "mmvr_local_504fff943e471418",
+      "original": "D_8088C27C",
+      "function": "EnArrow_Init",
+      "line": 96,
+      "at": 2658
+    },
+    {
+      "name": "mmvr_local_621ce36d2ef0c1dc",
+      "original": "D_8088C2A0",
+      "function": "EnArrow_Init",
+      "line": 111,
+      "at": 3040
+    },
+    {
+      "name": "mmvr_local_2b85814aa74e7d2b",
+      "original": "sVelocity",
+      "function": "EnArrow_Update",
+      "line": 603,
+      "at": 22872
+    },
+    {
+      "name": "mmvr_local_1bd73bd70e131550",
+      "original": "sAccel",
+      "function": "EnArrow_Update",
+      "line": 604,
+      "at": 22924
+    },
+    {
+      "name": "mmvr_local_af23bea5c6b2fb04",
+      "original": "sPrimColor",
+      "function": "EnArrow_Update",
+      "line": 605,
+      "at": 22979
+    },
+    {
+      "name": "mmvr_local_b007c86169e99ca2",
+      "original": "sEnvColor",
+      "function": "EnArrow_Update",
+      "line": 606,
+      "at": 23040
+    },
+    {
+      "name": "mmvr_local_d385523bfee9f5a3",
+      "original": "D_8088C2EC",
+      "function": "EnArrow_Draw",
+      "line": 674,
+      "at": 25700
+    }
+  ],
+  "sourceSha256": "e7e6ea61f7912c614ec4325c543350c44cc44c5e8d59d93a89fc66564c407276"
+}

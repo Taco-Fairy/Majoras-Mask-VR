@@ -1,0 +1,14 @@
+{
+  "source": "overlays/actors/ovl_Obj_Hsblock/z_obj_hsblock.c",
+  "include": "0b8adf063c592600.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_ee710f581473ae2a",
+      "original": "sEnvColors",
+      "function": "ObjHsblock_Draw",
+      "line": 138,
+      "at": 4585
+    }
+  ],
+  "sourceSha256": "05282a3bf5548844e956b54a1630cea9e8a04f327a27a1c7347fb49832b194b0"
+}

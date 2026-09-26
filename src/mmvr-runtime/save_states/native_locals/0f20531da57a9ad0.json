@@ -1,0 +1,63 @@
+{
+  "source": "overlays/actors/ovl_En_Ja/z_en_ja.c",
+  "include": "0f20531da57a9ad0.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_dfe982542c3d3374",
+      "original": "D_80BC3774",
+      "function": "EnJa_PostLimbDraw",
+      "line": 497,
+      "at": 17301
+    },
+    {
+      "name": "mmvr_local_880ef02c61e669f5",
+      "original": "D_80BC3780",
+      "function": "EnJa_PostLimbDraw",
+      "line": 498,
+      "at": 17360
+    },
+    {
+      "name": "mmvr_local_02d79bcbc99014b5",
+      "original": "D_80BC378C",
+      "function": "EnJa_PostLimbDraw",
+      "line": 499,
+      "at": 17415
+    },
+    {
+      "name": "mmvr_local_e1d394563c76090c",
+      "original": "D_80BC3798",
+      "function": "EnJa_PostLimbDraw",
+      "line": 500,
+      "at": 17473
+    },
+    {
+      "name": "mmvr_local_6038c049e599cabc",
+      "original": "D_80BC37A4",
+      "function": "EnJa_PostLimbDraw",
+      "line": 501,
+      "at": 17530
+    },
+    {
+      "name": "mmvr_local_3970831bac3c9856",
+      "original": "D_80BC37AC",
+      "function": "EnJa_Draw",
+      "line": 660,
+      "at": 23240
+    },
+    {
+      "name": "mmvr_local_b343d42922839a96",
+      "original": "D_80BC37B4",
+      "function": "EnJa_Draw",
+      "line": 664,
+      "at": 23346
+    },
+    {
+      "name": "mmvr_local_8ffbe95b36abe214",
+      "original": "D_80BC37BC",
+      "function": "EnJa_Draw",
+      "line": 668,
+      "at": 23456
+    }
+  ],
+  "sourceSha256": "8961905c60c9320dcd5114f610deacf292aa566c2105566ca4698b62656051a9"
+}

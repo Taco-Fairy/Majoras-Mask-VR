@@ -1,0 +1,77 @@
+{
+  "source": "overlays/actors/ovl_En_Gs/z_en_gs.c",
+  "include": "3759abab920e07ba.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_e6bcca16eda4ef8d",
+      "original": "D_8099A3F8",
+      "function": "func_80997AFC",
+      "line": 125,
+      "at": 4356
+    },
+    {
+      "name": "mmvr_local_e4807da34617d084",
+      "original": "D_8099A408",
+      "function": "func_80997D38",
+      "line": 187,
+      "at": 6424
+    },
+    {
+      "name": "mmvr_local_ce6e7e10834b4050",
+      "original": "sFlashColours",
+      "function": "func_809995A4",
+      "line": 781,
+      "at": 27696
+    },
+    {
+      "name": "mmvr_local_ec395dcd4d84a2cc",
+      "original": "sDustAccel",
+      "function": "func_809995A4",
+      "line": 786,
+      "at": 27822
+    },
+    {
+      "name": "mmvr_local_b2bcccf76cc6b3ee",
+      "original": "sDustPrimColor",
+      "function": "func_809995A4",
+      "line": 787,
+      "at": 27882
+    },
+    {
+      "name": "mmvr_local_d1703dbc86a24414",
+      "original": "sDustEnvColor",
+      "function": "func_809995A4",
+      "line": 788,
+      "at": 27947
+    },
+    {
+      "name": "mmvr_local_73f1fb92f4469051",
+      "original": "sBomb2Velocity",
+      "function": "func_809995A4",
+      "line": 789,
+      "at": 28003
+    },
+    {
+      "name": "mmvr_local_468b7f646a404329",
+      "original": "sBomb2Accel",
+      "function": "func_809995A4",
+      "line": 790,
+      "at": 28060
+    },
+    {
+      "name": "mmvr_local_640c7c0638dd295c",
+      "original": "D_8099A450",
+      "function": "func_80999AC0",
+      "line": 920,
+      "at": 32449
+    },
+    {
+      "name": "mmvr_local_cc6c59cb92db4384",
+      "original": "D_8099A458",
+      "function": "func_80999AC0",
+      "line": 921,
+      "at": 32493
+    }
+  ],
+  "sourceSha256": "a7573b1df3e6784b7aef24c3e55168c1edf28cf927104067c2d55d435b221fed"
+}

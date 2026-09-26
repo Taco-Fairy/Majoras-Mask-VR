@@ -1,0 +1,189 @@
+{
+  "source": "code/z_play_hireso.c",
+  "include": "9f47fd61495ef687.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_3bf871e3ca11ea68",
+      "original": "sBarColorR",
+      "function": "BombersNotebook_DrawRows",
+      "line": 580,
+      "at": 32339
+    },
+    {
+      "name": "mmvr_local_673148b9fc3855ce",
+      "original": "sBarColorG",
+      "function": "BombersNotebook_DrawRows",
+      "line": 581,
+      "at": 32371
+    },
+    {
+      "name": "mmvr_local_152b0bafb0ac7684",
+      "original": "sBarColorB",
+      "function": "BombersNotebook_DrawRows",
+      "line": 582,
+      "at": 32403
+    },
+    {
+      "name": "mmvr_local_70a48dc843a1f783",
+      "original": "sBarColorTimer",
+      "function": "BombersNotebook_DrawRows",
+      "line": 583,
+      "at": 32435
+    },
+    {
+      "name": "mmvr_local_bc0c7cb0b1b3896e",
+      "original": "sBarColorIndex",
+      "function": "BombersNotebook_DrawRows",
+      "line": 584,
+      "at": 32472
+    },
+    {
+      "name": "mmvr_local_6518db2c19fe7885",
+      "original": "sBarColorTargetsR",
+      "function": "BombersNotebook_DrawRows",
+      "line": 585,
+      "at": 32508
+    },
+    {
+      "name": "mmvr_local_ec86874484327751",
+      "original": "sBarColorTargetsG",
+      "function": "BombersNotebook_DrawRows",
+      "line": 586,
+      "at": 32558
+    },
+    {
+      "name": "mmvr_local_924ea665e13b7a58",
+      "original": "sBarColorTargetsB",
+      "function": "BombersNotebook_DrawRows",
+      "line": 587,
+      "at": 32607
+    },
+    {
+      "name": "mmvr_local_3e90bff4abd06b97",
+      "original": "sUpperArrowColorR",
+      "function": "BombersNotebook_DrawArrows",
+      "line": 980,
+      "at": 54080
+    },
+    {
+      "name": "mmvr_local_3aa12a911e200968",
+      "original": "sUpperArrowColorG",
+      "function": "BombersNotebook_DrawArrows",
+      "line": 981,
+      "at": 54119
+    },
+    {
+      "name": "mmvr_local_ada80811db644105",
+      "original": "sUpperArrowColorB",
+      "function": "BombersNotebook_DrawArrows",
+      "line": 982,
+      "at": 54160
+    },
+    {
+      "name": "mmvr_local_eb839de90d95aea6",
+      "original": "sLowerArrowColorR",
+      "function": "BombersNotebook_DrawArrows",
+      "line": 983,
+      "at": 54201
+    },
+    {
+      "name": "mmvr_local_7c140f6ea0683eae",
+      "original": "sLowerArrowColorG",
+      "function": "BombersNotebook_DrawArrows",
+      "line": 984,
+      "at": 54240
+    },
+    {
+      "name": "mmvr_local_9be3186be4ea5b4b",
+      "original": "sLowerArrowColorB",
+      "function": "BombersNotebook_DrawArrows",
+      "line": 985,
+      "at": 54281
+    },
+    {
+      "name": "mmvr_local_9598258302019773",
+      "original": "sUpperArrowColorIndex",
+      "function": "BombersNotebook_DrawArrows",
+      "line": 986,
+      "at": 54322
+    },
+    {
+      "name": "mmvr_local_a4afad6429d69309",
+      "original": "sLowerArrowColorIndex",
+      "function": "BombersNotebook_DrawArrows",
+      "line": 987,
+      "at": 54365
+    },
+    {
+      "name": "mmvr_local_9a7bf3285996f04b",
+      "original": "sUpperArrowColorTimer",
+      "function": "BombersNotebook_DrawArrows",
+      "line": 988,
+      "at": 54408
+    },
+    {
+      "name": "mmvr_local_e782821e766f81d8",
+      "original": "sLowerArrowColorTimer",
+      "function": "BombersNotebook_DrawArrows",
+      "line": 989,
+      "at": 54451
+    },
+    {
+      "name": "mmvr_local_e2f12dee7c9ad3d6",
+      "original": "sUpperArrowOffsetY",
+      "function": "BombersNotebook_DrawArrows",
+      "line": 990,
+      "at": 54494
+    },
+    {
+      "name": "mmvr_local_a4373abb7a850aee",
+      "original": "sLowerArrowOffsetY",
+      "function": "BombersNotebook_DrawArrows",
+      "line": 991,
+      "at": 54534
+    },
+    {
+      "name": "mmvr_local_f6d50da4edbcacee",
+      "original": "sArrowColorTargetsG",
+      "function": "BombersNotebook_DrawArrows",
+      "line": 992,
+      "at": 54574
+    },
+    {
+      "name": "mmvr_local_dc21dab02761e083",
+      "original": "sArrowColorTargetsB",
+      "function": "BombersNotebook_DrawArrows",
+      "line": 993,
+      "at": 54628
+    },
+    {
+      "name": "mmvr_local_d4a23ba170926c1c",
+      "original": "sStickXRepeatTimer",
+      "function": "BombersNotebook_Update",
+      "line": 1161,
+      "at": 61811
+    },
+    {
+      "name": "mmvr_local_941dfe8edfc5ec6c",
+      "original": "sStickYRepeatTimer",
+      "function": "BombersNotebook_Update",
+      "line": 1162,
+      "at": 61851
+    },
+    {
+      "name": "mmvr_local_a368ff7fe0f0faab",
+      "original": "sStickXRepeatState",
+      "function": "BombersNotebook_Update",
+      "line": 1163,
+      "at": 61891
+    },
+    {
+      "name": "mmvr_local_e7e8febfcfb04627",
+      "original": "sStickYRepeatState",
+      "function": "BombersNotebook_Update",
+      "line": 1164,
+      "at": 61931
+    }
+  ],
+  "sourceSha256": "c62a255a553aec9fa9e8ce0626ef0170b058b0ef88ef9132d1c41af77c25de50"
+}

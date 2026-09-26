@@ -1,0 +1,14 @@
+{
+  "source": "overlays/gamestates/ovl_file_choose/z_file_copy_erase.c",
+  "include": "cc880054c739f09c.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_a822e4c32bd3abd7",
+      "original": "D_80814E80",
+      "function": "FileSelect_EraseAnim1",
+      "line": 1076,
+      "at": 41355
+    }
+  ],
+  "sourceSha256": "5cb91bc2700d0e4537d0e207e211f0697ee9b614c8a5b2c6796a7ed5e380d74e"
+}

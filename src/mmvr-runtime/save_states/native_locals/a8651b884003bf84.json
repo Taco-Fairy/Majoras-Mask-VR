@@ -1,0 +1,112 @@
+{
+  "source": "overlays/actors/ovl_En_Invadepoh/z_en_invadepoh.c",
+  "include": "a8651b884003bf84.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_ec3339459ae09f1a",
+      "original": "sFaceAnimUpdateFuncs",
+      "function": "EnInvadepoh_ModelInfo_UpdateFaceAnim",
+      "line": 1763,
+      "at": 72182
+    },
+    {
+      "name": "mmvr_local_fc4d84b0ae0d19ba",
+      "original": "sPrimColor",
+      "function": "EnInvadepoh_Ufo_SpawnSparkles",
+      "line": 1846,
+      "at": 75993
+    },
+    {
+      "name": "mmvr_local_bbc19b75dd8dc866",
+      "original": "sEnvColor",
+      "function": "EnInvadepoh_Ufo_SpawnSparkles",
+      "line": 1847,
+      "at": 76054
+    },
+    {
+      "name": "mmvr_local_7dd8fd9c59da8bd5",
+      "original": "sEffectUpdateFuncs",
+      "function": "EnInvadepoh_UpdateEffects",
+      "line": 1927,
+      "at": 78885
+    },
+    {
+      "name": "mmvr_local_d5d39924fc6d3e92",
+      "original": "sInitFuncs",
+      "function": "EnInvadepoh_Init",
+      "line": 2212,
+      "at": 90822
+    },
+    {
+      "name": "mmvr_local_925719b7e460a2ef",
+      "original": "sDestroyFuncs",
+      "function": "EnInvadepoh_Destroy",
+      "line": 2294,
+      "at": 93820
+    },
+    {
+      "name": "mmvr_local_767983d5b42e00ef",
+      "original": "sAlienSpawnTimes",
+      "function": "EnInvadepoh_InvasionHandler_IntroCutscene",
+      "line": 2363,
+      "at": 97031
+    },
+    {
+      "name": "mmvr_local_409ca8bc5a9deffa",
+      "original": "sDeathScales",
+      "function": "EnInvadepoh_Alien_Dead",
+      "line": 2716,
+      "at": 110451
+    },
+    {
+      "name": "mmvr_local_545ab1e9d6f7ea45",
+      "original": "sDeathFlashScales",
+      "function": "EnInvadepoh_Alien_Dead",
+      "line": 2723,
+      "at": 110867
+    },
+    {
+      "name": "mmvr_local_2195e2e567716664",
+      "original": "sCowAngularVelocity",
+      "function": "EnInvadepoh_Cow_Update",
+      "line": 2890,
+      "at": 117422
+    },
+    {
+      "name": "mmvr_local_e1323fd8fe3bc9a8",
+      "original": "sHeadRotTargetX",
+      "function": "EnInvadepoh_SilentRomani_SetupWalk",
+      "line": 3098,
+      "at": 125201
+    },
+    {
+      "name": "mmvr_local_1d235ba7b1168453",
+      "original": "sUfoTargetOffsets",
+      "function": "EnInvadepoh_Ufo_IntroFlyAround",
+      "line": 3418,
+      "at": 139261
+    },
+    {
+      "name": "mmvr_local_000b090c50edfbd2",
+      "original": "sCowAbductionInfo",
+      "function": "EnInvadepoh_AlienAbductor_SetupAbductCow",
+      "line": 4962,
+      "at": 202997
+    },
+    {
+      "name": "mmvr_local_3881a220b8cbfeb1",
+      "original": "sFocusOffset",
+      "function": "EnInvadepoh_Alien_PostLimbDraw",
+      "line": 5174,
+      "at": 211397
+    },
+    {
+      "name": "mmvr_local_32a7cd60f7f27577",
+      "original": "sFocusOffset",
+      "function": "EnInvadepoh_Romani_PostLimbDraw",
+      "line": 5353,
+      "at": 218452
+    }
+  ],
+  "sourceSha256": "5b48524bbfd86ee2703cfdc0ebcb4f5e888866e7954c396f59a4edbd2e6f7b51"
+}

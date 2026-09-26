@@ -1,0 +1,14 @@
+{
+  "source": "overlays/actors/ovl_En_Niw/z_en_niw.c",
+  "include": "f9a1768367e6ed81.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_ee5f244ff6d7fbe6",
+      "original": "sInitChain",
+      "function": "EnNiw_Init",
+      "line": 86,
+      "at": 2560
+    }
+  ],
+  "sourceSha256": "b62781e13e71c7a88d4d56dfa8513df310d9f51a227ec4b10b6ad6dbdf417083"
+}

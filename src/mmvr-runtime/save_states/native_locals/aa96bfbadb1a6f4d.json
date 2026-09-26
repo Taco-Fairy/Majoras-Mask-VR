@@ -1,0 +1,21 @@
+{
+  "source": "overlays/actors/ovl_En_Fz/z_en_fz.c",
+  "include": "aa96bfbadb1a6f4d.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_6b4583aed3870eb2",
+      "original": "D_809347AC",
+      "function": "EnFz_Update",
+      "line": 790,
+      "at": 24894
+    },
+    {
+      "name": "mmvr_local_cef5f153438f177a",
+      "original": "D_809347BC",
+      "function": "EnFz_Draw",
+      "line": 836,
+      "at": 26332
+    }
+  ],
+  "sourceSha256": "e48df16655957e211e50f52d12bf21156c1897e542da78c0112d98d643252394"
+}

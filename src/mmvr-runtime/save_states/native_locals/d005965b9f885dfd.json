@@ -1,0 +1,14 @@
+{
+  "source": "overlays/actors/ovl_Bg_Dblue_Waterfall/z_bg_dblue_waterfall.c",
+  "include": "d005965b9f885dfd.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_a167814719f96854",
+      "original": "D_80B853A4",
+      "function": "func_80B84348",
+      "line": 230,
+      "at": 6947
+    }
+  ],
+  "sourceSha256": "c4230dccbc5771088c325a2afa2d6d469b488f57dddd2b3bf24cfc987a4f877c"
+}

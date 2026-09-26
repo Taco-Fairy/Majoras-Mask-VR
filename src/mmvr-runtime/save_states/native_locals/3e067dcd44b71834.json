@@ -1,0 +1,35 @@
+{
+  "source": "audio/lib/thread.c",
+  "include": "3e067dcd44b71834.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_1f4988e70cc1cbc7",
+      "original": "sMaxWriteReadDiff",
+      "function": "AudioThread_ScheduleProcessCmds",
+      "line": 330,
+      "at": 12180
+    },
+    {
+      "name": "mmvr_local_8e30ca4862088e29",
+      "original": "sCurCmdRdPos",
+      "function": "AudioThread_ProcessCmds",
+      "line": 461,
+      "at": 17322
+    },
+    {
+      "name": "mmvr_local_1ac2033803938829",
+      "original": "sAudioRandom",
+      "function": "AudioThread_NextRandom",
+      "line": 937,
+      "at": 32203
+    },
+    {
+      "name": "mmvr_local_016d46e8bbc64d96",
+      "original": "sAudioOsCount",
+      "function": "AudioThread_NextRandom",
+      "line": 938,
+      "at": 32246
+    }
+  ],
+  "sourceSha256": "94cd89bd42a57a2aaf35c7722aedd786a212bdaa55fda126734067d41d888086"
+}

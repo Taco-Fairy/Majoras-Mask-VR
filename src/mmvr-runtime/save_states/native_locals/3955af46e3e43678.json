@@ -1,0 +1,28 @@
+{
+  "source": "overlays/actors/ovl_En_Bji_01/z_en_bji_01.c",
+  "include": "3955af46e3e43678.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_c9fef01897f936ec",
+      "original": "sBlinkSequence",
+      "function": "EnBji01_Update",
+      "line": 422,
+      "at": 16096
+    },
+    {
+      "name": "mmvr_local_7f9d22ef3cbd17b4",
+      "original": "D_809CDCC8",
+      "function": "EnBji01_PostLimbDraw",
+      "line": 476,
+      "at": 17787
+    },
+    {
+      "name": "mmvr_local_a888b619d51686a6",
+      "original": "sEyeTextures",
+      "function": "EnBji01_Draw",
+      "line": 491,
+      "at": 18247
+    }
+  ],
+  "sourceSha256": "df9018964165b24b4610fd83d76c2a19e45b67bbba6130dcae3741ac776cd706"
+}

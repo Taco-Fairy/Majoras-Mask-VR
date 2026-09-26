@@ -1,0 +1,28 @@
+{
+  "source": "overlays/actors/ovl_En_Ending_Hero6/z_en_ending_hero6.c",
+  "include": "48381876b5c94b6d.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_f2561d949d6b11b5",
+      "original": "D_80C2426C",
+      "function": "EnEndingHero6_PostLimbDraw",
+      "line": 138,
+      "at": 5299
+    },
+    {
+      "name": "mmvr_local_59411ce483e87d3d",
+      "original": "sEyeTextures",
+      "function": "EnEndingHero6_Draw",
+      "line": 159,
+      "at": 6123
+    },
+    {
+      "name": "mmvr_local_539c35593f81daca",
+      "original": "sEyebrowTextures",
+      "function": "EnEndingHero6_Draw",
+      "line": 161,
+      "at": 6313
+    }
+  ],
+  "sourceSha256": "f47b50fb22c3ff93d465de627f1ab7edbc689f0dbd26afa43e277565a383ea6b"
+}

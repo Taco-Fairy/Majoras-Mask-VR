@@ -1,0 +1,14 @@
+{
+  "source": "overlays/gamestates/ovl_daytelop/z_daytelop.c",
+  "include": "23f5b19ef8e563be.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_9086ce66d96a839c",
+      "original": "D_80815FF0",
+      "function": "DayTelop_Update",
+      "line": 73,
+      "at": 6187
+    }
+  ],
+  "sourceSha256": "8b6cd6ec20c295ed90baa462e4b7226f729dcdfb8db6f63753b758b4f19c49db"
+}

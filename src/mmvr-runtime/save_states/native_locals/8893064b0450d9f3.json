@@ -1,0 +1,35 @@
+{
+  "source": "overlays/actors/ovl_En_Bigokuta/z_en_bigokuta.c",
+  "include": "8893064b0450d9f3.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_0d62d2cc7b2822a9",
+      "original": "D_80AC45A4",
+      "function": "EnBigokuta_PlayDeathEffects",
+      "line": 406,
+      "at": 16042
+    },
+    {
+      "name": "mmvr_local_b47b3caf7cb4d616",
+      "original": "D_80AC45B0",
+      "function": "EnBigokuta_PlayDeathEffects",
+      "line": 407,
+      "at": 16102
+    },
+    {
+      "name": "mmvr_local_58d8476cc70332f9",
+      "original": "D_80AC45B4",
+      "function": "EnBigokuta_PlayDeathEffects",
+      "line": 408,
+      "at": 16163
+    },
+    {
+      "name": "mmvr_local_752efc09e6f6c805",
+      "original": "D_80AC45B8",
+      "function": "EnBigokuta_PlayDeathEffects",
+      "line": 409,
+      "at": 16224
+    }
+  ],
+  "sourceSha256": "010bb2cdc40218194b60b1459213f62bce73cad5b36d686031aeecd98e70dc52"
+}

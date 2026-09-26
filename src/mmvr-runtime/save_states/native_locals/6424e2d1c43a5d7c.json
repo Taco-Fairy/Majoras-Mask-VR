@@ -1,0 +1,14 @@
+{
+  "source": "overlays/actors/ovl_En_Gg/z_en_gg.c",
+  "include": "6424e2d1c43a5d7c.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_da865b689a60d5ed",
+      "original": "D_80B36DF0",
+      "function": "EnGg_PostLimbDraw",
+      "line": 773,
+      "at": 27085
+    }
+  ],
+  "sourceSha256": "1d48ca8164a3f106870add7366d0e2f1a9289a65a696543ce9b4b683780f1618"
+}

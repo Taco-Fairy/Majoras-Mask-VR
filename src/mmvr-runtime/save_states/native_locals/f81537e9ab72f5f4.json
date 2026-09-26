@@ -1,0 +1,14 @@
+{
+  "source": "overlays/actors/ovl_Obj_Wturn/z_obj_wturn.c",
+  "include": "f81537e9ab72f5f4.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_c731f74a832cec77",
+      "original": "sSubCamUp",
+      "function": "func_808A7C78",
+      "line": 112,
+      "at": 3859
+    }
+  ],
+  "sourceSha256": "89a16524f56cb57c6f2d4934b1e05bd63389add98009cdc8ea3772dc25a7b8db"
+}

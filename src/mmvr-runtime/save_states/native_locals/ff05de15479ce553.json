@@ -1,0 +1,14 @@
+{
+  "source": "overlays/actors/ovl_En_Kbt/z_en_kbt.c",
+  "include": "ff05de15479ce553.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_33aead4705a77aac",
+      "original": "sAnimations",
+      "function": "EnKbt_ChangeAnim",
+      "line": 140,
+      "at": 5098
+    }
+  ],
+  "sourceSha256": "1955049d1f303cc2228634b55076d244b07756b0d25b0649e8374c24365486af"
+}

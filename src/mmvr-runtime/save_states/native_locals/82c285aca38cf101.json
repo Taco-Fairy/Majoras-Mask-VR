@@ -1,0 +1,49 @@
+{
+  "source": "overlays/actors/ovl_En_Tab/z_en_tab.c",
+  "include": "82c285aca38cf101.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_3ac8b0cabdc3bcc1",
+      "original": "D_80BE1AF0",
+      "function": "func_80BE0F04",
+      "line": 523,
+      "at": 18976
+    },
+    {
+      "name": "mmvr_local_d98f563f66cdb7fe",
+      "original": "D_80BE1AFC",
+      "function": "func_80BE0F04",
+      "line": 524,
+      "at": 19035
+    },
+    {
+      "name": "mmvr_local_42ee2099034e2f8e",
+      "original": "D_80BE1B04",
+      "function": "func_80BE0FC4",
+      "line": 544,
+      "at": 19835
+    },
+    {
+      "name": "mmvr_local_aea42527aad519c1",
+      "original": "D_80BE1B10",
+      "function": "func_80BE0FC4",
+      "line": 545,
+      "at": 19892
+    },
+    {
+      "name": "mmvr_local_851c2ff9ff52179b",
+      "original": "D_80BE1B18",
+      "function": "EnTab_PostLimbDraw",
+      "line": 733,
+      "at": 26304
+    },
+    {
+      "name": "mmvr_local_430584267ec8d070",
+      "original": "sEyeTextures",
+      "function": "EnTab_Draw",
+      "line": 774,
+      "at": 27815
+    }
+  ],
+  "sourceSha256": "f322810b3b2f9cedd652e422d375d00b07051895bc98eceba6e09e61f3e53e56"
+}

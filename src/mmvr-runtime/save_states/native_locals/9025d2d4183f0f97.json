@@ -1,0 +1,14 @@
+{
+  "source": "overlays/actors/ovl_En_Railgibud/z_en_railgibud.c",
+  "include": "9025d2d4183f0f97.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_40bf693d3104bbd7",
+      "original": "sCurrentGibdoIndex",
+      "function": "EnRailgibud_SpawnOtherGibdosAndSetPositionAndRotation",
+      "line": 197,
+      "at": 10734
+    }
+  ],
+  "sourceSha256": "f348fad06058353ffda7f191aa9088fde54977c3e41203e46190d98adc7a30f2"
+}

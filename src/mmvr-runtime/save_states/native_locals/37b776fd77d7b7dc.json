@@ -1,0 +1,91 @@
+{
+  "source": "overlays/actors/ovl_En_Go/z_en_go.c",
+  "include": "37b776fd77d7b7dc.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_4972678d69ba7367",
+      "original": "sDustTextures",
+      "function": "EnGo_DrawDust",
+      "line": 859,
+      "at": 38370
+    },
+    {
+      "name": "mmvr_local_03ae03bb0e6a0e9d",
+      "original": "sEnGoDustPrimColor",
+      "function": "EnGo_DrawDust",
+      "line": 862,
+      "at": 38543
+    },
+    {
+      "name": "mmvr_local_b3960799d63c9ac1",
+      "original": "sEnGoDustEnvColor",
+      "function": "EnGo_DrawDust",
+      "line": 867,
+      "at": 38726
+    },
+    {
+      "name": "mmvr_local_841fafcef67484e9",
+      "original": "sEffectIndexToSnowEffectTable",
+      "function": "EnGo_InitSnow",
+      "line": 927,
+      "at": 41237
+    },
+    {
+      "name": "mmvr_local_f9d72a1e33429112",
+      "original": "sMedigoronPos",
+      "function": "EnGo_UpdateFocus",
+      "line": 1161,
+      "at": 49882
+    },
+    {
+      "name": "mmvr_local_4e78a396c379e0d3",
+      "original": "sAccel",
+      "function": "EnGo_MakeSteam",
+      "line": 1824,
+      "at": 75833
+    },
+    {
+      "name": "mmvr_local_eeb4b923a1701985",
+      "original": "sPowderKegSpawnOffset",
+      "function": "EnGo_HandleGivePowderKegCutscene",
+      "line": 1970,
+      "at": 81189
+    },
+    {
+      "name": "mmvr_local_dd4778dd541e61bc",
+      "original": "sStretchingGoronOffset",
+      "function": "EnGo_ChangeToStretchingAnimation",
+      "line": 2032,
+      "at": 83409
+    },
+    {
+      "name": "mmvr_local_41759d0ac18bebaa",
+      "original": "sSubtypeToAnimIndex",
+      "function": "EnGo_ChangeToStretchingAnimation",
+      "line": 2033,
+      "at": 83473
+    },
+    {
+      "name": "mmvr_local_3077b2cf32bc23b5",
+      "original": "sSubtypeToAnimIndex",
+      "function": "EnGo_ChangeToSpectatingAnimation",
+      "line": 2074,
+      "at": 85237
+    },
+    {
+      "name": "mmvr_local_1e99ead22ced00fd",
+      "original": "sMsgScriptGraveyard",
+      "function": "EnGo_GetMsgScript",
+      "line": 2717,
+      "at": 110892
+    },
+    {
+      "name": "mmvr_local_140c12567262a7b7",
+      "original": "sEyeTextures",
+      "function": "EnGo_Draw",
+      "line": 2986,
+      "at": 120630
+    }
+  ],
+  "sourceSha256": "e261e89fceeb24ebf488658bb7a6d866cd82edf1bb668e83ecfde607346e2fce"
+}

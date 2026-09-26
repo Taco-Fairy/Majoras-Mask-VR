@@ -1,0 +1,42 @@
+{
+  "source": "overlays/actors/ovl_En_Ossan/z_en_ossan.c",
+  "include": "dd4b6a7d0d58373a.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_84e97536b0198b47",
+      "original": "sSelectedItemPosition",
+      "function": "EnOssan_PositionSelectedItem",
+      "line": 1216,
+      "at": 49906
+    },
+    {
+      "name": "mmvr_local_8db21040b81a2f54",
+      "original": "sInitFuncs",
+      "function": "EnOssan_InitShop",
+      "line": 1518,
+      "at": 60031
+    },
+    {
+      "name": "mmvr_local_cdee212ef7d2a2cf",
+      "original": "sFocusOffset",
+      "function": "EnOssan_PartTimer_PostLimbDraw",
+      "line": 1770,
+      "at": 70801
+    },
+    {
+      "name": "mmvr_local_98b54773d5100cff",
+      "original": "sEyeTextures",
+      "function": "EnOssan_CuriosityShopMan_Draw",
+      "line": 1779,
+      "at": 71091
+    },
+    {
+      "name": "mmvr_local_7fc22996de7cb4f3",
+      "original": "sEyeTextures",
+      "function": "EnOssan_PartTimer_Draw",
+      "line": 1797,
+      "at": 71956
+    }
+  ],
+  "sourceSha256": "138cf9711d65b7feab9a4069e2bd58e208ab82832e243fdac1bc2430fe21c566"
+}

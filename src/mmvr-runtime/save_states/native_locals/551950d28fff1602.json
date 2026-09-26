@@ -1,0 +1,21 @@
+{
+  "source": "overlays/actors/ovl_En_Trt/z_en_trt.c",
+  "include": "551950d28fff1602.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_63448e15b443ba16",
+      "original": "sSelectedItemPosition",
+      "function": "EnTrt_PositionSelectedItem",
+      "line": 1190,
+      "at": 47441
+    },
+    {
+      "name": "mmvr_local_602709a84c953577",
+      "original": "sEyeTextures",
+      "function": "EnTrt_Draw",
+      "line": 1834,
+      "at": 70239
+    }
+  ],
+  "sourceSha256": "af37bf4556cd630b0aea8d5de89fe6d65de45901725c617a6151f8a0e99729e9"
+}

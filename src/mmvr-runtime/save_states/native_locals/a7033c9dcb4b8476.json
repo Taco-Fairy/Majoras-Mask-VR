@@ -1,0 +1,42 @@
+{
+  "source": "overlays/actors/ovl_En_Neo_Reeba/z_en_neo_reeba.c",
+  "include": "a7033c9dcb4b8476.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_6ed58c92a62e7e57",
+      "original": "sDeadDbVel",
+      "function": "EnNeoReeba_PlayDeathEffects",
+      "line": 455,
+      "at": 17103
+    },
+    {
+      "name": "mmvr_local_7edce296c900006d",
+      "original": "sDeadDbAccel",
+      "function": "EnNeoReeba_PlayDeathEffects",
+      "line": 456,
+      "at": 17156
+    },
+    {
+      "name": "mmvr_local_a418775957b47061",
+      "original": "sIcePrimColor",
+      "function": "EnNeoReeba_SpawnIce",
+      "line": 668,
+      "at": 26124
+    },
+    {
+      "name": "mmvr_local_cf545b26330b49de",
+      "original": "sIceEnvColor",
+      "function": "EnNeoReeba_SpawnIce",
+      "line": 669,
+      "at": 26188
+    },
+    {
+      "name": "mmvr_local_31233dd3e4248a2d",
+      "original": "sIceAccel",
+      "function": "EnNeoReeba_SpawnIce",
+      "line": 670,
+      "at": 26245
+    }
+  ],
+  "sourceSha256": "d376125d435fe31d158b527e2b8ed5c909e46278560b5ed323b79b71f0342d9f"
+}

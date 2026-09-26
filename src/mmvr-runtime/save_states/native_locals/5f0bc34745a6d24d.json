@@ -1,0 +1,21 @@
+{
+  "source": "overlays/actors/ovl_En_Col_Man/z_en_col_man.c",
+  "include": "5f0bc34745a6d24d.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_c708bca27f10e137",
+      "original": "sPrimColor",
+      "function": "func_80AFDFB4",
+      "line": 156,
+      "at": 5338
+    },
+    {
+      "name": "mmvr_local_fe730be38f698c16",
+      "original": "sEnvColor",
+      "function": "func_80AFDFB4",
+      "line": 157,
+      "at": 5396
+    }
+  ],
+  "sourceSha256": "972b9e356f028969e080fcb45c545b1e2e0da3a8aae2339fdcf45e2e97579555"
+}

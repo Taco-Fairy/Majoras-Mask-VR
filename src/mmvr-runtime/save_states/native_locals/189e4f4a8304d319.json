@@ -1,0 +1,21 @@
+{
+  "source": "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_prompt.c",
+  "include": "189e4f4a8304d319.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_e4bbf153565be12e",
+      "original": "sPromptAlphaTargetIndex",
+      "function": "KaleidoScope_UpdatePrompt",
+      "line": 13,
+      "at": 295
+    },
+    {
+      "name": "mmvr_local_7334dbbcb6ed7a41",
+      "original": "sPromptAlphaTimer",
+      "function": "KaleidoScope_UpdatePrompt",
+      "line": 14,
+      "at": 340
+    }
+  ],
+  "sourceSha256": "5bbab04baa219a7e18450feada7b57004eaaf6e4c4e2949da7016053cc3575f9"
+}

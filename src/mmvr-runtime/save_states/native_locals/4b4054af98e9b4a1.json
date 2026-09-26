@@ -1,0 +1,105 @@
+{
+  "source": "overlays/actors/ovl_En_An/z_en_an.c",
+  "include": "4b4054af98e9b4a1.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_3c952530d27a6509",
+      "original": "D_80B58E34",
+      "function": "EnAn_UpdateCollider",
+      "line": 1626,
+      "at": 80011
+    },
+    {
+      "name": "mmvr_local_50eb86db6e443f62",
+      "original": "sMouthIndices",
+      "function": "EnAn_UpdateFace",
+      "line": 1673,
+      "at": 81429
+    },
+    {
+      "name": "mmvr_local_b632b144052754fb",
+      "original": "D_80B58E54",
+      "function": "EnAn_DrawAccessory",
+      "line": 1781,
+      "at": 85709
+    },
+    {
+      "name": "mmvr_local_41cede4aa8ad12ee",
+      "original": "D_80B58E60",
+      "function": "EnAn_DrawAccessory",
+      "line": 1782,
+      "at": 85779
+    },
+    {
+      "name": "mmvr_local_8e42319a07d78e85",
+      "original": "D_80B58E68",
+      "function": "EnAn_DrawAccessory",
+      "line": 1823,
+      "at": 87784
+    },
+    {
+      "name": "mmvr_local_3f89333401ef2910",
+      "original": "D_80B58E74",
+      "function": "EnAn_DrawAccessory",
+      "line": 1824,
+      "at": 87856
+    },
+    {
+      "name": "mmvr_local_319ae75fc3046397",
+      "original": "D_80B58E7C",
+      "function": "EnAn_ProcessSchedule_Ranch",
+      "line": 3197,
+      "at": 139418
+    },
+    {
+      "name": "mmvr_local_c1696d578afbdbff",
+      "original": "D_80B58E88",
+      "function": "EnAn_ProcessSchedule_Ranch",
+      "line": 3198,
+      "at": 139477
+    },
+    {
+      "name": "mmvr_local_d7e526596e894386",
+      "original": "D_80B58E90",
+      "function": "EnAn_ProcessSchedule_StaffRoom",
+      "line": 3221,
+      "at": 140331
+    },
+    {
+      "name": "mmvr_local_37d307685e08ff10",
+      "original": "D_80B58E9C",
+      "function": "EnAn_ProcessSchedule_StaffRoom",
+      "line": 3222,
+      "at": 140392
+    },
+    {
+      "name": "mmvr_local_bb3c39ed00a2467a",
+      "original": "D_80B58EA4",
+      "function": "EnAn_ProcessSchedule_WithKafei",
+      "line": 3254,
+      "at": 141502
+    },
+    {
+      "name": "mmvr_local_e6c2b450e61c52d1",
+      "original": "D_80B58ED4",
+      "function": "EnAn_PostLimbDraw",
+      "line": 3891,
+      "at": 163485
+    },
+    {
+      "name": "mmvr_local_5704cfac07fc41ec",
+      "original": "sMouthTextures",
+      "function": "EnAn_Draw",
+      "line": 3940,
+      "at": 165542
+    },
+    {
+      "name": "mmvr_local_c4aaac2a42dec0a9",
+      "original": "sEyeTextures",
+      "function": "EnAn_Draw",
+      "line": 3945,
+      "at": 165781
+    }
+  ],
+  "sourceSha256": "261242be7ca45188109ec0fec0e89bc8abc3a982c61359cbb0836ed6cc6097f0"
+}

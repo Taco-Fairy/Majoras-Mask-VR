@@ -1,0 +1,63 @@
+{
+  "source": "overlays/actors/ovl_Arrow_Fire/z_arrow_fire.c",
+  "include": "b7d5ffa1905cd157.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_008e396c6210dca3",
+      "original": "D_80922284",
+      "function": "FireArrow_SetQuadVerticies",
+      "line": 218,
+      "at": 6321
+    },
+    {
+      "name": "mmvr_local_eecbfbf2b3640b4f",
+      "original": "D_80922290",
+      "function": "FireArrow_SetQuadVerticies",
+      "line": 219,
+      "at": 6378
+    },
+    {
+      "name": "mmvr_local_8d73e9b993822049",
+      "original": "D_8092229C",
+      "function": "FireArrow_SetQuadVerticies",
+      "line": 220,
+      "at": 6434
+    },
+    {
+      "name": "mmvr_local_61e24b1e552ab841",
+      "original": "D_809222A8",
+      "function": "FireArrow_SetQuadVerticies",
+      "line": 221,
+      "at": 6492
+    },
+    {
+      "name": "mmvr_local_81381eca8d50d30f",
+      "original": "D_809222B4",
+      "function": "FireArrow_SetQuadVerticies",
+      "line": 222,
+      "at": 6546
+    },
+    {
+      "name": "mmvr_local_8fdf4b1c2cf69de5",
+      "original": "D_809222C0",
+      "function": "FireArrow_SetQuadVerticies",
+      "line": 223,
+      "at": 6603
+    },
+    {
+      "name": "mmvr_local_e296a9d3143af539",
+      "original": "D_809222CC",
+      "function": "FireArrow_SetQuadVerticies",
+      "line": 224,
+      "at": 6659
+    },
+    {
+      "name": "mmvr_local_d1f9bd399685bc9e",
+      "original": "D_809222D8",
+      "function": "FireArrow_SetQuadVerticies",
+      "line": 225,
+      "at": 6717
+    }
+  ],
+  "sourceSha256": "7b748f87eb97618aea00032085e0b059e185747115bd96b6b1fee3f536aefa6e"
+}

@@ -1,0 +1,35 @@
+{
+  "source": "overlays/actors/ovl_En_Dai/z_en_dai.c",
+  "include": "cce900c22e5b3af4.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_293de4c317f623ab",
+      "original": "sCsAnimIndex",
+      "function": "EnDai_HandleCutscene",
+      "line": 487,
+      "at": 15645
+    },
+    {
+      "name": "mmvr_local_7b8a64330251849a",
+      "original": "D_80B3FE4C",
+      "function": "EnDai_PostLimbDraw",
+      "line": 643,
+      "at": 20684
+    },
+    {
+      "name": "mmvr_local_2b4e2f6656a3889d",
+      "original": "D_80B3FE58",
+      "function": "func_80B3F78C",
+      "line": 694,
+      "at": 22184
+    },
+    {
+      "name": "mmvr_local_8a55b13254a6002e",
+      "original": "D_80B3FE70",
+      "function": "func_80B3F920",
+      "line": 732,
+      "at": 23525
+    }
+  ],
+  "sourceSha256": "09f0bf5ed68586c61ab1142da06eb2b0e328be1e13f8d2c7bafd6e2ef9badb7b"
+}

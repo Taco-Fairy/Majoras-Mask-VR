@@ -1,0 +1,21 @@
+{
+  "source": "overlays/actors/ovl_En_Suttari/z_en_suttari.c",
+  "include": "f1caaa10fe3e9e0a.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_a06492fb0b8a137b",
+      "original": "D_80BAE950",
+      "function": "EnSuttari_PostLimbDraw",
+      "line": 1604,
+      "at": 61936
+    },
+    {
+      "name": "mmvr_local_68209986b93a20f6",
+      "original": "D_80BAE95C",
+      "function": "EnSuttari_PostLimbDraw",
+      "line": 1605,
+      "at": 61989
+    }
+  ],
+  "sourceSha256": "f7e00fe371259359ad39ec1f146fece7b184816adc1f22aa77a880124badc124"
+}

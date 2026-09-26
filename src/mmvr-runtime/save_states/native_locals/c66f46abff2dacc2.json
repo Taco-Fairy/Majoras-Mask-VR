@@ -1,0 +1,14 @@
+{
+  "source": "overlays/actors/ovl_Obj_Snowball2/z_obj_snowball2.c",
+  "include": "c66f46abff2dacc2.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_bb860416b854bff7",
+      "original": "D_80B3A938",
+      "function": "func_80B39638",
+      "line": 232,
+      "at": 7306
+    }
+  ],
+  "sourceSha256": "11f080cc60425c73b10f9e96be4d355e395088aac1a923e71340a8dc5db7e961"
+}

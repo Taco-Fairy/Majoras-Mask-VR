@@ -1,0 +1,14 @@
+{
+  "source": "overlays/actors/ovl_En_Egol/z_en_egol.c",
+  "include": "de9cd93226119e0f.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_9e9dd2170609d2fd",
+      "original": "sLaserAngles",
+      "function": "EnEgol_Laser",
+      "line": 684,
+      "at": 26208
+    }
+  ],
+  "sourceSha256": "03779713e611eac31416f135f91b11d6f3202eff1ebe64b934570e365c5d359e"
+}

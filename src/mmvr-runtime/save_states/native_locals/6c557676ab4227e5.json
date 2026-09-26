@@ -1,0 +1,21 @@
+{
+  "source": "audio/lib/effects.c",
+  "include": "6c557676ab4227e5.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_c34a09ba0f675b19",
+      "original": "sActiveVibratoFreqScaleSum",
+      "function": "AudioEffects_UpdateVibrato",
+      "line": 134,
+      "at": 4792
+    },
+    {
+      "name": "mmvr_local_0d454e794ca06ab5",
+      "original": "sActiveVibratoCount",
+      "function": "AudioEffects_UpdateVibrato",
+      "line": 135,
+      "at": 4843
+    }
+  ],
+  "sourceSha256": "a6d4ba31690b74da0eb99cd890be1803ecfb47d51760a46eb814ff4800d3b109"
+}

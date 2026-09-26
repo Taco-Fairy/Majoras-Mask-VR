@@ -1,0 +1,154 @@
+{
+  "source": "code/z_collision_check.c",
+  "include": "4f130925a2341d91.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_cbb08d03dfdbd873",
+      "original": "sDamageMultipliers",
+      "function": "CollisionCheck_GetDamageAndEffectOnElementAC",
+      "line": 54,
+      "at": 1609
+    },
+    {
+      "name": "mmvr_local_6e38ea705b0d5861",
+      "original": "sDefaultCollider",
+      "function": "Collider_InitBase",
+      "line": 112,
+      "at": 3725
+    },
+    {
+      "name": "mmvr_local_0ba738eff23c9f42",
+      "original": "sDefaultDamageInfoAT",
+      "function": "Collider_InitElementDamageInfoAT",
+      "line": 179,
+      "at": 5708
+    },
+    {
+      "name": "mmvr_local_6618e3a3d76b3393",
+      "original": "sDefaultDamageInfoAC",
+      "function": "Collider_InitElementDamageInfoAC",
+      "line": 201,
+      "at": 6469
+    },
+    {
+      "name": "mmvr_local_f0c7fdd4363d120b",
+      "original": "sDefaultColliderElement",
+      "function": "Collider_InitElement",
+      "line": 220,
+      "at": 7117
+    },
+    {
+      "name": "mmvr_local_f777fd3a3cbd1395",
+      "original": "sDefaultColliderJntSphElementDim",
+      "function": "Collider_InitJntSphElementDim",
+      "line": 276,
+      "at": 9113
+    },
+    {
+      "name": "mmvr_local_581b35ba52112832",
+      "original": "sDefaultColliderCylinderDim",
+      "function": "Collider_InitCylinderDim",
+      "line": 505,
+      "at": 16771
+    },
+    {
+      "name": "mmvr_local_49de009679e65f15",
+      "original": "sDefaultColliderTrisElementDim",
+      "function": "Collider_InitTrisElementDim",
+      "line": 616,
+      "at": 20320
+    },
+    {
+      "name": "mmvr_local_5689ee20ef98e9aa",
+      "original": "sDefaultColliderQuadDim",
+      "function": "Collider_InitQuadDim",
+      "line": 833,
+      "at": 27042
+    },
+    {
+      "name": "mmvr_local_543e91c29a917095",
+      "original": "sDefaultLinePoint",
+      "function": "Collider_InitLine",
+      "line": 1060,
+      "at": 33952
+    },
+    {
+      "name": "mmvr_local_97bfc3d6bdd861c2",
+      "original": "D_801EEC00",
+      "function": "CollisionCheck_BlueBlood",
+      "line": 1423,
+      "at": 44806
+    },
+    {
+      "name": "mmvr_local_6817206e45c0c32c",
+      "original": "D_801EF0C8",
+      "function": "CollisionCheck_GreenBlood",
+      "line": 1476,
+      "at": 46588
+    },
+    {
+      "name": "mmvr_local_bfb8f34cdd97fbd3",
+      "original": "sDefaultColChkInfo",
+      "function": "CollisionCheck_InitInfo",
+      "line": 3442,
+      "at": 129648
+    },
+    {
+      "name": "mmvr_local_a7a84cd8bddbbe4f",
+      "original": "D_801EE1C0",
+      "function": "Collider_UpdateSpheres",
+      "line": 3823,
+      "at": 142200
+    },
+    {
+      "name": "mmvr_local_b9caf0e012627e62",
+      "original": "D_801EE1D0",
+      "function": "Collider_UpdateSpheres",
+      "line": 3824,
+      "at": 142230
+    },
+    {
+      "name": "mmvr_local_ac49b03241ed83f5",
+      "original": "D_801EE1E0",
+      "function": "Collider_UpdateSphere",
+      "line": 3862,
+      "at": 144053
+    },
+    {
+      "name": "mmvr_local_d801ada01e0be304",
+      "original": "D_801EE1F0",
+      "function": "Collider_UpdateSphere",
+      "line": 3863,
+      "at": 144083
+    },
+    {
+      "name": "mmvr_local_beafd9b2dfcdd448",
+      "original": "D_801EE200",
+      "function": "CollisionCheck_SpawnRedBlood",
+      "line": 3882,
+      "at": 144808
+    },
+    {
+      "name": "mmvr_local_a6ff138765d6f1ca",
+      "original": "D_801EE738",
+      "function": "CollisionCheck_SpawnWaterDroplets",
+      "line": 3935,
+      "at": 146586
+    },
+    {
+      "name": "mmvr_local_3617a8ccc2cb8338",
+      "original": "sShieldParticleInitMetal",
+      "function": "CollisionCheck_SpawnShieldParticles",
+      "line": 3987,
+      "at": 148358
+    },
+    {
+      "name": "mmvr_local_54c92cb1cb07370a",
+      "original": "sShieldParticleInitWood",
+      "function": "CollisionCheck_SpawnShieldParticlesWood",
+      "line": 4042,
+      "at": 150215
+    }
+  ],
+  "sourceSha256": "ee1b2bb8f7def8350081abe61a8a3d6d2f52a7c45fd849034c1a98d7a2582e5c"
+}

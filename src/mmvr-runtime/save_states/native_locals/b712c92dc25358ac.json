@@ -1,0 +1,49 @@
+{
+  "source": "overlays/actors/ovl_En_Ge2/z_en_ge2.c",
+  "include": "b712c92dc25358ac.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_00fd21e85a57eef0",
+      "original": "sEffectVelocity",
+      "function": "EnGe2_SpawnEffects",
+      "line": 344,
+      "at": 11755
+    },
+    {
+      "name": "mmvr_local_a325ef4c3131e3a6",
+      "original": "sEffectAccel",
+      "function": "EnGe2_SpawnEffects",
+      "line": 345,
+      "at": 11815
+    },
+    {
+      "name": "mmvr_local_76fcb590e9e6f279",
+      "original": "sEffectPrimColor",
+      "function": "EnGe2_SpawnEffects",
+      "line": 346,
+      "at": 11879
+    },
+    {
+      "name": "mmvr_local_eaffbc92edfff345",
+      "original": "sEffectEnvColor",
+      "function": "EnGe2_SpawnEffects",
+      "line": 347,
+      "at": 11944
+    },
+    {
+      "name": "mmvr_local_15dfc82194ff2bd7",
+      "original": "sFocusOffset",
+      "function": "EnGe2_PostLimbDraw",
+      "line": 754,
+      "at": 28582
+    },
+    {
+      "name": "mmvr_local_e8bfa4df4ddcfa01",
+      "original": "sEyeTextures",
+      "function": "EnGe2_Draw",
+      "line": 762,
+      "at": 28820
+    }
+  ],
+  "sourceSha256": "d01f826f6138a88e5dec1a03ed0312ae1c9654ae7a9a246f18a93c06aece65a7"
+}

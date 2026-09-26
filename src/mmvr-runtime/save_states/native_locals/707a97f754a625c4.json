@@ -1,0 +1,21 @@
+{
+  "source": "overlays/actors/ovl_En_Aob_01/z_en_aob_01.c",
+  "include": "707a97f754a625c4.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_0a2e90364092d788",
+      "original": "sTrackOptions",
+      "function": "EnAob01_UpdateCommon",
+      "line": 531,
+      "at": 23568
+    },
+    {
+      "name": "mmvr_local_6375ff2d8a923b2d",
+      "original": "sFocusOffset",
+      "function": "EnAob01_PostLimbDraw",
+      "line": 1198,
+      "at": 51418
+    }
+  ],
+  "sourceSha256": "533f9f94b01670271daf59e790ce4b85c80aadaafe51ff2e77dba0a395992df6"
+}

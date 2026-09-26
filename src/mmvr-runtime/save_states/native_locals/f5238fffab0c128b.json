@@ -1,0 +1,21 @@
+{
+  "source": "overlays/actors/ovl_En_Syateki_Wf/z_en_syateki_wf.c",
+  "include": "f5238fffab0c128b.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_50bcbf4b0bb5613c",
+      "original": "sTailColliderOffset",
+      "function": "EnSyatekiWf_PostLimbDraw",
+      "line": 485,
+      "at": 18560
+    },
+    {
+      "name": "mmvr_local_5f44b3aa9d182e84",
+      "original": "sEyeTextures",
+      "function": "EnSyatekiWf_Draw",
+      "line": 499,
+      "at": 19128
+    }
+  ],
+  "sourceSha256": "680eb2df21eeee43a458b1fa784b47549ef06ad17752aed75cb4fd053cf48c35"
+}

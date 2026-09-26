@@ -1,0 +1,28 @@
+{
+  "source": "overlays/actors/ovl_Obj_Ice_Poly/z_obj_ice_poly.c",
+  "include": "16b12db9d05e54d5.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_b8656e4067b1395d",
+      "original": "D_80932380",
+      "function": "func_80931828",
+      "line": 136,
+      "at": 4385
+    },
+    {
+      "name": "mmvr_local_416946c08ff6d3eb",
+      "original": "D_80932384",
+      "function": "func_80931828",
+      "line": 137,
+      "at": 4446
+    },
+    {
+      "name": "mmvr_local_bae290155087457a",
+      "original": "D_80932388",
+      "function": "func_80931828",
+      "line": 138,
+      "at": 4498
+    }
+  ],
+  "sourceSha256": "bc421294ed4ca561462fc178ca5539d56541a30f67a36948d2f8d7ca088a3f93"
+}

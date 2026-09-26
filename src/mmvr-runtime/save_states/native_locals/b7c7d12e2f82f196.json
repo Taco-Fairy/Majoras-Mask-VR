@@ -1,0 +1,35 @@
+{
+  "source": "overlays/actors/ovl_En_Tk/z_en_tk.c",
+  "include": "b7c7d12e2f82f196.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_81644e2ad13e8dd8",
+      "original": "D_80AEF9B4",
+      "function": "func_80AEC658",
+      "line": 203,
+      "at": 7328
+    },
+    {
+      "name": "mmvr_local_c5ed840e18e483d4",
+      "original": "D_80AEFA78",
+      "function": "func_80AEE86C",
+      "line": 1076,
+      "at": 39048
+    },
+    {
+      "name": "mmvr_local_7c19e4e46d6bfbd1",
+      "original": "D_80AEFA84",
+      "function": "EnTk_PostLimbDraw",
+      "line": 1397,
+      "at": 50158
+    },
+    {
+      "name": "mmvr_local_a7c555d85ccf5aa1",
+      "original": "D_80AEFA90",
+      "function": "EnTk_Draw",
+      "line": 1424,
+      "at": 50858
+    }
+  ],
+  "sourceSha256": "3f3ac1bd026c3a50a3eea583e51d9203ab429d903c522a650f39ffaa57260a76"
+}

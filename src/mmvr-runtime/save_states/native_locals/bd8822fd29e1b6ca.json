@@ -1,0 +1,28 @@
+{
+  "source": "overlays/actors/ovl_En_Bomjimb/z_en_bomjimb.c",
+  "include": "bd8822fd29e1b6ca.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_48a799f431a929a3",
+      "original": "D_80C03260",
+      "function": "EnBomjimb_Draw",
+      "line": 968,
+      "at": 33677
+    },
+    {
+      "name": "mmvr_local_7dc6be628d61cfee",
+      "original": "D_80C03274",
+      "function": "EnBomjimb_Draw",
+      "line": 972,
+      "at": 33858
+    },
+    {
+      "name": "mmvr_local_b238806f0339b80b",
+      "original": "D_80C03280",
+      "function": "EnBomjimb_Draw",
+      "line": 977,
+      "at": 33999
+    }
+  ],
+  "sourceSha256": "25b5a3ada7aef700ee6e023c524e0f5d96a05a6978705bf0de7ee1d148845239"
+}

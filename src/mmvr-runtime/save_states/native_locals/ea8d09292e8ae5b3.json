@@ -1,0 +1,35 @@
+{
+  "source": "overlays/actors/ovl_En_Fish/z_en_fish.c",
+  "include": "ea8d09292e8ae5b3.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_bcb9c0aaaf5f9897",
+      "original": "D_8091FACC",
+      "function": "func_8091DEE4",
+      "line": 265,
+      "at": 8217
+    },
+    {
+      "name": "mmvr_local_bdd85c4f5b4f8741",
+      "original": "D_8091FAD4",
+      "function": "func_8091E070",
+      "line": 304,
+      "at": 9315
+    },
+    {
+      "name": "mmvr_local_306fa4e71a1d5e0a",
+      "original": "D_8091FADC",
+      "function": "func_8091F3BC",
+      "line": 789,
+      "at": 24577
+    },
+    {
+      "name": "mmvr_local_e4861a8436f2c51a",
+      "original": "D_8091FAE8",
+      "function": "func_8091F3BC",
+      "line": 790,
+      "at": 24632
+    }
+  ],
+  "sourceSha256": "67d0b354009daa1f278b59fe4b4b25138e890811cdf3cb240e2cc20983b592ca"
+}

@@ -1,0 +1,56 @@
+{
+  "source": "overlays/actors/ovl_Obj_Hugebombiwa/z_obj_hugebombiwa.c",
+  "include": "9c803a59e6afb61d.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_487d4ba1caf0292c",
+      "original": "D_80A55D38",
+      "function": "func_80A53E60",
+      "line": 115,
+      "at": 3426
+    },
+    {
+      "name": "mmvr_local_e9610840e3873cfe",
+      "original": "D_80A55D3C",
+      "function": "func_80A53E60",
+      "line": 116,
+      "at": 3487
+    },
+    {
+      "name": "mmvr_local_a20879df9d4c371c",
+      "original": "D_80A55D40",
+      "function": "func_80A53E60",
+      "line": 117,
+      "at": 3540
+    },
+    {
+      "name": "mmvr_local_28878e08a51eae99",
+      "original": "D_80A55D50",
+      "function": "func_80A541F4",
+      "line": 181,
+      "at": 5545
+    },
+    {
+      "name": "mmvr_local_e5b5bbcb1fb604b1",
+      "original": "D_80A55D60",
+      "function": "func_80A54600",
+      "line": 246,
+      "at": 7753
+    },
+    {
+      "name": "mmvr_local_eeda66ba2814ff82",
+      "original": "D_80A55D70",
+      "function": "func_80A54600",
+      "line": 247,
+      "at": 7812
+    },
+    {
+      "name": "mmvr_local_0cc21e04a815bbdb",
+      "original": "D_80A55D74",
+      "function": "func_80A54A0C",
+      "line": 307,
+      "at": 9730
+    }
+  ],
+  "sourceSha256": "61528a9a23f3b943b90190237baf98b0b140937812dd7310e728d4e52455933d"
+}

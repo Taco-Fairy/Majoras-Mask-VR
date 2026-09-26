@@ -1,0 +1,49 @@
+{
+  "source": "overlays/actors/ovl_En_Kusa2/z_en_kusa2.c",
+  "include": "0611831015d26815.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_77a713803255768c",
+      "original": "D_80A5EB0C",
+      "function": "func_80A5BB40",
+      "line": 290,
+      "at": 9003
+    },
+    {
+      "name": "mmvr_local_d19f77a9bccb5c55",
+      "original": "D_80A5EB18",
+      "function": "func_80A5BB40",
+      "line": 291,
+      "at": 9056
+    },
+    {
+      "name": "mmvr_local_cc8611dbd3fd989c",
+      "original": "D_80A5EB24",
+      "function": "func_80A5BD14",
+      "line": 323,
+      "at": 10161
+    },
+    {
+      "name": "mmvr_local_345eba95d3f173f8",
+      "original": "D_80A5EB48",
+      "function": "func_80A5C104",
+      "line": 441,
+      "at": 13958
+    },
+    {
+      "name": "mmvr_local_cd70ec2bfc50d7aa",
+      "original": "D_80A5EB4C",
+      "function": "func_80A5CB74",
+      "line": 707,
+      "at": 21707
+    },
+    {
+      "name": "mmvr_local_bea2e83a127f24a4",
+      "original": "D_80A5EB68",
+      "function": "func_80A5E6F0",
+      "line": 1343,
+      "at": 42218
+    }
+  ],
+  "sourceSha256": "c240b8c8efe409534e85f5be67c1518bd85ea5ebb2986a494b57572498c8bdca"
+}

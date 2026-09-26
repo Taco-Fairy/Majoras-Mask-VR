@@ -1,0 +1,21 @@
+{
+  "source": "code/graph.c",
+  "include": "67ba4a70ac085900.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_a04393286a052576",
+      "original": "retryCount",
+      "function": "Graph_TaskSet00",
+      "line": 150,
+      "at": 5664
+    },
+    {
+      "name": "mmvr_local_153c1a4b9669926a",
+      "original": "cfbIdx",
+      "function": "Graph_TaskSet00",
+      "line": 151,
+      "at": 5697
+    }
+  ],
+  "sourceSha256": "2e86597b188107a05ce8ff925ac4a43453361af8189dd0c82a1a1740c1683991"
+}

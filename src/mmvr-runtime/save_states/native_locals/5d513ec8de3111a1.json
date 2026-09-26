@@ -1,0 +1,63 @@
+{
+  "source": "code/z_camera.c",
+  "include": "5d513ec8de3111a1.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_170b89c2aa9353b7",
+      "original": "sFloorYNear",
+      "function": "Camera_GetPitchAdjFromFloorHeightDiffs",
+      "line": 876,
+      "at": 29281
+    },
+    {
+      "name": "mmvr_local_a9409defd28bbd55",
+      "original": "sFloorYFar",
+      "function": "Camera_GetPitchAdjFromFloorHeightDiffs",
+      "line": 877,
+      "at": 29310
+    },
+    {
+      "name": "mmvr_local_4d2e87c30cd7498b",
+      "original": "sFarColChk",
+      "function": "Camera_GetPitchAdjFromFloorHeightDiffs",
+      "line": 878,
+      "at": 29350
+    },
+    {
+      "name": "mmvr_local_41583d97280dcb28",
+      "original": "D_801B9E5C",
+      "function": "func_800CCCEC",
+      "line": 950,
+      "at": 31979
+    },
+    {
+      "name": "mmvr_local_1b0b6520664c9c5a",
+      "original": "D_801B9E60",
+      "function": "func_800CCCEC",
+      "line": 951,
+      "at": 32011
+    },
+    {
+      "name": "mmvr_local_ccec3d6f1014eab7",
+      "original": "prevTargetingHeld",
+      "function": "Camera_Parallel1",
+      "line": 2732,
+      "at": 100209
+    },
+    {
+      "name": "mmvr_local_95cd032d882e6858",
+      "original": "sEarthquakeTimer",
+      "function": "Camera_EarthquakeDay3",
+      "line": 7279,
+      "at": 277124
+    },
+    {
+      "name": "mmvr_local_63d8ea419388f55e",
+      "original": "sModeChangeFlags",
+      "function": "Camera_ChangeModeFlags",
+      "line": 7663,
+      "at": 293574
+    }
+  ],
+  "sourceSha256": "837560a89c301d72ef4edfbfbff72a45db28aa5d6ac70412585a2509a3724bcd"
+}

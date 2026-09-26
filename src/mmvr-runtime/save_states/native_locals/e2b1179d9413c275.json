@@ -1,0 +1,14 @@
+{
+  "source": "overlays/actors/ovl_En_Dno/z_en_dno.c",
+  "include": "e2b1179d9413c275.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_3a9e45d8b0204af1",
+      "original": "D_80A73B40",
+      "function": "EnDno_PostLimbDraw",
+      "line": 1028,
+      "at": 43739
+    }
+  ],
+  "sourceSha256": "59ce77d42337f443aec1866769019a217b5aa2cfed559511e04089603a83735f"
+}

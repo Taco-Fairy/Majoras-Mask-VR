@@ -1,0 +1,28 @@
+{
+  "source": "overlays/actors/ovl_Obj_Hakaisi/z_obj_hakaisi.c",
+  "include": "83fc33052fb467a3.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_8e72dcfd065f31cb",
+      "original": "sPrimColor",
+      "function": "func_80B14CF8",
+      "line": 288,
+      "at": 9921
+    },
+    {
+      "name": "mmvr_local_05d87ed75bad4e0d",
+      "original": "sEnvColor",
+      "function": "func_80B14CF8",
+      "line": 289,
+      "at": 9981
+    },
+    {
+      "name": "mmvr_local_1413d57a80f6e884",
+      "original": "D_80B15600",
+      "function": "func_80B15264",
+      "line": 376,
+      "at": 13116
+    }
+  ],
+  "sourceSha256": "905c243c350e0dac7ee851fd92499f8ac0a5414ef3b0293dc6d55e487b5107ee"
+}

@@ -1,0 +1,28 @@
+{
+  "source": "overlays/actors/ovl_Bg_Icicle/z_bg_icicle.c",
+  "include": "ba65ffc8be100d93.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_2f8a1975ede67d31",
+      "original": "sAccel",
+      "function": "BgIcicle_Break",
+      "line": 98,
+      "at": 3030
+    },
+    {
+      "name": "mmvr_local_fbdd442fcc21b18c",
+      "original": "sPrimColor",
+      "function": "BgIcicle_Break",
+      "line": 99,
+      "at": 3086
+    },
+    {
+      "name": "mmvr_local_6354c59cea1c22b0",
+      "original": "sEnvColor",
+      "function": "BgIcicle_Break",
+      "line": 100,
+      "at": 3147
+    }
+  ],
+  "sourceSha256": "8dcf065ecc3902933d72210c6d1f8f8bc5f15eec070a52891634733b24eee443"
+}

@@ -1,0 +1,14 @@
+{
+  "source": "overlays/actors/ovl_En_Poh/z_en_poh.c",
+  "include": "305abf39fc2bf5d2.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_242956fc2eea5cfc",
+      "original": "D_80B2F710",
+      "function": "func_80B2D300",
+      "line": 397,
+      "at": 13629
+    }
+  ],
+  "sourceSha256": "255de8bbbc49d209a91316be5ba0ef628e4457393a2601bbb182ae4ec1c41726"
+}

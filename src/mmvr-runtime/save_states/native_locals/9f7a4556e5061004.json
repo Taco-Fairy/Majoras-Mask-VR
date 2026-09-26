@@ -1,0 +1,28 @@
+{
+  "source": "overlays/actors/ovl_En_Wiz_Fire/z_en_wiz_fire.c",
+  "include": "9f7a4556e5061004.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_2602a382a0a1ef10",
+      "original": "sLightSettingsColors",
+      "function": "EnWizFire_Update",
+      "line": 493,
+      "at": 19068
+    },
+    {
+      "name": "mmvr_local_e3ce0c9d824e0168",
+      "original": "sSteamPrimColor",
+      "function": "EnWizFire_Update",
+      "line": 612,
+      "at": 24340
+    },
+    {
+      "name": "mmvr_local_b096f755e1cfb517",
+      "original": "sSteamEnvColor",
+      "function": "EnWizFire_Update",
+      "line": 613,
+      "at": 24414
+    }
+  ],
+  "sourceSha256": "bd630802e4e9350cb2db178467ed8b2e0ea25f0e659e9473ee22848d7e6960bf"
+}

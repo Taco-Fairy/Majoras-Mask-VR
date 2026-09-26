@@ -1,0 +1,14 @@
+{
+  "source": "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_mask.c",
+  "include": "901c059e6b2335f2.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_0e31c4880e6ea201",
+      "original": "sMaskEquipMagicArrowBowSlotHoldTimer",
+      "function": "KaleidoScope_UpdateMaskEquip",
+      "line": 1027,
+      "at": 54034
+    }
+  ],
+  "sourceSha256": "31e813bcf1f3420af415fb4ead2467d0672bae202871af3cd6753f0ef151df69"
+}

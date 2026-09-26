@@ -1,0 +1,14 @@
+{
+  "source": "code/z_view.c",
+  "include": "68e934387c6528ef.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_05ad3af972183f27",
+      "original": "old_view",
+      "function": "View_ApplyPerspective",
+      "line": 402,
+      "at": 11904
+    }
+  ],
+  "sourceSha256": "da6361253e091dfcb23d05053f8cdc04fd26a6b3289b9b0bf8caf4515dca21fc"
+}

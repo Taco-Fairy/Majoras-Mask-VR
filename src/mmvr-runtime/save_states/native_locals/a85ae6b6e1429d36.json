@@ -1,0 +1,21 @@
+{
+  "source": "overlays/actors/ovl_En_Thiefbird/z_en_thiefbird.c",
+  "include": "a85ae6b6e1429d36.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_bb96848abe8a721d",
+      "original": "D_80C13680",
+      "function": "func_80C10B0C",
+      "line": 217,
+      "at": 7719
+    },
+    {
+      "name": "mmvr_local_96afc404be2c599b",
+      "original": "D_80C1368C",
+      "function": "func_80C12D00",
+      "line": 982,
+      "at": 34474
+    }
+  ],
+  "sourceSha256": "fdff88a87a066466511376e97ac50bf9e83c3dc43a8889c48884b24c87ba546b"
+}

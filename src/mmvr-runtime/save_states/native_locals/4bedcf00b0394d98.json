@@ -1,0 +1,42 @@
+{
+  "source": "overlays/actors/ovl_En_Ge1/z_en_ge1.c",
+  "include": "4bedcf00b0394d98.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_e10f8a345a104ace",
+      "original": "sAnimations",
+      "function": "EnGe1_ChangeAnim",
+      "line": 130,
+      "at": 4455
+    },
+    {
+      "name": "mmvr_local_a84480c43bc8f58e",
+      "original": "sHairstyleDLs",
+      "function": "EnGe1_PostLimbDraw",
+      "line": 423,
+      "at": 15694
+    },
+    {
+      "name": "mmvr_local_adefd9646a8dca1b",
+      "original": "sInitialFocusPos",
+      "function": "EnGe1_PostLimbDraw",
+      "line": 428,
+      "at": 15864
+    },
+    {
+      "name": "mmvr_local_148d6d1132fd6e7e",
+      "original": "sZeroVec",
+      "function": "EnGe1_PostLimbDraw",
+      "line": 429,
+      "at": 15927
+    },
+    {
+      "name": "mmvr_local_95bd213a073ecbb9",
+      "original": "sEyeTextures",
+      "function": "EnGe1_Draw",
+      "line": 452,
+      "at": 16562
+    }
+  ],
+  "sourceSha256": "6df7012bf5219401079be95be80f75a4825655c5652397bd7e4cd3bc4108de28"
+}

@@ -1,0 +1,28 @@
+{
+  "source": "overlays/actors/ovl_En_Kame/z_en_kame.c",
+  "include": "11b8979f9e87584f.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_0610fbcff5e244c9",
+      "original": "sSnowPrimColor",
+      "function": "EnKame_ProcessAttackEffects",
+      "line": 341,
+      "at": 14543
+    },
+    {
+      "name": "mmvr_local_32b63f1f42d22b7d",
+      "original": "sSnowEnvColor",
+      "function": "EnKame_ProcessAttackEffects",
+      "line": 342,
+      "at": 14608
+    },
+    {
+      "name": "mmvr_local_806aa09a794e3a17",
+      "original": "sVelocity",
+      "function": "EnKame_ProcessAttackEffects",
+      "line": 343,
+      "at": 14666
+    }
+  ],
+  "sourceSha256": "55334db01bb6995ae7cd0293a6068fc7259ac708c20570af493306ac8944637b"
+}

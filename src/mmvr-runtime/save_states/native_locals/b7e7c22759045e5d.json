@@ -1,0 +1,42 @@
+{
+  "source": "overlays/actors/ovl_En_Az/z_en_az.c",
+  "include": "b7e7c22759045e5d.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_d0b103894774487f",
+      "original": "D_80A9914C",
+      "function": "EnAz_Init",
+      "line": 197,
+      "at": 7040
+    },
+    {
+      "name": "mmvr_local_01d39e9fd6eafe69",
+      "original": "D_80A9915C",
+      "function": "EnAz_Init",
+      "line": 198,
+      "at": 7097
+    },
+    {
+      "name": "mmvr_local_6feb5b7b4f1fadac",
+      "original": "D_80A99410",
+      "function": "EnAz_PostLimbDraw",
+      "line": 1993,
+      "at": 84020
+    },
+    {
+      "name": "mmvr_local_0bd59727987b3e4a",
+      "original": "D_80A9941C",
+      "function": "EnAz_PostLimbDraw",
+      "line": 1994,
+      "at": 84075
+    },
+    {
+      "name": "mmvr_local_cc7d7dec5642b206",
+      "original": "D_80A99428",
+      "function": "EnAz_PostLimbDraw",
+      "line": 1995,
+      "at": 84131
+    }
+  ],
+  "sourceSha256": "368f236bc477a41808d04f6667e1809faa60a5e096299ea601868b348539417c"
+}

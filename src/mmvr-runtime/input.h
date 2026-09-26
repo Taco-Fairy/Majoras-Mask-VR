@@ -1,0 +1,104 @@
+#pragma once
+#include <algorithm>
+#include <cmath>
+#include <cstdint>
+namespace mmvr {
+struct Pad {
+    uint16_t buttons = 0;
+    int8_t x = 0, y = 0;
+    bool active = false;
+    int8_t rightX = 0, rightY = 0;
+};
+inline Pad ItemWheelInput(Pad pad, bool selecting) {
+    if (selecting) {
+        pad.buttons = 0;
+        pad.rightX = pad.rightY = 0;
+    }
+    return pad;
+}
+inline int8_t Axis(float value, float other) {
+    const float length = std::sqrt(value * value + other * other);
+    if (length <= .18f)
+        return 0;
+    const float scale = std::min(1.f, (length - .18f) / .82f) / length;
+    return static_cast<int8_t>(std::lround(std::clamp(value * scale, -1.f, 1.f) * 85.f));
+}
+inline uint16_t CButtons(float x, float y) {
+    return (x < -.55f ? 2 : 0) | (x > .55f ? 1 : 0) | (y > .55f ? 8 : 0) | (y < -.55f ? 4 : 0);
+}
+// Five native notes; B and Y both remain cancel rather than changing pitch.
+inline uint16_t InstrumentButtons(float lx, float ly, float rx, float ry, bool a, bool x, bool b, bool y) {
+    return CButtons(lx, ly) | CButtons(rx, ry) | ((a || x) ? 0x8000 : 0) | ((b || y) ? 0x4000 : 0);
+}
+struct TriggerHold {
+    bool held = false;
+    bool Update(float value, bool enabled) {
+        if (!enabled || value < .25f)
+            held = false;
+        else if (value > .65f)
+            held = true;
+        return held;
+    }
+};
+// Page left is native Z (not L, which opens the developer inventory editor).
+// A trigger held on menu entry must be released before it can change pages.
+struct PauseTriggers {
+    TriggerHold left, right;
+    bool active = false, armedLeft = false, armedRight = false;
+    uint16_t Update(float l, float r, bool enabled) {
+        if (!enabled) {
+            active = false;
+            armedLeft = armedRight = false;
+            left.Update(0, false);
+            right.Update(0, false);
+            return 0;
+        }
+        if (!active) {
+            active = true;
+            armedLeft = l < .25f;
+            armedRight = r < .25f;
+        }
+        armedLeft |= l < .25f;
+        armedRight |= r < .25f;
+        bool a = left.Update(l, armedLeft), b = right.Update(r, armedRight);
+        return a == b ? 0 : a ? 0x2000 : 0x10;
+    }
+};
+// Left upper face button is lock-on in gameplay; in instruments/pause it keeps
+// its native L mapping. Triggers are reserved for physical actions and menu tabs.
+inline uint16_t LeftUpperButton(bool pressed, bool gameplay, bool ocarina, bool pause, bool climbing) {
+    if (!pressed)
+        return 0;
+    if (ocarina || pause || !gameplay)
+        return 0x20;
+    return climbing ? 0 : 0x2000;
+}
+// Preserve short presses between native game ticks. Clear on focus/session loss.
+struct PadLatch {
+    Pad held{};
+    uint16_t pending = 0, delivered = 0;
+    void Update(Pad next) {
+        if (!next.active) {
+            held = {};
+            pending = 0;
+            delivered = 0;
+            return;
+        }
+        pending |= next.buttons & ~held.buttons;
+        held = next;
+    }
+    void ClearButtons() {
+        held.buttons = 0;
+        pending = delivered = 0;
+    }
+    Pad Consume() {
+        auto result = held;
+        // A second short press needs a delivered release between native ticks.
+        const uint16_t releaseFirst = pending & delivered;
+        result.buttons = (result.buttons | pending) & ~releaseFirst;
+        pending &= releaseFirst;
+        delivered = result.buttons;
+        return result;
+    }
+};
+} // namespace mmvr

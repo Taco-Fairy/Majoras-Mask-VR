@@ -1,0 +1,42 @@
+{
+  "source": "overlays/actors/ovl_En_Osn/z_en_osn.c",
+  "include": "233d4deaea097db8.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_c0e2cab8bc8fdd17",
+      "original": "sEyeClosedHappyTex",
+      "function": "EnOsn_Draw",
+      "line": 1032,
+      "at": 36014
+    },
+    {
+      "name": "mmvr_local_098c36368ea58966",
+      "original": "sEyeOpenTex",
+      "function": "EnOsn_Draw",
+      "line": 1033,
+      "at": 36095
+    },
+    {
+      "name": "mmvr_local_269125e281590652",
+      "original": "sEyeClosedAngryTex",
+      "function": "EnOsn_Draw",
+      "line": 1034,
+      "at": 36162
+    },
+    {
+      "name": "mmvr_local_6f9f7c6ac8bd2fdf",
+      "original": "sSmileTex",
+      "function": "EnOsn_Draw",
+      "line": 1035,
+      "at": 36243
+    },
+    {
+      "name": "mmvr_local_2b09178195432b24",
+      "original": "sFrownTex",
+      "function": "EnOsn_Draw",
+      "line": 1036,
+      "at": 36306
+    }
+  ],
+  "sourceSha256": "d16b951a34202e4fd92c17eccbd568810461bb03c91f23b2efdefecdb5500ac8"
+}

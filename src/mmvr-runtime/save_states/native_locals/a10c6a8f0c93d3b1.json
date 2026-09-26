@@ -1,0 +1,49 @@
+{
+  "source": "overlays/actors/ovl_En_Am/z_en_am.c",
+  "include": "a10c6a8f0c93d3b1.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_809e5e6a2d459ccf",
+      "original": "sVelocity",
+      "function": "EnAm_SpawnEffects",
+      "line": 158,
+      "at": 5596
+    },
+    {
+      "name": "mmvr_local_3374fe6d8f5bd7ff",
+      "original": "sAccel",
+      "function": "EnAm_SpawnEffects",
+      "line": 159,
+      "at": 5649
+    },
+    {
+      "name": "mmvr_local_55ec25017cf41322",
+      "original": "sPrimColor",
+      "function": "EnAm_SpawnEffects",
+      "line": 160,
+      "at": 5714
+    },
+    {
+      "name": "mmvr_local_1c7c69ee727a0955",
+      "original": "sEnvColor",
+      "function": "EnAm_SpawnEffects",
+      "line": 161,
+      "at": 5773
+    },
+    {
+      "name": "mmvr_local_53da318fad293057",
+      "original": "sPrimColor",
+      "function": "func_808B0894",
+      "line": 390,
+      "at": 14308
+    },
+    {
+      "name": "mmvr_local_59fe262bb63056cc",
+      "original": "sEnvColor",
+      "function": "func_808B0894",
+      "line": 391,
+      "at": 14369
+    }
+  ],
+  "sourceSha256": "50ae81ca80856fc90413d8a91a856a8f3b1a1840d2c94e91bcaf3bac64a72553"
+}

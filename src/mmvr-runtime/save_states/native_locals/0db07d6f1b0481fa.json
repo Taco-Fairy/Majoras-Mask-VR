@@ -1,0 +1,42 @@
+{
+  "source": "overlays/actors/ovl_En_Okuta/z_en_okuta.c",
+  "include": "0db07d6f1b0481fa.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_0683e837f46e1ec5",
+      "original": "sSmokePrimColor",
+      "function": "EnOkuta_SpawnSmoke",
+      "line": 245,
+      "at": 10002
+    },
+    {
+      "name": "mmvr_local_f0fefee50fa5f880",
+      "original": "sSmokeEnvColor",
+      "function": "EnOkuta_SpawnSmoke",
+      "line": 246,
+      "at": 10068
+    },
+    {
+      "name": "mmvr_local_a47c048a26ccbbc3",
+      "original": "sBubbleAccel",
+      "function": "EnOkuta_Die",
+      "line": 583,
+      "at": 23137
+    },
+    {
+      "name": "mmvr_local_882b5f0d42833994",
+      "original": "sBubblePrimColor",
+      "function": "EnOkuta_Die",
+      "line": 584,
+      "at": 23199
+    },
+    {
+      "name": "mmvr_local_6870786f32888439",
+      "original": "sBubbleEnvColor",
+      "function": "EnOkuta_Die",
+      "line": 585,
+      "at": 23266
+    }
+  ],
+  "sourceSha256": "0f1d89f152891702a050659c88cd17bd6647eed42a0263f74cbadc0d56d0c1a9"
+}

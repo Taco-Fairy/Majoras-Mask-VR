@@ -1,0 +1,14 @@
+{
+  "source": "overlays/actors/ovl_Bg_Goron_Oyu/z_bg_goron_oyu.c",
+  "include": "52fe40e187724554.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_e31f240741005f43",
+      "original": "D_80B40780",
+      "function": "func_80B40160",
+      "line": 63,
+      "at": 1948
+    }
+  ],
+  "sourceSha256": "97ed7ec2fbac303325eda145eba36c2a0214246f98fec12672568a6aa339b3b1"
+}

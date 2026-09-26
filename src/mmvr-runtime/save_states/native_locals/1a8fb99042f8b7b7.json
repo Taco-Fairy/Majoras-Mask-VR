@@ -1,0 +1,21 @@
+{
+  "source": "overlays/actors/ovl_En_Dekunuts/z_en_dekunuts.c",
+  "include": "1a8fb99042f8b7b7.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_807a9a05123f9d32",
+      "original": "D_808BEF90",
+      "function": "func_808BE4D4",
+      "line": 529,
+      "at": 19292
+    },
+    {
+      "name": "mmvr_local_ed34c28298ead6f8",
+      "original": "D_808BEF94",
+      "function": "func_808BE4D4",
+      "line": 530,
+      "at": 19353
+    }
+  ],
+  "sourceSha256": "82662ba46d08ce010a357bee80f220a1841fc8ab28be35505a5234a684e8065b"
+}

@@ -1,0 +1,35 @@
+{
+  "source": "overlays/actors/ovl_Bg_Dy_Yoseizo/z_bg_dy_yoseizo.c",
+  "include": "3c13bea8a22a9e00.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_33ed1694c8e60d2f",
+      "original": "sEffectPrimColors",
+      "function": "BgDyYoseizo_SpawnEffects",
+      "line": 118,
+      "at": 4602
+    },
+    {
+      "name": "mmvr_local_a5221c14cb8d49b6",
+      "original": "sEffectEnvColors",
+      "function": "BgDyYoseizo_SpawnEffects",
+      "line": 126,
+      "at": 4928
+    },
+    {
+      "name": "mmvr_local_73a96deb9497c9fb",
+      "original": "sMouthTextures",
+      "function": "BgDyYoseizo_Draw",
+      "line": 579,
+      "at": 23248
+    },
+    {
+      "name": "mmvr_local_c90ce9cc17c6a10f",
+      "original": "sStretchFactors",
+      "function": "BgDyYoseizo_DrawEffects",
+      "line": 731,
+      "at": 28340
+    }
+  ],
+  "sourceSha256": "658daef6a6ebdef3e9798f0de5bfee2d0110134bb6f181c2121ffc943953dae2"
+}

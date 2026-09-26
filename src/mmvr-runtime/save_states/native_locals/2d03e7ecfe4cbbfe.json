@@ -1,0 +1,77 @@
+{
+  "source": "code/z_scene_proc.c",
+  "include": "2d03e7ecfe4cbbfe.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_3ae0b49a33a4cf0e",
+      "original": "sceneDrawConfigHandlers",
+      "function": "Scene_Draw",
+      "line": 29,
+      "at": 786
+    },
+    {
+      "name": "mmvr_local_3140dc6c0f64df99",
+      "original": "matAnimDrawHandlers",
+      "function": "AnimatedMat_DrawMain",
+      "line": 393,
+      "at": 13673
+    },
+    {
+      "name": "mmvr_local_d1339b35b9fb484f",
+      "original": "renderModeSetNoneDL",
+      "function": "Scene_SetRenderModeXlu",
+      "line": 582,
+      "at": 20386
+    },
+    {
+      "name": "mmvr_local_133d7bd44b0d40bf",
+      "original": "renderModeSetXluSingleCycleDL",
+      "function": "Scene_SetRenderModeXlu",
+      "line": 589,
+      "at": 20615
+    },
+    {
+      "name": "mmvr_local_02efed6d0bca82cd",
+      "original": "renderModeSetXluTwoCycleDL",
+      "function": "Scene_SetRenderModeXlu",
+      "line": 600,
+      "at": 21267
+    },
+    {
+      "name": "mmvr_local_dd63a2ec80ebaab3",
+      "original": "dLists",
+      "function": "Scene_SetRenderModeXlu",
+      "line": 613,
+      "at": 22229
+    },
+    {
+      "name": "mmvr_local_1de20e7613be2aa3",
+      "original": "setBackCullDL",
+      "function": "Scene_SetCullFlag",
+      "line": 638,
+      "at": 22878
+    },
+    {
+      "name": "mmvr_local_f668112fe2accb24",
+      "original": "setFrontCullDL",
+      "function": "Scene_SetCullFlag",
+      "line": 642,
+      "at": 22996
+    },
+    {
+      "name": "mmvr_local_a29445a780d97322",
+      "original": "dLists",
+      "function": "Scene_SetCullFlag",
+      "line": 646,
+      "at": 23117
+    },
+    {
+      "name": "mmvr_local_e6451d93098c99bd",
+      "original": "greatBayTempleColorSetDL",
+      "function": "Scene_DrawConfigGreatBayTemple",
+      "line": 712,
+      "at": 25014
+    }
+  ],
+  "sourceSha256": "d21a714de1bc116a1d6cfa4f07f79002194ba17aa17fac00fc3398ab7526cfb3"
+}

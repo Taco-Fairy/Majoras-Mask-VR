@@ -1,0 +1,14 @@
+{
+  "source": "overlays/actors/ovl_En_Zot/z_en_zot.c",
+  "include": "ecae3024d9eea9fa.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_98fe7268f0bf4529",
+      "original": "D_80B99934",
+      "function": "EnZot_PostLimbDraw",
+      "line": 1409,
+      "at": 48025
+    }
+  ],
+  "sourceSha256": "e49f689210c030d624d0a9f00e3da3ae19a7625f8c55f8a7e9f7175cf239660d"
+}

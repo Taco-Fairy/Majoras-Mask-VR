@@ -1,0 +1,42 @@
+{
+  "source": "overlays/actors/ovl_En_Tru/z_en_tru.c",
+  "include": "76ecb6a6edc87361.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_a578b6d49694d6c9",
+      "original": "D_80A8B3D8",
+      "function": "func_80A86674",
+      "line": 459,
+      "at": 16598
+    },
+    {
+      "name": "mmvr_local_90db9e90f28613b1",
+      "original": "D_80A8B3E4",
+      "function": "func_80A86674",
+      "line": 460,
+      "at": 16653
+    },
+    {
+      "name": "mmvr_local_bba6379453ba9592",
+      "original": "D_80A8B3F0",
+      "function": "func_80A86674",
+      "line": 461,
+      "at": 16707
+    },
+    {
+      "name": "mmvr_local_2ddfcb63d738bb0f",
+      "original": "D_80A8B3FC",
+      "function": "EnTru_OverrideLimbDraw",
+      "line": 1249,
+      "at": 43934
+    },
+    {
+      "name": "mmvr_local_edcc38fafac7d1a9",
+      "original": "sEyeTextures",
+      "function": "EnTru_Draw",
+      "line": 1320,
+      "at": 46270
+    }
+  ],
+  "sourceSha256": "a239e05335f4572168bd7ba556947f7dc302408fb752094bea12b2c4bb6405a0"
+}

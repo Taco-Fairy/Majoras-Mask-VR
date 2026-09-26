@@ -1,0 +1,21 @@
+{
+  "source": "overlays/actors/ovl_En_M_Thunder/z_en_m_thunder.c",
+  "include": "aa64bab47b17ae3e.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_1f8adff4f8e1e707",
+      "original": "regular",
+      "function": "EnMThunder_Init",
+      "line": 119,
+      "at": 4081
+    },
+    {
+      "name": "mmvr_local_a0372da88fa2c6e3",
+      "original": "great",
+      "function": "EnMThunder_Init",
+      "line": 120,
+      "at": 4138
+    }
+  ],
+  "sourceSha256": "2444c40c30e8139a7b3fa4d24668c9f924a6b6eb030aa9df5ec13a17fff8ddec"
+}

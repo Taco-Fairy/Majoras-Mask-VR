@@ -1,0 +1,14 @@
+{
+  "source": "overlays/actors/ovl_En_Zoraegg/z_en_zoraegg.c",
+  "include": "259f4b1247dadc67.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_4a41a7a0a2e357ca",
+      "original": "sZoraBabyEyeTextures",
+      "function": "func_80B33818",
+      "line": 857,
+      "at": 28539
+    }
+  ],
+  "sourceSha256": "c00829656fe7135adc8d6f80beab472ecd6b6b82d212ba1d0e163f6e609e7e75"
+}

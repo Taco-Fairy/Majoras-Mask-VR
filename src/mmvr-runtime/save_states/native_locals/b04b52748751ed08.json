@@ -1,0 +1,28 @@
+{
+  "source": "overlays/actors/ovl_En_Pametfrog/z_en_pametfrog.c",
+  "include": "b04b52748751ed08.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_ab66080fc9f50a8e",
+      "original": "sAccel",
+      "function": "EnPametfrog_SetupSpawnFrog",
+      "line": 952,
+      "at": 38347
+    },
+    {
+      "name": "mmvr_local_d8dd866d74f251a7",
+      "original": "sPrimColor",
+      "function": "EnPametfrog_SetupSpawnFrog",
+      "line": 953,
+      "at": 38403
+    },
+    {
+      "name": "mmvr_local_551087b9db974a6e",
+      "original": "sEnvColor",
+      "function": "EnPametfrog_SetupSpawnFrog",
+      "line": 954,
+      "at": 38464
+    }
+  ],
+  "sourceSha256": "6c1926a7af6bc65bf0deae07011dcff89f36f5cf31e46e7d063615f762699fa1"
+}

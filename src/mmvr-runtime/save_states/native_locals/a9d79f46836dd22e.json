@@ -1,0 +1,21 @@
+{
+  "source": "overlays/actors/ovl_En_Karebaba/z_en_karebaba.c",
+  "include": "a9d79f46836dd22e.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_9b86a1c9ffe4296e",
+      "original": "sFogColor",
+      "function": "EnKarebaba_Draw",
+      "line": 647,
+      "at": 24937
+    },
+    {
+      "name": "mmvr_local_7ebc758bf149e5ba",
+      "original": "sStemDLists",
+      "function": "EnKarebaba_Draw",
+      "line": 648,
+      "at": 24982
+    }
+  ],
+  "sourceSha256": "4f6db452411c95a08858f7c4c54633f060e5bd5b3431d4951e132f98cb0ed3f6"
+}

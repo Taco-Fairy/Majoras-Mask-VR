@@ -1,0 +1,21 @@
+{
+  "source": "overlays/actors/ovl_En_Tite/z_en_tite.c",
+  "include": "866ad9c9abb68e76.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_4afa5399f079ffe4",
+      "original": "sTexturesDesegmented",
+      "function": "EnTite_Init",
+      "line": 133,
+      "at": 4852
+    },
+    {
+      "name": "mmvr_local_9b98373e23a14f11",
+      "original": "sAccel",
+      "function": "func_80893BCC",
+      "line": 234,
+      "at": 8387
+    }
+  ],
+  "sourceSha256": "170b118211a1263115d8cd3c51eb979f3263165a6cba61101db54f696c80f74b"
+}

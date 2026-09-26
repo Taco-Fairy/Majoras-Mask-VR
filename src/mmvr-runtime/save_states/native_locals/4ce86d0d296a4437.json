@@ -1,0 +1,14 @@
+{
+  "source": "overlays/actors/ovl_Obj_Makekinsuta/z_obj_makekinsuta.c",
+  "include": "4ce86d0d296a4437.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_39a4546f638375fb",
+      "original": "D_8099FE3C",
+      "function": "func_8099FB64",
+      "line": 73,
+      "at": 2197
+    }
+  ],
+  "sourceSha256": "2a4767c057a12b6036b6f5c2be0c148c2e82345ac9c55bd11bdfd71dd867cd61"
+}

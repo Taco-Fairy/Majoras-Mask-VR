@@ -1,0 +1,14 @@
+{
+  "source": "overlays/actors/ovl_En_River_Sound/z_en_river_sound.c",
+  "include": "b89d81a5b8284534.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_6de68ecb7403509e",
+      "original": "freqScale",
+      "function": "EnRiverSound_Draw",
+      "line": 78,
+      "at": 2632
+    }
+  ],
+  "sourceSha256": "b42ebd4f5f6328626b93c4ec5a670d6d1d52090625381317c0c06691fc041bc0"
+}

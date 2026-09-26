@@ -1,0 +1,35 @@
+{
+  "source": "overlays/actors/ovl_En_Rz/z_en_rz.c",
+  "include": "af4ffc2e8fe0f9a5.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_4865c28f168087bf",
+      "original": "sJudoAnimations",
+      "function": "EnRz_ChangeAnim",
+      "line": 196,
+      "at": 6796
+    },
+    {
+      "name": "mmvr_local_7885e49107286d3a",
+      "original": "sMarillaAnimations",
+      "function": "EnRz_ChangeAnim",
+      "line": 205,
+      "at": 7349
+    },
+    {
+      "name": "mmvr_local_113cce559b7d874a",
+      "original": "sPlayerAnimations",
+      "function": "EnRz_ChangeAnim",
+      "line": 214,
+      "at": 7841
+    },
+    {
+      "name": "mmvr_local_45b9d267fdc22eb2",
+      "original": "sFocusOffsetPos",
+      "function": "EnRz_PostLimbDraw",
+      "line": 684,
+      "at": 24370
+    }
+  ],
+  "sourceSha256": "e1fb2be0c6b267176a2bf68cc949c30b2200fd8ba231704ba7e1f48aa4e0a662"
+}

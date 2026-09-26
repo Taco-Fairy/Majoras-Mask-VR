@@ -1,0 +1,77 @@
+{
+  "source": "code/z_play.c",
+  "include": "c94cd22351dd5d20.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_505db47cdd51c79b",
+      "original": "lastBlurWidth",
+      "function": "Play_DrawMotionBlur",
+      "line": 84,
+      "at": 2351
+    },
+    {
+      "name": "mmvr_local_c810c2e8faefccc3",
+      "original": "lastBlurHeight",
+      "function": "Play_DrawMotionBlur",
+      "line": 85,
+      "at": 2382
+    },
+    {
+      "name": "mmvr_local_4aa7e2b362ac65e9",
+      "original": "hasCopiedForFrame",
+      "function": "Play_DrawMotionBlur",
+      "line": 86,
+      "at": 2413
+    },
+    {
+      "name": "mmvr_local_e2dcada1dd3b51a6",
+      "original": "sQuakeIndex",
+      "function": "Play_UpdateWaterCamera",
+      "line": 584,
+      "at": 19039
+    },
+    {
+      "name": "mmvr_local_9bbfce0e5dfb16bb",
+      "original": "sIsCameraUnderwater",
+      "function": "Play_UpdateWaterCamera",
+      "line": 585,
+      "at": 19073
+    },
+    {
+      "name": "mmvr_local_222e60c92dfe0614",
+      "original": "lastPauseWidth",
+      "function": "Play_DrawMain",
+      "line": 1280,
+      "at": 48314
+    },
+    {
+      "name": "mmvr_local_611e2d661e3b6587",
+      "original": "lastPauseHeight",
+      "function": "Play_DrawMain",
+      "line": 1281,
+      "at": 48346
+    },
+    {
+      "name": "mmvr_local_3e960d5ea2af1905",
+      "original": "lastAltAssets",
+      "function": "Play_DrawMain",
+      "line": 1282,
+      "at": 48380
+    },
+    {
+      "name": "mmvr_local_f82c0d5a52d804ad",
+      "original": "hasCapturedPauseBuffer",
+      "function": "Play_DrawMain",
+      "line": 1283,
+      "at": 48412
+    },
+    {
+      "name": "mmvr_local_37bd02a323bb4c9d",
+      "original": "prevInput",
+      "function": "Play_Main",
+      "line": 1781,
+      "at": 71175
+    }
+  ],
+  "sourceSha256": "953bc0e3ab1de377f1f714472da3ae9f54002cbe24ff761d1b3d42d2480f1907"
+}

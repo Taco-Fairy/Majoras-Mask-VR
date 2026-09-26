@@ -1,0 +1,28 @@
+{
+  "source": "overlays/actors/ovl_En_Geg/z_en_geg.c",
+  "include": "e818f529c236b64c.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_9634bbab2f1dfada",
+      "original": "D_80BB4044",
+      "function": "func_80BB3318",
+      "line": 868,
+      "at": 31078
+    },
+    {
+      "name": "mmvr_local_d3fde3f9bdfd2c7f",
+      "original": "D_80BB407C",
+      "function": "EnGeg_PostLimbDraw",
+      "line": 994,
+      "at": 35282
+    },
+    {
+      "name": "mmvr_local_3db6e2118ffbc9b1",
+      "original": "D_80BB4088",
+      "function": "func_80BB3BE0",
+      "line": 1088,
+      "at": 38542
+    }
+  ],
+  "sourceSha256": "4e8a430a3fe334e28177db175bd478e7cd3b92715b22f8faf2995b6ebcaea436"
+}

@@ -1,0 +1,14 @@
+{
+  "source": "overlays/actors/ovl_En_Fishing/z_en_fishing.c",
+  "include": "813670024edd2ab6.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_804a81fdd45ad6a1",
+      "original": "sLoachMouthOffset",
+      "function": "EnFishing_LoachPostLimbDraw",
+      "line": 4220,
+      "at": 150310
+    }
+  ],
+  "sourceSha256": "745609976cf3f2c6e988b8bd09ad5de5256282635eb76714b5924d87f3dbec73"
+}

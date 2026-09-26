@@ -1,0 +1,14 @@
+{
+  "source": "overlays/actors/ovl_En_Toto/z_en_toto.c",
+  "include": "3b5f170a6a1a946a.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_c4e1495f98a8872c",
+      "original": "eyeTextures",
+      "function": "EnToto_Draw",
+      "line": 710,
+      "at": 24814
+    }
+  ],
+  "sourceSha256": "db536a957a999015ca89cd71a92ff11905cad71af1dd98f2ec0b5f85b2081e69"
+}

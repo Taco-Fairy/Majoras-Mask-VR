@@ -1,0 +1,28 @@
+{
+  "source": "overlays/actors/ovl_En_Vm/z_en_vm.c",
+  "include": "e49c5823bd08655f.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_90ba9367b20943ec",
+      "original": "sTexturesDesegmented",
+      "function": "EnVm_Init",
+      "line": 155,
+      "at": 4906
+    },
+    {
+      "name": "mmvr_local_acb49dd144389c87",
+      "original": "sPrimColor",
+      "function": "func_808CC610",
+      "line": 232,
+      "at": 7719
+    },
+    {
+      "name": "mmvr_local_4694f0cf4630ceb0",
+      "original": "sEnvColor",
+      "function": "func_808CC610",
+      "line": 233,
+      "at": 7774
+    }
+  ],
+  "sourceSha256": "4067bed45fb52c0a5fd3e0cd8987aec7d17af1d24b8bb8b658557be3d48c7109"
+}

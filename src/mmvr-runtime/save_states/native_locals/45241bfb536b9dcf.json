@@ -1,0 +1,14 @@
+{
+  "source": "overlays/gamestates/ovl_file_choose/z_file_choose_NES.c",
+  "include": "45241bfb536b9dcf.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_4bced69b2c78fd51",
+      "original": "D_80814564",
+      "function": "FileSelect_UnusedCMDelay",
+      "line": 426,
+      "at": 16304
+    }
+  ],
+  "sourceSha256": "fc624dea450f6a34ec4a44ccbe5a0979919a9c651e4b41b00debe83a5abd36bc"
+}

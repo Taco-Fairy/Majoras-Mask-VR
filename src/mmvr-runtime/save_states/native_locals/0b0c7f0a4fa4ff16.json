@@ -1,0 +1,14 @@
+{
+  "source": "overlays/actors/ovl_En_Raf/z_en_raf.c",
+  "include": "0b0c7f0a4fa4ff16.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_46abc980f800b395",
+      "original": "limbScale",
+      "function": "EnRaf_Init",
+      "line": 204,
+      "at": 9631
+    }
+  ],
+  "sourceSha256": "9ff6c40d193c4a4a403b9f360a874e20c0c0f20d091d9cea20fa401db38554ee"
+}

@@ -1,0 +1,14 @@
+{
+  "source": "overlays/actors/ovl_En_Bjt/z_en_bjt.c",
+  "include": "47ed780e474cfd21.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_758f847d73aea3ed",
+      "original": "sColliderBasePos",
+      "function": "EnBjt_UpdateCollision",
+      "line": 174,
+      "at": 7118
+    }
+  ],
+  "sourceSha256": "f677422c3b0fe3aa2c1113cb097b862475b97ff9bc8bdb14accaa17ab6250e6a"
+}

@@ -1,0 +1,21 @@
+{
+  "source": "overlays/actors/ovl_En_Lift_Nuts/z_en_lift_nuts.c",
+  "include": "a17f3d2f1beb721f.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_3910337232e9887c",
+      "original": "sMinigameState",
+      "function": "EnLiftNuts_MinigameState",
+      "line": 230,
+      "at": 9710
+    },
+    {
+      "name": "mmvr_local_037f24737110f10b",
+      "original": "sFocusOffset",
+      "function": "EnLiftNuts_PostLimbDraw",
+      "line": 1106,
+      "at": 44251
+    }
+  ],
+  "sourceSha256": "f2eb651ad4b6079a087d94d889926050396ccabcdf3a63de90072b94c9e733bc"
+}

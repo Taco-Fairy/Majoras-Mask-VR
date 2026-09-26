@@ -1,0 +1,21 @@
+{
+  "source": "overlays/actors/ovl_En_Fall/z_en_fall.c",
+  "include": "8045389d44c2ec80.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_14b805c559c36494",
+      "original": "sFocusOffset",
+      "function": "EnFall_Moon_Draw",
+      "line": 773,
+      "at": 30747
+    },
+    {
+      "name": "mmvr_local_7f68aa71cbd89e66",
+      "original": "sDebrisModelDLists",
+      "function": "EnFall_RisingDebris_Draw",
+      "line": 904,
+      "at": 36316
+    }
+  ],
+  "sourceSha256": "bdec4b9cc3530c88fea47582b7a10da54aecf1ef5e5a498a1d598c62328a1fb2"
+}

@@ -1,0 +1,14 @@
+{
+  "source": "overlays/actors/ovl_Dm_Bal/z_dm_bal.c",
+  "include": "43dabbb319f48877.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_ad1d104257e909ac",
+      "original": "sCueId",
+      "function": "DmBal_HandleCutscene",
+      "line": 97,
+      "at": 4212
+    }
+  ],
+  "sourceSha256": "38d2f291a7d6a581d3969860fdf9f8dd3f126ff81d17e5dacd9ae32f92f7e9d2"
+}

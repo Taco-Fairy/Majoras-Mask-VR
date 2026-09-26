@@ -1,0 +1,84 @@
+{
+  "source": "overlays/actors/ovl_En_Gm/z_en_gm.c",
+  "include": "7a40a2e5f0f32491.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_ae0aa886fb2f99c9",
+      "original": "D_80951D90",
+      "function": "func_8094FCC4",
+      "line": 1321,
+      "at": 48676
+    },
+    {
+      "name": "mmvr_local_d3518a03c27f46b6",
+      "original": "D_80951D9C",
+      "function": "func_8094FF04",
+      "line": 1376,
+      "at": 50678
+    },
+    {
+      "name": "mmvr_local_dcf188198b0f1c62",
+      "original": "D_80951DA8",
+      "function": "func_80950088",
+      "line": 1418,
+      "at": 52248
+    },
+    {
+      "name": "mmvr_local_6cb020484be377b0",
+      "original": "D_80951DB4",
+      "function": "func_80950088",
+      "line": 1419,
+      "at": 52305
+    },
+    {
+      "name": "mmvr_local_3916632c772acc07",
+      "original": "D_80951DBC",
+      "function": "func_80950120",
+      "line": 1433,
+      "at": 52878
+    },
+    {
+      "name": "mmvr_local_94f707a4c16d03d7",
+      "original": "D_80951DC8",
+      "function": "func_80950120",
+      "line": 1434,
+      "at": 52938
+    },
+    {
+      "name": "mmvr_local_0a09eaf864704466",
+      "original": "D_80951DD0",
+      "function": "func_809501B8",
+      "line": 1448,
+      "at": 53509
+    },
+    {
+      "name": "mmvr_local_2b3035c64b0b9a56",
+      "original": "D_80951DDC",
+      "function": "func_809501B8",
+      "line": 1449,
+      "at": 53569
+    },
+    {
+      "name": "mmvr_local_a7f664bc2ee4ba8d",
+      "original": "D_80951DE4",
+      "function": "func_80950490",
+      "line": 1573,
+      "at": 57026
+    },
+    {
+      "name": "mmvr_local_d414ab70b475b3b4",
+      "original": "D_80951E24",
+      "function": "EnGm_PostLimbDraw",
+      "line": 1989,
+      "at": 71405
+    },
+    {
+      "name": "mmvr_local_4d8de27d305ec56b",
+      "original": "D_80951E30",
+      "function": "EnGm_Draw",
+      "line": 2056,
+      "at": 74092
+    }
+  ],
+  "sourceSha256": "d337dda55aa4b45eda37de2259191f3bb82630bdbb41175224f230154915e6f6"
+}

@@ -1,0 +1,35 @@
+{
+  "source": "overlays/actors/ovl_En_Snowwd/z_en_snowwd.c",
+  "include": "18ab8e6d18a7f2f3.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_63168ad68c68fa06",
+      "original": "sAccel",
+      "function": "EnSnowwd_Idle",
+      "line": 73,
+      "at": 2004
+    },
+    {
+      "name": "mmvr_local_4c83e740508486f6",
+      "original": "sVelocity",
+      "function": "EnSnowwd_Idle",
+      "line": 74,
+      "at": 2053
+    },
+    {
+      "name": "mmvr_local_fcc53c31c877ef62",
+      "original": "sPrimColor",
+      "function": "EnSnowwd_Idle",
+      "line": 75,
+      "at": 2112
+    },
+    {
+      "name": "mmvr_local_52a44bd5b4ca1a0b",
+      "original": "sEnvColor",
+      "function": "EnSnowwd_Idle",
+      "line": 76,
+      "at": 2173
+    }
+  ],
+  "sourceSha256": "5f89eae53bc630fbfe10f1c1b6b99a2f3a84e6c748de5c324919d40b34cea511"
+}

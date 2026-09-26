@@ -1,0 +1,14 @@
+{
+  "source": "overlays/actors/ovl_En_Giant/z_en_giant.c",
+  "include": "b06ebece0bc4e2af.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_5e3a63942dc2239c",
+      "original": "sFaceTextures",
+      "function": "EnGiant_Draw",
+      "line": 536,
+      "at": 19764
+    }
+  ],
+  "sourceSha256": "7436f8c179c94cd0905762edd34e81997831718c89943779d038e129306370fb"
+}

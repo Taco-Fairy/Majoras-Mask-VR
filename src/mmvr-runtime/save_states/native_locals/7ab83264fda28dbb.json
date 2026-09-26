@@ -1,0 +1,35 @@
+{
+  "source": "code/z_bgcheck.c",
+  "include": "7ab83264fda28dbb.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_c6e3017a27c6af7e",
+      "original": "sPolyVerts",
+      "function": "CollisionPoly_LineVsPoly",
+      "line": 395,
+      "at": 14013
+    },
+    {
+      "name": "mmvr_local_f207ec69dbbae80a",
+      "original": "sPlane",
+      "function": "CollisionPoly_LineVsPoly",
+      "line": 396,
+      "at": 14060
+    },
+    {
+      "name": "mmvr_local_5b86095e8543f269",
+      "original": "sSphere",
+      "function": "CollisionPoly_SphVsPoly",
+      "line": 445,
+      "at": 16187
+    },
+    {
+      "name": "mmvr_local_d1d562c98e9015f6",
+      "original": "sTri",
+      "function": "CollisionPoly_SphVsPoly",
+      "line": 446,
+      "at": 16230
+    }
+  ],
+  "sourceSha256": "1120f3d5c532d4d525931b09e014ce03052b0f05198547a0ca91ec75d0ecb26a"
+}

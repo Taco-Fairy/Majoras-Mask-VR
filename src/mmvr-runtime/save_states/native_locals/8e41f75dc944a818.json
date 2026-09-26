@@ -1,0 +1,42 @@
+{
+  "source": "overlays/actors/ovl_En_Ma4/z_en_ma4.c",
+  "include": "8e41f75dc944a818.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_1cf76ace2c0401a2",
+      "original": "sAnimIndex",
+      "function": "EnMa4_RunInCircles",
+      "line": 274,
+      "at": 10649
+    },
+    {
+      "name": "mmvr_local_c734b1e96b1d1348",
+      "original": "D_80AC0250",
+      "function": "EnMa4_RunInCircles",
+      "line": 275,
+      "at": 10692
+    },
+    {
+      "name": "mmvr_local_d15860754ad0070c",
+      "original": "D_80AC0254",
+      "function": "EnMa4_RunInCircles",
+      "line": 276,
+      "at": 10724
+    },
+    {
+      "name": "mmvr_local_28d7144670033495",
+      "original": "D_80AC0258",
+      "function": "EnMa4_HorsebackGameWait",
+      "line": 744,
+      "at": 28748
+    },
+    {
+      "name": "mmvr_local_dbf25f5604ebc018",
+      "original": "sFrameCounter",
+      "function": "EnMa4_HorsebackGameEnd",
+      "line": 771,
+      "at": 29799
+    }
+  ],
+  "sourceSha256": "126797fb69dc8d09c8d3d4be9b0939ad0b89eb82825052ac23839a0dfa55de56"
+}

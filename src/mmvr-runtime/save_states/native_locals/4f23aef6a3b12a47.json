@@ -1,0 +1,77 @@
+{
+  "source": "overlays/actors/ovl_En_Bigslime/z_en_bigslime.c",
+  "include": "4f23aef6a3b12a47.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_cf11265f340aeedc",
+      "original": "sIsFrogReturnedFlags",
+      "function": "EnBigslime_Init",
+      "line": 308,
+      "at": 18733
+    },
+    {
+      "name": "mmvr_local_3dc541719d5786b8",
+      "original": "minislimeSpawnVtx",
+      "function": "EnBigslime_SetMinislimeBreakLocation",
+      "line": 704,
+      "at": 34072
+    },
+    {
+      "name": "mmvr_local_c7851f18be5b3b27",
+      "original": "sIceSmokeVelocity",
+      "function": "EnBigslime_Melt",
+      "line": 1967,
+      "at": 86838
+    },
+    {
+      "name": "mmvr_local_52de7df68f832f96",
+      "original": "sDustPrimColor",
+      "function": "EnBigslime_SetupFrogSpawn",
+      "line": 2421,
+      "at": 103946
+    },
+    {
+      "name": "mmvr_local_b3f161b13ab2d0a0",
+      "original": "sDustEnvColor",
+      "function": "EnBigslime_SetupFrogSpawn",
+      "line": 2422,
+      "at": 104011
+    },
+    {
+      "name": "mmvr_local_f4bbb66f39a6a32c",
+      "original": "sHahenAccel",
+      "function": "EnBigslime_SetupFrogSpawn",
+      "line": 2423,
+      "at": 104069
+    },
+    {
+      "name": "mmvr_local_316d8a87d3953d70",
+      "original": "isGekkoOnGround",
+      "function": "EnBigslime_UpdateGekko",
+      "line": 2821,
+      "at": 121177
+    },
+    {
+      "name": "mmvr_local_1107becd160b87ca",
+      "original": "bubblesInfo",
+      "function": "EnBigslime_DrawBigslime",
+      "line": 2981,
+      "at": 127916
+    },
+    {
+      "name": "mmvr_local_243f7dce53d6b9f4",
+      "original": "sGekkoDamageColor",
+      "function": "EnBigslime_DrawGekko",
+      "line": 3090,
+      "at": 133211
+    },
+    {
+      "name": "mmvr_local_79488cad99b22787",
+      "original": "sGekkoStunColor",
+      "function": "EnBigslime_DrawGekko",
+      "line": 3091,
+      "at": 133273
+    }
+  ],
+  "sourceSha256": "49ebba54b637f07a9cfc3775c841b082d1a79ff920cd32ca5ab106d909356bb7"
+}

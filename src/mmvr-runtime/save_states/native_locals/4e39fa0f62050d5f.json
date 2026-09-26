@@ -1,0 +1,21 @@
+{
+  "source": "overlays/actors/ovl_Dm_Stk/z_dm_stk.c",
+  "include": "4e39fa0f62050d5f.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_44560913a7f4e2b1",
+      "original": "sMoonCallTimer",
+      "function": "DmStk_PlaySfxForClockTowerIntroCutsceneVersion1",
+      "line": 596,
+      "at": 25893
+    },
+    {
+      "name": "mmvr_local_2cd4b019441b910c",
+      "original": "sMoonCallTimer",
+      "function": "DmStk_PlaySfxForClockTowerIntroCutsceneVersion2",
+      "line": 797,
+      "at": 32607
+    }
+  ],
+  "sourceSha256": "5e660993000c6691d3039b38d08f41d4044e99143afb5c71bdb331fac399e88e"
+}

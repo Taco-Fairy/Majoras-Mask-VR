@@ -1,0 +1,28 @@
+{
+  "source": "overlays/actors/ovl_En_Bom_Chu/z_en_bom_chu.c",
+  "include": "a3391c039d2d6dae.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_9936cadacb75be9c",
+      "original": "sBlureP1Offset",
+      "function": "EnBomChu_Update",
+      "line": 473,
+      "at": 15816
+    },
+    {
+      "name": "mmvr_local_746333b9f0e4bd2c",
+      "original": "sBlureP2LeftOffset",
+      "function": "EnBomChu_Update",
+      "line": 474,
+      "at": 15874
+    },
+    {
+      "name": "mmvr_local_f772c70588e35496",
+      "original": "sBlureP2RightOffset",
+      "function": "EnBomChu_Update",
+      "line": 475,
+      "at": 15937
+    }
+  ],
+  "sourceSha256": "777782dd58322fdca40c6fef4bdb321a4bb86ba3aa607cc793eda9c829a2ae44"
+}

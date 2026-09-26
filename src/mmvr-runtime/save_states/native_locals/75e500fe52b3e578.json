@@ -1,0 +1,21 @@
+{
+  "source": "overlays/actors/ovl_En_Snowman/z_en_snowman.c",
+  "include": "75e500fe52b3e578.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_e2d10f94d2c1b857",
+      "original": "sAccel",
+      "function": "EnSnowman_SpawnBigSnowballFragmentEffects",
+      "line": 314,
+      "at": 13056
+    },
+    {
+      "name": "mmvr_local_c236ba719e9a0ff0",
+      "original": "sAccel",
+      "function": "EnSnowman_Dead",
+      "line": 742,
+      "at": 31892
+    }
+  ],
+  "sourceSha256": "9cc45d87fc2e218c818ce45a073ced7c6afc8092bd78a5f1daf0d33751ed4859"
+}

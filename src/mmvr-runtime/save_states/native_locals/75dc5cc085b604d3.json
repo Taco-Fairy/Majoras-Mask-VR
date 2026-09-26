@@ -1,0 +1,14 @@
+{
+  "source": "overlays/actors/ovl_Obj_Dora/z_obj_dora.c",
+  "include": "75dc5cc085b604d3.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_9f57fedec8835882",
+      "original": "sPos",
+      "function": "ObjDora_Draw",
+      "line": 320,
+      "at": 11122
+    }
+  ],
+  "sourceSha256": "44544139ff6ff02e35b429ea9658a02930c17372a312dd3ff47b5155e50f7074"
+}

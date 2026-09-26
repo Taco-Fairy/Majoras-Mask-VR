@@ -1,0 +1,21 @@
+{
+  "source": "overlays/actors/ovl_En_Osk/z_en_osk.c",
+  "include": "9e370bdeca8de711.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_0e11fe9cc216371c",
+      "original": "D_80BF7018",
+      "function": "func_80BF5EBC",
+      "line": 173,
+      "at": 6523
+    },
+    {
+      "name": "mmvr_local_25d08947176b3a1b",
+      "original": "D_80BF7024",
+      "function": "EnOsk_PostLimbDraw",
+      "line": 578,
+      "at": 20002
+    }
+  ],
+  "sourceSha256": "16e2fdf0ae6ae1f354ca73940c8661a9217ef464ad14c97a4de7b434a29331a6"
+}

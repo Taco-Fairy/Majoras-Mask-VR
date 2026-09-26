@@ -1,0 +1,21 @@
+{
+  "source": "overlays/actors/ovl_En_Rr/z_en_rr.c",
+  "include": "87a3b1f5b2a45387.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_1a9619dae8c1d385",
+      "original": "D_808FC1E4",
+      "function": "func_808FA260",
+      "line": 221,
+      "at": 8079
+    },
+    {
+      "name": "mmvr_local_2ad30b0732e4471b",
+      "original": "D_808FC1F8",
+      "function": "func_808FA7AC",
+      "line": 366,
+      "at": 12291
+    }
+  ],
+  "sourceSha256": "135cb47a80b72db669343b5bd78c8c136d923e17b30bd03b5dfe2d8a57f48aca"
+}

@@ -1,0 +1,42 @@
+{
+  "source": "overlays/effects/ovl_Effect_Ss_Kakera/z_eff_ss_kakera.c",
+  "include": "bf9f2d5d5a731eca.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_652077877454d670",
+      "original": "D_8097EB0C",
+      "function": "func_8097E420",
+      "line": 205,
+      "at": 6599
+    },
+    {
+      "name": "mmvr_local_2b53566bf2d76c99",
+      "original": "D_8097EB14",
+      "function": "func_8097E4B0",
+      "line": 222,
+      "at": 7081
+    },
+    {
+      "name": "mmvr_local_b88a9627b6461840",
+      "original": "D_8097EB30",
+      "function": "func_8097E4F0",
+      "line": 232,
+      "at": 7366
+    },
+    {
+      "name": "mmvr_local_7c4dabdfe3174942",
+      "original": "D_8097EB3C",
+      "function": "func_8097E584",
+      "line": 249,
+      "at": 7862
+    },
+    {
+      "name": "mmvr_local_04c3e8ec634d87bd",
+      "original": "D_8097EB64",
+      "function": "func_8097E7E0",
+      "line": 308,
+      "at": 9540
+    }
+  ],
+  "sourceSha256": "fae66dd207ffe84abdaf05a7e96d3ab07e915609ddf3e02f68fc709ddda91a12"
+}

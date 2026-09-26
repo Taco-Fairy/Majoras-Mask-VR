@@ -1,0 +1,14 @@
+{
+  "source": "audio/lib/load.c",
+  "include": "f09f544553b6af2e.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_027ca430b1c81277",
+      "original": "sLoadIndex",
+      "function": "AudioLoad_ScriptLoad",
+      "line": 2238,
+      "at": 83408
+    }
+  ],
+  "sourceSha256": "11fae8658a2435c2292d45da4d9e8a848d8328268337896d074ad21fa8b60d3d"
+}

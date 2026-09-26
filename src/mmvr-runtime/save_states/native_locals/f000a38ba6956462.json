@@ -1,0 +1,49 @@
+{
+  "source": "overlays/actors/ovl_Boss_05/z_boss_05.c",
+  "include": "f000a38ba6956462.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_3a16d7f9ffff47bb",
+      "original": "sIcePrimColor",
+      "function": "Boss05_WalkingHead_Thaw",
+      "line": 204,
+      "at": 8529
+    },
+    {
+      "name": "mmvr_local_b10a286cd0af9d07",
+      "original": "sIceEnvColor",
+      "function": "Boss05_WalkingHead_Thaw",
+      "line": 205,
+      "at": 8593
+    },
+    {
+      "name": "mmvr_local_d66bbbe90504c04c",
+      "original": "sIceAccel",
+      "function": "Boss05_WalkingHead_Thaw",
+      "line": 206,
+      "at": 8650
+    },
+    {
+      "name": "mmvr_local_b92d20cfe43911b3",
+      "original": "sHeadOffset",
+      "function": "Boss05_LilyPad_PostLimbDraw",
+      "line": 1458,
+      "at": 66721
+    },
+    {
+      "name": "mmvr_local_15b61ca4ef4e2caf",
+      "original": "sHeadColliderOffset",
+      "function": "Boss05_Head_PostLimbDraw",
+      "line": 1498,
+      "at": 68179
+    },
+    {
+      "name": "mmvr_local_b1cab5148a1f5373",
+      "original": "sHeadOffset",
+      "function": "Boss05_Head_PostLimbDraw",
+      "line": 1499,
+      "at": 68247
+    }
+  ],
+  "sourceSha256": "f034e4d6500f370ea7edfea36d13fe644c9d93edd94f49ec731a180134112649"
+}

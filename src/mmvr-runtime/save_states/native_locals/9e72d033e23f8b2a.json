@@ -1,0 +1,49 @@
+{
+  "source": "overlays/actors/ovl_Dm_Char01/z_dm_char01.c",
+  "include": "9e72d033e23f8b2a.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_d96fb945453488b3",
+      "original": "D_80AAAAB8",
+      "function": "DmChar01_Draw",
+      "line": 403,
+      "at": 13737
+    },
+    {
+      "name": "mmvr_local_9417c94f28c5aba6",
+      "original": "D_80AAAABC",
+      "function": "DmChar01_Draw",
+      "line": 404,
+      "at": 13772
+    },
+    {
+      "name": "mmvr_local_84ae6885fb52c43e",
+      "original": "D_80AAAAC0",
+      "function": "DmChar01_Draw",
+      "line": 405,
+      "at": 13807
+    },
+    {
+      "name": "mmvr_local_1337bb70e38b7bad",
+      "original": "D_80AAAAC4",
+      "function": "DmChar01_Draw",
+      "line": 406,
+      "at": 13839
+    },
+    {
+      "name": "mmvr_local_a13897b40ebe86d6",
+      "original": "D_80AAAAC8",
+      "function": "DmChar01_Draw",
+      "line": 407,
+      "at": 13871
+    },
+    {
+      "name": "mmvr_local_a306e7eb2e71ba0b",
+      "original": "D_80AAAACC",
+      "function": "DmChar01_Draw",
+      "line": 408,
+      "at": 13903
+    }
+  ],
+  "sourceSha256": "2626fc42758dac57a629881957e9f36a0e3f8eac8b2ce65e2a05af8698cfa90a"
+}

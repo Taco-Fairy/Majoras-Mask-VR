@@ -1,0 +1,14 @@
+{
+  "source": "overlays/actors/ovl_En_Fsn/z_en_fsn.c",
+  "include": "851efd0979f4e5b1.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_efb0880a1f0acc6d",
+      "original": "sEyeTextures",
+      "function": "EnFsn_Draw",
+      "line": 1719,
+      "at": 66473
+    }
+  ],
+  "sourceSha256": "abf86122bacc82417efaef552249c6d2d370bcee0a3de043eaa88dced602d4e9"
+}

@@ -1,0 +1,14 @@
+{
+  "source": "overlays/actors/ovl_En_Owl/z_en_owl.c",
+  "include": "0b66e5813ea8b290.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_3bb7159413ed04e2",
+      "original": "sEyeTextures",
+      "function": "EnOwl_Draw",
+      "line": 1185,
+      "at": 39832
+    }
+  ],
+  "sourceSha256": "02a21c143b736ccedcdb39badc3aaec05d8c70abecdadb1808f1eeea2a3b5738"
+}

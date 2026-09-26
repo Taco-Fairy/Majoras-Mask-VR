@@ -1,0 +1,21 @@
+{
+  "source": "overlays/gamestates/ovl_title/z_title.c",
+  "include": "df79d82bfaa716e3.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_8dcbdbb9b1029626",
+      "original": "sTitleRotation",
+      "function": "ConsoleLogo_Draw",
+      "line": 118,
+      "at": 3350
+    },
+    {
+      "name": "mmvr_local_b24efb84caaf5f6b",
+      "original": "sTitleLights",
+      "function": "ConsoleLogo_Draw",
+      "line": 119,
+      "at": 3390
+    }
+  ],
+  "sourceSha256": "7b4559509009129c1f22bfd2104edb470dba19f7a6e1797760b6708983fbf0e7"
+}

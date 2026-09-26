@@ -1,0 +1,98 @@
+{
+  "source": "overlays/actors/ovl_En_Death/z_en_death.c",
+  "include": "274a2a3087fb8c02.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_90ae4b445149a103",
+      "original": "sSparkleVel",
+      "function": "EnDeath_DeathCutscenePart3",
+      "line": 955,
+      "at": 37715
+    },
+    {
+      "name": "mmvr_local_eedb7f773960115b",
+      "original": "sSparkleAccel",
+      "function": "EnDeath_DeathCutscenePart3",
+      "line": 956,
+      "at": 37770
+    },
+    {
+      "name": "mmvr_local_ceaaa54a374c6bfa",
+      "original": "sSparklePrimColor",
+      "function": "EnDeath_DeathCutscenePart3",
+      "line": 957,
+      "at": 37833
+    },
+    {
+      "name": "mmvr_local_26ca305b5f2e7d67",
+      "original": "sSparkleEnvColor",
+      "function": "EnDeath_DeathCutscenePart3",
+      "line": 958,
+      "at": 37893
+    },
+    {
+      "name": "mmvr_local_d270b35856e72ad4",
+      "original": "sDeleteLimbFrameNumbers",
+      "function": "EnDeath_DeathCutscenePart3",
+      "line": 959,
+      "at": 37947
+    },
+    {
+      "name": "mmvr_local_f14728bd96189f95",
+      "original": "sSparkleAccel",
+      "function": "EnDeath_DeathCutscenePart4",
+      "line": 1036,
+      "at": 40661
+    },
+    {
+      "name": "mmvr_local_fbcc57c25e1240c2",
+      "original": "sSparklePrimColor",
+      "function": "EnDeath_DeathCutscenePart4",
+      "line": 1037,
+      "at": 40724
+    },
+    {
+      "name": "mmvr_local_5b99339b0cc03e82",
+      "original": "sSparkleEnvColor",
+      "function": "EnDeath_DeathCutscenePart4",
+      "line": 1038,
+      "at": 40788
+    },
+    {
+      "name": "mmvr_local_292c915f7cf9cf34",
+      "original": "sMinideathDLs",
+      "function": "EnDeath_DrawBats",
+      "line": 1396,
+      "at": 53972
+    },
+    {
+      "name": "mmvr_local_950cb734e0230bbe",
+      "original": "sWeaponColliderOffsetEndSwing",
+      "function": "EnDeath_PostLimbDraw",
+      "line": 1640,
+      "at": 63237
+    },
+    {
+      "name": "mmvr_local_e72d5f61edec54f4",
+      "original": "sWeaponColliderOffsetOther",
+      "function": "EnDeath_PostLimbDraw",
+      "line": 1641,
+      "at": 63317
+    },
+    {
+      "name": "mmvr_local_6df16b3f39541439",
+      "original": "sDamageEffectOffsets",
+      "function": "EnDeath_PostLimbDraw",
+      "line": 1642,
+      "at": 63394
+    },
+    {
+      "name": "mmvr_local_ddd8c1451d476b97",
+      "original": "sLimbToBodyParts",
+      "function": "EnDeath_PostLimbDraw",
+      "line": 1646,
+      "at": 63621
+    }
+  ],
+  "sourceSha256": "59e8fefa4b41b06f87977d3cd73cceefba90e7ac1101f338017d049786e9a39b"
+}

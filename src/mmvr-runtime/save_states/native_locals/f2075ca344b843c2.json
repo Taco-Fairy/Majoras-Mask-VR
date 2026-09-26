@@ -1,0 +1,98 @@
+{
+  "source": "overlays/actors/ovl_En_Zog/z_en_zog.c",
+  "include": "f2075ca344b843c2.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_2711d25f1a73a5b8",
+      "original": "D_80B9593C",
+      "function": "func_80B93A48",
+      "line": 316,
+      "at": 10880
+    },
+    {
+      "name": "mmvr_local_677bf1ed30e61c7d",
+      "original": "D_80B95944",
+      "function": "func_80B93A48",
+      "line": 317,
+      "at": 10971
+    },
+    {
+      "name": "mmvr_local_3a29c891458f3da9",
+      "original": "D_80B95948",
+      "function": "func_80B93A48",
+      "line": 318,
+      "at": 11034
+    },
+    {
+      "name": "mmvr_local_916c7e5146742b53",
+      "original": "D_80B95950",
+      "function": "func_80B93A48",
+      "line": 319,
+      "at": 11111
+    },
+    {
+      "name": "mmvr_local_ef3b06a1bce2ca9f",
+      "original": "D_80B95974",
+      "function": "func_80B93A48",
+      "line": 323,
+      "at": 11500
+    },
+    {
+      "name": "mmvr_local_f63405dd51008146",
+      "original": "D_80B95984",
+      "function": "func_80B93A48",
+      "line": 324,
+      "at": 11583
+    },
+    {
+      "name": "mmvr_local_2b64040f12deb7c4",
+      "original": "D_80B9598C",
+      "function": "func_80B93DE8",
+      "line": 416,
+      "at": 14274
+    },
+    {
+      "name": "mmvr_local_d0e1d7c11012c4a2",
+      "original": "D_80B95998",
+      "function": "func_80B93DE8",
+      "line": 417,
+      "at": 14329
+    },
+    {
+      "name": "mmvr_local_760c60268add1a19",
+      "original": "D_80B959A4",
+      "function": "func_80B93DE8",
+      "line": 418,
+      "at": 14391
+    },
+    {
+      "name": "mmvr_local_2e75b22f0f90094e",
+      "original": "D_80B959A8",
+      "function": "func_80B93DE8",
+      "line": 419,
+      "at": 14452
+    },
+    {
+      "name": "mmvr_local_19a952c157db5780",
+      "original": "D_80B959AC",
+      "function": "func_80B94E34",
+      "line": 885,
+      "at": 30076
+    },
+    {
+      "name": "mmvr_local_ff3e19030bc833e9",
+      "original": "D_80B959B8",
+      "function": "EnZog_PostLimbDrawOpa",
+      "line": 1033,
+      "at": 35479
+    },
+    {
+      "name": "mmvr_local_d6b688dddb9593af",
+      "original": "D_80B959C4",
+      "function": "EnZog_PostLimbDraw",
+      "line": 1056,
+      "at": 36190
+    }
+  ],
+  "sourceSha256": "1d2336f011064ee40929599241e07c568b044370343b775ad99a61d569d095bf"
+}

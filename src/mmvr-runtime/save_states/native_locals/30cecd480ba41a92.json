@@ -1,0 +1,14 @@
+{
+  "source": "overlays/actors/ovl_En_Warp_Uzu/z_en_warp_uzu.c",
+  "include": "30cecd480ba41a92.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_cba843d93f4b15dd",
+      "original": "D_80A664FC",
+      "function": "func_80A66208",
+      "line": 77,
+      "at": 2346
+    }
+  ],
+  "sourceSha256": "f1dac4b2f8f525a6fcf5c1143b03132c0f4b855062c811c2c3023c75091898bf"
+}

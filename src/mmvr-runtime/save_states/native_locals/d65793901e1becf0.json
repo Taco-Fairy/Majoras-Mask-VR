@@ -1,0 +1,42 @@
+{
+  "source": "overlays/actors/ovl_En_Twig/z_en_twig.c",
+  "include": "d65793901e1becf0.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_3dc389bb6e0e7983",
+      "original": "D_80AC10D0",
+      "function": "func_80AC0AC8",
+      "line": 135,
+      "at": 4252
+    },
+    {
+      "name": "mmvr_local_192629824b2671f1",
+      "original": "sKiraVel",
+      "function": "func_80AC0D2C",
+      "line": 179,
+      "at": 6187
+    },
+    {
+      "name": "mmvr_local_d1165ba42a40ca07",
+      "original": "sKiraAccel",
+      "function": "func_80AC0D2C",
+      "line": 180,
+      "at": 6240
+    },
+    {
+      "name": "mmvr_local_f0900474249c9499",
+      "original": "sColorWhite",
+      "function": "func_80AC0D2C",
+      "line": 181,
+      "at": 6302
+    },
+    {
+      "name": "mmvr_local_f77ddd487f98fe8b",
+      "original": "sColorYellow",
+      "function": "func_80AC0D2C",
+      "line": 182,
+      "at": 6364
+    }
+  ],
+  "sourceSha256": "c9e4716379458f61ddd4dbf34e39bdd301edf35e3a2af0543d4370399a41f724"
+}

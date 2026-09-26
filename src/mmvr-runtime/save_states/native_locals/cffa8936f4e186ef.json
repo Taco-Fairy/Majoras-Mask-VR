@@ -1,0 +1,42 @@
+{
+  "source": "overlays/actors/ovl_En_Zov/z_en_zov.c",
+  "include": "cffa8936f4e186ef.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_8b7d5300c12b3dd2",
+      "original": "D_80BD2744",
+      "function": "EnZov_PostLimbDraw",
+      "line": 554,
+      "at": 19973
+    },
+    {
+      "name": "mmvr_local_4dd2298f939a864a",
+      "original": "D_80BD2750",
+      "function": "EnZov_PostLimbDraw",
+      "line": 555,
+      "at": 20030
+    },
+    {
+      "name": "mmvr_local_a39bff1618bafa53",
+      "original": "sEyeTextures",
+      "function": "EnZov_Draw",
+      "line": 574,
+      "at": 20638
+    },
+    {
+      "name": "mmvr_local_d80923e33fd5b0db",
+      "original": "sMouthTextures",
+      "function": "EnZov_Draw",
+      "line": 575,
+      "at": 20735
+    },
+    {
+      "name": "mmvr_local_0d18c297135ad971",
+      "original": "D_80BD2770",
+      "function": "EnZov_Draw",
+      "line": 576,
+      "at": 20813
+    }
+  ],
+  "sourceSha256": "17bac39449b5ce6723055360c2da32cff74e36f0ec38a3181e9a30d72dd203ef"
+}

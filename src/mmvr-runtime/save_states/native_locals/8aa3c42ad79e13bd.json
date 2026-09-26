@@ -1,0 +1,14 @@
+{
+  "source": "overlays/actors/ovl_En_Tubo_Trap/z_en_tubo_trap.c",
+  "include": "8aa3c42ad79e13bd.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_7400b8513858ba42",
+      "original": "sTransformationHeight",
+      "function": "EnTuboTrap_Idle",
+      "line": 226,
+      "at": 7557
+    }
+  ],
+  "sourceSha256": "c9eb9ef066d78bd7188d5c08651dcdf0e6d31402f091ce76fd688c9308a17c11"
+}

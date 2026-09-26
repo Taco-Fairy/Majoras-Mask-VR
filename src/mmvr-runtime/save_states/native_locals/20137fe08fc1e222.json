@@ -1,0 +1,14 @@
+{
+  "source": "overlays/actors/ovl_En_Zow/z_en_zow.c",
+  "include": "20137fe08fc1e222.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_ee2feb57abebead2",
+      "original": "D_80BDDD34",
+      "function": "func_80BDCD38",
+      "line": 274,
+      "at": 7923
+    }
+  ],
+  "sourceSha256": "faa35c73f2000c7ac8e81fb6106a2bf6d5025406169f017875bfca1935597a5f"
+}

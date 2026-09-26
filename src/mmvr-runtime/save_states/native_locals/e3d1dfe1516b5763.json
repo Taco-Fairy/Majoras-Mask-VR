@@ -1,0 +1,28 @@
+{
+  "source": "code/z_eff_blure.c",
+  "include": "e3d1dfe1516b5763.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_1acddd0aa56d521b",
+      "original": "baseVtx",
+      "function": "EffectBlure_DrawElemNoInterpolation",
+      "line": 461,
+      "at": 16981
+    },
+    {
+      "name": "mmvr_local_09a485a27f159230",
+      "original": "baseVtx",
+      "function": "EffectBlure_DrawElemHermiteInterpolation",
+      "line": 551,
+      "at": 19770
+    },
+    {
+      "name": "mmvr_local_7b3a226942e7b0b6",
+      "original": "interpolationEpoch",
+      "function": "EffectBlure_DrawSmooth",
+      "line": 725,
+      "at": 26849
+    }
+  ],
+  "sourceSha256": "9ddc7cb91fcafc655d24d95fd07e07795a368946b97a7ba9b68705a5f3535bb1"
+}

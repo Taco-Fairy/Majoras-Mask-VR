@@ -1,0 +1,21 @@
+{
+  "source": "overlays/actors/ovl_En_Ge3/z_en_ge3.c",
+  "include": "38075813ba731d1a.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_82b6a8bcdd0c913b",
+      "original": "sAnimations",
+      "function": "EnGe3_ChangeAnim",
+      "line": 115,
+      "at": 3919
+    },
+    {
+      "name": "mmvr_local_1abd5075de3366e3",
+      "original": "sEyeTextures",
+      "function": "EnGe3_Draw",
+      "line": 415,
+      "at": 15337
+    }
+  ],
+  "sourceSha256": "a8e79c7b6e31f1589eca60e2f20c5b67bdfd3e1e39e0372f9354f1192d5a60bb"
+}

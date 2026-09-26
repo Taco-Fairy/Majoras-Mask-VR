@@ -1,0 +1,21 @@
+{
+  "source": "overlays/actors/ovl_En_Zos/z_en_zos.c",
+  "include": "1f01575c71606459.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_fe216b90e496f15f",
+      "original": "D_80BBC750",
+      "function": "EnZos_PostLimbDraw",
+      "line": 720,
+      "at": 26031
+    },
+    {
+      "name": "mmvr_local_c222a9e065f0d77d",
+      "original": "sEyeTextures",
+      "function": "EnZos_Draw",
+      "line": 728,
+      "at": 26252
+    }
+  ],
+  "sourceSha256": "41808c842e6a8db4c106eaf2c4d6a06a3b55b452809477c6eb5d4253ac873953"
+}

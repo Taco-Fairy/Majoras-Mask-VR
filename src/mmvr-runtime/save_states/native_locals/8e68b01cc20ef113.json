@@ -1,0 +1,21 @@
+{
+  "source": "overlays/actors/ovl_En_Peehat/z_en_peehat.c",
+  "include": "8e68b01cc20ef113.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_58e9bf34fdf65d2f",
+      "original": "D_80899558",
+      "function": "func_80897258",
+      "line": 248,
+      "at": 8845
+    },
+    {
+      "name": "mmvr_local_1202313261ae0029",
+      "original": "D_80899564",
+      "function": "func_80897258",
+      "line": 249,
+      "at": 8898
+    }
+  ],
+  "sourceSha256": "0f02a4e35b4a2a94dc7acabb32a501a3299e05ff7dc356e402ac7bce3d75eff7"
+}

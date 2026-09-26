@@ -1,0 +1,524 @@
+#include "NativeActions.h"
+#ifdef MMVR_ENABLE
+#include "ItemUse.h"
+#include "Carry.h"
+#include "NativeForms.h"
+#include "Bombchu.h"
+#include "Interactions.h"
+#include "Camera.h"
+#include "Bow.h"
+#include "Bottle.h"
+#include "NativeCombat.h"
+#include "item_trigger.h"
+#include "runtime.h"
+#include "ui.h"
+#include <deque>
+#include <fstream>
+extern "C" {
+#include "global.h"
+int MMVR_ReadyThrowable(PlayState*, Player*, int);
+extern u8 gPlayerFormItemRestrictions[PLAYER_FORM_MAX][114];
+void MMVR_PlayerEquipSword(PlayState*, Player*, ItemId);
+void Player_UseItem(PlayState*, Player*, ItemId);
+}
+namespace {
+mmvr::ItemTrigger triggers[2];
+int holdingHand = -1;
+bool exchangeContext = false, exchangeSent = false;
+Actor* exchangeActor = nullptr;
+int exchangeText = -1;
+void SyncExchangeContext(PlayState* play) {
+    const bool active = mmvrgame::ExchangeItemContextActive(play);
+    auto* actor = active ? GET_PLAYER(play)->talkActor : nullptr;
+    const int text = active ? play->msgCtx.currentTextId : -1;
+    if (active != exchangeContext || actor != exchangeActor || text != exchangeText) {
+        mmvrgame::ClearItemTrigger();
+        exchangeSent = false;
+        exchangeContext = active;
+        exchangeActor = actor;
+        exchangeText = text;
+    }
+}
+struct Edge {
+    int kind, hand;
+    mmvrgame::ThrowSample release;
+};
+std::deque<Edge> edges;
+Player* owner = nullptr;
+int scene = -1, selected = ITEM_NONE, inventorySlot = -1, hand = -1, selectedForm = -1;
+bool holding = false, equipPending = false;
+double frameTime = -1;
+mmvrgame::ThrowSample delayedRelease{};
+bool delayedRestoreEquipment=true;
+Actor* delayedActor = nullptr;
+Actor* delayedBombchu = nullptr;
+bool BowItem(int item) {
+    return (item >= ITEM_BOW && item <= ITEM_ARROW_LIGHT) || (item >= ITEM_BOW_FIRE && item <= ITEM_BOW_LIGHT);
+}
+void Log(const char* event, int item) {
+    if (mmvr::GetSettings().Get(mmvr::Setting::SwordDiagnostics) > .5f)
+        std::ofstream("mmvr-combat.log", std::ios::app) << "item-trigger " << event << " item=" << item << "\n";
+}
+bool Eligible(PlayState* play, Player* p) {
+    return mmvrgame::InteractionsEligible(play, p) && mmvr::PhysicalActionsAllowed() &&
+           play->msgCtx.msgMode == MSGMODE_NONE && !(p->stateFlags2 & PLAYER_STATE2_USING_OCARINA);
+}
+void Equip(PlayState* play, Player* p, int item) {
+    if (item == ITEM_HOOKSHOT)
+        MMVR_PlayerEquipHookshot(play, p);
+    else if (BowItem(item) && mmvr::GetSettings().Get(mmvr::Setting::PhysicalBow) > .5f)
+        MMVR_PlayerEquipBow(play, p, item);
+    else if (item == ITEM_BOTTLE && mmvr::GetSettings().Get(mmvr::Setting::PhysicalBottle) > .5f)
+        MMVR_PlayerEquipEmptyBottle(play, p);
+    else if ((item >= ITEM_SWORD_KOKIRI && item <= ITEM_SWORD_GILDED) || item == ITEM_SWORD_GREAT_FAIRY ||
+             item == ITEM_SWORD_DEITY)
+        MMVR_PlayerEquipSword(play, p, static_cast<ItemId>(item));
+}
+} // namespace
+namespace mmvrgame {
+bool ExchangePromptActive(PlayState* play) {
+    auto* p = play ? GET_PLAYER(play) : nullptr;
+    // Only the native NPC item-request prompt owns this exception. Ordinary text,
+    // rewards, instruments and pause menus must never activate an equipped item.
+    return p && mmvr::FirstPersonRequested() && mmvr::InputFocused() && !mmvr::MenuPaused() &&
+           play->pauseCtx.state == PAUSE_STATE_OFF && play->transitionTrigger == TRANS_TRIGGER_OFF &&
+           gSaveContext.save.saveInfo.playerData.health > 0 && p->talkActor &&
+           (p->stateFlags1 & PLAYER_STATE1_TALKING) && !(p->stateFlags2 & PLAYER_STATE2_USING_OCARINA) &&
+           Message_GetState(&play->msgCtx) == TEXT_STATE_PAUSE_MENU;
+}
+bool ExchangeItemContextActive(PlayState* play) {
+    if (ExchangePromptActive(play))
+        return true;
+    auto* p = play ? GET_PLAYER(play) : nullptr;
+    // Native actors register an item offer before any dialogue starts. Let the
+    // tracked trigger hand that selected item to the native exchange action,
+    // while leaving the ordinary A-button talk path untouched.
+    return p && mmvr::FirstPersonRequested() && mmvr::InputFocused() && !mmvr::MenuPaused() &&
+           play->pauseCtx.state == PAUSE_STATE_OFF && play->transitionTrigger == TRANS_TRIGGER_OFF &&
+           gSaveContext.save.saveInfo.playerData.health > 0 && p->talkActor &&
+           p->exchangeItemAction > PLAYER_IA_NONE && p->exchangeItemAction < PLAYER_IA_MASK_MIN &&
+           !(p->stateFlags2 & PLAYER_STATE2_USING_OCARINA) && play->msgCtx.msgMode == MSGMODE_NONE;
+}
+int WheelSlotItem(PlayState* play, int slot) {
+    if (!play || slot < 0 || slot > 48)
+        return ITEM_NONE;
+    if (slot != 48)
+        return gSaveContext.save.saveInfo.inventory.items[slot];
+    // The sword slot represents equipment, not Blast/Bremen/Kamaro's contextual B action.
+    // Keep native B-disable rules and reject synthetic action IDs before icon lookup.
+    const int sword = Inventory_GetBtnBItem(play);
+    return ((sword >= ITEM_SWORD_KOKIRI && sword <= ITEM_SWORD_GILDED) || sword == ITEM_SWORD_DEITY) ? sword
+                                                                                                     : ITEM_NONE;
+}
+bool ItemAllowed(Player* p, int item) {
+    if (!p || p->transformation >= PLAYER_FORM_MAX)
+        return false;
+    // Kafei's quest segment uses the player movement/camera path, but has no
+    // VR equipment wheel actions. Preserve empty hands while rejecting items.
+    if (MMVR_ControlledKafei(p))
+        return item == ITEM_NONE;
+    if (item == ITEM_NONE || item == ITEM_OCARINA_OF_TIME)
+        return true;
+    // Mask replacement is mediated by the native transformation/ceiling rules.
+    if (item >= ITEM_MASK_DEKU && item <= ITEM_MASK_GIANT)
+        return true;
+    if (item == ITEM_SWORD_DEITY)
+        return p->transformation == PLAYER_FORM_FIERCE_DEITY;
+    if (item >= ITEM_SWORD_KOKIRI && item <= ITEM_SWORD_GILDED)
+        return p->transformation == PLAYER_FORM_HUMAN;
+    return item >= 0 && item < 114 && gPlayerFormItemRestrictions[p->transformation][item] != 0;
+}
+void ClearItemTrigger() {
+    for (auto& trigger : triggers)
+        trigger.Reset();
+    holdingHand = -1;
+    edges.clear();
+    holding = false;
+    delayedRelease = {};
+    delayedRestoreEquipment=true;
+    delayedActor = nullptr;
+    delayedBombchu = nullptr;
+}
+bool HasItemInHand(PlayState* play) {
+    auto* p = play ? GET_PLAYER(play) : nullptr;
+    if (!p) return false;
+    if (p->heldActor || BowHeld() || mmvr::HeldMaskItem() >= 0) return true;
+    // Selection is not equipment: a spent nut/bomb leaves its wheel slot selected.
+    const int action = p->heldItemAction;
+    return action > PLAYER_IA_LAST_USED && action < PLAYER_IA_MASK_MIN &&
+           action != PLAYER_IA_ZORA_BOOMERANG &&
+           !(action >= PLAYER_IA_EXPLOSIVE_MIN && action <= PLAYER_IA_DEKU_NUT);
+}
+void StowItem(PlayState* play) {
+    if (MMVR_ItemPresentationActive(GET_PLAYER(play)) || NativeViewfinderActive(play) ||
+        (!GET_PLAYER(play)->heldActor && GET_PLAYER(play)->itemAction != GET_PLAYER(play)->heldItemAction))
+        return;
+    ClearItemTrigger();
+    ClearBow();
+    ClearCombat();
+    mmvr::CancelHeldMask();
+    auto* p = GET_PLAYER(play);
+    if (HeldBombchu(p)) {
+        if (!PlaceBombchu(play, p))
+            return;
+    } else if (HeldThrowable(p)) {
+        auto sample = SampleThrow(play, p);
+        sample.velocity = {};
+        if (sample.valid && !ReleaseThrowable(play, p, sample, false)) {
+            delayedRelease = sample;
+            delayedRestoreEquipment=false;
+            delayedActor = p->heldActor;
+        }
+    } else
+        MMVR_PlayerEmptyHands(play, p);
+    Log("stowed", selected);
+    selected = ITEM_NONE;
+    inventorySlot = -1;
+    equipPending = false;
+}
+void RestoreSelectedEquipment(PlayState* play) {
+    auto* p=GET_PLAYER(play);
+    if(owner==p && scene==play->sceneId && ItemAllowed(p,selected) && !p->heldActor) Equip(play,p,selected);
+}
+int SelectedItem(PlayState* play) {
+    return play && owner == GET_PLAYER(play) && scene == play->sceneId ? selected : ITEM_NONE;
+}
+void ClearItemSelection() {
+    exchangeContext = exchangeSent = false;
+    exchangeActor = nullptr;
+    exchangeText = -1;
+    mmvr::CancelHeldMask();
+    ClearItemTrigger();
+    owner = nullptr;
+    selected = ITEM_NONE;
+    inventorySlot = -1;
+    equipPending = false;
+}
+bool SelectItem(PlayState* play, int slot, int item) {
+    auto* p = GET_PLAYER(play);
+    if (!mmvr::FirstPersonRequested() || !mmvr::InputFocused())
+        return false;
+    const bool exchange = ExchangeItemContextActive(play);
+    if ((MMVR_ItemPresentationActive(p) && !exchange) || NativeViewfinderActive(play))
+        return true;
+    if (!ItemAllowed(p, item)) {
+        Audio_PlaySfx(NA_SE_SY_ERROR);
+        return true;
+    }
+    if (!exchange && p->heldActor && !Player_IsHoldingHookshot(p))
+        return true;
+    ClearItemTrigger();
+    owner = p;
+    scene = play->sceneId;
+    selectedForm = p->transformation;
+    selected = item;
+    inventorySlot = slot;
+    // Selecting an offer must not replace the NPC's talk action or draw/use it.
+    if (exchange) {
+        Log("offer-selected", item);
+        return true;
+    }
+    // A native upper-body transition can temporarily reject equipment changes.
+    // Retain the requested selection and apply it after that action releases ownership.
+    equipPending = p->itemAction != p->heldItemAction;
+    if (!equipPending) {
+        MMVR_PlayerEmptyHands(play, p);
+        p->heldItemButton = EQUIP_SLOT_C_DOWN;
+        if (item != ITEM_NONE) Equip(play, p, item);
+    }
+    Log("selected", item);
+    return true;
+}
+void UpdateItemTrigger(const mmvr::TrackingFrame& frame) {
+    auto* play = gPlayState;
+    auto* p = play ? GET_PLAYER(play) : nullptr;
+    int dominant = mmvr::SwordController(mmvr::GetSettings());
+    if (!p || owner != p || scene != play->sceneId) {
+        ClearItemSelection();
+        owner = p;
+        scene = play ? play->sceneId : -1;
+    }
+    if (p && selectedForm != p->transformation) {
+        ClearItemTrigger();
+        mmvr::CancelHeldMask();
+        selectedForm = p->transformation;
+        if (!ItemAllowed(p, selected)) {
+            selected = ITEM_NONE;
+            inventorySlot = -1;
+            MMVR_PlayerEmptyHands(play, p);
+        }
+    }
+    if (hand != dominant) {
+        ClearItemTrigger();
+        hand = dominant;
+    }
+    SyncExchangeContext(play);
+    if (p && owner == p && inventorySlot >= SLOT_BOTTLE_1 && inventorySlot <= SLOT_BOTTLE_6 &&
+        p->heldItemButton == EQUIP_SLOT_C_DOWN && C_SLOT_EQUIP(0, EQUIP_SLOT_C_DOWN) == inventorySlot) {
+        const int contents = gSaveContext.save.saveInfo.inventory.items[inventorySlot];
+        if (contents != ITEM_NONE && contents != selected) {
+            selected = contents;
+            ClearItemTrigger(); // A catch/release never reuses the edge which started it.
+        }
+    }
+    if (!p || !(exchangeContext ? mmvr::PhysicalActionsAllowed() : Eligible(play, p))) {
+        ClearItemTrigger();
+        return;
+    }
+    if (frameTime >= 0 && (frame.timeSeconds < frameTime || frame.timeSeconds - frameTime > .15))
+        ClearItemTrigger();
+    frameTime = frame.timeSeconds;
+    for (int h = 0; h < 2; ++h) {
+        int edge = triggers[h].Update(frame.timeSeconds, frame.epoch, frame.handTracked[h], frame.triggers[h]);
+        if (edge) {
+            if (edges.size() >= 8) {
+                ClearItemTrigger();
+                return;
+            }
+            edges.push_back({ edge, h, edge < 0 ? SampleHandThrow(play, p, h) : ThrowSample{} });
+        }
+    }
+}
+void ProcessItemTrigger(PlayState* play) {
+    auto* p = GET_PLAYER(play);
+    SyncExchangeContext(play);
+    if (exchangeContext) {
+        if (!mmvr::PhysicalActionsAllowed()) {
+            ClearItemTrigger();
+            return;
+        }
+        while (!edges.empty()) {
+            const auto edge = edges.front();
+            edges.pop_front();
+            if (exchangeSent || edge.kind != 1 || edge.hand != mmvr::SwordController(mmvr::GetSettings()))
+                continue;
+            if (owner != p || scene != play->sceneId || inventorySlot < 0 || inventorySlot >= 48 ||
+                selected == ITEM_NONE || gSaveContext.save.saveInfo.inventory.items[inventorySlot] != selected ||
+                !ItemAllowed(p, selected) || Player_GetItemOnButton(play, p, EQUIP_SLOT_C_DOWN) != selected)
+                continue;
+            // The NPC's func_80123810 consumes this native C-button offer, retaining its
+            // acceptance/rejection, bottle contents, quantities and quest progression.
+            // Never call Player_UseItem or a physical-item handler during the request.
+            auto& input = *CONTROLLER1(&play->state);
+            input.cur.button |= BTN_CDOWN;
+            input.press.button |= BTN_CDOWN;
+            exchangeSent = true;
+            Log("npc-offer", selected);
+        }
+        return;
+    }
+    if (!Eligible(play, p)) {
+        ClearItemTrigger();
+        return;
+    }
+    if (!ItemAllowed(p, selected)) {
+        ClearItemSelection();
+        return;
+    }
+    if (mmvr::MaskTriggerClaimed()) {
+        ClearItemTrigger();
+        return;
+    }
+    if (equipPending && owner == p && scene == play->sceneId && !p->heldActor &&
+        p->itemAction == p->heldItemAction && !(p->stateFlags1 & PLAYER_STATE1_8000000)) {
+        MMVR_PlayerEmptyHands(play, p);
+        p->heldItemButton = EQUIP_SLOT_C_DOWN;
+        Equip(play, p, selected);
+        equipPending = false;
+    }
+    if (delayedBombchu) {
+        if (p->heldActor != delayedBombchu || !HeldBombchu(p))
+            delayedBombchu = nullptr;
+        else if (!delayedBombchu->init) {
+            PlaceBombchu(play, p);
+            delayedBombchu = nullptr;
+        }
+    }
+    // A short press can release before the native actor's object is initialized.
+    if (delayedRelease.valid) {
+        if (!HeldThrowable(p) || p->heldActor != delayedActor)
+            delayedRelease = {};
+        else if (!p->heldActor->init && ReleaseThrowable(play, p, delayedRelease, delayedRestoreEquipment))
+            delayedRelease = {};
+    }
+    while (!edges.empty()) {
+        auto edge = edges.front();
+        edges.pop_front();
+        if (edge.kind < 0) {
+            if (edge.hand != holdingHand)
+                continue;
+            if (holding && HeldBombchu(p)) {
+                if (p->heldActor->init)
+                    delayedBombchu = p->heldActor;
+                else
+                    PlaceBombchu(play, p);
+                holding = false;
+                continue;
+            }
+            if (holding && HeldThrowable(p) && edge.release.valid) {
+                if (!ReleaseThrowable(play, p, edge.release)) {
+                    delayedRelease = edge.release;
+                    delayedRestoreEquipment=true;
+                    delayedActor = p->heldActor;
+                }
+                Log("released", selected);
+            }
+            holding = false;
+            continue;
+        }
+        if (HeldThrowable(p) || HeldBombchu(p)) {
+            if (edge.hand == CarryHand(p)) {
+                holding = true;
+                holdingHand = edge.hand;
+            }
+            continue;
+        }
+        if (edge.hand == mmvr::SwordController(mmvr::GetSettings()) && p->transformation == PLAYER_FORM_FIERCE_DEITY &&
+            MMVR_IndependentSword(p))
+            continue; // The sword-hand trigger belongs to the drawn beam.
+        if (TryGrabCarry(play, p, edge.hand)) {
+            holding = true;
+            holdingHand = edge.hand;
+            MMVR_UpdateHeldItem(play, p);
+            continue;
+        }
+        if (edge.hand != mmvr::SwordController(mmvr::GetSettings()))
+            continue;
+        if (BowHeld())
+            continue; // Only the string grab decides the bow trigger action.
+        if (MMVR_IndependentHookshot(p)) {
+            MMVR_UseHookshot(play, p);
+            Log("hookshot", ITEM_HOOKSHOT);
+            continue;
+        }
+        if (selected == ITEM_NONE || owner != p || scene != play->sceneId)
+            continue;
+        if (inventorySlot == 48) {
+            Equip(play, p, selected);
+            continue;
+        }
+        if (inventorySlot < 0 || inventorySlot >= 48 ||
+            gSaveContext.save.saveInfo.inventory.items[inventorySlot] != selected ||
+            GET_CUR_FORM_BTN_ITEM(EQUIP_SLOT_C_DOWN) != selected)
+            continue;
+        // The requested instrument is the sole exception to the native form table.
+        // Player_UseItem still owns grounded/underwater/dialogue eligibility and the song action.
+        if (selected == ITEM_OCARINA_OF_TIME) {
+            Player_UseItem(play, p, ITEM_OCARINA_OF_TIME);
+            Log("instrument", selected);
+            continue;
+        }
+        if (Player_GetItemOnButton(play, p, EQUIP_SLOT_C_DOWN) != selected)
+            continue;
+        if (selected == ITEM_BOMB || selected == ITEM_BOMBCHU || selected == ITEM_POWDER_KEG ||
+            selected == ITEM_DEKU_NUT) {
+            holding = MMVR_ReadyThrowable(play, p, selected) != 0;
+            if (holding) {
+                holdingHand = edge.hand;
+                MMVR_UpdateHeldItem(play, p);
+                Log("ready", selected);
+                mmvr::HapticPulse(mmvr::SwordController(mmvr::GetSettings()), .2f);
+            }
+            continue;
+        }
+        if ((selected == ITEM_HOOKSHOT && mmvr::GetSettings().Get(mmvr::Setting::TrackedAim) > .5f) ||
+            (BowItem(selected) && mmvr::GetSettings().Get(mmvr::Setting::PhysicalBow) > .5f) ||
+            (selected == ITEM_BOTTLE && MMVR_BottleFormAllowed(p) &&
+             mmvr::GetSettings().Get(mmvr::Setting::PhysicalBottle) > .5f) ||
+            selected == ITEM_SWORD_GREAT_FAIRY) {
+            Equip(play, p, selected);
+            continue;
+        }
+        if (selected >= ITEM_MASK_DEKU && selected <= ITEM_MASK_GIANT &&
+            mmvr::GetSettings().Get(mmvr::Setting::PhysicalMasks) > .5f)
+            continue;
+        // Native one-shot use preserves masks, lens toggles, bottles, ocarina and quest rules.
+        auto& input = *CONTROLLER1(&play->state);
+        input.cur.button |= BTN_CDOWN;
+        input.press.button |= BTN_CDOWN;
+        Log("use", selected);
+    }
+}
+} // namespace mmvrgame
+#endif
+
+#if defined(MMVR_ENABLE) && defined(MMVR_STATE_NATIVE_BACKEND)
+#include "NativeStateFields.h"
+#include "NativeStateComponents.h"
+#include <cstring>
+extern "C" void MMVR_VisitVrItemUseState(MMVR_StateSink* sink) {
+    mmvrgame::NativeStateField(sink,"vr/item-use/holdingHand",holdingHand);
+    mmvrgame::NativeStateField(sink,"vr/item-use/exchangeContext",exchangeContext);
+    mmvrgame::NativeStateField(sink,"vr/item-use/exchangeSent",exchangeSent);
+    mmvrgame::NativeStateField(sink,"vr/item-use/exchangeActor",exchangeActor);
+    mmvrgame::NativeStateField(sink,"vr/item-use/exchangeText",exchangeText);
+    mmvrgame::NativeStateField(sink,"vr/item-use/owner",owner);
+    mmvrgame::NativeStateField(sink,"vr/item-use/scene",scene);
+    mmvrgame::NativeStateField(sink,"vr/item-use/selected",selected);
+    mmvrgame::NativeStateField(sink,"vr/item-use/inventorySlot",inventorySlot);
+    mmvrgame::NativeStateField(sink,"vr/item-use/hand",hand);
+    mmvrgame::NativeStateField(sink,"vr/item-use/selectedForm",selectedForm);
+    mmvrgame::NativeStateField(sink,"vr/item-use/holding",holding);
+    mmvrgame::NativeStateField(sink,"vr/item-use/equipPending",equipPending);
+    mmvrgame::NativeStateField(sink,"vr/item-use/delayedRelease",delayedRelease);
+    mmvrgame::NativeStateField(sink,"vr/item-use/delayedRestoreEquipment",delayedRestoreEquipment);
+    mmvrgame::NativeStateField(sink,"vr/item-use/delayedActor",delayedActor);
+    mmvrgame::NativeStateField(sink,"vr/item-use/delayedBombchu",delayedBombchu);
+}
+namespace mmvrgame {
+namespace {
+// Raw controller edges are external input, not issued game actions. The native
+// world (including delayed releases already accepted by the game) is restored,
+// while old presses must not re-equip/throw something when the snapshot loads.
+constexpr const char* InputResetId="input/item-trigger-reset";
+struct PreparedItemInput final : mmvr::states::PreparedComponent {
+    bool committed=false;
+    void Commit() noexcept override {
+        if(committed)return;
+        edges.clear();for(auto& trigger:triggers)trigger.Reset();frameTime=-1;
+        committed=true;
+    }
+};
+}
+mmvr::states::Component ItemInputResetComponent() {
+    using namespace mmvr::states;
+    return {InputResetId,1,[] {return Block{InputResetId,1,{0},{}};},
+        [](const Block& block)->std::unique_ptr<PreparedComponent> {
+            if(block.id!=InputResetId||block.schema!=1||!block.references.empty()||block.bytes!=Bytes{0})
+                throw Error("Invalid item input resume policy");
+            return std::make_unique<PreparedItemInput>();
+        }};
+}
+void VerifyItemInputResetComponent() {
+    using namespace mmvr::states;
+    auto component=ItemInputResetComponent();
+    struct Restore {
+        std::deque<Edge> original;mmvr::ItemTrigger savedTriggers[2];double savedTime;
+        ~Restore(){edges.swap(original);triggers[0]=savedTriggers[0];triggers[1]=savedTriggers[1];frameTime=savedTime;}
+    } restore{edges,{triggers[0],triggers[1]},frameTime};
+    edges.clear();edges.push_back({1,1,{}});edges.push_back({-1,1,{}});
+    frameTime=100;
+    auto state=component.capture(),bad=state;bad.bytes[0]=1;
+    bool rejected=false;try{component.prepare(bad);}catch(const Error&){rejected=true;}
+    if(!rejected||edges.size()!=2||frameTime!=100)throw Error("Input validation altered live controls");
+    auto prepared=component.prepare(state);
+    if(edges.size()!=2||frameTime!=100)throw Error("Input preparation altered live controls");
+    prepared->Commit();
+    if(!edges.empty()||frameTime!=-1)throw Error("Saved controller edges were replayed");
+    // A one-shot commit must not clear fresh input on a repeated call.
+    edges.push_back({1,0,{}});prepared->Commit();
+    if(edges.size()!=1)throw Error("Repeated input commit consumed fresh controls");
+}
+}
+#endif
+
+#if defined(MMVR_ENABLE) && defined(MMVR_STATE_NATIVE_BACKEND)
+#include "NativeTrackingResume.h"
+namespace mmvrgame {
+void RebaseItemTracking(const mmvr::TrackingFrame& f) {
+    edges.clear();frameTime=f.timeSeconds;
+    for(int h=0;h<2;++h)
+        triggers[h].Rebase(f.timeSeconds,f.epoch,holding&&holdingHand==h&&f.handTracked[h],f.triggers[h]);
+}
+}
+#endif

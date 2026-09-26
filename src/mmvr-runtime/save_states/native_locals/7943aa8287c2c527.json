@@ -1,0 +1,14 @@
+{
+  "source": "overlays/actors/ovl_Dm_Char05/z_dm_char05.c",
+  "include": "7943aa8287c2c527.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_7797e4f95cb995ed",
+      "original": "sObjectIds",
+      "function": "func_80AACBE4",
+      "line": 231,
+      "at": 8264
+    }
+  ],
+  "sourceSha256": "db31d31a9b0923f3502c9314db030ccf678a5c9b933d3789bf3fa31b0754d58c"
+}

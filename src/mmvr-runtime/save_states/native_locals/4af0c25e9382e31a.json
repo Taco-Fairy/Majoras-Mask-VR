@@ -1,0 +1,77 @@
+{
+  "source": "code/z_kankyo.c",
+  "include": "4af0c25e9382e31a.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_ad42f82fcbfc6fd0",
+      "original": "rooftopSkyCaptured",
+      "function": "Environment_UpdateSkybox",
+      "line": 1020,
+      "at": 43348
+    },
+    {
+      "name": "mmvr_local_cd653a9fb21a02ba",
+      "original": "rooftopSkyConfig",
+      "function": "Environment_UpdateSkybox",
+      "line": 1021,
+      "at": 43390
+    },
+    {
+      "name": "mmvr_local_542a0369d29828dd",
+      "original": "rooftopSkyTime",
+      "function": "Environment_UpdateSkybox",
+      "line": 1022,
+      "at": 43423
+    },
+    {
+      "name": "mmvr_local_c7c44689a420db36",
+      "original": "rooftopLastFrame",
+      "function": "Environment_UpdateSkybox",
+      "line": 1023,
+      "at": 43454
+    },
+    {
+      "name": "mmvr_local_b34c529614a32c98",
+      "original": "vertices",
+      "function": "Environment_DrawSun",
+      "line": 1875,
+      "at": 85441
+    },
+    {
+      "name": "mmvr_local_199893c4ab8f1d28",
+      "original": "origBillboardMtxF",
+      "function": "Ship_DrawSkyboxStarInterpolated",
+      "line": 3261,
+      "at": 140223
+    },
+    {
+      "name": "mmvr_local_0e9a145fa15ff54f",
+      "original": "starVtxData",
+      "function": "Ship_DrawSkyboxStarInterpolated",
+      "line": 3262,
+      "at": 140258
+    },
+    {
+      "name": "mmvr_local_d821bc1326d72f57",
+      "original": "D_801DD880",
+      "function": "Environment_DrawSkyboxStarsImpl",
+      "line": 3330,
+      "at": 143297
+    },
+    {
+      "name": "mmvr_local_7e479505f47fb970",
+      "original": "D_801DD8E0",
+      "function": "Environment_DrawSkyboxStarsImpl",
+      "line": 3337,
+      "at": 143950
+    },
+    {
+      "name": "mmvr_local_c11a3ddb91bb9984",
+      "original": "D_801DD900",
+      "function": "Environment_DrawSkyboxStarsImpl",
+      "line": 3343,
+      "at": 144349
+    }
+  ],
+  "sourceSha256": "ee507c82a3440ff1056e1692d69b70fc3ee7c65b5fab2e8959a595430cc51659"
+}

@@ -1,0 +1,21 @@
+{
+  "source": "overlays/actors/ovl_Bg_Kin2_Fence/z_bg_kin2_fence.c",
+  "include": "1085ab20a2a62ebd.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_6a08fcd20cdca9cf",
+      "original": "sPrimColor",
+      "function": "BgKin2Fence_SpawnEyeSparkles",
+      "line": 119,
+      "at": 3632
+    },
+    {
+      "name": "mmvr_local_c0302f664906f3fd",
+      "original": "sEnvColor",
+      "function": "BgKin2Fence_SpawnEyeSparkles",
+      "line": 120,
+      "at": 3691
+    }
+  ],
+  "sourceSha256": "9803c9ab80b31ffd26cf796b6c9233a97ac2016794eee93d0dc9456e5a51f12e"
+}

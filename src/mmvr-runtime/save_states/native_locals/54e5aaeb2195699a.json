@@ -1,0 +1,35 @@
+{
+  "source": "overlays/actors/ovl_En_Syateki_Dekunuts/z_en_syateki_dekunuts.c",
+  "include": "54e5aaeb2195699a.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_3896a70444528519",
+      "original": "sVelocity",
+      "function": "EnSyatekiDekunuts_SetupDead",
+      "line": 375,
+      "at": 14098
+    },
+    {
+      "name": "mmvr_local_5082e325cf1adeb9",
+      "original": "sAccel",
+      "function": "EnSyatekiDekunuts_SetupDead",
+      "line": 376,
+      "at": 14151
+    },
+    {
+      "name": "mmvr_local_11123a3d9fe9b284",
+      "original": "sPrimColor",
+      "function": "EnSyatekiDekunuts_Dead",
+      "line": 397,
+      "at": 15097
+    },
+    {
+      "name": "mmvr_local_e23cbccf4d6a54fd",
+      "original": "sEnvColor",
+      "function": "EnSyatekiDekunuts_Dead",
+      "line": 398,
+      "at": 15158
+    }
+  ],
+  "sourceSha256": "15ae5631f28d4f744c922094c57a887a4ca9911a2f3a9b2bcbe6ff700b1e9373"
+}

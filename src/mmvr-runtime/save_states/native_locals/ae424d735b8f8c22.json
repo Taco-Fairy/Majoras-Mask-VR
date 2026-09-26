@@ -1,0 +1,42 @@
+{
+  "source": "audio/code_8019AF00.c",
+  "include": "ae424d735b8f8c22.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_0609eb68f306bf30",
+      "original": "sScarecrowAfterCreditsState",
+      "function": "AudioOcarina_PlayLongScarecrowSong",
+      "line": 3422,
+      "at": 129052
+    },
+    {
+      "name": "mmvr_local_50298c6cb45a15cf",
+      "original": "sScarecrowAfterCreditsIntrumentId",
+      "function": "AudioOcarina_PlayLongScarecrowSong",
+      "line": 3423,
+      "at": 129100
+    },
+    {
+      "name": "mmvr_local_7f908f6674b49a53",
+      "original": "sScarecrowAfterCreditsTimer",
+      "function": "AudioOcarina_PlayLongScarecrowSong",
+      "line": 3424,
+      "at": 129180
+    },
+    {
+      "name": "mmvr_local_433732a3615ed694",
+      "original": "sZVolumes",
+      "function": "AudioSfx_SetProperties",
+      "line": 4012,
+      "at": 147045
+    },
+    {
+      "name": "mmvr_local_631e3b0de1ef59bf",
+      "original": "sSfxOriginalPos",
+      "function": "Audio_PlaySfx_AtFixedPos",
+      "line": 6391,
+      "at": 233863
+    }
+  ],
+  "sourceSha256": "0b22c4220379f91b941007fc2c30c61a69724d371b1ca3b1a90c2f3b879cd84f"
+}

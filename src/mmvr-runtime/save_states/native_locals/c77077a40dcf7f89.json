@@ -1,0 +1,21 @@
+{
+  "source": "overlays/actors/ovl_Bg_Hakugin_Post/z_bg_hakugin_post.c",
+  "include": "c77077a40dcf7f89.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_5bbe1ece0daf2025",
+      "original": "D_80A9D900",
+      "function": "func_80A9D61C",
+      "line": 1002,
+      "at": 36755
+    },
+    {
+      "name": "mmvr_local_ff3e5032cfc97106",
+      "original": "D_80A9D91C",
+      "function": "func_80A9D61C",
+      "line": 1006,
+      "at": 36953
+    }
+  ],
+  "sourceSha256": "c289dc2a28742b41d9845c851ef393d130fce192fba500a060a80674d0c1d4aa"
+}

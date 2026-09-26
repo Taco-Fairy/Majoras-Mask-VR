@@ -1,0 +1,21 @@
+{
+  "source": "overlays/actors/ovl_En_Honotrap/z_en_honotrap.c",
+  "include": "c33fb7e5b6cb0701.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_ac805b281aaf1f97",
+      "original": "sVelocity",
+      "function": "EnHonotrap_Update",
+      "line": 690,
+      "at": 25697
+    },
+    {
+      "name": "mmvr_local_4190da451641f266",
+      "original": "sAccel",
+      "function": "EnHonotrap_Update",
+      "line": 691,
+      "at": 25749
+    }
+  ],
+  "sourceSha256": "92443cfe1128af689d3b6619f30abcc792202ad1dfce32f89400abe013fcf951"
+}

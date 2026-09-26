@@ -1,0 +1,21 @@
+{
+  "source": "overlays/actors/ovl_En_Tanron3/z_en_tanron3.c",
+  "include": "5f81aa5b00b34992.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_0596369034b1eab1",
+      "original": "sPrimColor",
+      "function": "EnTanron3_SpawnBubbles",
+      "line": 131,
+      "at": 4353
+    },
+    {
+      "name": "mmvr_local_006267edf0004d22",
+      "original": "sEnvColor",
+      "function": "EnTanron3_SpawnBubbles",
+      "line": 132,
+      "at": 4412
+    }
+  ],
+  "sourceSha256": "e0b568efa4f883e5b14656e6ba6950405967b6dc03a485f45dedd9203ca16049"
+}

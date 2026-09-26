@@ -1,0 +1,14 @@
+{
+  "source": "overlays/actors/ovl_En_Box/z_en_box.c",
+  "include": "d831af0060b2978b.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_ee92aaf6ac8b54a6",
+      "original": "sBigChestAnimations",
+      "function": "EnBox_WaitOpen",
+      "line": 443,
+      "at": 16759
+    }
+  ],
+  "sourceSha256": "ffd0d01d6036972858db6ba1e31b78f7e08e031c1c3d5a84079bca3a15e940e0"
+}

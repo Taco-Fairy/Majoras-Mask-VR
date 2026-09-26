@@ -1,0 +1,14 @@
+{
+  "source": "overlays/actors/ovl_En_Shn/z_en_shn.c",
+  "include": "5ca6a4929a7a5110.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_18d3baa42553c6d6",
+      "original": "sPictographFlags",
+      "function": "func_80AE6704",
+      "line": 581,
+      "at": 25086
+    }
+  ],
+  "sourceSha256": "532569e90accc480f380f6c76314f7140ca9e2ac8b996860b237837ed4561e4b"
+}

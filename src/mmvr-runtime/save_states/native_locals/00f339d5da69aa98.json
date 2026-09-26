@@ -1,0 +1,21 @@
+{
+  "source": "overlays/actors/ovl_En_Wdhand/z_en_wdhand.c",
+  "include": "00f339d5da69aa98.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_1454168187eb3f62",
+      "original": "sEffectVelocity",
+      "function": "EnWdhand_Die",
+      "line": 633,
+      "at": 22606
+    },
+    {
+      "name": "mmvr_local_47a421da4b9eceb7",
+      "original": "sEffectAccel",
+      "function": "EnWdhand_Die",
+      "line": 634,
+      "at": 22664
+    }
+  ],
+  "sourceSha256": "a0f557bd6e89b9d28bbf13b721a1416135dca3eb668dfe7358039733a1d786ef"
+}

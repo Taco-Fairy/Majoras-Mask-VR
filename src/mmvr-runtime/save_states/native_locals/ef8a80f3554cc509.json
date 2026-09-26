@@ -1,0 +1,28 @@
+{
+  "source": "overlays/actors/ovl_En_Ik/z_en_ik.c",
+  "include": "ef8a80f3554cc509.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_559229ee921a01a4",
+      "original": "sDisplayListDesegmented",
+      "function": "EnIk_Init",
+      "line": 269,
+      "at": 10165
+    },
+    {
+      "name": "mmvr_local_85f75b3590878879",
+      "original": "sEffectVelAndAccel",
+      "function": "EnIk_Die",
+      "line": 684,
+      "at": 26790
+    },
+    {
+      "name": "mmvr_local_85779ff28497c62a",
+      "original": "sScale",
+      "function": "EnIk_Draw",
+      "line": 1134,
+      "at": 47298
+    }
+  ],
+  "sourceSha256": "246f5bd54692cb41e2f2a48cefe40100aae601572c22724fffd819f9e6405e8c"
+}

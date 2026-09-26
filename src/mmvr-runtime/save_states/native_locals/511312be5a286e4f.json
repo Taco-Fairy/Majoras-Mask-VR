@@ -1,0 +1,14 @@
+{
+  "source": "overlays/actors/ovl_En_Daiku/z_en_daiku.c",
+  "include": "511312be5a286e4f.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_0efcae759adf8f5e",
+      "original": "D_809440D4",
+      "function": "EnDaiku_PostLimbDraw",
+      "line": 335,
+      "at": 11135
+    }
+  ],
+  "sourceSha256": "04567d08600a22a3a5ccdb88a8aed38f66bf61e08870bbc9b22f0f205dda753b"
+}

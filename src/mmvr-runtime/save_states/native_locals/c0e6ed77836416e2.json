@@ -1,0 +1,21 @@
+{
+  "source": "overlays/actors/ovl_En_Sth2/z_en_sth2.c",
+  "include": "c0e6ed77836416e2.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_3a4b2950d3a152d5",
+      "original": "sFocusOffset",
+      "function": "EnSth2_PostLimbDraw",
+      "line": 93,
+      "at": 3065
+    },
+    {
+      "name": "mmvr_local_410c8e69cb975561",
+      "original": "sEnvColors",
+      "function": "EnSth2_Draw",
+      "line": 107,
+      "at": 3441
+    }
+  ],
+  "sourceSha256": "854a252f36bab7a0157fc544b8ef8cf94db2c7b97d1cdcb8e1e3226a2d922195"
+}

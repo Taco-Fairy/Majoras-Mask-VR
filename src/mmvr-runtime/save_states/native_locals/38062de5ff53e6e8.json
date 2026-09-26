@@ -1,0 +1,49 @@
+{
+  "source": "overlays/actors/ovl_En_Syateki_Man/z_en_syateki_man.c",
+  "include": "38062de5ff53e6e8.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_d19c0f95dcc18320",
+      "original": "sGameStartTimer",
+      "function": "EnSyatekiMan_Swamp_StartGame",
+      "line": 1032,
+      "at": 47084
+    },
+    {
+      "name": "mmvr_local_aa15a4be377d63bf",
+      "original": "sHasSignaledGuaysForThisWave",
+      "function": "EnSyatekiMan_Swamp_RunGame",
+      "line": 1062,
+      "at": 48201
+    },
+    {
+      "name": "mmvr_local_27320294ffe3451e",
+      "original": "sBonusTimer",
+      "function": "EnSyatekiMan_Swamp_AddBonusPoints",
+      "line": 1194,
+      "at": 54336
+    },
+    {
+      "name": "mmvr_local_4fb61953d5823c22",
+      "original": "sGameStartTimer",
+      "function": "EnSyatekiMan_Town_StartGame",
+      "line": 1244,
+      "at": 56401
+    },
+    {
+      "name": "mmvr_local_574ffe0f237a7545",
+      "original": "sModFromLosingTime",
+      "function": "EnSyatekiMan_Town_RunGame",
+      "line": 1346,
+      "at": 61271
+    },
+    {
+      "name": "mmvr_local_8429201591d2feba",
+      "original": "sEyeTextures",
+      "function": "EnSyatekiMan_Draw",
+      "line": 1531,
+      "at": 68961
+    }
+  ],
+  "sourceSha256": "84b21cd1539a067ff4f877b8e674c57434c4102712f1699d2389a5e8059d0936"
+}

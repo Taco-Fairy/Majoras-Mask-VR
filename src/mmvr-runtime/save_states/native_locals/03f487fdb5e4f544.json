@@ -1,0 +1,21 @@
+{
+  "source": "overlays/actors/ovl_En_Dnq/z_en_dnq.c",
+  "include": "03f487fdb5e4f544.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_65ccd647798e5531",
+      "original": "D_80A535DC",
+      "function": "func_80A52A78",
+      "line": 291,
+      "at": 11256
+    },
+    {
+      "name": "mmvr_local_2fbbc09c6dbf8809",
+      "original": "sCsAnimIndex",
+      "function": "EnDnq_HandleCutscene",
+      "line": 459,
+      "at": 16839
+    }
+  ],
+  "sourceSha256": "e9bec3a4ef00b79e6124f52244ecf478c5059cc7e6a5d17541392a6177415e03"
+}

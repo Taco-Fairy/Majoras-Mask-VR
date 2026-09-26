@@ -1,0 +1,42 @@
+{
+  "source": "overlays/actors/ovl_Dm_An/z_dm_an.c",
+  "include": "57dd69bdaaa5e42f.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_f253550fb08da765",
+      "original": "D_80C1D2C8",
+      "function": "DmAn_PostLimbDraw",
+      "line": 343,
+      "at": 12553
+    },
+    {
+      "name": "mmvr_local_04f2ac2b50676bf0",
+      "original": "D_80C1D2D4",
+      "function": "DmAn_PostLimbDraw",
+      "line": 344,
+      "at": 12617
+    },
+    {
+      "name": "mmvr_local_97cc2c4ce6750eb6",
+      "original": "D_80C1D2DC",
+      "function": "DmAn_PostLimbDraw",
+      "line": 362,
+      "at": 13233
+    },
+    {
+      "name": "mmvr_local_41e2d5fcb8106269",
+      "original": "sMouthTextures",
+      "function": "DmAn_Draw",
+      "line": 411,
+      "at": 15453
+    },
+    {
+      "name": "mmvr_local_aa11543292dff6ea",
+      "original": "sEyeTextures",
+      "function": "DmAn_Draw",
+      "line": 416,
+      "at": 15672
+    }
+  ],
+  "sourceSha256": "5fca7a15f4127feb54df604e9f1a42a6e2e8ee196bbffc4120e6c56906bcc14b"
+}

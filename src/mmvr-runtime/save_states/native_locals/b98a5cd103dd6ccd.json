@@ -1,0 +1,21 @@
+{
+  "source": "overlays/actors/ovl_Bg_Dkjail_Ivy/z_bg_dkjail_ivy.c",
+  "include": "b98a5cd103dd6ccd.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_bd22e3606bce676c",
+      "original": "sLeafDlists",
+      "function": "BgDkjailIvy_IvyCutEffects",
+      "line": 58,
+      "at": 1745
+    },
+    {
+      "name": "mmvr_local_495a65357930642f",
+      "original": "sLeafScales",
+      "function": "BgDkjailIvy_IvyCutEffects",
+      "line": 59,
+      "at": 1820
+    }
+  ],
+  "sourceSha256": "5b3e3052b2abaf119a53d71fb110f839e7d7f0fde370dd17dc7a5543eaf7a816"
+}

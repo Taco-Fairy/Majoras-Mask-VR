@@ -1,0 +1,49 @@
+{
+  "source": "overlays/actors/ovl_En_Firefly/z_en_firefly.c",
+  "include": "3836c6f21cde6ba3.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_27b68b694f08b57a",
+      "original": "sFireAuraPrimColor",
+      "function": "EnFirefly_PostLimbDraw",
+      "line": 757,
+      "at": 28753
+    },
+    {
+      "name": "mmvr_local_e4c292c859c28d05",
+      "original": "sFireAuraEnvColor",
+      "function": "EnFirefly_PostLimbDraw",
+      "line": 758,
+      "at": 28822
+    },
+    {
+      "name": "mmvr_local_4f9ca61a4fdb2f6f",
+      "original": "sIceAuraPrimColor",
+      "function": "EnFirefly_PostLimbDraw",
+      "line": 759,
+      "at": 28885
+    },
+    {
+      "name": "mmvr_local_adaf561091b7c22a",
+      "original": "sIceAuraEnvColor",
+      "function": "EnFirefly_PostLimbDraw",
+      "line": 760,
+      "at": 28953
+    },
+    {
+      "name": "mmvr_local_cc0971d08412fe9b",
+      "original": "sAuraVelocity",
+      "function": "EnFirefly_PostLimbDraw",
+      "line": 761,
+      "at": 29008
+    },
+    {
+      "name": "mmvr_local_141fca8692238bf8",
+      "original": "sAuraAccel",
+      "function": "EnFirefly_PostLimbDraw",
+      "line": 762,
+      "at": 29064
+    }
+  ],
+  "sourceSha256": "346d4aa9f82e35cf880d74951e179298d5fdf126a97c871b71c14d3d9875d629"
+}

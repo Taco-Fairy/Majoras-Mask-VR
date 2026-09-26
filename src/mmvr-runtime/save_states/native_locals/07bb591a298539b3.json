@@ -1,0 +1,14 @@
+{
+  "source": "overlays/actors/ovl_En_Ssh/z_en_ssh.c",
+  "include": "07bb591a298539b3.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_09de262880b70578",
+      "original": "D_80976178",
+      "function": "EnSsh_Draw",
+      "line": 959,
+      "at": 29817
+    }
+  ],
+  "sourceSha256": "bedead78dd616997b9de5fce78cbd23cd4c337b0c71619f25a3ed67060d2772c"
+}

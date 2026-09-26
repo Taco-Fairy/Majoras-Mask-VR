@@ -1,0 +1,63 @@
+{
+  "source": "overlays/actors/ovl_Boss_01/z_boss_01.c",
+  "include": "32c9d65d741bfb2b.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_766916595eb1d72f",
+      "original": "sBlueWarpSpawnsX",
+      "function": "Boss01_DeathCutscene",
+      "line": 2231,
+      "at": 95938
+    },
+    {
+      "name": "mmvr_local_e384c1179de12346",
+      "original": "sBlueWarpSpawnsZ",
+      "function": "Boss01_DeathCutscene",
+      "line": 2232,
+      "at": 96031
+    },
+    {
+      "name": "mmvr_local_ef82d3b1bc55812b",
+      "original": "sIcePrimColor",
+      "function": "Boss01_Thaw",
+      "line": 2307,
+      "at": 99547
+    },
+    {
+      "name": "mmvr_local_b9ed466e4ac7ef71",
+      "original": "sIceEnvColor",
+      "function": "Boss01_Thaw",
+      "line": 2308,
+      "at": 99611
+    },
+    {
+      "name": "mmvr_local_eb76afad658515d2",
+      "original": "sIceAccel",
+      "function": "Boss01_Thaw",
+      "line": 2309,
+      "at": 99668
+    },
+    {
+      "name": "mmvr_local_c53924ae249386fd",
+      "original": "sSwordTrailOuterVertexIndices",
+      "function": "Boss01_DrawSwordTrail",
+      "line": 2611,
+      "at": 111800
+    },
+    {
+      "name": "mmvr_local_cac11dd9d29d0471",
+      "original": "sSwordTrailInnerVertexIndices",
+      "function": "Boss01_DrawSwordTrail",
+      "line": 2612,
+      "at": 111892
+    },
+    {
+      "name": "mmvr_local_232493c7a02a222e",
+      "original": "sDefaultPelvisColliderOffset",
+      "function": "Boss01_Draw",
+      "line": 2888,
+      "at": 127375
+    }
+  ],
+  "sourceSha256": "efced6fee71055c2e5a36d9d0ad3f90b7e3b48485e35e469cd13e86794bf90ea"
+}

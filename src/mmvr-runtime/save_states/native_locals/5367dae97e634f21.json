@@ -1,0 +1,35 @@
+{
+  "source": "overlays/actors/ovl_En_Elforg/z_en_elforg.c",
+  "include": "5367dae97e634f21.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_79e9a5fc3d0bd6ac",
+      "original": "sVelocity",
+      "function": "EnElforg_SpawnSparkles",
+      "line": 165,
+      "at": 5361
+    },
+    {
+      "name": "mmvr_local_29de7b88a8149368",
+      "original": "sAccel",
+      "function": "EnElforg_SpawnSparkles",
+      "line": 166,
+      "at": 5415
+    },
+    {
+      "name": "mmvr_local_ebb8831be30f9841",
+      "original": "sPrimColors",
+      "function": "EnElforg_SpawnSparkles",
+      "line": 167,
+      "at": 5473
+    },
+    {
+      "name": "mmvr_local_8362c828429616da",
+      "original": "sEnvColors",
+      "function": "EnElforg_SpawnSparkles",
+      "line": 171,
+      "at": 5661
+    }
+  ],
+  "sourceSha256": "e2041f5bc1a9bc01d1267422bca1a3f667e5f182503acfe5654d8bc52e0d958b"
+}

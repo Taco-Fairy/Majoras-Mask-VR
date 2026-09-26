@@ -1,0 +1,14 @@
+{
+  "source": "code/z_skelanime.c",
+  "include": "4539cac1cb2049af.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_21d22d03f66f1e14",
+      "original": "sAnimTaskFuncs",
+      "function": "AnimTaskQueue_Update",
+      "line": 1286,
+      "at": 44422
+    }
+  ],
+  "sourceSha256": "1a2072fb049b4a8002614d92dfbaf6824898e21680b7fdefbfe054c3e0d32fc6"
+}

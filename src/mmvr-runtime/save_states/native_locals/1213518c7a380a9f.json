@@ -1,0 +1,196 @@
+{
+  "source": "overlays/actors/ovl_player_actor/z_player.c",
+  "include": "1213518c7a380a9f.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_f380449d3bbc9b6d",
+      "original": "D_8085D10C",
+      "function": "Player_Door_Staircase",
+      "line": 6953,
+      "at": 294794
+    },
+    {
+      "name": "mmvr_local_51b4e7c1e03e5032",
+      "original": "D_8085D130",
+      "function": "func_80836C70",
+      "line": 7302,
+      "at": 308552
+    },
+    {
+      "name": "mmvr_local_15cb36c2d2d8ca47",
+      "original": "D_8085D27C",
+      "function": "func_8083F8A8",
+      "line": 10860,
+      "at": 459090
+    },
+    {
+      "name": "mmvr_local_ba73012d0ef3d59e",
+      "original": "D_8085D288",
+      "function": "func_8083F8A8",
+      "line": 10861,
+      "at": 459143
+    },
+    {
+      "name": "mmvr_local_5dc74d3dec7f3bcc",
+      "original": "sSwordItemIds",
+      "function": "Player_PutSwordInHand",
+      "line": 11472,
+      "at": 485439
+    },
+    {
+      "name": "mmvr_local_7126aa2295da3cfe",
+      "original": "sPedestalPos",
+      "function": "Player_StartMode_TimeTravel",
+      "line": 11497,
+      "at": 486342
+    },
+    {
+      "name": "mmvr_local_818272f103c917af",
+      "original": "sTatlSpawnPosOffset",
+      "function": "Player_Init",
+      "line": 11914,
+      "at": 504719
+    },
+    {
+      "name": "mmvr_local_c9cb4e12a7e30602",
+      "original": "D_8085D34C",
+      "function": "Player_UpdateInterface",
+      "line": 12079,
+      "at": 511360
+    },
+    {
+      "name": "mmvr_local_5c16dbaded778fa0",
+      "original": "D_8085D354",
+      "function": "Player_UpdateInterface",
+      "line": 12129,
+      "at": 514300
+    },
+    {
+      "name": "mmvr_local_bd80d822b81f77e1",
+      "original": "sInteractWallCheckOffset",
+      "function": "Player_ProcessSceneCollision",
+      "line": 12342,
+      "at": 525147
+    },
+    {
+      "name": "mmvr_local_d59037396cb1a975",
+      "original": "sDogSpawnPos",
+      "function": "Player_Update",
+      "line": 13584,
+      "at": 579654
+    },
+    {
+      "name": "mmvr_local_f0d5e079085e5589",
+      "original": "D_8085D62C",
+      "function": "Player_Action_35",
+      "line": 16797,
+      "at": 703429
+    },
+    {
+      "name": "mmvr_local_d88aeadcaddf6817",
+      "original": "D_8085D638",
+      "function": "Player_Action_35",
+      "line": 16798,
+      "at": 703510
+    },
+    {
+      "name": "mmvr_local_1ae42bbeca3b211d",
+      "original": "D_8085D644",
+      "function": "Player_Action_35",
+      "line": 16799,
+      "at": 703591
+    },
+    {
+      "name": "mmvr_local_d8e26d6b96f6325d",
+      "original": "sJumpOffPedestalAnimSfxList",
+      "function": "Player_Action_TimeTravelEnd",
+      "line": 18794,
+      "at": 788074
+    },
+    {
+      "name": "mmvr_local_ae3a480be300bef2",
+      "original": "D_8085D7F8",
+      "function": "Player_Action_70",
+      "line": 19089,
+      "at": 802162
+    },
+    {
+      "name": "mmvr_local_d9f79a30365cc9ad",
+      "original": "D_8085D804",
+      "function": "Player_Action_70",
+      "line": 19090,
+      "at": 802220
+    },
+    {
+      "name": "mmvr_local_deee0aa974ca3ff9",
+      "original": "D_8085D80C",
+      "function": "Player_Action_70",
+      "line": 19097,
+      "at": 802473
+    },
+    {
+      "name": "mmvr_local_1854010f8829249b",
+      "original": "D_8085D838",
+      "function": "Player_Action_70",
+      "line": 19110,
+      "at": 803722
+    },
+    {
+      "name": "mmvr_local_2d110f4e9d3382c3",
+      "original": "D_8085D918",
+      "function": "func_80856110",
+      "line": 20124,
+      "at": 842449
+    },
+    {
+      "name": "mmvr_local_a5f32fb56d3628e9",
+      "original": "D_8085D924",
+      "function": "func_80856110",
+      "line": 20125,
+      "at": 842521
+    },
+    {
+      "name": "mmvr_local_4915e8de051d9abd",
+      "original": "D_8085D930",
+      "function": "func_80856110",
+      "line": 20126,
+      "at": 842596
+    },
+    {
+      "name": "mmvr_local_0c063b18747c8929",
+      "original": "D_8085D934",
+      "function": "func_80856110",
+      "line": 20127,
+      "at": 842669
+    },
+    {
+      "name": "mmvr_local_3abb1cb885e20a71",
+      "original": "D_8085D940",
+      "function": "func_808566C0",
+      "line": 20267,
+      "at": 847773
+    },
+    {
+      "name": "mmvr_local_32bd056558e8a459",
+      "original": "D_8085D94C",
+      "function": "func_808566C0",
+      "line": 20268,
+      "at": 847826
+    },
+    {
+      "name": "mmvr_local_1e9940bd83c3b6e7",
+      "original": "D_8085D978",
+      "function": "Player_Action_96",
+      "line": 20843,
+      "at": 869764
+    },
+    {
+      "name": "mmvr_local_4518bf7ab6e3eacf",
+      "original": "D_8085D984",
+      "function": "Player_Action_96",
+      "line": 20844,
+      "at": 869836
+    }
+  ],
+  "sourceSha256": "c876d00a414db3c421c48ce4cdf805e4bf30ea8036de9c77683a6012600b9060"
+}

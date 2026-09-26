@@ -1,0 +1,14 @@
+{
+  "source": "boot/O2/math64.c",
+  "include": "6470d22430b680cf.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_a70f91d8b5a6a6fe",
+      "original": "coeffs",
+      "function": "Math_FAtanTaylorQF",
+      "line": 47,
+      "at": 932
+    }
+  ],
+  "sourceSha256": "1238bce1fa19ed88fbf45a2512ee6ade84bd9c427c83fce3bda7095b7263e6de"
+}

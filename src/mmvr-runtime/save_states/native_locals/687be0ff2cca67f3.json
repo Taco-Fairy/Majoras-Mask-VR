@@ -1,0 +1,147 @@
+{
+  "source": "overlays/gamestates/ovl_file_choose/z_file_nameset_NES.c",
+  "include": "687be0ff2cca67f3.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_05dbc4331e6eaff6",
+      "original": "sCursorPrimRed",
+      "function": "FileSelect_DrawOptionsImpl_NES_GC",
+      "line": 864,
+      "at": 39017
+    },
+    {
+      "name": "mmvr_local_577145f56e90150c",
+      "original": "sCursorPrimGreen",
+      "function": "FileSelect_DrawOptionsImpl_NES_GC",
+      "line": 865,
+      "at": 39055
+    },
+    {
+      "name": "mmvr_local_c261299dbf6421d3",
+      "original": "sCursorPrimBlue",
+      "function": "FileSelect_DrawOptionsImpl_NES_GC",
+      "line": 866,
+      "at": 39095
+    },
+    {
+      "name": "mmvr_local_2e6e608e4b10f3bb",
+      "original": "sCursorEnvRed",
+      "function": "FileSelect_DrawOptionsImpl_NES_GC",
+      "line": 867,
+      "at": 39134
+    },
+    {
+      "name": "mmvr_local_9e3b0bcca7ebb5e1",
+      "original": "sCursorEnvGreen",
+      "function": "FileSelect_DrawOptionsImpl_NES_GC",
+      "line": 868,
+      "at": 39169
+    },
+    {
+      "name": "mmvr_local_ba77ccd1ed48804a",
+      "original": "sCursorEnvBlue",
+      "function": "FileSelect_DrawOptionsImpl_NES_GC",
+      "line": 869,
+      "at": 39206
+    },
+    {
+      "name": "mmvr_local_21859f7ff1fa36d6",
+      "original": "sCursorPulseDir",
+      "function": "FileSelect_DrawOptionsImpl_NES_GC",
+      "line": 870,
+      "at": 39242
+    },
+    {
+      "name": "mmvr_local_d0460fb87466ad07",
+      "original": "sCursorFlashTimer",
+      "function": "FileSelect_DrawOptionsImpl_NES_GC",
+      "line": 871,
+      "at": 39279
+    },
+    {
+      "name": "mmvr_local_3f30ed4055304906",
+      "original": "sCursorPrimColors",
+      "function": "FileSelect_DrawOptionsImpl_NES_GC",
+      "line": 872,
+      "at": 39319
+    },
+    {
+      "name": "mmvr_local_10adb5f3ad197a67",
+      "original": "sCursorEnvColors",
+      "function": "FileSelect_DrawOptionsImpl_NES_GC",
+      "line": 876,
+      "at": 39424
+    },
+    {
+      "name": "mmvr_local_164ee2069842687d",
+      "original": "sCursorPrimRed",
+      "function": "FileSelect_DrawOptionsImpl",
+      "line": 1085,
+      "at": 49034
+    },
+    {
+      "name": "mmvr_local_ead519d50cf6c1ad",
+      "original": "sCursorPrimGreen",
+      "function": "FileSelect_DrawOptionsImpl",
+      "line": 1086,
+      "at": 49072
+    },
+    {
+      "name": "mmvr_local_124d476cef6f05f3",
+      "original": "sCursorPrimBlue",
+      "function": "FileSelect_DrawOptionsImpl",
+      "line": 1087,
+      "at": 49112
+    },
+    {
+      "name": "mmvr_local_37460dce87c64237",
+      "original": "sCursorEnvRed",
+      "function": "FileSelect_DrawOptionsImpl",
+      "line": 1088,
+      "at": 49151
+    },
+    {
+      "name": "mmvr_local_cbc518ae6e8344d8",
+      "original": "sCursorEnvGreen",
+      "function": "FileSelect_DrawOptionsImpl",
+      "line": 1089,
+      "at": 49186
+    },
+    {
+      "name": "mmvr_local_5f925c5ffe709c2a",
+      "original": "sCursorEnvBlue",
+      "function": "FileSelect_DrawOptionsImpl",
+      "line": 1090,
+      "at": 49223
+    },
+    {
+      "name": "mmvr_local_75ac89dfe1034c30",
+      "original": "sCursorPulseDir",
+      "function": "FileSelect_DrawOptionsImpl",
+      "line": 1091,
+      "at": 49259
+    },
+    {
+      "name": "mmvr_local_b4b9f0e9092be43f",
+      "original": "sCursorFlashTimer",
+      "function": "FileSelect_DrawOptionsImpl",
+      "line": 1092,
+      "at": 49296
+    },
+    {
+      "name": "mmvr_local_78ed5e17e18446c6",
+      "original": "sCursorPrimColors",
+      "function": "FileSelect_DrawOptionsImpl",
+      "line": 1093,
+      "at": 49336
+    },
+    {
+      "name": "mmvr_local_75ee9b20ac4a031e",
+      "original": "sCursorEnvColors",
+      "function": "FileSelect_DrawOptionsImpl",
+      "line": 1097,
+      "at": 49441
+    }
+  ],
+  "sourceSha256": "10f9de851d76e1a1a601bc838e6c2636d0594c0b3ebd6cfe6bfa080c1a589c3e"
+}

@@ -1,0 +1,35 @@
+{
+  "source": "overlays/actors/ovl_En_Rail_Skb/z_en_rail_skb.c",
+  "include": "7e3ceaa00e814890.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_1091cf4806738418",
+      "original": "D_80B734B0",
+      "function": "func_80B726B4",
+      "line": 902,
+      "at": 31081
+    },
+    {
+      "name": "mmvr_local_e8f341d57dde8c0c",
+      "original": "D_80B734B4",
+      "function": "func_80B726B4",
+      "line": 903,
+      "at": 31142
+    },
+    {
+      "name": "mmvr_local_162518933dffcd69",
+      "original": "D_80B734B8",
+      "function": "func_80B726B4",
+      "line": 904,
+      "at": 31197
+    },
+    {
+      "name": "mmvr_local_a8d2ffb6ffbfff3c",
+      "original": "D_80B734D0",
+      "function": "EnRailSkb_PostLimbDraw",
+      "line": 1141,
+      "at": 40322
+    }
+  ],
+  "sourceSha256": "caa09a7d88fda4c2e6ffce1b9a5b6597023aea4540bde98602d5bad15d918ea6"
+}

@@ -1,0 +1,14 @@
+{
+  "source": "code/audio_thread_manager.c",
+  "include": "594f5977124c207c.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_e14cdfe9b1f0ad28",
+      "original": "sRetryCount",
+      "function": "AudioMgr_HandleRetrace",
+      "line": 16,
+      "at": 431
+    }
+  ],
+  "sourceSha256": "44b4d3945dbec70ec2343ba44d73081310b6a58241b349e1a4aab25644c278f8"
+}

@@ -1,0 +1,14 @@
+{
+  "source": "overlays/actors/ovl_En_Baguo/z_en_baguo.c",
+  "include": "8b42064ab9ce6598.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_97f3ce4a4e21bf4b",
+      "original": "sEyeTextures",
+      "function": "EnBaguo_DrawBody",
+      "line": 413,
+      "at": 17771
+    }
+  ],
+  "sourceSha256": "7f1d84fe9382ce2af4d0d79586a6ecd4693f1c2c3e0b671385397b2cec67a926"
+}

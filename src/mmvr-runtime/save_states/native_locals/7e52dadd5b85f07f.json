@@ -1,0 +1,119 @@
+{
+  "source": "overlays/actors/ovl_En_Mag/z_en_mag.c",
+  "include": "7e52dadd5b85f07f.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_977f6c3b91e0112c",
+      "original": "sDisplayEffectPrimRedTargets",
+      "function": "EnMag_UpdateDisplayEffectColors",
+      "line": 190,
+      "at": 7064
+    },
+    {
+      "name": "mmvr_local_6aee5287f5b5776d",
+      "original": "sDisplayEffectPrimGreenTargets",
+      "function": "EnMag_UpdateDisplayEffectColors",
+      "line": 191,
+      "at": 7127
+    },
+    {
+      "name": "mmvr_local_2545d46afeb2f5e0",
+      "original": "sDisplayEffectPrimBlueTargets",
+      "function": "EnMag_UpdateDisplayEffectColors",
+      "line": 192,
+      "at": 7192
+    },
+    {
+      "name": "mmvr_local_09d810b898af5110",
+      "original": "sDisplayEffectEnvRedTargets",
+      "function": "EnMag_UpdateDisplayEffectColors",
+      "line": 193,
+      "at": 7255
+    },
+    {
+      "name": "mmvr_local_c5410be98a0b4f55",
+      "original": "sDisplayEffectEnvBlueTargets",
+      "function": "EnMag_UpdateDisplayEffectColors",
+      "line": 194,
+      "at": 7315
+    },
+    {
+      "name": "mmvr_local_3be6aa9b74885ecb",
+      "original": "sAppearEffectPrimGreenTargets",
+      "function": "EnMag_Update",
+      "line": 228,
+      "at": 9253
+    },
+    {
+      "name": "mmvr_local_93324d10e6e6b07f",
+      "original": "sAppearEffectEnvRedTargets",
+      "function": "EnMag_Update",
+      "line": 229,
+      "at": 9317
+    },
+    {
+      "name": "mmvr_local_d2410cfbc0ec25ca",
+      "original": "sAppearEffectEnvBlueTargets",
+      "function": "EnMag_Update",
+      "line": 230,
+      "at": 9376
+    },
+    {
+      "name": "mmvr_local_0169f4352c5bf6f7",
+      "original": "sPressStartFontIndices",
+      "function": "EnMag_DrawInner",
+      "line": 711,
+      "at": 31831
+    },
+    {
+      "name": "mmvr_local_aa2a1889de82aa0c",
+      "original": "sAppearEffectMaskTextures",
+      "function": "EnMag_DrawInner",
+      "line": 714,
+      "at": 31995
+    },
+    {
+      "name": "mmvr_local_7010a54e269e1be3",
+      "original": "sDisplayEffectMaskTextures",
+      "function": "EnMag_DrawInner",
+      "line": 718,
+      "at": 32317
+    },
+    {
+      "name": "mmvr_local_3b3906cc65b5ce57",
+      "original": "sEffectTextures",
+      "function": "EnMag_DrawInner",
+      "line": 722,
+      "at": 32656
+    },
+    {
+      "name": "mmvr_local_5e33c159bad340a4",
+      "original": "sEffectScrollVelocitySs",
+      "function": "EnMag_DrawInner",
+      "line": 726,
+      "at": 32858
+    },
+    {
+      "name": "mmvr_local_edc8ebf0e36f894c",
+      "original": "sEffectScrollVelocityTs",
+      "function": "EnMag_DrawInner",
+      "line": 727,
+      "at": 32926
+    },
+    {
+      "name": "mmvr_local_2a14280c3d37da4e",
+      "original": "sTextAlpha",
+      "function": "EnMag_DrawInner",
+      "line": 728,
+      "at": 32995
+    },
+    {
+      "name": "mmvr_local_f5cfc52a777e326f",
+      "original": "sTextAlphaTargets",
+      "function": "EnMag_DrawInner",
+      "line": 729,
+      "at": 33091
+    }
+  ],
+  "sourceSha256": "24019c90a4b240f31f98b984f5c29129e8dd0a753c26b159f2ab58ed20f38812"
+}

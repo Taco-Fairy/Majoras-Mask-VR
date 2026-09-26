@@ -1,0 +1,14 @@
+{
+  "source": "overlays/actors/ovl_Obj_Switch/z_obj_switch.c",
+  "include": "b8185c3ec45c45ce.inc",
+  "variables": [
+    {
+      "name": "mmvr_local_b67c7bd68f44fd62",
+      "original": "drawFunc",
+      "function": "ObjSwitch_Draw",
+      "line": 1043,
+      "at": 40440
+    }
+  ],
+  "sourceSha256": "77070ad9486d79cb27bc87bf2b1e1d4077c527c45dff88fb42a5a85174594875"
+}
