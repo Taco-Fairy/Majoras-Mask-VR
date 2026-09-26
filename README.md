@@ -47,6 +47,7 @@ This is an independent fan project. Nintendo does not make or endorse it. Ninten
 
 This release is **version 0.1 beta**. It is intended to be fully playable, but a complete playthrough and every possible scenario have not been verified. Game systems, items, masks and functions have undergone development testing; that is not a guarantee that every combination or situation is free of bugs. Quest performance is not yet perfect and may vary by area and configuration. Please report reproducible issues, including your platform and build version.
 
+## How to play: saving and resuming
 **Save states are available on both PCVR and Quest.** During gameplay, click the right thumbstick to open the VR menu, then go to **System > Save states**. Choose **Save slot 1, 2 or 3** to capture your current game state, and the matching **Load slot** to resume it. Loading replaces your current progress with that state. Keep ordinary in-game saves too; exact states require compatible game data and state layouts. See [Exact save states and ordinary saves](#exact-save-states-and-ordinary-saves) below for compatibility and backup details.
 
 An in-game guide is available under **Controls > How to play tutorial** in the VR menu, including before entering a save. Expand it and scroll with the left stick to read controls, item use, physical gestures, forms, songs and saving. It uses default Touch button names; your custom bindings still apply.
@@ -193,7 +194,6 @@ Ordinary saves, global settings, the extracted game archive and exact states liv
 The default application cap is **90 FPS**; available caps are Uncapped, 90, 80 and 72. An existing saved preference survives updates, so change it in **Graphics > Frame timing** if necessary. A cap is not a guaranteed achieved rate.
 
 Eye resolution scale defaults to 1.0 of the runtime-recommended eye size. Leave it at 1.0 initially. The system recenter function is supported; the in-game recenter action and System menu provide alternatives. Recenter from your intended neutral position.
-## How to play: saving and resuming
 
 ## Troubleshooting and limits
 
