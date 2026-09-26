@@ -54,7 +54,7 @@ An in-game guide is available under **Controls > How to play tutorial** in the V
 
 ## Default controls
 I recommend playing with default settings for the most part, but they are highly customizable.
-These are Touch-style names. In **Hands > Dominant hand and size**, **Left dominant hand** swaps sword, selected-item, wheel, shield and bow ownership. It does not change menu controls: the left stick always navigates, while the right stick adjusts, points or assigns. Physical A/B/X/Y labels also stay fixed. Rebinding is separate.
+In **Hands > Dominant hand and size**, **Left dominant hand** swaps sword, selected-item, wheel, shield and bow ownership. It does not change menu controls: the left stick always navigates, while the right stick adjusts, points or assigns. Physical A/B/X/Y labels also stay fixed. Rebinding is separate.
 
 | Input | Action |
 | --- | --- |
