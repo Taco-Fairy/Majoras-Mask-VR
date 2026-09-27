@@ -23,16 +23,17 @@ Download the platform asset from this repository's **Releases** page once availa
 
 ### Windows PCVR
 
-1. Obtain the Windows release ZIP and extract the **entire archive**, including its `assets` and support files, into a writable folder. Do not run it inside the ZIP.
-2. Prepare a clean, legally obtained self-dump of **Majora's Mask (USA), Nintendo 64 revision 1.0**, or the **N64 Majora's Mask ROM extracted from the US The Legend of Zelda: Collector's Edition GameCube disc**. Use an uncompressed `.z64`, `.v64` or `.n64` file. A matching existing `mm.o2r` can instead be placed beside `2ship.exe`.
-3. Connect the headset and controllers through your chosen OpenXR runtime/streamer, then run **Play Majoras Mask VR.cmd**. The executable in the extracted release is `2ship.exe`; keep the launcher and its companion files together. On first launch, follow the extraction prompt and choose your prepared ROM file.
-4. Adjust VR settings with right-stick click before or after entering a save. Start a normal game through file select.
+1. Download the Windows release ZIP and extract the it's contents into a folder.
+2. Prepare a clean, legally obtained self-dump of **Majora's Mask (USA), Nintendo 64 revision 1.0**, or the **N64 Majora's Mask ROM extracted from the US The Legend of Zelda: Collector's Edition GameCube disc**. Use an uncompressed `.z64`, `.v64` or `.n64` file. A matching existing `mm.o2r` can instead be placed beside `2ship.exe`. Place it into your extracted folder.
+3. Open the game one time and follow the on screen instructions. Close the game when done.
+4. Connect the headset and controllers through your chosen OpenXR runtime/streamer, then run **Play Majoras Mask VR.cmd**. The executable in the extracted release is `2ship.exe`; keep the launcher and its companion files together. On first launch, follow the extraction prompt and choose your prepared ROM file.
+5. Adjust VR settings with right-stick click before or after entering a save. Start a normal game through file select.
 
 ### Quest standalone
 
-1. Install the provided signed Quest APK using your normal sideloading method. USB sideloading requires Quest developer mode and USB-debugging authorization. A typical ADB install is `adb install -r MMVR-Quest-version.apk`, using the actual downloaded filename. Keep the same app/signing identity for later updates.
-2. Copy a clean, legally obtained self-dump of **Majora's Mask (USA), Nintendo 64 revision 1.0**, or the **N64 Majora's Mask ROM extracted from the US The Legend of Zelda: Collector's Edition GameCube disc** to the headset, for example `Download`. Supported inputs are uncompressed `.z64`, `.v64` and `.n64`.
-3. Open **Majora's Mask VR**, normally in the headset's Unknown Sources app list. In setup, select **Choose Majora's Mask ROM**, browse to the file and confirm. Extraction runs on the headset; the source file is not modified. Importing a compatible existing `mm.o2r` is also supported.
+1. Install the Quest APK using your normal sideloading method. (Google Quest Sideloader if you don't know how)
+2. Copy a clean, legally obtained self-dump of **Majora's Mask (USA), Nintendo 64 revision 1.0**, or the **N64 Majora's Mask ROM extracted from the US The Legend of Zelda: Collector's Edition GameCube disc** to the headset, for example `Download`. Supported inputs are uncompressed `.z64`, `.v64` and `.n64`. Place it anywhere your headset file picker can access.
+3. Open **Majora's Mask VR**, normally in the headset's Unknown Sources app list. In setup, select **Choose Majora's Mask ROM**, browse to the file and confirm. Extraction runs on the headset; the source file is not modified. Importing a compatible existing `mm.o2r` is also supported. The app will likely close. Reset and Play!
 4. Keep controllers awake and complete normal headset system prompts. Use right-stick click for VR settings before or after entering a save.
 
 No Nintendo game ROM or extracted archive (`mm.o2r`) is included. Supply your own legally obtained dump; the release contains the port support files, not the game. Do not share your ROM or extracted archive. The package excludes saves, personal settings and signing keys. This guide cannot verify the contents of third-party repacks. I provide no Nintendo assets within my download. I make nothing from this mod in any way.
