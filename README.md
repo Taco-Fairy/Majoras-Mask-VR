@@ -1,5 +1,5 @@
 <img width="1729" height="910" alt="LOZMM VR Logo" src="https://github.com/user-attachments/assets/c08ce56c-b671-4c67-80a3-b7efd279198c" />
-# Majora's Mask VR
+## Majora's Mask VR
 Full Motion Majora's Mask VR mod, made by FullDiveGames.
 
 Disclaimer: I don't want to hide the fact that I made this mod using Vibe coding. I make no money from this mod, I've put a lot of time into iterating and testing into making it polished, fun, and fully playable. I don't support all AI, but I don't mind using it for coding non profit mods for the games I love. I am sorry if this fact bothers anyone or is a deal breaker, but I hope you enjoy!
