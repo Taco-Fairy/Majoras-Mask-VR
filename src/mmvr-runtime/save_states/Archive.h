@@ -56,6 +56,7 @@ public:
     Snapshot Load(int slot, const Identity&) const;
     Snapshot LoadUnbound(int slot) const; // Read-only migration inspection; never rewrites the slot.
     bool Exists(int slot) const;
+    Identity PeekIdentity(int slot) const; // Bounded preflight only; Load still verifies the full archive.
 };
 struct ExternalRange { void* address = nullptr; uint64_t bytes = 0; };
 using Resolver = std::function<ExternalRange(ReferenceKind, const std::string&)>;

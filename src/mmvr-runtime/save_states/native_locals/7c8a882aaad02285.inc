@@ -5,6 +5,7 @@
  */
 
 #include "../../../2ship2harkinian/mm/src/overlays/actors/ovl_En_Kanban/z_en_kanban.h"
+#include "2s2h/VR/ScriptedMelee.h"
 #include "objects/object_kanban/object_kanban.h"
 #include "objects/gameplay_keep/gameplay_keep.h"
 
@@ -197,8 +198,8 @@ void func_80954BE8(EnKanban* this, PlayState* play) {
     }
 }
 
-static Color_RGBA8 mmvr_local_921358cdde269af2 = { 185, 140, 70, 255 };
-static Color_RGBA8 mmvr_local_ee774b24e6b36c98 = { 255, 255, 255, 255 };
+static Color_RGBA8 mmvr_local_de387cdddee96b2b = { 185, 140, 70, 255 };
+static Color_RGBA8 mmvr_local_824ab806355a300e = { 255, 255, 255, 255 };
 void EnKanban_Update(Actor* thisx, PlayState* play) {
     u8 bounced = false;
     EnKanban* this = (EnKanban*)thisx;
@@ -251,7 +252,7 @@ void EnKanban_Update(Actor* thisx, PlayState* play) {
                         u8 i;
 
                         if (acHitElem->atDmgInfo.dmgFlags & 0x200) {
-                            this->cutType = sCutTypes[player->meleeWeaponAnimation];
+                            this->cutType = sCutTypes[MMVR_ScriptedMeleeAnimation(player)];
                         } else if (acHitElem->atDmgInfo.dmgFlags & 0x10) {
                             this->invincibilityTimer = 0;
                             this->cutType = this->unk_19A + 3;
@@ -647,11 +648,11 @@ void EnKanban_Update(Actor* thisx, PlayState* play) {
                 s32 pad3;
 
                 if (this->unk_197 != 0) {
-                    primColor = mmvr_local_ee774b24e6b36c98;
-                    envColor = mmvr_local_ee774b24e6b36c98;
+                    primColor = mmvr_local_824ab806355a300e;
+                    envColor = mmvr_local_824ab806355a300e;
                 } else {
-                    primColor = mmvr_local_921358cdde269af2;
-                    envColor = mmvr_local_921358cdde269af2;
+                    primColor = mmvr_local_de387cdddee96b2b;
+                    envColor = mmvr_local_de387cdddee96b2b;
                 }
 
                 accel.x = 0.0f;

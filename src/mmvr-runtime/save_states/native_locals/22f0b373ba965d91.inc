@@ -5,6 +5,7 @@
  */
 
 #include "2s2h/VR/YawBillboard.h"
+#include "2s2h/VR/ScriptedMelee.h"
 #include "../../../2ship2harkinian/mm/src/overlays/actors/ovl_En_Po_Sisters/z_en_po_sisters.h"
 #include "overlays/actors/ovl_En_Clear_Tag/z_en_clear_tag.h"
 #include "objects/gameplay_keep/gameplay_keep.h"
@@ -242,8 +243,8 @@ void EnPoSisters_MatchPlayerXZ(EnPoSisters* this, PlayState* play) {
     f32 dist;
 
     if ((this->megCloneId == POE_SISTERS_MEG_REAL) || (this->actionFunc != EnPoSisters_DamageFlinch)) {
-        if (((player->meleeWeaponState == PLAYER_MELEE_WEAPON_STATE_0) ||
-             (player->meleeWeaponAnimation >= PLAYER_MWA_SPIN_ATTACK_1H)) &&
+        if (((MMVR_ScriptedMeleeState(player) == PLAYER_MELEE_WEAPON_STATE_0) ||
+             (MMVR_ScriptedMeleeAnimation(player) >= PLAYER_MWA_SPIN_ATTACK_1H)) &&
             ((player->actor.world.pos.y - player->actor.floorHeight) < 1.0f)) {
             Math_StepToF(&this->megDistToPlayer, 110.0f, 3.0f);
         } else {
@@ -1068,19 +1069,19 @@ void EnPoSisters_UpdateColors(EnPoSisters* this) {
     }
 }
 
-static Gfx* mmvr_local_a40ee5d6ab06ed56[] = {
+static Gfx* mmvr_local_3772cb7c86b147b5[] = {
         gPoeSistersMegBodyDL,
         gPoeSistersJoelleBodyDL,
         gPoeSistersBethBodyDL,
         gPoeSistersAmyBodyDL,
     };
-static Gfx* mmvr_local_868c7c6191511484[] = {
+static Gfx* mmvr_local_f15775bcf738e347[] = {
         gPoeSistersMegFaceDL,
         gPoeSistersJoelleFaceDL,
         gPoeSistersBethFaceDL,
         gPoeSistersAmyFaceDL,
     };
-static Color_RGBA8 mmvr_local_9dd321550d216a2c[] = {
+static Color_RGBA8 mmvr_local_11a09e452bdb4ba4[] = {
         { 80, 0, 100, 0 },
         { 80, 15, 0, 0 },
         { 0, 70, 50, 0 },
@@ -1105,14 +1106,14 @@ s32 EnPoSisters_OverrideLimbDraw(PlayState* play, s32 limbIndex, Gfx** dList, Ve
         ((this->actionFunc == EnPoSisters_DeathStage1) && (this->deathTimer >= 8))) {
         *dList = NULL;
     } else if (limbIndex == POE_SISTERS_LIMB_MAIN_BODY) {
-        *dList = mmvr_local_a40ee5d6ab06ed56[this->type];
+        *dList = mmvr_local_3772cb7c86b147b5[this->type];
     } else if (limbIndex == POE_SISTERS_LIMB_FACE) {
-        *dList = mmvr_local_868c7c6191511484[this->type];
+        *dList = mmvr_local_f15775bcf738e347[this->type];
 
         gDPPipeSync((*gfx)++);
         gDPSetEnvColor((*gfx)++, this->color.r, this->color.g, this->color.b, this->color.a);
     } else if (limbIndex == POE_SISTERS_LIMB_LOWER_BODY) {
-        Color_RGBA8* color = &mmvr_local_9dd321550d216a2c[this->type];
+        Color_RGBA8* color = &mmvr_local_11a09e452bdb4ba4[this->type];
 
         gDPPipeSync((*gfx)++);
         gDPSetEnvColor((*gfx)++, color->r, color->g, color->b, this->color.a);

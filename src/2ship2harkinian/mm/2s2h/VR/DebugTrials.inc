@@ -98,6 +98,25 @@ extern "C" int MMVR_DebugLocationBegin(PlayState* play,int index){
  trialSave=gSaveContext.save;trialSkyboxTime=gSaveContext.skyboxTime;trialTimeSpeed=R_TIME_SPEED;std::memcpy(trialEvents,gSaveContext.eventInf,sizeof(trialEvents));std::memcpy(trialCycles,gSaveContext.cycleSceneFlags,sizeof(trialCycles));
  trialSnapshot=true;trialReturning=false;trial=-1;
  PrepareKafeiCheckpoint(debugLocations[index].kafeiPreset);
+ const int interaction=debugLocations[index].interactionPreset;
+ if(interaction>=0) {
+  // This is inside the existing reversible trial snapshot, not the player's save.
+  gSaveContext.save.day=1;gSaveContext.save.eventDayCount=1;
+  gSaveContext.save.time=CLOCK_TIME(10,0);gSaveContext.skyboxTime=gSaveContext.save.time;
+  gSaveContext.save.playerForm=PLAYER_FORM_HUMAN;gSaveContext.save.equippedMask=PLAYER_MASK_NONE;
+  if(interaction==0) {
+   SET_WEEKEVENTREG(WEEKEVENTREG_TALKED_KOUME_INJURED);
+   CLEAR_WEEKEVENTREG(WEEKEVENTREG_SAVED_KOUME);
+   CLEAR_WEEKEVENTREG(WEEKEVENTREG_RECEIVED_RED_POTION_FOR_KOUME);
+   CLEAR_WEEKEVENTREG(WEEKEVENTREG_RECEIVED_KOTAKE_BOTTLE);
+   CLEAR_WEEKEVENTREG(WEEKEVENTREG_FAILED_RECEIVED_RED_POTION_FOR_KOUME_SHOP);
+   gSaveContext.save.saveInfo.inventory.items[SLOT_BOTTLE_1]=ITEM_NONE;
+  } else if(interaction==1) {
+   CLEAR_WEEKEVENTREG(WEEKEVENTREG_09_80);
+   CLEAR_WEEKEVENTREG(WEEKEVENTREG_23_20);
+   SET_WEEKEVENTREG(WEEKEVENTREG_88_01);
+  }
+ }
  Log()<<"location-trial index="<<index<<" name="<<debugLocations[index].name<<"\n"<<std::flush;
  TrialTransition(play,debugLocations[index].entrance);return true;
 }

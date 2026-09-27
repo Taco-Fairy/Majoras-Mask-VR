@@ -5,6 +5,7 @@
  */
 
 #include "z_en_kaizoku.h"
+#include "2s2h/VR/ScriptedMelee.h"
 #include "overlays/actors/ovl_En_Clear_Tag/z_en_clear_tag.h"
 #include "overlays/actors/ovl_En_Arrow/z_en_arrow.h"
 #include "overlays/effects/ovl_Effect_Ss_Hitmark/z_eff_ss_hitmark.h"
@@ -387,7 +388,7 @@ s32 EnKaizoku_ReactToPlayer(EnKaizoku* this, PlayState* play, s16 arg2) {
     Actor* explosiveActor;
 
     if (func_800BE184(play, &this->picto.actor, 100.0f, 0x2710, 0x4000, this->picto.actor.shape.rot.y)) {
-        if (player->meleeWeaponAnimation == PLAYER_MWA_JUMPSLASH_START) {
+        if (MMVR_ScriptedMeleeAnimation(player) == PLAYER_MWA_JUMPSLASH_START) {
             if (this->action != KAIZOKU_ACTION_SPIN_DODGE) {
                 EnKaizoku_SetupSpinDodge(this, play);
             }
@@ -404,7 +405,7 @@ s32 EnKaizoku_ReactToPlayer(EnKaizoku* this, PlayState* play, s16 arg2) {
                 EnKaizoku_SetupJump(this);
             }
             return true;
-        } else if (player->meleeWeaponAnimation == PLAYER_MWA_JUMPSLASH_START) {
+        } else if (MMVR_ScriptedMeleeAnimation(player) == PLAYER_MWA_JUMPSLASH_START) {
             if (this->action != KAIZOKU_ACTION_SPIN_DODGE) {
                 EnKaizoku_SetupSpinDodge(this, play);
             }
@@ -942,7 +943,7 @@ void EnKaizoku_Ready(EnKaizoku* this, PlayState* play) {
     if ((this->lookTimer == 0) && !EnKaizoku_DodgeRanged(this, play) && !EnKaizoku_ReactToPlayer(this, play, false)) {
         s16 angleToPlayer = this->picto.actor.yawTowardsPlayer - this->picto.actor.shape.rot.y;
 
-        if ((this->picto.actor.xzDistToPlayer < 100.0f) && (player->meleeWeaponState != PLAYER_MELEE_WEAPON_STATE_0) &&
+        if ((this->picto.actor.xzDistToPlayer < 100.0f) && (MMVR_ScriptedMeleeState(player) != PLAYER_MELEE_WEAPON_STATE_0) &&
             (angleToPlayer >= 0x1F40)) {
             this->picto.actor.shape.rot.y = this->picto.actor.world.rot.y = this->picto.actor.yawTowardsPlayer;
             EnKaizoku_SetupCircle(this);
@@ -1084,7 +1085,7 @@ void EnKaizoku_Block(EnKaizoku* this, PlayState* play) {
         if ((ABS_ALT(angleToPlayer) <= 0x4000) && (this->picto.actor.xzDistToPlayer < 40.0f) &&
             (fabsf(this->picto.actor.playerHeightRel) < 50.0f)) {
             if (func_800BE184(play, &this->picto.actor, 100.0f, 10000, 0x4000, this->picto.actor.shape.rot.y)) {
-                if (player->meleeWeaponAnimation == PLAYER_MWA_JUMPSLASH_START) {
+                if (MMVR_ScriptedMeleeAnimation(player) == PLAYER_MWA_JUMPSLASH_START) {
                     this->bodyCollider.base.acFlags &= ~AC_HARD;
                     EnKaizoku_SetupSpinDodge(this, play);
                 } else if ((play->gameplayFrames % 2) == 0) {
@@ -1109,7 +1110,7 @@ void EnKaizoku_Block(EnKaizoku* this, PlayState* play) {
         }
     } else if ((this->combatTimer == 0) &&
                func_800BE184(play, &this->picto.actor, 100.0f, 10000, 0x4000, this->picto.actor.shape.rot.y)) {
-        if (player->meleeWeaponAnimation == PLAYER_MWA_JUMPSLASH_START) {
+        if (MMVR_ScriptedMeleeAnimation(player) == PLAYER_MWA_JUMPSLASH_START) {
             this->bodyCollider.base.acFlags &= ~AC_HARD;
             EnKaizoku_SetupSpinDodge(this, play);
         } else if (!EnKaizoku_DodgeRanged(this, play)) {
@@ -1328,7 +1329,7 @@ void EnKaizoku_Advance(EnKaizoku* this, PlayState* play) {
 
         this->skelAnime.playSpeed = 1.0f;
         yawDiff = ABS_ALT(player->actor.shape.rot.y - this->picto.actor.shape.rot.y);
-        if ((this->picto.actor.xzDistToPlayer < 150.0f) && (player->meleeWeaponState != PLAYER_MELEE_WEAPON_STATE_0) &&
+        if ((this->picto.actor.xzDistToPlayer < 150.0f) && (MMVR_ScriptedMeleeState(player) != PLAYER_MELEE_WEAPON_STATE_0) &&
             (yawDiff >= 0x2000)) {
             this->picto.actor.shape.rot.y = this->picto.actor.world.rot.y = this->picto.actor.yawTowardsPlayer;
             if (Rand_ZeroOne() > 0.7f) {

@@ -52,7 +52,7 @@ extern "C" void HudEditor_OverrideNextElementMode(HudEditorElementMode mode) {
 static bool VrHudActive(){
  const char* nativeTest=std::getenv("MMVR_NATIVE_TEST");
  const bool test=nativeTest&&std::strcmp(nativeTest,"1")==0;
- return (mmvr::StereoActive()||test)&&gPlayState&&gPlayState->pauseCtx.state==PAUSE_STATE_OFF&&!mmvr::MenuPaused();
+ return mmvr::FirstPersonSelected()&&(mmvr::StereoActive()||test)&&gPlayState&&gPlayState->pauseCtx.state==PAUSE_STATE_OFF&&!mmvr::MenuPaused();
 }
 extern "C" int MMVR_HudLayout(){return VrHudActive();}
 static mmvr::HudGroup VrHudGroup(HudEditorElementID id){

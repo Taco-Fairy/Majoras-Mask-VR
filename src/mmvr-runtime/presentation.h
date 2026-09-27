@@ -128,6 +128,22 @@ inline void Draw(ImDrawList& list, const UiDrawFrame& frame, ImTextureID frameTe
         list.AddRect({ 31, 31 }, { 993, 737 }, IM_COL32(43, 107, 113, 255), 8, 0, 2);
         Text(list, 60, 46, "MAJORA'S MASK VR", 36);
         const auto& menu = mmvr::GetMenu();
+        if (setupGuideVisible) {
+            Text(list, 60, 112, "WELCOME - VR SETUP", 32);
+            Text(list, 60, 180, "1. Get comfortable", 26);
+            Text(list, 60, 222, "Sit or stand normally, then use your headset's recenter function.", 21);
+            Text(list, 60, 276, "2. Check your height and floor", 26);
+            Text(list, 60, 318, "View > World scale uses your runtime's floor to match each form.", 21);
+            Text(list, 60, 350, "No floor tracking? Set Fallback floor-to-eye height, then recenter.", 21);
+            Text(list, 60, 404, "3. Choose your controls", 26);
+            Text(list, 60, 446, "Hands selects your dominant hand. Controls has the full tutorial", 21);
+            Text(list, 60, 478, "and button rebinding. Closing settings saves your changes.", 21);
+            Text(list, 60, 550, "System > Updates shows the automatic update check result.", 21);
+            Text(list, 60, 582, "You can reopen this guide under System at any time.", 21);
+            Text(list, 60, 666, "A: Open settings     B: Finish setup and close", 25);
+            return;
+        }
+
         for (int tab = 0; tab < TabCount; ++tab) {
             const float tabWidth = 924.f / TabCount;
             float x = 51.f + tab * tabWidth;
@@ -159,8 +175,8 @@ inline void Draw(ImDrawList& list, const UiDrawFrame& frame, ImTextureID frameTe
         if (menu.tab == ControlsTab)
             Text(list, 60, 169,
                  "Select an action, press its new input, then confirm. Menu navigation stays at defaults.", 16);
-        if (menu.tab == SystemTab)
-            Text(list, 60, 169, updateStatus.substr(0, 105).c_str(), 16);
+        if (menu.tab == SystemTab || updateAvailable)
+            Text(list, 60, 169, (supportStatus.empty() ? updateStatus : supportStatus).substr(0, 105).c_str(), 16);
         auto row = menu.row;
         int first = menu.first;
         for (int local = first; local < std::min(first + MenuVisibleRows, menu.VisibleRows()); ++local) {
@@ -174,6 +190,21 @@ inline void Draw(ImDrawList& list, const UiDrawFrame& frame, ImTextureID frameTe
                 Text(list, 64, y + 10, expanded ? "-" : "+", 30);
                 Text(list, 99, y + 10, MenuSections[section].label, 26);
                 Text(list, 819, y + 14, expanded ? "Collapse" : "Expand", 19);
+            } else if (ReleaseNotesRow(i)) {
+                static constexpr const char* notes[][3] = {
+                    { "World scale", "On by default, with per-form tuning and floor calibration.", "Hands and held items keep their intended size." },
+                    { "First-time setup", "Welcome guide before gameplay; reopen it under System.", "Automatic launch update checks, with manual installation." },
+                    { "Recovery and diagnostics", "VR settings recovery and private-safe diagnostic export.", "Existing saves and mod files are preserved." },
+                    { "Save-state safeguards", "Incompatible states are rejected before changing gameplay.", "Make an ordinary game save before updating." },
+                    { "Physical sword hotfixes", "Improved blade-tip and scripted sword interactions.", "Fixed monkey rope targeting and dojo jump-slash detection." },
+                    { "Aiming and third-person controls", "Optional head aiming, original controls and gamepad HUD.", "Separate lock-on toggle and native mask transformations." },
+                    { "Gameplay hotfixes", "Corrected default form height and potion/message crashes.", "Existing height adjustments remain available." },
+                    { "Beta reminder", "Cutscenes, performance and mod compatibility can vary.", "Old save states may require their original build and mods." }
+                };
+                const auto& note = notes[i - ReleaseNotesFirstRow];
+                Text(list, 64, y - 3, note[0], 22);
+                Text(list, 64, y + 23, note[1], 17);
+                Text(list, 64, y + 43, note[2], 17);
             } else if (TutorialRow(i)) {
                 const auto& help = ControlTutorial[i - TutorialFirstRow];
                 Text(list, 64, y - 3, help.title, 22);
@@ -239,8 +270,12 @@ inline void Draw(ImDrawList& list, const UiDrawFrame& frame, ImTextureID frameTe
                 Text(list, 64, y, "Restore all control bindings to defaults", 25);
             else if (i == ResetSettingsRow)
                 Text(list, 64, y, "Reset all VR tuning to defaults", 25);
+            else if (i == DiagnosticExportRow)
+                Text(list, 64, y, "Export private-safe diagnostic report", 25);
+            else if (i == SetupGuideRow)
+                Text(list, 64, y, "Show / hide first-time setup guide", 25);
             else if (i == RecenterRow)
-                Text(list, 64, y, "Recenter headset", 25);
+                Text(list, 64, y, "Recenter view and height", 25);
             else if (ExactStateRow(i)) {
                 const int slot=(i-SaveStateFirstRow)/2;
                 const bool load=(i-SaveStateFirstRow)%2;
@@ -266,9 +301,15 @@ inline void Draw(ImDrawList& list, const UiDrawFrame& frame, ImTextureID frameTe
             else if (i == RefreshModsRow)
                 Text(list, 64, y, "Refresh mods and texture packs", 25);
             else
-                Text(list, 64, y, i == CheckUpdateRow ? "Check for updates" : "Install available update", 25);
+                Text(list, 64, y, i == CheckUpdateRow ? "Check for updates" : (confirmUpdateInstall ? "Confirm install (save states may break)" : "Install available update"), 25);
         }
-        if (menu.tab == SystemTab) {
+        if (setupGuideVisible && menu.tab == SystemTab) {
+            list.AddRectFilled({49, 635}, {975, 699}, IM_COL32(12, 20, 25, 250), 5);
+            Text(list, 60, 638, "VR SETUP: Stand or sit comfortably, then recenter. Choose your hand under Hands.", 16);
+            Text(list, 60, 658, "View adjusts height. Optional world scale uses floor-to-eye height; recenter upright.", 16);
+            Text(list, 60, 678, "Controls has the tutorial and rebinding. Close settings to save. Reopen this guide in System.", 16);
+        }
+        if (menu.tab == SystemTab && !setupGuideVisible) {
             const auto identity = deviceInfo.runtime + " | " + deviceInfo.headset;
             Text(list, 60, 650, identity.substr(0, 105).c_str(), 16);
             char rate[160];
@@ -294,7 +335,7 @@ inline void Draw(ImDrawList& list, const UiDrawFrame& frame, ImTextureID frameTe
         char footer[180];
         std::snprintf(footer, sizeof(footer), "%s: %s   %s: collapse   %s: back",
                       ControlName(0, leftProfile, rightProfile),
-                      TutorialRow(menu.Selected()) ? "read only"
+                      (TutorialRow(menu.Selected()) || ReleaseNotesRow(menu.Selected())) ? "read only"
                       : BindingSetting(menu.Selected()) ? "rebind"
                       : ModFolderRow(menu.Selected()) ? (menu.expandedModFolders.contains(modFolders[FolderIndex(menu.Selected())].key) ? "collapse" : "expand")
                       : MenuHeader(menu.Selected())   ? (menu.expanded[menu.Selected()-MenuRows] ? "collapse" : "expand")

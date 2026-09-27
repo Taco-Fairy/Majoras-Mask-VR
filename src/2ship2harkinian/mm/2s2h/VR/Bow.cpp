@@ -106,16 +106,16 @@ void UpdateBow(const mmvr::TrackingFrame& frame, const mmvr::Matrix& view, const
                             (anchor.z - head.z) * (anchor.z - head.z)) /
                   40;
     bool valid =
-        reach < settings.Get(mmvr::Setting::AimReach) &&
+        reach < settings.Get(mmvr::Setting::AimReach)*frame.trackingScale &&
         !BgCheck_EntityLineTest2(&play->colCtx, &from, &anchor, &hit, &poly, true, true, true, true, &bg, &p->actor);
     ItemId ammoItem; ArrowType ammoType;
     const bool hasArrow = func_808305BC(play, p, &ammoItem, &ammoType) > 0;
     const bool freeDrawHand = !CarriedObject(p);
     if (!freeDrawHand) { draw.Cancel(); pending=false; }
     bool fire = draw.Update(frame.timeSeconds, frame.epoch, valid && freeDrawHand && hasArrow, frame.triggers[dominant], distance,
-                            std::min(backwards, mmvr::LimitedArrowDraw(100) / 40),
-                            settings.Get(mmvr::Setting::BowGrabDistance), settings.Get(mmvr::Setting::BowMinDraw),
-                            std::min(settings.Get(mmvr::Setting::BowFullDraw), mmvr::LimitedArrowDraw(100) / 40));
+                            std::min(backwards, mmvr::LimitedArrowDraw(100) / 40 * frame.trackingScale),
+                            settings.Get(mmvr::Setting::BowGrabDistance)*frame.trackingScale, settings.Get(mmvr::Setting::BowMinDraw)*frame.trackingScale,
+                            std::min(settings.Get(mmvr::Setting::BowFullDraw), mmvr::LimitedArrowDraw(100) / 40)*frame.trackingScale);
     bowModel = model;
     stringHand = pullHand;
     bowPoseValid = valid;
@@ -124,11 +124,16 @@ void UpdateBow(const mmvr::TrackingFrame& frame, const mmvr::Matrix& view, const
         (draw.drawing || fire) && distance > .01f ? XrVector3f{ delta.x, delta.y, delta.z }
                                                   : XrVector3f{ -aim.m[2][0], -aim.m[2][1], -aim.m[2][2] },
         settings.Get(mmvr::Setting::BowAimYaw), settings.Get(mmvr::Setting::BowAimPitch));
-    const float visualDraw = mmvr::LimitedArrowDraw(distance * 40);
+    const auto stringDirection = direction;
+    if (settings.Get(mmvr::Setting::HeadItemAim) > .5f) {
+        const auto headAim = worldPose(frame.head);
+        direction = { -headAim.m[2][0], -headAim.m[2][1], -headAim.m[2][2] };
+    }
+    const float visualDraw = mmvr::LimitedArrowDraw(distance * 40 / frame.trackingScale) * frame.trackingScale;
     if (draw.drawing)
-        stringHand = { anchor.x - direction.x * visualDraw, anchor.y - direction.y * visualDraw,
-                       anchor.z - direction.z * visualDraw };
-    arrowPose = draw.drawing && valid ? mmvr::ArrowPose(direction, { stringHand.x, stringHand.y, stringHand.z })
+        stringHand = { anchor.x - stringDirection.x * visualDraw, anchor.y - stringDirection.y * visualDraw,
+                       anchor.z - stringDirection.z * visualDraw };
+    arrowPose = draw.drawing && valid ? mmvr::ArrowPose(direction, { stringHand.x, stringHand.y, stringHand.z }, frame.trackingScale)
                                       : mmvr::Matrix{};
     reticlePose = {};
     if (draw.drawing && hasArrow && valid && settings.Get(mmvr::Setting::BowReticle) > .5f) {

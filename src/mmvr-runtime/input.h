@@ -73,6 +73,14 @@ inline uint16_t LeftUpperButton(bool pressed, bool gameplay, bool ocarina, bool 
         return 0x20;
     return climbing ? 0 : 0x2000;
 }
+// Native third-person controls keep item use on C-down and preserve native
+// shield/target state machines. Menus and instruments own their own bindings.
+inline uint16_t ThirdPersonButtons(float leftTrigger, float leftGrip, float rightTrigger, bool enabled) {
+    if (!enabled) return 0;
+    return (leftTrigger > .65f ? 0x10 : 0) |
+           (leftGrip > .65f ? 0x2000 : 0) |
+           (rightTrigger > .65f ? 4 : 0);
+}
 // Preserve short presses between native game ticks. Clear on focus/session loss.
 struct PadLatch {
     Pad held{};

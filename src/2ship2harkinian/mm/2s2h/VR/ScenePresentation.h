@@ -278,6 +278,11 @@ inline void UpdateIntroPresentation(PlayState* play) {
 }
 inline mmvr::SceneView SceneView(PlayState* play) {
     const auto facts = SceneFacts(play);
+    // Third-person transformations use the original cinematic on the theater
+    // screen; keep first-person transformation comfort behavior unchanged.
+    if (play && !mmvr::FirstPersonSelected() &&
+        (MMVR_LocalTransformation(GET_PLAYER(play)) || MMVR_FormReloadActive(play)))
+        return mmvr::SceneView::Theater;
     // Kafei's quest-control handoff temporarily makes his embedded Player the
     // active player. Keep the normal head-following VR view for that segment;
     // its native scripted camera is not a standalone panorama.

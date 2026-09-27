@@ -1789,6 +1789,10 @@ s32 EnTrt_OverrideLimbDraw(PlayState* play, s32 limbIndex, Gfx** dList, Vec3f* p
     s32 i;
 
     for (i = 0; i < ARRAY_COUNT(this->items); i++) {
+        // Shelf actors may be absent when their spawn could not be satisfied.
+        if (this->items[i] == NULL) {
+            continue;
+        }
         this->items[i]->actor.scale.x = 0.2f;
         this->items[i]->actor.scale.y = 0.2f;
         this->items[i]->actor.scale.z = 0.2f;

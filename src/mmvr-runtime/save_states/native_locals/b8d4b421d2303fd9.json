@@ -1,0 +1,6 @@
+{
+  "source": "overlays/actors/ovl_En_Kaizoku/z_en_kaizoku.c",
+  "include": "b8d4b421d2303fd9.inc",
+  "variables": [],
+  "sourceSha256": "f818b7580f35b3be31e02cd9635c4950d0393b413b60c788cb5de3d46d8c9a58"
+}

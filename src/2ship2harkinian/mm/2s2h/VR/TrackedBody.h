@@ -64,6 +64,8 @@ mmvr::Matrix DekuGuardPose(PlayState* play,Player* p){
  if(dekuGuardPreviousLocal.m[3][3])
   for(int r=0;r<4;++r)for(int c=0;c<4;++c)
    local.m[r][c]=dekuGuardPreviousLocal.m[r][c]+(local.m[r][c]-dekuGuardPreviousLocal.m[r][c])*bodyRenderAlpha;
+ const float factor=mmvr::WorldTrackingScale(mmvr::GetSettings(),p->transformation,StandingFormEyeHeight(p));
+ for(int r=0;r<4;++r)for(int c=0;c<3;++c)local.m[r][c]*=factor;
  auto head=FormHeadPose();if(head.m[3][3])return mmvr::Multiply(local,head);
  auto pose=dekuGuardMatrix;for(int c=0;c<3;++c)pose.m[3][c]+=(&p->actor.world.pos.x)[c]-(&dekuGuardRoot.x)[c];return pose;
 }

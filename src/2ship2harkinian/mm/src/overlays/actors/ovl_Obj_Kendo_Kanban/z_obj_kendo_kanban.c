@@ -5,6 +5,7 @@
  */
 
 #include "z_obj_kendo_kanban.h"
+#include "2s2h/VR/ScriptedMelee.h"
 #include "objects/object_dora/object_dora.h"
 
 #define FLAGS 0x00000000
@@ -253,9 +254,9 @@ void ObjKendoKanban_SetupTumble(ObjKendoKanban* this, PlayState* play) {
     Player* player = GET_PLAYER(play);
 
     if (this->boardFragments == OBJKENDOKANBAN_PART_FULL) {
-        if ((player->meleeWeaponAnimation == PLAYER_MWA_FORWARD_SLASH_1H) ||
-            (player->meleeWeaponAnimation == PLAYER_MWA_FORWARD_SLASH_2H) ||
-            (player->meleeWeaponAnimation == PLAYER_MWA_JUMPSLASH_FINISH)) {
+        if ((MMVR_ScriptedMeleeAnimation(player) == PLAYER_MWA_FORWARD_SLASH_1H) ||
+            (MMVR_ScriptedMeleeAnimation(player) == PLAYER_MWA_FORWARD_SLASH_2H) ||
+            (MMVR_ScriptedMeleeAnimation(player) == PLAYER_MWA_JUMPSLASH_FINISH)) {
 
             // Vertical cuts initialize the right half, spawn the left half.
             this->boardFragments = OBJKENDOKANBAN_RIGHT_HALF;

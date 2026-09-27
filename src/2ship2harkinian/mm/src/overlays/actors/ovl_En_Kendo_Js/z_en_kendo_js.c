@@ -5,6 +5,7 @@
  */
 
 #include "z_en_kendo_js.h"
+#include "2s2h/VR/ScriptedMelee.h"
 #include "overlays/actors/ovl_En_Maruta/z_en_maruta.h"
 
 #define FLAGS                                                                                  \
@@ -373,7 +374,7 @@ s32 func_80B26BF8(EnKendoJs* this, PlayState* play) {
                 return 0;
             }
 
-            if ((player->meleeWeaponState != PLAYER_MELEE_WEAPON_STATE_0) ||
+            if ((MMVR_ScriptedMeleeState(player) != PLAYER_MELEE_WEAPON_STATE_0) ||
                 (player->stateFlags3 & PLAYER_STATE3_8000000) || (player->stateFlags2 & PLAYER_STATE2_80000)) {
                 return 1;
             }
@@ -384,7 +385,7 @@ s32 func_80B26BF8(EnKendoJs* this, PlayState* play) {
                 return 0;
             }
 
-            if ((player->meleeWeaponState != PLAYER_MELEE_WEAPON_STATE_0) ||
+            if ((MMVR_ScriptedMeleeState(player) != PLAYER_MELEE_WEAPON_STATE_0) ||
                 (player->stateFlags2 & PLAYER_STATE2_80000)) {
                 return 1;
             }
@@ -395,7 +396,7 @@ s32 func_80B26BF8(EnKendoJs* this, PlayState* play) {
                 return 0;
             }
 
-            if ((player->meleeWeaponState != PLAYER_MELEE_WEAPON_STATE_0) ||
+            if ((MMVR_ScriptedMeleeState(player) != PLAYER_MELEE_WEAPON_STATE_0) ||
                 (player->stateFlags3 & PLAYER_STATE3_8000000) || (player->stateFlags2 & PLAYER_STATE2_80000)) {
                 return 1;
             }
@@ -403,8 +404,8 @@ s32 func_80B26BF8(EnKendoJs* this, PlayState* play) {
             break;
 
         case 3:
-            if ((this->unk_28E == 1) && ((player->meleeWeaponAnimation == PLAYER_MWA_RIGHT_SLASH_1H) ||
-                                         (player->meleeWeaponAnimation == PLAYER_MWA_RIGHT_COMBO_1H))) {
+            if ((this->unk_28E == 1) && ((MMVR_ScriptedMeleeAnimation(player) == PLAYER_MWA_RIGHT_SLASH_1H) ||
+                                         (MMVR_ScriptedMeleeAnimation(player) == PLAYER_MWA_RIGHT_COMBO_1H))) {
                 this->unk_28E = 0;
                 return 0;
             }
@@ -417,8 +418,8 @@ s32 func_80B26BF8(EnKendoJs* this, PlayState* play) {
             break;
 
         case 4:
-            if ((this->unk_28E == 1) && ((player->meleeWeaponAnimation == PLAYER_MWA_FORWARD_SLASH_1H) ||
-                                         (player->meleeWeaponAnimation == PLAYER_MWA_FORWARD_COMBO_1H))) {
+            if ((this->unk_28E == 1) && ((MMVR_ScriptedMeleeAnimation(player) == PLAYER_MWA_FORWARD_SLASH_1H) ||
+                                         (MMVR_ScriptedMeleeAnimation(player) == PLAYER_MWA_FORWARD_COMBO_1H))) {
                 this->unk_28E = 0;
                 return 0;
             }
@@ -431,7 +432,7 @@ s32 func_80B26BF8(EnKendoJs* this, PlayState* play) {
             break;
 
         case 5:
-            if ((this->unk_28E == 1) && (player->meleeWeaponAnimation == PLAYER_MWA_STAB_1H)) {
+            if ((this->unk_28E == 1) && (MMVR_ScriptedMeleeAnimation(player) == PLAYER_MWA_STAB_1H)) {
                 this->unk_28E = 0;
                 return 0;
             }
@@ -444,8 +445,8 @@ s32 func_80B26BF8(EnKendoJs* this, PlayState* play) {
             break;
 
         case 6:
-            if ((this->unk_28E == 1) && ((player->meleeWeaponAnimation == PLAYER_MWA_JUMPSLASH_START) ||
-                                         (player->meleeWeaponAnimation == PLAYER_MWA_JUMPSLASH_FINISH))) {
+            if ((this->unk_28E == 1) && ((MMVR_ScriptedMeleeAnimation(player) == PLAYER_MWA_JUMPSLASH_START) ||
+                                         (MMVR_ScriptedMeleeAnimation(player) == PLAYER_MWA_JUMPSLASH_FINISH))) {
                 this->unk_28E = 0;
                 return 0;
             }
@@ -645,13 +646,13 @@ void func_80B274BC(EnKendoJs* this, PlayState* play) {
     }
 
     if (this->unk_28E == 1) {
-        if ((player->meleeWeaponAnimation == PLAYER_MWA_JUMPSLASH_START) ||
-            (player->meleeWeaponAnimation == PLAYER_MWA_JUMPSLASH_FINISH)) {
+        if ((MMVR_ScriptedMeleeAnimation(player) == PLAYER_MWA_JUMPSLASH_START) ||
+            (MMVR_ScriptedMeleeAnimation(player) == PLAYER_MWA_JUMPSLASH_FINISH)) {
             play->interfaceCtx.minigamePoints = 3;
             if (gSaveContext.minigameScore >= 27) {
                 player->stateFlags1 |= PLAYER_STATE1_20;
             }
-        } else if (player->meleeWeaponAnimation == PLAYER_MWA_STAB_1H) {
+        } else if (MMVR_ScriptedMeleeAnimation(player) == PLAYER_MWA_STAB_1H) {
             play->interfaceCtx.minigamePoints = 2;
         } else {
             play->interfaceCtx.minigamePoints = 1;

@@ -5,6 +5,7 @@
  */
 
 #include "../../../2ship2harkinian/mm/src/overlays/actors/ovl_En_Wf/z_en_wf.h"
+#include "2s2h/VR/ScriptedMelee.h"
 #include "overlays/actors/ovl_En_Bom_Chu/z_en_bom_chu.h"
 #include "overlays/actors/ovl_En_Clear_Tag/z_en_clear_tag.h"
 #include "overlays/actors/ovl_Obj_Ice_Poly/z_obj_ice_poly.h"
@@ -259,7 +260,7 @@ static InitChainEntry sInitChain[] = {
     ICHAIN_F32_DIV1000(gravity, -2000, ICHAIN_STOP),
 };
 
-static s32 mmvr_local_9de5ba719bfdce07 = false;
+static s32 mmvr_local_899b0b04db1e1fce = false;
 void EnWf_Init(Actor* thisx, PlayState* play) {
     /* persistent local storage is declared above */
     EnWf* this = (EnWf*)thisx;
@@ -341,12 +342,12 @@ void EnWf_Init(Actor* thisx, PlayState* play) {
 
     Actor_ChangeCategory(play, &play->actorCtx, &this->actor, ACTORCAT_ENEMY);
 
-    if (!mmvr_local_9de5ba719bfdce07) {
+    if (!mmvr_local_899b0b04db1e1fce) {
         for (i = 0; i < ARRAY_COUNT(sNormalEyeTextures); i++) {
             sNormalEyeTextures[i] = Lib_SegmentedToVirtual(sNormalEyeTextures[i]);
             sWhiteEyeTextures[i] = Lib_SegmentedToVirtual(sWhiteEyeTextures[i]);
         }
-        mmvr_local_9de5ba719bfdce07 = true;
+        mmvr_local_899b0b04db1e1fce = true;
     }
     this->unk_2A2 = Rand_ZeroFloat(96.0f);
 }
@@ -409,7 +410,7 @@ s32 func_80990948(PlayState* play, EnWf* this, s16 arg2) {
     }
 
     if (func_800BE184(play, &this->actor, 100.0f, 10000, 12000, this->actor.shape.rot.y) &&
-        ((player->meleeWeaponAnimation == PLAYER_MWA_JUMPSLASH_START) || ((play->gameplayFrames % 2) != 0))) {
+        ((MMVR_ScriptedMeleeAnimation(player) == PLAYER_MWA_JUMPSLASH_START) || ((play->gameplayFrames % 2) != 0))) {
         func_8099282C(this);
         return true;
     }
@@ -422,7 +423,7 @@ s32 func_80990948(PlayState* play, EnWf* this, s16 arg2) {
             return true;
         }
 
-        if ((player->meleeWeaponAnimation == PLAYER_MWA_JUMPSLASH_START) || ((play->gameplayFrames % 2) != 0)) {
+        if ((MMVR_ScriptedMeleeAnimation(player) == PLAYER_MWA_JUMPSLASH_START) || ((play->gameplayFrames % 2) != 0)) {
             func_8099282C(this);
             return true;
         }
@@ -463,9 +464,9 @@ s32 func_80990948(PlayState* play, EnWf* this, s16 arg2) {
     return false;
 }
 
-static Vec3f mmvr_local_a9048e7c53b99212 = { 0.0f, 0.1f, 0.0f };
-static Color_RGBA8 mmvr_local_f0889ae801f1b87f = { 185, 140, 70, 255 };
-static Color_RGBA8 mmvr_local_d326ea922b4c5f9d = { 255, 255, 255, 255 };
+static Vec3f mmvr_local_fa4b2ce3eaa86730 = { 0.0f, 0.1f, 0.0f };
+static Color_RGBA8 mmvr_local_f3c9288fb96746c8 = { 185, 140, 70, 255 };
+static Color_RGBA8 mmvr_local_dbe21c346b6cdc21 = { 255, 255, 255, 255 };
 void func_80990C6C(EnWf* this, PlayState* play, s32 arg2) {
     /* persistent local storage is declared above */
     /* persistent local storage is declared above */
@@ -481,11 +482,11 @@ void func_80990C6C(EnWf* this, PlayState* play, s32 arg2) {
 
         if (floorType != FLOOR_TYPE_5) {
             if ((floorType == FLOOR_TYPE_15) || (floorType == FLOOR_TYPE_14)) {
-                phi_s1 = &mmvr_local_d326ea922b4c5f9d;
+                phi_s1 = &mmvr_local_dbe21c346b6cdc21;
                 phi_s6 = Rand_ZeroFloat(150.0f) + 350.0f;
                 arg2 += 2;
             } else {
-                phi_s1 = &mmvr_local_f0889ae801f1b87f;
+                phi_s1 = &mmvr_local_f3c9288fb96746c8;
                 phi_s6 = Rand_ZeroFloat(100.0f) + 250.0f;
             }
 
@@ -493,7 +494,7 @@ void func_80990C6C(EnWf* this, PlayState* play, s32 arg2) {
                 pos.x = Rand_CenteredFloat(50.0f) + this->actor.world.pos.x;
                 pos.y = Rand_ZeroFloat(5.0f) + this->actor.world.pos.y;
                 pos.z = Rand_CenteredFloat(50.0f) + this->actor.world.pos.z;
-                func_800B0F18(play, &pos, &gZeroVec3f, &mmvr_local_a9048e7c53b99212, phi_s1, phi_s1, phi_s6, 5,
+                func_800B0F18(play, &pos, &gZeroVec3f, &mmvr_local_fa4b2ce3eaa86730, phi_s1, phi_s1, phi_s6, 5,
                               Rand_ZeroFloat(5.0f) + 14.0f);
             }
         }
@@ -617,7 +618,7 @@ void func_80991280(EnWf* this, PlayState* play) {
 
     if (!func_8099408C(play, this) && !func_80990948(play, this, false)) {
         phi_v1 = ABS_ALT(BINANG_SUB(player->actor.shape.rot.y, this->actor.shape.rot.y));
-        if ((this->actor.xzDistToPlayer < 80.0f) && (player->meleeWeaponState != PLAYER_MELEE_WEAPON_STATE_0) &&
+        if ((this->actor.xzDistToPlayer < 80.0f) && (MMVR_ScriptedMeleeState(player) != PLAYER_MELEE_WEAPON_STATE_0) &&
             (phi_v1 >= 0x1F40)) {
             this->actor.shape.rot.y = this->actor.yawTowardsPlayer;
             this->actor.world.rot.y = this->actor.yawTowardsPlayer;
@@ -669,7 +670,7 @@ void func_8099149C(EnWf* this, PlayState* play) {
         sp28 = ABS_ALT(BINANG_SUB(player->actor.shape.rot.y, this->actor.shape.rot.y));
 
         if ((this->actor.xzDistToPlayer < (150.0f + sp2C)) &&
-            (player->meleeWeaponState != PLAYER_MELEE_WEAPON_STATE_0) && (sp28 >= 0x1F40)) {
+            (MMVR_ScriptedMeleeState(player) != PLAYER_MELEE_WEAPON_STATE_0) && (sp28 >= 0x1F40)) {
             this->actor.shape.rot.y = this->actor.yawTowardsPlayer;
             this->actor.world.rot.y = this->actor.yawTowardsPlayer;
             if (Rand_ZeroOne() > 0.7f) {
@@ -1077,7 +1078,7 @@ void func_809928CC(EnWf* this, PlayState* play) {
         if (this->unk_2A0 != 0) {
             this->unk_2A0--;
         } else if (func_800BE184(play, &this->actor, 100.0f, 10000, 0x4000, this->actor.shape.rot.y)) {
-            if ((player->meleeWeaponAnimation != PLAYER_MWA_JUMPSLASH_START) || ((play->gameplayFrames % 2) != 0)) {
+            if ((MMVR_ScriptedMeleeAnimation(player) != PLAYER_MWA_JUMPSLASH_START) || ((play->gameplayFrames % 2) != 0)) {
                 this->unk_2A0 = 10;
             } else {
                 func_8099223C(this);
@@ -1177,7 +1178,7 @@ void func_80992D6C(EnWf* this) {
     this->actionFunc = func_80992E0C;
 }
 
-static Vec3f mmvr_local_4ce98dab4ad685a2 = { 0.0f, 0.5f, 0.0f };
+static Vec3f mmvr_local_3ee2f6e295802dda = { 0.0f, 0.5f, 0.0f };
 void func_80992E0C(EnWf* this, PlayState* play) {
     /* persistent local storage is declared above */
 
@@ -1211,7 +1212,7 @@ void func_80992E0C(EnWf* this, PlayState* play) {
             sp60.x = Rand_CenteredFloat(60.0f) + this->actor.world.pos.x;
             sp60.z = Rand_CenteredFloat(60.0f) + this->actor.world.pos.z;
             sp60.y = Rand_CenteredFloat(50.0f) + (this->actor.world.pos.y + 20.0f);
-            func_800B3030(play, &sp60, &mmvr_local_4ce98dab4ad685a2, &mmvr_local_4ce98dab4ad685a2, 100, 0, 2);
+            func_800B3030(play, &sp60, &mmvr_local_3ee2f6e295802dda, &mmvr_local_3ee2f6e295802dda, 100, 0, 2);
         }
 
         Actor_PlaySfx_Flagged(&this->actor, NA_SE_EN_COMMON_EXTINCT_LEV - SFX_FLAG);

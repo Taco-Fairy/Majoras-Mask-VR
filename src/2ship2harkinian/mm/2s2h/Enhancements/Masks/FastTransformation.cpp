@@ -1,3 +1,6 @@
+#ifdef MMVR_ENABLE
+#include "runtime.h"
+#endif
 #include <libultraship/bridge/consolevariablebridge.h>
 #include "2s2h/GameInteractor/GameInteractor.h"
 #include "2s2h/ShipInit.hpp"
@@ -15,8 +18,17 @@ void TransitionFade_SetColor(void* thisx, u32 color);
 #define CVAR_NAME "gEnhancements.Masks.FastTransformation"
 #define CVAR CVarGetInteger(CVAR_NAME, 0)
 
+static bool KeepNativeVrTransformation() {
+#ifdef MMVR_ENABLE
+    return mmvr::StereoActive() && !mmvr::FirstPersonSelected();
+#else
+    return false;
+#endif
+}
+
 void RegisterFastTransformation() {
     COND_VB_SHOULD(VB_PREVENT_MASK_TRANSFORMATION_CS, CVAR, {
+        if (KeepNativeVrTransformation()) return;
         *should = true;
         Player* player = GET_PLAYER(gPlayState);
 

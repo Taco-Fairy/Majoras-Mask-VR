@@ -5,6 +5,9 @@
  */
 
 #include "z_en_mnk.h"
+#ifdef MMVR_ENABLE
+#include "2s2h/VR/Interactions.h"
+#endif
 #include "2s2h/GameInteractor/GameInteractor.h"
 
 #define FLAGS (ACTOR_FLAG_ATTENTION_ENABLED | ACTOR_FLAG_FRIENDLY | ACTOR_FLAG_UPDATE_CULLING_DISABLED)
@@ -2066,6 +2069,21 @@ void EnMnk_Update(Actor* thisx, PlayState* play) {
             Collider_UpdateCylinder(&this->picto.actor, &this->collider);
         }
         CollisionCheck_SetOC(play, &play->colChkCtx, &this->collider.base);
+    }
+    if (MONKEY_GET_TYPE(&this->picto.actor) == MONKEY_TIED_UP) {
+        // Native button swings reach the base of the pole. Tracked swords must
+        // also reach the visible rope/monkey attachment, above that low cylinder.
+        // Keep the original footprint, damage mask, and dialogue-owned response.
+        this->collider.dim.height = 30;
+#ifdef MMVR_ENABLE
+        if (MMVR_IndependentSword(GET_PLAYER(play))) {
+            f32 attachmentHeight = this->unk_36C.yw - this->picto.actor.world.pos.y;
+            // The draw-owned attachment is unavailable before the first draw.
+            if ((attachmentHeight > 10.0f) && (attachmentHeight < 200.0f)) {
+                this->collider.dim.height = (s16)(attachmentHeight + 20.0f);
+            }
+        }
+#endif
     }
     if (this->flags & MONKEY_FLAGS_200) {
         CollisionCheck_SetAC(play, &play->colChkCtx, &this->collider.base);

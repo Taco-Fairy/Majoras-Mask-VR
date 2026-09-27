@@ -1,2 +1,2 @@
-#include "../../../2ship2harkinian/mm/src/overlays/actors/ovl_En_Mnk/z_en_mnk.c"
+#include "../native_locals/e7fc6e99a04b390f.inc"
 #include "e7fc6e99a04b390f.inc"

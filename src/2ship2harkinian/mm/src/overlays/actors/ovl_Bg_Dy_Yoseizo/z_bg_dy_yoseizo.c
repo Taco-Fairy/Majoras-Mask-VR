@@ -5,6 +5,7 @@
  */
 
 #include "z_bg_dy_yoseizo.h"
+#include "2s2h/VR/ScriptedMelee.h"
 #include "overlays/actors/ovl_Demo_Effect/z_demo_effect.h"
 #include "2s2h/GameInteractor/GameInteractor.h"
 
@@ -469,8 +470,8 @@ void BgDyYoseizo_TrainPlayer(BgDyYoseizo* this, PlayState* play) {
                     CutsceneManager_Queue(this->actor.csId);
                 }
             }
-        } else if (!(this->unk302 & 2) && (player->meleeWeaponState != 0)) {
-            if (player->meleeWeaponAnimation >= PLAYER_MWA_SPIN_ATTACK_1H) {
+        } else if (!(this->unk302 & 2) && (MMVR_ScriptedMeleeState(player) != 0)) {
+            if (MMVR_ScriptedMeleeAnimation(player) >= PLAYER_MWA_SPIN_ATTACK_1H) {
                 if (player->unk_B08 >= 0.85f) {
                     this->unk302 |= 1;
                     this->unk302 |= 2;

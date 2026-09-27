@@ -1417,6 +1417,21 @@ extern "C" void Graph_ProcessGfxCommands(Gfx* commands) {
     static int time;
     int fps = target_fps;
     int original_fps = 60 / R_UPDATE_RATE;
+#ifdef MMVR_LOCAL_TEST_TOOLS
+    // Private audit retains every native update and its draw; only desktop
+    // waiting and interpolation-only renders are removed. Never an XR mode.
+    const auto auditFlag = [](const char* key) {
+        const char* value = std::getenv(key);
+        return value && std::string(value) == "1";
+    };
+    const bool auditFast = auditFlag("MMVR_AUDIT_FAST") &&
+        auditFlag("MMVR_NATIVE_TEST") && auditFlag("MMVR_PROTECT_SAVES") &&
+        !mmvr::PacingActive();
+    if (auditFast) {
+        target_fps = fps = original_fps;
+        CVarSetInteger(CVAR_VSYNC_ENABLED, 0);
+    }
+#endif
     auto wnd = std::dynamic_pointer_cast<Fast::Fast3dWindow>(Ship::Context::GetRawInstance()->GetWindow());
 
     if (target_fps == 20 || original_fps > target_fps) {
@@ -1440,7 +1455,11 @@ extern "C" void Graph_ProcessGfxCommands(Gfx* commands) {
     time -= fps;
 
     if (wnd != nullptr) {
+#ifdef MMVR_LOCAL_TEST_TOOLS
+        wnd->SetTargetFps(auditFast ? 10000 : fps);
+#else
         wnd->SetTargetFps(fps);
+#endif
     }
 
     int step = original_fps;

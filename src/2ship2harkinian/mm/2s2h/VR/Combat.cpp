@@ -9,6 +9,7 @@
 #include "NativeClimbing.h"
 #include "FormPresentation.h"
 #include "NativeForms.h"
+#include "world_scale.h"
 #include "NativeActions.h"
 #include "ScenePresentation.h"
 #include "ShieldReflection.h"
@@ -71,6 +72,7 @@ size_t swordTargetCount = 0;
 double swordTime = 0, lastDamageTime = -100;
 Vec3f swordBase{}, swordTip{};
 mmvr::SwingGate swordGate;
+int physicalSwordAnimation = PLAYER_MWA_FORWARD_SLASH_1H;
 mmvr::MotionPoint lastRawBlade{};
 bool rawBladeValid = false;
 float bladeStepSpeed = 0;
@@ -190,6 +192,7 @@ void ClearCombat() {
     bladeSamples.clear();
     swordContact.Reset();
     swordGate.Reset();
+    physicalSwordAnimation = PLAYER_MWA_FORWARD_SLASH_1H;
     swordWindow.Cancel();
     swordTargetCount = 0;
     swordContactFeedback = false;
@@ -275,7 +278,7 @@ void UpdateShield(const mmvr::TrackingFrame& frame, const mmvr::Matrix& rightHan
                   40;
     CollisionPoly* poly = nullptr;
     int bg = BGCHECK_SCENE;
-    if (reach > mmvr::GetSettings().Get(mmvr::Setting::AimReach) ||
+    if (reach > mmvr::GetSettings().Get(mmvr::Setting::AimReach)*frame.trackingScale ||
         BgCheck_EntityLineTest2(&play->colCtx, &start, &end, &hit, &poly, true, true, true, true, &bg, &p->actor)) {
         shieldValid = false;
         return;
@@ -448,7 +451,7 @@ void UpdateSwordDiagnostics(const mmvr::TrackingFrame& frame, mmvr::Matrix& left
     auto raw =
         mmvr::Multiply(mmvr::PoseMatrix(frame.hands[controller]), mmvr::InversePose(mmvr::PoseMatrix(frame.origin)));
     for (int c = 0; c < 3; ++c)
-        raw.m[3][c] *= 40;
+        raw.m[3][c] *= 40 / frame.trackingScale;
     auto rawTip =
         bladePoint(mmvr::Multiply(mmvr::ModelHandCalibration(0, controller, mmvr::GetSettings()), raw), length);
     auto& settings = mmvr::GetSettings();
@@ -467,7 +470,7 @@ void UpdateSwordDiagnostics(const mmvr::TrackingFrame& frame, mmvr::Matrix& left
     };
     // Clip the blade at scenery. A tip touching the floor must not discard the
     // exposed part of a long sword or cancel the entire stroke.
-    d.blocked = d.reach > settings.Get(mmvr::Setting::AimReach) || line(head, base);
+    d.blocked = d.reach > settings.Get(mmvr::Setting::AimReach)*frame.trackingScale || line(head, base);
     Vec3f sceneHit;
     CollisionPoly* scenePoly = nullptr;
     int sceneBg = BGCHECK_SCENE;
@@ -489,13 +492,13 @@ void UpdateSwordDiagnostics(const mmvr::TrackingFrame& frame, mmvr::Matrix& left
     }
     // Charged turns and physical spins use the same swept blade as ordinary strikes.
     float rawReach = std::hypot(frame.hands[controller].position.x - frame.head.position.x,
-                                frame.hands[controller].position.z - frame.head.position.z);
+                                frame.hands[controller].position.z - frame.head.position.z) / frame.trackingScale;
     spin.Update(frame.timeSeconds, frame.epoch, !stick && !deity && !d.blocked && !mmvr::MaskTriggerClaimed(),
                 frame.triggers[controller], mmvr::PoseYaw(mmvr::PoseMatrix(frame.head)), rawReach,
                 settings.Get(mmvr::Setting::TriggerSpinTurn) > .5f, settings.Get(mmvr::Setting::SpinChargeTime));
     if (spinAngularSpeed > 0 && rawReach >= .25f)
         bladeStepSpeed = std::max(bladeStepSpeed, spinAngularSpeed * rawReach);
-    bool swung = swordGate.Update({frame.timeSeconds,raw.m[3][0]/40,raw.m[3][1]/40,raw.m[3][2]/40},
+    bool swung = swordGate.Update({frame.timeSeconds,rawTip.x/40,rawTip.y/40,rawTip.z/40},
                                   frame.epoch,!d.blocked,tune);
     d.speed = swordGate.speed;
     d.swings = swordGate.serial;
@@ -774,6 +777,28 @@ void ProcessCombatInput(PlayState* play) {
         swordPending = false;
         auto* player = GET_PLAYER(play);
         if (CombatEligible(play, player) && MMVR_IndependentSword(player)) {
+            // Publish the kind of physical stroke to native script readers without
+            // starting a native attack animation or changing the player's action.
+            physicalSwordAnimation = PLAYER_MWA_FORWARD_SLASH_1H;
+            if (!(player->actor.bgCheckFlags & BGCHECKFLAG_GROUND) &&
+                !(player->stateFlags1 & PLAYER_STATE1_8000000) &&
+                player->actor.world.pos.y - player->actor.floorHeight > 5.f) {
+                // The physical stroke is already hitting: START is native wind-up,
+                // which dojo logs intentionally ignore. Publish the striking phase.
+                physicalSwordAnimation = PLAYER_MWA_JUMPSLASH_FINISH;
+            } else if (bladeSamples.size() > 1) {
+                const auto& first = bladeSamples.front();
+                const auto& last = bladeSamples.back();
+                Vec3f delta{last.tip.x-first.tip.x,last.tip.y-first.tip.y,last.tip.z-first.tip.z};
+                Vec3f axis{last.tip.x-last.base.x,last.tip.y-last.base.y,last.tip.z-last.base.z};
+                float length = std::sqrt(SQ(axis.x)+SQ(axis.y)+SQ(axis.z));
+                float travel = std::sqrt(SQ(delta.x)+SQ(delta.y)+SQ(delta.z));
+                float along = length > .001f ? (delta.x*axis.x+delta.y*axis.y+delta.z*axis.z)/length : 0.f;
+                if (along > travel*.75f)
+                    physicalSwordAnimation = PLAYER_MWA_STAB_1H;
+                else if (std::hypot(delta.x,delta.z) > std::abs(delta.y))
+                    physicalSwordAnimation = PLAYER_MWA_RIGHT_SLASH_1H;
+            }
             MMVR_InitSwordDamage(player);
             ApplySpinDamage(player);
             swordWindow.Arm(swordTime, mmvr::GetSettings().Get(mmvr::Setting::SwordWindow));
@@ -1067,10 +1092,10 @@ extern "C" void MMVR_PhysicalDeityBeam(PlayState* play, Player* p) {
         mmvrgame::ProcessDeityTrigger(play);
 }
 extern "C" int MMVR_TapTargeting(void) {
-    return mmvr::InputFocused() && mmvr::GetSettings().Get(mmvr::Setting::ToggleLockOn) > .5f;
+    return mmvr::InputFocused() && mmvr::GetSettings().Get(mmvr::FirstPersonSelected() ? mmvr::Setting::ToggleLockOn : mmvr::Setting::ThirdPersonToggleLockOn) > .5f;
 }
 extern "C" int MMVR_HoldTargeting(void) {
-    return mmvr::InputFocused() && mmvr::GetSettings().Get(mmvr::Setting::ToggleLockOn) <= .5f;
+    return mmvr::InputFocused() && mmvr::GetSettings().Get(mmvr::FirstPersonSelected() ? mmvr::Setting::ToggleLockOn : mmvr::Setting::ThirdPersonToggleLockOn) <= .5f;
 }
 extern "C" int MMVR_DisableButtonMelee(Player* p) {
     return p && gPlayState && p == GET_PLAYER(gPlayState) && mmvr::FirstPersonRequested() &&
@@ -1088,6 +1113,17 @@ extern "C" int MMVR_SwordControlActive(Player* p) {
 extern "C" int MMVR_IndependentSword(Player* p) {
     int weapon = p ? Player_GetMeleeWeaponHeld(p) : 0;
     return MMVR_SwordControlActive(p) && PhysicalMelee(weapon);
+}
+// Script-only queries leave the animation-owned player fields untouched.
+extern "C" int MMVR_ScriptedMeleeState(Player* player) {
+    if (!MMVR_IndependentSword(player)) return player->meleeWeaponState;
+    return CombatEligible(gPlayState,player) && !mmvr::GetCombatDiagnostics().blocked &&
+           (SpinContactActive() || swordWindow.Active(swordTime)) ? PLAYER_MELEE_WEAPON_STATE_1 : PLAYER_MELEE_WEAPON_STATE_0;
+}
+extern "C" int MMVR_ScriptedMeleeAnimation(Player* player) {
+    if (!MMVR_IndependentSword(player)) return player->meleeWeaponAnimation;
+    if (SpinContactActive()) return spinTier == 2 ? PLAYER_MWA_BIG_SPIN_1H : PLAYER_MWA_SPIN_ATTACK_1H;
+    return physicalSwordAnimation;
 }
 // Called only after native damage eligibility succeeded, before committing a hit.
 // Multiple hurtboxes of one enemy share a target; grass patches share an actor
@@ -1407,6 +1443,7 @@ extern "C" void MMVR_VisitVrCombatState(MMVR_StateSink* sink) {
     mmvrgame::NativeStateField(sink,"vr/combat/swordBase",swordBase);
     mmvrgame::NativeStateField(sink,"vr/combat/swordTip",swordTip);
     mmvrgame::NativeStateField(sink,"vr/combat/swordGate",swordGate);
+    mmvrgame::NativeStateField(sink,"vr/combat/physicalSwordAnimation",physicalSwordAnimation);
     mmvrgame::NativeStateField(sink,"vr/combat/lastRawBlade",lastRawBlade);
     mmvrgame::NativeStateField(sink,"vr/combat/rawBladeValid",rawBladeValid);
     mmvrgame::NativeStateField(sink,"vr/combat/bladeStepSpeed",bladeStepSpeed);

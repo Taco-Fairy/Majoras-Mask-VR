@@ -1,5 +1,7 @@
 #ifdef MMVR_ENABLE
 #include "GoronCombat.h"
+#include "NativeForms.h"
+#include "world_scale.h"
 #include "ItemUse.h"
 #include "FormAim.h"
 #include "combat.h"
@@ -145,13 +147,14 @@ void UpdateGoronCombat(const mmvr::TrackingFrame& frame, const mmvr::Matrix& vie
         local.m[3][2] = (point.z - head.m[3][2]) * 40;
         auto world = mmvr::Multiply(local, view);
         Vec3f current{ world.m[3][0], world.m[3][1], world.m[3][2] }, from{ eye.m[3][0], eye.m[3][1], eye.m[3][2] };
+        point.x/=frame.trackingScale;point.y/=frame.trackingScale;point.z/=frame.trackingScale;
         if (f.valid && now == f.local.time)
             continue;
         double dt = now - f.local.time;
         float dx = point.x - f.local.x, dy = point.y - f.local.y, dz = point.z - f.local.z;
         if (!std::isfinite(now) || (f.valid && (dt <= 0 || dt > .15 || dx * dx + dy * dy + dz * dz > .25f * .25f)) ||
             std::sqrt(SQ(current.x - from.x) + SQ(current.y - from.y) + SQ(current.z - from.z)) >
-                s.Get(mmvr::Setting::AimReach) * 40 ||
+                s.Get(mmvr::Setting::AimReach) * 40 * frame.trackingScale ||
             Wall(play, p, from, current) || (f.valid && Wall(play, p, f.position, current))) {
             f = Fist{};
             continue;
@@ -197,7 +200,7 @@ void UpdateGoronCombat(const mmvr::TrackingFrame& frame, const mmvr::Matrix& vie
         f.quad.elem.atDmgInfo.effect = 0;
         f.quad.elem.atElemFlags = ATELEM_ON | ATELEM_SFX_NORMAL;
         // Longitudinal debug outline includes the added forward reach.
-        float r = s.Get(mmvr::Setting::PunchRadius) * 40;
+        float r = s.Get(mmvr::Setting::PunchRadius) * 40 * frame.trackingScale;
         Vec3f a{}, b{}, c{}, d{};
         for (int k = 0; k < 3; ++k) {
             float side = worldAim.m[0][k] * r, back = worldAim.m[2][k] * r;
@@ -235,7 +238,8 @@ void ResolveGoronCombat(PlayState* play) {
             continue;
         }
         bool hit = false;
-        float radius = mmvr::GetSettings().Get(mmvr::Setting::PunchRadius) * 40;
+        float radius = mmvr::GetSettings().Get(mmvr::Setting::PunchRadius) * 40 *
+            mmvr::WorldTrackingScale(mmvr::GetSettings(),p->transformation,StandingFormEyeHeight(p));
         // Sweep the fist volume between tracked samples, with native enemy damage tables.
         for (size_t segment = 1; segment < f.pathCount && !hit; ++segment) {
             auto before = f.path[segment - 1], after = f.path[segment];

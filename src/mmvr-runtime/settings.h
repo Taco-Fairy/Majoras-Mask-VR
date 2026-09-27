@@ -179,6 +179,17 @@ enum class Setting {
     FairyNearComfort,
     PhysicalRunBoost,
     ExperimentalFirstPersonMotion,
+    ThirdPersonToggleLockOn,
+    ThirdPersonOriginalControls,
+    HeadItemAim,
+    WorldScaleCalibration,
+    StandingEyeHeight,
+    HumanWorldSize,
+    DekuWorldSize,
+    GoronWorldSize,
+    ZoraWorldSize,
+    DeityWorldSize,
+    CheckUpdatesOnLaunch,
     Count
 };
 struct SettingDefinition {
@@ -224,7 +235,7 @@ inline constexpr SettingDefinition SettingDefinitions[] = {
     { "gVR.SelectorDepth", "Item hover depth", .08f, .03f, .2f, .01f, "m" },
     { "gVR.SwordDiagnostics", "Sword diagnostics", 0, 0, 1, 1, "off/on" },
     { "gVR.SwingSpeed", "Minimum swing speed", 1.2f, .25f, 3, .05f, "m/s" },
-    { "gVR.SwingDistance", "Minimum hand swing travel", .28f, .20f, .6f, .01f, "m" },
+    { "gVR.SwingDistance", "Minimum blade swing travel", .28f, .20f, .6f, .01f, "m" },
     { "gVR.SwingResetSpeed", "Swing resting threshold", .25f, .05f, .5f, .05f, "m/s" },
     { "gVR.SwingCooldown", "Swing cooldown", .25f, .15f, 1, .05f, "s" },
     { "gVR.PhysicalSword", "Physical sword (beta)", 1, 0, 1, 1, "off/on" },
@@ -361,9 +372,23 @@ inline constexpr SettingDefinition SettingDefinitions[] = {
     { "gVR.FairyNearComfort", "Near-head fairy comfort", 1, 0, 1, 1, "off/on" },
     { "gVR.PhysicalRunBoost", "Physical run speed boost", 20, 0, 100, 5, "%" },
     { "gVR.ExperimentalFirstPersonMotion", "Experimental First-Person Motion", 0, 0, 1, 1, "off/on" },
+    { "gVR.ThirdPersonToggleLockOn", "Third-person toggle lock-on", 0, 0, 1, 1, "off/on" },
+    { "gVR.ThirdPersonOriginalControls", "Original third-person VR controls", 0, 0, 1, 1, "off/on" },
+    { "gVR.HeadItemAim", "Head aim for bow and hookshot", 0, 0, 1, 1, "off/on" },
+    { "gVR.WorldScaleCalibration", "World-scale calibration", 1, 0, 1, 1, "off/on" },
+    { "gVR.StandingEyeHeight", "Fallback floor-to-eye height", 170, 40, 250, 1, "cm" },
+    { "gVR.HumanWorldSize", "Human world size", 100, 50, 200, 1, "%" },
+    { "gVR.DekuWorldSize", "Deku world size", 100, 50, 200, 1, "%" },
+    { "gVR.GoronWorldSize", "Goron world size", 100, 50, 200, 1, "%" },
+    { "gVR.ZoraWorldSize", "Zora world size", 100, 50, 200, 1, "%" },
+    { "gVR.DeityWorldSize", "Fierce Deity world size", 100, 50, 200, 1, "%" },
+    { "gVR.CheckUpdatesOnLaunch", "Check for updates on launch", 1, 0, 1, 1, "off/on" },
 };
 static_assert(sizeof(SettingDefinitions) / sizeof(SettingDefinitions[0]) == size_t(Setting::Count));
 inline float BoundSetting(Setting id, float value) {
+    // Model matching is always enabled; its legacy switch is no longer exposed.
+    // Old profiles must not silently select the taller nominal fallback.
+    if (id == Setting::ModelFormHeight) return 1.f;
     if(!PrivateDebugTools && (id==Setting::DebugRoomSpawn || id==Setting::DebugSkipCutscenes ||
         id==Setting::DebugHitboxes || id==Setting::SwordDiagnostics))return 0;
     const auto& d = SettingDefinitions[size_t(id)];

@@ -16,7 +16,7 @@
 using Microsoft::WRL::ComPtr;
 void hr(HRESULT value){if(FAILED(value))throw std::runtime_error("UI offscreen rendering failed");}
 int main(int argc,char** argv){
- if(argc!=2)return 2;
+ if(argc!=2 && argc!=3)return 2;
  ComPtr<ID3D11Device> device;ComPtr<ID3D11DeviceContext> context;D3D_FEATURE_LEVEL level;
  hr(D3D11CreateDevice(nullptr,D3D_DRIVER_TYPE_WARP,nullptr,0,nullptr,0,D3D11_SDK_VERSION,&device,&level,&context));
  ImGui::CreateContext();auto& io=ImGui::GetIO();io.IniFilename=nullptr;io.LogFilename=nullptr;io.DisplaySize={1024,768};io.DeltaTime=1.f/90;
@@ -24,6 +24,21 @@ int main(int argc,char** argv){
  D3D11_TEXTURE2D_DESC desc{};desc.Width=1024;desc.Height=768;desc.MipLevels=desc.ArraySize=desc.SampleDesc.Count=1;desc.Format=DXGI_FORMAT_R8G8B8A8_UNORM;desc.BindFlags=D3D11_BIND_RENDER_TARGET;
  ComPtr<ID3D11Texture2D> target,readback;hr(device->CreateTexture2D(&desc,nullptr,&target));ComPtr<ID3D11RenderTargetView> view;hr(device->CreateRenderTargetView(target.Get(),nullptr,&view));
  desc.BindFlags=0;desc.Usage=D3D11_USAGE_STAGING;desc.CPUAccessFlags=D3D11_CPU_ACCESS_READ;hr(device->CreateTexture2D(&desc,nullptr,&readback));
+ if(argc==3 && (std::string(argv[2])=="--setup-only" || std::string(argv[2])=="--notes-first" || std::string(argv[2])=="--notes-last")) {
+  mmvr::setupGuideVisible=std::string(argv[2])=="--setup-only";
+  auto& menu=mmvr::GetMenu();menu.tab=mmvr::SystemTab;
+  if(!mmvr::setupGuideVisible){menu.CollapseAll();menu.expanded[39]=true;
+    for(int i=0;i<menu.VisibleRows();++i)if(menu.VisibleSetting(i)==mmvr::ReleaseNotesFirstRow+(std::string(argv[2])=="--notes-last"?7:0)){menu.row=i;break;}
+    menu.Normalize();}
+  const float clear[4]={0,0,0,0};context->ClearRenderTargetView(view.Get(),clear);auto* rtv=view.Get();context->OMSetRenderTargets(1,&rtv,nullptr);
+  ImDrawList list(ImGui::GetDrawListSharedData());list._ResetForNewFrame();list.PushTextureID(io.Fonts->TexID);list.PushClipRect({0,0},{1024,768});
+  mmvr::presentation::Draw(list,{mmvr::UiKind::Menu,1024,768},nullptr,{});
+  list.PopClipRect();list.PopTextureID();ImDrawData data;data.Valid=true;data.DisplaySize={1024,768};data.FramebufferScale={1,1};data.AddDrawList(&list);ImGui_ImplDX11_RenderDrawData(&data);
+  context->CopyResource(readback.Get(),target.Get());D3D11_MAPPED_SUBRESOURCE mapped{};hr(context->Map(readback.Get(),0,D3D11_MAP_READ,0,&mapped));
+  std::ofstream output(std::string(argv[1])+"/setup-guide.rgba",std::ios::binary);
+  for(unsigned y=0;y<768;++y)output.write(static_cast<const char*>(mapped.pData)+y*mapped.RowPitch,1024*4);
+  context->Unmap(readback.Get(),0);ImGui::EndFrame();ImGui_ImplDX11_Shutdown();ImGui::DestroyContext();return 0;
+ }
  for(int leftMode=0;leftMode<2;++leftMode)for(int tab=0;tab<mmvr::TabCount;++tab)for(int page=0;page<(tab==mmvr::ControlsTab?7:3);++page){
   if(leftMode&&(tab!=0||page!=0))continue;
   mmvr::GetSettings().Set(mmvr::Setting::SwordLeftHanded,leftMode);

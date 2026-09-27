@@ -5,6 +5,7 @@
  */
 
 #include "../../../2ship2harkinian/mm/src/overlays/actors/ovl_En_Dinofos/z_en_dinofos.h"
+#include "2s2h/VR/ScriptedMelee.h"
 #include "overlays/actors/ovl_En_Clear_Tag/z_en_clear_tag.h"
 
 #define FLAGS                                                                                 \
@@ -270,8 +271,8 @@ static InitChainEntry sInitChain[] = {
     ICHAIN_VEC3F_DIV1000(scale, 15, ICHAIN_STOP),
 };
 
-static s32 mmvr_local_b7a532caad79797d = false;
-static EffectBlureInit2 mmvr_local_0ea22b6973285da8 = {
+static s32 mmvr_local_62103f9ce30e0093 = false;
+static EffectBlureInit2 mmvr_local_1e90b5ebb5ed097f = {
         0,
         EFFECT_BLURE_ELEMENT_FLAG_8,
         0,
@@ -295,7 +296,7 @@ void EnDinofos_Init(Actor* thisx, PlayState* play) {
 
     Actor_ProcessInitChain(&this->actor, sInitChain);
     ActorShape_Init(&this->actor.shape, 0.0f, ActorShadow_DrawFeet, 90.0f);
-    Effect_Add(play, &this->effectIndex, EFFECT_BLURE2, 0, 0, &mmvr_local_0ea22b6973285da8);
+    Effect_Add(play, &this->effectIndex, EFFECT_BLURE2, 0, 0, &mmvr_local_1e90b5ebb5ed097f);
     Collider_InitAndSetJntSph(play, &this->bodyAndFireCollider, &this->actor, &sJntSphInit,
                               this->bodyAndFireColliderElements);
     Collider_InitAndSetQuad(play, &this->knifeCollider, &this->actor, &sQuadInit);
@@ -303,11 +304,11 @@ void EnDinofos_Init(Actor* thisx, PlayState* play) {
     SkelAnime_InitFlex(play, &this->skelAnime, &gDinolfosSkel, &gDinolfosIdleAnim, this->jointTable, this->morphTable,
                        DINOLFOS_LIMB_MAX);
 
-    if (!mmvr_local_b7a532caad79797d) {
+    if (!mmvr_local_62103f9ce30e0093) {
         for (i = 0; i < ARRAY_COUNT(sEyeTextures); i++) {
             sEyeTextures[i] = Lib_SegmentedToVirtual(sEyeTextures[i]);
         }
-        mmvr_local_b7a532caad79797d = true;
+        mmvr_local_62103f9ce30e0093 = true;
     }
 
     this->envColorAlpha = 255;
@@ -470,7 +471,7 @@ s32 EnDinofos_Dodge(EnDinofos* this, PlayState* play) {
         return true;
     }
 
-    if ((this->actor.xzDistToPlayer < 100.0f) && (player->meleeWeaponState != PLAYER_MELEE_WEAPON_STATE_0) &&
+    if ((this->actor.xzDistToPlayer < 100.0f) && (MMVR_ScriptedMeleeState(player) != PLAYER_MELEE_WEAPON_STATE_0) &&
         this->actor.isLockedOn && (Rand_ZeroOne() < 0.5f) && EnDinofos_IsFacingPlayer(this) &&
         Player_IsFacingActor(&this->actor, 0x2000, play)) {
         if (Rand_ZeroOne() < 0.5f) {

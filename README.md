@@ -7,7 +7,9 @@ Disclaimer: I don't want to hide the fact that I made this mod using Vibe coding
 
 One project for **Windows PCVR** and **standalone Meta Quest**. Choose the download for your platform.
 
-**Version 0.1 beta downloads:** [Windows PCVR ZIP](https://github.com/fulldivegames/Majoras-Mask-VR/releases/download/v0.1.0-beta.2/MMVR-Windows-0.1.0-beta.2.zip) | [Quest standalone APK](https://github.com/fulldivegames/Majoras-Mask-VR/releases/download/v0.1.0-beta.2/MMVR-Quest-0.1.0-beta.2.apk) | [Release notes](https://github.com/fulldivegames/Majoras-Mask-VR/releases/tag/v0.1.0-beta.2)
+**Version 0.2 beta downloads:** [Windows PCVR ZIP](https://github.com/fulldivegames/Majoras-Mask-VR/releases/download/v0.2.0/MMVR-Windows-0.2.0.zip) | [Quest standalone APK](https://github.com/fulldivegames/Majoras-Mask-VR/releases/download/v0.2.0/MMVR-Quest-0.2.0.apk) | [Release notes](https://github.com/fulldivegames/Majoras-Mask-VR/releases/tag/v0.2.0)
+
+**World Scale and Hotfix Update:** Per-form world scale and floor calibration, corrected hand/item sizing, first-time setup, launch update checks, recovery/diagnostics, save-state safeguards, optional head aiming and third-person controls, plus height, potion and physical sword fixes. See System in the VR menu for release notes. Existing preferences are kept.
 
 ## INDEX
 [Installation](#first-installation) · [Controls](#default-controls) · [Physical items](#physical-items-and-combat) · [Forms and gestures](#forms-movement-and-songs) · [Save states](#exact-save-states-and-ordinary-saves)

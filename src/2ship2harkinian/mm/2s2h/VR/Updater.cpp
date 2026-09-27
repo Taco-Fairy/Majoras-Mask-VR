@@ -1,10 +1,18 @@
 #ifdef MMVR_ENABLE
 #include "updater.h"
+#include "runtime.h"
 #include "mods.h"
+#include "ui.h"
+#include "device_info.h"
+#include <libultraship/bridge/consolevariablebridge.h>
 extern "C" void MMVR_RefreshModCatalog();
 #include "ship/Context.h"
 #include "ship/window/Window.h"
 #include <chrono>
+#include <cctype>
+extern "C" {
+#include "global.h"
+}
 #include <filesystem>
 #include <fstream>
 #include <nlohmann/json.hpp>
@@ -159,8 +167,59 @@ static void RefreshMods() {
     MMVR_RefreshModCatalog();
 #endif
 }
+static void ExportDiagnostics() {
+    try {
+        nlohmann::json report;
+        report["schema"] = 1;
+        report["runtime"] = mmvr::deviceInfo.runtime;
+        report["headset"] = mmvr::deviceInfo.headset;
+        report["displayHz"] = mmvr::deviceInfo.displayHz;
+        report["cadenceHz"] = mmvr::deviceInfo.cadenceHz;
+        report["eyeResolution"] = {mmvr::deviceInfo.eyeWidth, mmvr::deviceInfo.eyeHeight};
+        // Only allowlisted numeric VR preferences, never paths, saves or raw logs.
+        for (size_t i=0;i<size_t(mmvr::Setting::Count);++i)
+            report["vrSettings"][mmvr::SettingDefinitions[i].key] = mmvr::GetSettings().Get(mmvr::Setting(i));
+        report["modCount"] = mmvr::modPacks.size();
+        report["mods"]=nlohmann::json::array();
+        for(const auto& pack:mmvr::modPacks) {
+            // Stable opaque IDs distinguish configurations without leaking folder names.
+            uint64_t id=14695981039346656037ull;
+            for(unsigned char c:pack.id) {id^=c;id*=1099511628211ull;}
+            report["mods"].push_back({{"opaqueId",std::to_string(id)},{"enabled",pack.enabled}});
+        }
+        for(const char* name:{"mmvr.log","logs/2 Ship 2 Harkinian.log"}) {
+            std::ifstream log(name,std::ios::binary|std::ios::ate);
+            if(!log)continue;
+            const auto size=log.tellg();
+            if(size<0)continue;
+            log.seekg(std::max<std::streamoff>(0,std::streamoff(size)-65536));
+            std::string line; unsigned errors=0,warnings=0,crashes=0;
+            while(std::getline(log,line)) {
+                std::transform(line.begin(),line.end(),line.begin(),[](unsigned char c){return char(std::tolower(c));});
+                errors+=line.find("error")!=std::string::npos;
+                warnings+=line.find("warning")!=std::string::npos;
+                crashes+=line.find("crash")!=std::string::npos || line.find("fatal")!=std::string::npos;
+            }
+            report["recentLogSignals"][name]={{"errors",errors},{"warnings",warnings},{"crashOrFatal",crashes}};
+        }
+        report["enabledModCount"] = std::count_if(mmvr::modPacks.begin(),mmvr::modPacks.end(),[](const auto& p){return p.enabled;});
+        std::ifstream version("version.json");
+        if(version) {
+            auto value=nlohmann::json::parse(version);
+            report["version"]=value.value("version",std::string("unknown"));
+            report["build"]=value.value("build",0);
+        }
+        report["privacy"]="No save files, mod names, personal paths, credentials or raw logs included.";
+        std::filesystem::create_directories("diagnostics");
+        std::ofstream out("diagnostics/mmvr-report.json",std::ios::trunc);
+        out << report.dump(2); out.flush();
+        if(!out)throw std::runtime_error("Cannot write report");
+        mmvr::supportStatus="Report saved: diagnostics/mmvr-report.json (review before sharing).";
+    } catch(...) { mmvr::supportStatus="Diagnostic export failed. Check available storage."; }
+}
 extern "C" void MMVR_PollUpdater() {
     mmvr::refreshMods = RefreshMods;
+    mmvr::exportDiagnostics = ExportDiagnostics;
 
     mmvr::sharedFilesCallback = SharedFiles;
     mmvr::SetUpdateCallback(Request);
@@ -175,6 +234,21 @@ extern "C" void MMVR_PollUpdater() {
     auto stamp = std::filesystem::last_write_time("shared-pack-cache/packs.json", packError);
     if (!packError && stamp != packStamp) { packStamp = stamp; MMVR_RefreshModCatalog(); }
 #endif
+    static bool started = false, notified = false;
+    if (!started) {
+        started = true;
+        if (mmvr::GetSettings().Get(mmvr::Setting::CheckUpdatesOnLaunch) > .5f &&
+            !(mmvr::PrivateDebugTools && std::getenv("MMVR_NATIVE_TEST"))) Request(false);
+    }
     Poll();
+    mmvr::updateAvailable = mmvr::updateStatus.rfind("Update ",0)==0 &&
+        mmvr::updateStatus.find("is available")!=std::string::npos;
+    if (mmvr::updateAvailable && !notified && mmvr::InputFocused() && (!gPlayState || gSaveContext.gameMode == GAMEMODE_TITLE_SCREEN || mmvr::GetMenu().open)) {
+        notified=true;
+        // Show the notice without installing or closing the game. Input remains
+        // in the ordinary menu, which the player can dismiss normally.
+        auto& menu=mmvr::GetMenu();
+        if(!menu.open) mmvr::OpenSystemSettings();
+    }
 }
 #endif

@@ -75,7 +75,7 @@ public:
     static constexpr float RecoveryDistance = .3048f * 40.f;
     bool recovered=false, blocked=false;
     void Reset() { valid=false; recovered=blocked=false; }
-    template<class Query> HandPoint Update(HandPoint target, HandPoint controller, float radius, Query&& query) {
+    template<class Query> HandPoint Update(HandPoint target, HandPoint controller, float radius, Query&& query, float recoveryDistance = RecoveryDistance) {
         recovered=blocked=false;
         for(float v:target) if(!std::isfinite(v)) {Reset();return target;}
         if(!valid) { position=target;valid=true; }
@@ -118,7 +118,7 @@ public:
             HandContact hit;
             if(!query(next,radius,hit))position=next;
         }
-        if(HandLength(HandSub(position,controller))>RecoveryDistance) {
+        if(HandLength(HandSub(position,controller))>recoveryDistance) {
             // Explicit user-requested stuck-hand escape. A controller inside a
             // wall is moved to its nearest free surface instead of displaying
             // an embedded hand. Combat history is invalidated by the caller.

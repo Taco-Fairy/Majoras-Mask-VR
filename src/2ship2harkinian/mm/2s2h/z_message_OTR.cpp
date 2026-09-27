@@ -47,6 +47,10 @@ MessageTableEntry* OTRMessage_LoadTable(const char* filePath, bool isNES) {
         //_message_0xFFFC_nes = (char*)file->messages[i].msg.c_str();
     }
 
+    // Every native lookup walks to this sentinel, including missing-ID lookups.
+    table[file->messages.size()] = {};
+    table[file->messages.size()].textId = 0xFFFF;
+
     return table;
 }
 
@@ -56,7 +60,7 @@ extern "C" void OTRMessage_Init() {
     auto file2 =
         std::static_pointer_cast<SOH::TextMM>(Ship::Context::GetRawInstance()->GetResourceManager()->LoadResource(
             "text/staff_message_data_static/staff_message_data_static"));
-    sMessageTableCredits = (MessageTableEntry*)malloc(sizeof(MessageTableEntry) * file2->messages.size());
+    sMessageTableCredits = (MessageTableEntry*)malloc(sizeof(MessageTableEntry) * (file2->messages.size() + 1));
 
     for (size_t i = 0; i < file2->messages.size(); i++) {
         sMessageTableCredits[i].textId = file2->messages[i].id;
@@ -64,4 +68,6 @@ extern "C" void OTRMessage_Init() {
         sMessageTableCredits[i].segment = file2->messages[i].msg.c_str();
         sMessageTableCredits[i].msgSize = file2->messages[i].msg.size();
     }
+    sMessageTableCredits[file2->messages.size()] = {};
+    sMessageTableCredits[file2->messages.size()].textId = 0xFFFF;
 }

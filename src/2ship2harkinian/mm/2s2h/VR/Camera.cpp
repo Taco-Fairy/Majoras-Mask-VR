@@ -14,6 +14,9 @@
 #include "Camera.h"
 #include "NativeTrackingResume.h"
 #include <limits>
+#include <filesystem>
+#include "ship/Context.h"
+#include "ship/config/Config.h"
 #include <vector>
 #include "BeanPresentation.h"
 #include "ViewTools.h"
@@ -29,6 +32,7 @@
 #include "flower_camera.h"
 #include "walk_step_camera.h"
 #include "room_scale_interpolation.h"
+#include "world_scale.h"
 #include "ui.h"
 #include <libultraship/bridge/consolevariablebridge.h>
 #include <algorithm>
@@ -183,7 +187,9 @@ float Radians(s16 angle) {
 s16 Angle(float angle) {
     return static_cast<s16>(static_cast<int32_t>(std::remainder(angle, 2 * Pi) * (32768.f / Pi)));
 }
-mmvr::CameraFrame Update(const mmvr::TrackingFrame& tracking) {
+mmvr::CameraFrame Update(const mmvr::TrackingFrame& rawTracking) {
+    mmvr::SetWorldScaleFloorHeight(rawTracking.calibratedFloorEyeHeight);
+    auto tracking = rawTracking;
     mmvr::CameraFrame result;
     result.trackingTime = tracking.timeSeconds;
     auto* play = gPlayState;
@@ -195,6 +201,11 @@ mmvr::CameraFrame Update(const mmvr::TrackingFrame& tracking) {
     const bool giantTransition = mmvrgame::GiantTransformationActive(p);
     if (!giantTransition && mmvrgame::ViewToolCamera(tracking, result))
         return result;
+    if (p && mmvr::FirstPersonRequested()) {
+        result.trackingScale = mmvr::WorldTrackingScale(mmvr::GetSettings(), p->transformation,
+                                                       mmvrgame::StandingFormEyeHeight(p));
+        tracking = mmvr::ScaleWorldTracking(rawTracking, result.trackingScale);
+    }
     const auto facts = mmvrgame::SceneFacts(play);
     if (MMVR_FormReloadActive(play) && !DrawReady(play, p) && lastViewPose.m[3][3] &&
         mmvr::FirstPersonRequested() && !giantTransition) {
@@ -278,6 +289,15 @@ mmvr::CameraFrame Update(const mmvr::TrackingFrame& tracking) {
     if (cinematic && wasCinematic && owner == p && scene == play->sceneId) {
         baseReset = false;
         reset = epoch != tracking.epoch || originGeneration != tracking.originEpoch || activeForm != p->transformation;
+    }
+    static float previousTrackingScale = 1.f;
+    const bool scaleChanged = previousTrackingScale != tracking.trackingScale;
+    if (scaleChanged) {
+        reset = true;
+        mmvrgame::ResetHandGeometry();
+        itemSmoother.Reset();
+        walkSteps.Reset();
+        previousTrackingScale = tracking.trackingScale;
     }
     if (baseReset) {
         // A system recenter changes headset forward. Deriving the base from the
@@ -619,7 +639,7 @@ mmvr::CameraFrame Update(const mmvr::TrackingFrame& tracking) {
     mmvrgame::ApplyPhysicalPushHandLock(play, p, result.hands);
     result.heldMask = mmvrgame::HeldMaskPose(itemTracking, viewPose, relative);
     if (rewardDrawValid && rewardDrawFrame == play->gameplayFrames) {
-        Vec3f target{viewPose.m[3][0],viewPose.m[3][1]+relative.m[3][1]*Units+18,viewPose.m[3][2]};
+        Vec3f target{viewPose.m[3][0],viewPose.m[3][1]+relative.m[3][1]*Units+18*tracking.trackingScale,viewPose.m[3][2]};
         mmvr::Matrix hand;
         const bool offer=MMVR_OfferingItem(p);
         const bool trackedOffer=offer&&mmvrgame::TrackedMaskHand(play,hand,mmvr::SwordController(mmvr::GetSettings()));
@@ -629,7 +649,7 @@ mmvr::CameraFrame Update(const mmvr::TrackingFrame& tracking) {
             // Hold the result in world space while the player looks around.
             if (!rewardViewAnchored || rewardViewOwner != p || rewardViewScene != play->sceneId ||
                 rewardViewItem != p->getItemDrawIdPlusOne) {
-                constexpr float forward = Units * .3048f;
+                const float forward = Units * .3048f * tracking.trackingScale;
                 target.x += std::sin(heading) * forward;
                 target.z += std::cos(heading) * forward;
                 rewardViewAnchor=target;
@@ -646,9 +666,11 @@ mmvr::CameraFrame Update(const mmvr::TrackingFrame& tracking) {
             // Preserve each child model's authored transform, while reanchoring
             // the entire presentation to this render's hand/head and spin phase.
             const float turn=(tracking.visualAlpha-1.f)*1000.f*(Pi/32768.f);
+            auto rewardPose=mmvr::YawPose(turn,target.x,target.y,target.z);
+            for(int row=0;row<3;++row)for(int col=0;col<3;++col)rewardPose.m[row][col]*=tracking.trackingScale;
             result.rewardCorrection=mmvr::Multiply(
                 mmvr::YawPose(0,-rewardDrawPosition.x,-rewardDrawPosition.y,-rewardDrawPosition.z),
-                mmvr::YawPose(turn,target.x,target.y,target.z));
+                rewardPose);
             result.rewardActive=true;
         }
     } else rewardViewAnchored=false;
@@ -857,6 +879,26 @@ extern "C" int MMVR_AreaFadeType(PlayState* play, int type) {
     }
 }
 extern "C" void MMVR_RegisterCamera(void) {
+    // Offline recovery requests reset only registered VR preferences, never saves,
+    // mods or native game settings. Retain the marker if persistence fails.
+    static bool recoveryChecked = false;
+    if (!recoveryChecked) {
+    recoveryChecked = true;
+    try {
+        if (std::filesystem::is_regular_file("reset-vr-settings.request")) {
+            if (std::filesystem::is_regular_file("2ship2harkinian.json"))
+                std::filesystem::copy_file("2ship2harkinian.json", "vr-settings-before-recovery.json",
+                    std::filesystem::copy_options::overwrite_existing);
+            for (const auto& definition : mmvr::SettingDefinitions)
+                CVarSetFloat(definition.key, definition.initial);
+            CVarSetInteger("gVR.SetupGuideSeen", 0);
+            CVarSave();
+            if (Ship::Context::GetRawInstance()->GetConfig()->LastSaveSucceeded())
+                std::filesystem::remove("reset-vr-settings.request");
+        }
+    } catch (...) { /* Preserve the recovery marker and original files on storage errors. */ }
+    }
+
 #ifdef __ANDROID__
     if (!CVarGetInteger("gVR.Standalone90DefaultApplied", 0)) {
         auto cap = CVarGet("gVR.FrameRateCap");
@@ -1256,13 +1298,17 @@ extern "C" void MMVR_VisitVrPresentationState(MMVR_StateSink* sink) {
 namespace mmvrgame {
 bool StateTrackingResumePending() { return stateTrackingPending; }
 namespace {
-bool ResumeStateTracking(const mmvr::TrackingFrame& f) {
+bool ResumeStateTracking(const mmvr::TrackingFrame& raw) {
+    auto f = raw;
     auto* play=gPlayState;auto* p=play?GET_PLAYER(play):nullptr;
     if(!play||!p||!std::isfinite(f.timeSeconds)||!mmvr::StateResumeInputReady()) return false;
     const bool playerView=mmvr::FirstPersonRequested()&&SceneView(play)==mmvr::SceneView::Player;
     // An initializing/hidden player must be allowed to advance its native
     // action; waiting for a body draw in that state would deadlock the load.
     if(playerView&&!p->actor.init&&p->actor.draw&&!DrawReady(play,p)) return false;
+    if (playerView)
+        f = mmvr::ScaleWorldTracking(raw, mmvr::WorldTrackingScale(mmvr::GetSettings(),
+            p->transformation, StandingFormEyeHeight(p)));
     RebasePresentationClock(f.timeSeconds);
     RebaseInteractionTracking(f);RebaseItemTracking(f);RebaseBowTracking(f);
     RebaseBottleTracking(f);RebaseCombatTracking(f);RebaseFinTracking(f);

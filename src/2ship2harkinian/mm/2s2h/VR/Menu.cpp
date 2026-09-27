@@ -19,6 +19,7 @@
 #include "NativeCombat.h"
 #include "NativeForms.h"
 #include "ui.h"
+#include "updater.h"
 #include "presentation.h"
 #include "runtime.h"
 #include <libultraship/bridge/consolevariablebridge.h>
@@ -127,6 +128,9 @@ void Render(const mmvr::UiDrawFrame& frame) {
     data.FramebufferScale = { 1, 1 };
     data.AddDrawList(&list);
     gui->RenderVrDrawData(&data);
+    if (frame.kind == mmvr::UiKind::Menu && mmvr::GetMenu().tab == mmvr::SystemTab && mmvr::setupGuideVisible)
+        { if(!mmvr::setupGuideRendered) std::ofstream("mmvr-startup.log",std::ios::app)<<"setup rendered\n";
+          mmvr::setupGuideRendered = true; }
 }
 } // namespace
 extern "C" int MMVR_HideCompanionFairy(PlayState* play, Actor* actor) {
@@ -254,10 +258,16 @@ extern "C" void MMVR_ApplyGameInput(void* data) {
     input->press.button |= pad.buttons & ~previous;
     input->rel.button |= previous & ~pad.buttons;
     input->cur.err_no = 0;
-    input->cur.stick_x = pad.x;
-    input->cur.stick_y = pad.y;
-    input->cur.right_stick_x = pad.rightX;
-    input->cur.right_stick_y = pad.rightY;
+    // Idle motion controllers must not erase native gamepad axes in theater
+    // or third-person mode. An actively moved VR stick still takes ownership.
+    if (nativeTest || mmvr::FirstPersonSelected() || pad.x || pad.y) {
+        input->cur.stick_x = pad.x;
+        input->cur.stick_y = pad.y;
+    }
+    if (nativeTest || mmvr::FirstPersonSelected() || pad.rightX || pad.rightY) {
+        input->cur.right_stick_x = pad.rightX;
+        input->cur.right_stick_y = pad.rightY;
+    }
     PadUtils_UpdateRelXY(input);
     previous = pad.buttons;
 }
@@ -272,6 +282,31 @@ extern "C" void MMVR_RegisterMenu(void) {
 #endif
     if (!initialized)
         InitFrame();
+    static bool setupShown = false;
+    const bool startupScreen = !gPlayState || gSaveContext.gameMode == GAMEMODE_TITLE_SCREEN;
+    // Version 1 recorded completion before presenting anything. Show the repaired
+    // guide once, after XR is focused, at title/file selection rather than gameplay.
+    if (!setupShown && CVarGetInteger("gVR.SetupGuideSeen", 0) < 3 && startupScreen &&
+        mmvr::InputFocused() && mmvr::RendererBridgeObserved() &&
+        !(mmvr::PrivateDebugTools && std::getenv("MMVR_NATIVE_TEST"))) {
+        setupShown = true;
+        std::ofstream("mmvr-startup.log",std::ios::app)<<"setup requested at title/file screen\n";
+        mmvr::setupGuideRendered = false;
+        mmvr::setupGuideVisible = true;
+        mmvr::OpenSystemSettings();
+    }
+    // Loss of focus or a scene reset can close UI without user acknowledgment.
+    // Keep the welcome pending until an explicit guide button is pressed.
+    if (setupShown && !mmvr::setupGuideCompleted && mmvr::setupGuideVisible &&
+        !mmvr::GetMenu().open && startupScreen && mmvr::InputFocused())
+        mmvr::OpenSystemSettings();
+    if (mmvr::setupGuideCompleted) {
+        mmvr::setupGuideCompleted = false;
+        CVarSetInteger("gVR.SetupGuideSeen", 3);
+        std::ofstream("mmvr-startup.log",std::ios::app)<<"setup explicitly dismissed\n";
+        settingsDirty = true;
+        CommitSettings();
+    }
     // Defaults belong in the registry. Never reapply them on load or save-slot
     // changes: all VR preferences and bindings are application-wide CVars.
     static bool wasOpen = false;
@@ -374,7 +409,7 @@ extern "C" void MMVR_RegisterMenu(void) {
 extern "C" void MMVR_NativePresentationProbe(PlayState* play) {
     if (!NativeTestEnabled())
         return;
-    for (const char* flag : { "MMVR_EXCHANGE_TEST", "MMVR_LIFECYCLE_TEST", "MMVR_TOWN_TEST",
+    for (const char* flag : { "MMVR_SCRIPT_TEST", "MMVR_DAMAGE_MATRIX_TEST", "MMVR_POTION_SHOP_TEST", "MMVR_EXCHANGE_TEST", "MMVR_LIFECYCLE_TEST", "MMVR_TOWN_TEST",
                               "MMVR_ARENA_EXPANSION_TEST", "MMVR_FLOWER_TEST", "MMVR_PERFORMANCE_TEST", "MMVR_PERFORMANCE_INTERACTIVE", "MMVR_SCENE_SWEEP",
                               "MMVR_NATIVE_STATE_TEST", "MMVR_RENDER_CADENCE_TEST", "MMVR_KAFEI_DRAW_TEST" }) {
         const char* value = std::getenv(flag);
@@ -509,6 +544,8 @@ extern "C" void MMVR_BeforePlayUpdate(PlayState* play) {
     C_SLOT_EQUIP(0, EQUIP_SLOT_C_DOWN) = slot;
     Interface_LoadItemIcon(play, EQUIP_SLOT_C_DOWN);
     mmvr::ConfirmSelectedItem();
+    if (!mmvr::FirstPersonSelected())
+        return; // Native C-down activation comes from the right trigger or gamepad.
     if (mmvrgame::SelectItem(play, slot, item))
         return;
     if (item == ITEM_BOTTLE && mmvr::FirstPersonRequested() && mmvr::InputFocused() &&

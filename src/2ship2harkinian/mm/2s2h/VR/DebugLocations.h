@@ -1,6 +1,6 @@
 #pragma once
 // Authored native scenes retain their real actor and room dependencies.
-struct DebugLocation {const char* name;int entrance,scene;int kafeiPreset=-1;};
+struct DebugLocation {const char* name;int entrance,scene;int kafeiPreset=-1;int interactionPreset=-1;};
 constexpr DebugLocation debugLocations[]={
  {"Ancient Castle of Ikana",ENTRANCE(IKANA_CASTLE,0),SCENE_CASTLE},
  {"Astral Observatory",ENTRANCE(ASTRAL_OBSERVATORY,0),SCENE_TENMON_DAI},
@@ -101,4 +101,7 @@ constexpr DebugLocation debugLocations[]={
  {"Zora Cape",ENTRANCE(ZORA_CAPE,0),SCENE_31MISAKI},
  {"Zora Hall",ENTRANCE(ZORA_HALL,0),SCENE_33ZORACITY},
  {"Zora Hall Rooms",ENTRANCE(ZORA_HALL_ROOMS,0),SCENE_BANDROOM},
+ {"Potion handoff - rescue Koume",ENTRANCE(MAGIC_HAGS_POTION_SHOP,0),SCENE_WITCH_SHOP,-1,0},
+ {"Monkey - sword rope interaction",ENTRANCE(DEKU_KINGS_CHAMBER,1),SCENE_DEKU_KING,-1,1},
+ {"Sword Dojo - lessons and challenge",ENTRANCE(SWORDMANS_SCHOOL,0),SCENE_DOUJOU,-1,2},
 };

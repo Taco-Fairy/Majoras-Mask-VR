@@ -1790,6 +1790,10 @@ s32 EnTrt_OverrideLimbDraw(PlayState* play, s32 limbIndex, Gfx** dList, Vec3f* p
     s32 i;
 
     for (i = 0; i < ARRAY_COUNT(this->items); i++) {
+        // Shelf actors may be absent when their spawn could not be satisfied.
+        if (this->items[i] == NULL) {
+            continue;
+        }
         this->items[i]->actor.scale.x = 0.2f;
         this->items[i]->actor.scale.y = 0.2f;
         this->items[i]->actor.scale.z = 0.2f;
@@ -1831,7 +1835,7 @@ void EnTrt_TransformLimbDraw(PlayState* play, s32 limbIndex, Actor* thisx) {
     }
 }
 
-static TexturePtr mmvr_local_602709a84c953577[] = { gKotakeEyeOpenTex, gKotakeEyeHalfTex, gKotakeEyeClosedTex };
+static TexturePtr mmvr_local_c41663c45a952d5c[] = { gKotakeEyeOpenTex, gKotakeEyeHalfTex, gKotakeEyeClosedTex };
 void EnTrt_Draw(Actor* thisx, PlayState* play) {
     /* persistent local storage is declared above */
     EnTrt* this = (EnTrt*)thisx;
@@ -1840,8 +1844,8 @@ void EnTrt_Draw(Actor* thisx, PlayState* play) {
     OPEN_DISPS(play->state.gfxCtx);
 
     Gfx_SetupDL25_Opa(play->state.gfxCtx);
-    gSPSegment(POLY_OPA_DISP++, 0x08, Lib_SegmentedToVirtual(mmvr_local_602709a84c953577[this->eyeTexIndex]));
-    gSPSegment(POLY_OPA_DISP++, 0x09, Lib_SegmentedToVirtual(mmvr_local_602709a84c953577[this->eyeTexIndex]));
+    gSPSegment(POLY_OPA_DISP++, 0x08, Lib_SegmentedToVirtual(mmvr_local_c41663c45a952d5c[this->eyeTexIndex]));
+    gSPSegment(POLY_OPA_DISP++, 0x09, Lib_SegmentedToVirtual(mmvr_local_c41663c45a952d5c[this->eyeTexIndex]));
     SkelAnime_DrawTransformFlexOpa(play, this->skelAnime.skeleton, this->skelAnime.jointTable,
                                    this->skelAnime.dListCount, EnTrt_OverrideLimbDraw, EnTrt_PostLimbDraw,
                                    EnTrt_TransformLimbDraw, &this->actor);

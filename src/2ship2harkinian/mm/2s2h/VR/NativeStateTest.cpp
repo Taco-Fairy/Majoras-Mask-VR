@@ -3,6 +3,7 @@
 #include "NativeStateComponents.h"
 #include "NativeTrackingResume.h"
 #include "NativeStateBackend.h"
+#include "updater.h"
 #include "ui.h"
 #include "2s2h/BenPort.h"
 #include "NativeStateEnvironment.h"
@@ -808,7 +809,21 @@ namespace {
 std::filesystem::path ExactStateDirectory() {
     return Ship::Context::GetPathRelativeToAppDirectory("saves",appShortName);
 }
+bool PreflightStateSlot(int slot) {
+    try {
+        const auto saved=mmvr::states::Store(ExactStateDirectory()).PeekIdentity(slot);
+        if(saved!=NativeStateIdentity()) {
+            mmvr::GetMenu().stateStatus="Incompatible build/mods/platform. Slot kept. Use an ordinary save.";
+            return false;
+        }
+        return true;
+    } catch(...) {
+        mmvr::GetMenu().stateStatus="Cannot read this state. Slot kept; use an ordinary save.";
+        return false;
+    }
+}
 void RefreshStateSlots() {
+    mmvr::statePreflight=PreflightStateSlot;
     mmvr::states::Store store(ExactStateDirectory());
     for(int slot=1;slot<=3;++slot)mmvr::GetMenu().stateSlotsPresent[slot-1]=store.Exists(slot);
 }

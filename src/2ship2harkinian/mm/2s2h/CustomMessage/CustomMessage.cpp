@@ -150,6 +150,11 @@ CustomMessage::Entry CustomMessage::LoadVanillaMessageTableEntry(u16 textId) {
         msgEntry++;
     }
 
+    // Match the native missing-ID fallback; the sentinel has no text payload.
+    if (msgEntry->textId == 0xFFFF) {
+        msgEntry = msgCtx->messageTableNES;
+    }
+
     CustomMessage::Entry entry;
 
     entry.textboxType = msgEntry->segment[0];

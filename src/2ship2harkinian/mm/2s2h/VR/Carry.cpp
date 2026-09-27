@@ -1,5 +1,7 @@
 #ifdef MMVR_ENABLE
 #include "Carry.h"
+#include "NativeForms.h"
+#include "world_scale.h"
 #include "solid_hull.h"
 #include "ItemUse.h"
 #include "Interactions.h"
@@ -344,7 +346,11 @@ bool CarryPose(PlayState* play, Player* p, const mmvr::Matrix& grip, mmvr::Matri
     if (!CarriedObject(p))
         return false;
     auto* a = p->heldActor;
-    target = mmvr::Multiply(relative, CarryPalmPose(grip,holdingHand));
+    const float worldScale=mmvr::WorldTrackingScale(mmvr::GetSettings(),p->transformation,
+                                                   StandingFormEyeHeight(p));
+    auto attachment=relative;
+    for(int row=0;row<4;++row)for(int col=0;col<3;++col)attachment.m[row][col]*=worldScale;
+    target = mmvr::Multiply(attachment, CarryPalmPose(grip,holdingHand));
     Vec3f next{ target.m[3][0], target.m[3][1], target.m[3][2] }, before = a->world.pos, resolved = before;
     CollisionPoly* wall = nullptr;
     int bg = BGCHECK_SCENE;
@@ -353,6 +359,7 @@ bool CarryPose(PlayState* play, Player* p, const mmvr::Matrix& grip, mmvr::Matri
         radius = std::max(6.f, float(dim->radius));
         halfHeight = dim->height * .5f;
     }
+    radius*=worldScale; halfHeight*=worldScale;
     BgCheck_EntitySphVsWall3(&play->colCtx, &resolved, &next, &before, radius, &wall, &bg, a, halfHeight);
     Vec3f probe{ resolved.x, resolved.y + halfHeight, resolved.z };
     auto floor = BgCheck_EntityRaycastFloor5(&play->colCtx, &wall, &bg, a, &probe);

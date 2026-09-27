@@ -485,12 +485,12 @@ void MMVR_StateVisit_254b53bb70d4f754(MMVR_StateSink* sink) {
     sink->pointer(sink->context, (const void*)&(mmvr_local_36c00136cd8c088f[mmvr_i0]), 0, "overlays/actors/ovl_En_Sob1/z_en_sob1.c::EnSob1_ZoraShopkeeper_Draw::sZoraShopkeeperEyeTextures::local0[]");
     }
     if(sink->layout) {
-    sink->layout(sink->context, "overlays/actors/ovl_En_Sob1/z_en_sob1.c::EnSob1_GoronShopkeeper_Draw::sGoronShopkeeperEyeTextures::local0", "array:3:pointer:scalar:void", 0, sizeof(mmvr_local_d3d1cb89382a492a), MMVR_STATE_ALIGN_TYPE(void*), 3);
-    sink->layout(sink->context, "overlays/actors/ovl_En_Sob1/z_en_sob1.c::EnSob1_GoronShopkeeper_Draw::sGoronShopkeeperEyeTextures::local0[]", "pointer:scalar:void", (size_t)((const unsigned char*)&(mmvr_local_d3d1cb89382a492a[0])-(const unsigned char*)&(mmvr_local_d3d1cb89382a492a)), sizeof(mmvr_local_d3d1cb89382a492a[0]), MMVR_STATE_ALIGN_TYPE(void*), 1);
+    sink->layout(sink->context, "overlays/actors/ovl_En_Sob1/z_en_sob1.c::EnSob1_GoronShopkeeper_Draw::sGoronShopkeeperEyeTextures::local0", "array:3:pointer:scalar:void", 0, sizeof(mmvr_local_635f6b2cc0fe2800), MMVR_STATE_ALIGN_TYPE(void*), 3);
+    sink->layout(sink->context, "overlays/actors/ovl_En_Sob1/z_en_sob1.c::EnSob1_GoronShopkeeper_Draw::sGoronShopkeeperEyeTextures::local0[]", "pointer:scalar:void", (size_t)((const unsigned char*)&(mmvr_local_635f6b2cc0fe2800[0])-(const unsigned char*)&(mmvr_local_635f6b2cc0fe2800)), sizeof(mmvr_local_635f6b2cc0fe2800[0]), MMVR_STATE_ALIGN_TYPE(void*), 1);
     }
-    sink->block(sink->context, "overlays/actors/ovl_En_Sob1/z_en_sob1.c::EnSob1_GoronShopkeeper_Draw::sGoronShopkeeperEyeTextures::local0", &mmvr_local_d3d1cb89382a492a, sizeof(mmvr_local_d3d1cb89382a492a));
+    sink->block(sink->context, "overlays/actors/ovl_En_Sob1/z_en_sob1.c::EnSob1_GoronShopkeeper_Draw::sGoronShopkeeperEyeTextures::local0", &mmvr_local_635f6b2cc0fe2800, sizeof(mmvr_local_635f6b2cc0fe2800));
     for (size_t mmvr_i0=0; mmvr_i0<3; ++mmvr_i0) {
-    sink->pointer(sink->context, (const void*)&(mmvr_local_d3d1cb89382a492a[mmvr_i0]), 0, "overlays/actors/ovl_En_Sob1/z_en_sob1.c::EnSob1_GoronShopkeeper_Draw::sGoronShopkeeperEyeTextures::local0[]");
+    sink->pointer(sink->context, (const void*)&(mmvr_local_635f6b2cc0fe2800[mmvr_i0]), 0, "overlays/actors/ovl_En_Sob1/z_en_sob1.c::EnSob1_GoronShopkeeper_Draw::sGoronShopkeeperEyeTextures::local0[]");
     }
     sink->function(sink->context, "overlays/actors/ovl_En_Sob1/z_en_sob1.c::EnSob1_ChangeAnim", (void (*)(void))EnSob1_ChangeAnim);
     sink->function(sink->context, "overlays/actors/ovl_En_Sob1/z_en_sob1.c::EnSob1_SetupAction", (void (*)(void))EnSob1_SetupAction);

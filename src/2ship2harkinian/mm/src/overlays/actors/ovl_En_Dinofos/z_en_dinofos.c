@@ -5,6 +5,7 @@
  */
 
 #include "z_en_dinofos.h"
+#include "2s2h/VR/ScriptedMelee.h"
 #include "overlays/actors/ovl_En_Clear_Tag/z_en_clear_tag.h"
 
 #define FLAGS                                                                                 \
@@ -468,7 +469,7 @@ s32 EnDinofos_Dodge(EnDinofos* this, PlayState* play) {
         return true;
     }
 
-    if ((this->actor.xzDistToPlayer < 100.0f) && (player->meleeWeaponState != PLAYER_MELEE_WEAPON_STATE_0) &&
+    if ((this->actor.xzDistToPlayer < 100.0f) && (MMVR_ScriptedMeleeState(player) != PLAYER_MELEE_WEAPON_STATE_0) &&
         this->actor.isLockedOn && (Rand_ZeroOne() < 0.5f) && EnDinofos_IsFacingPlayer(this) &&
         Player_IsFacingActor(&this->actor, 0x2000, play)) {
         if (Rand_ZeroOne() < 0.5f) {

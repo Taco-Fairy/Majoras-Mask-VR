@@ -5,6 +5,7 @@
  */
 
 #include "z_en_kanban.h"
+#include "2s2h/VR/ScriptedMelee.h"
 #include "objects/object_kanban/object_kanban.h"
 #include "objects/gameplay_keep/gameplay_keep.h"
 
@@ -249,7 +250,7 @@ void EnKanban_Update(Actor* thisx, PlayState* play) {
                         u8 i;
 
                         if (acHitElem->atDmgInfo.dmgFlags & 0x200) {
-                            this->cutType = sCutTypes[player->meleeWeaponAnimation];
+                            this->cutType = sCutTypes[MMVR_ScriptedMeleeAnimation(player)];
                         } else if (acHitElem->atDmgInfo.dmgFlags & 0x10) {
                             this->invincibilityTimer = 0;
                             this->cutType = this->unk_19A + 3;

@@ -3,19 +3,19 @@
   "include": "586e8377cdff5f08.inc",
   "variables": [
     {
-      "name": "mmvr_local_b7a532caad79797d",
+      "name": "mmvr_local_62103f9ce30e0093",
       "original": "sTexturesDesegmented",
       "function": "EnDinofos_Init",
-      "line": 274,
-      "at": 10270
+      "line": 275,
+      "at": 10306
     },
     {
-      "name": "mmvr_local_0ea22b6973285da8",
+      "name": "mmvr_local_1e90b5ebb5ed097f",
       "original": "sBlureInit",
       "function": "EnDinofos_Init",
-      "line": 275,
-      "at": 10329
+      "line": 276,
+      "at": 10365
     }
   ],
-  "sourceSha256": "9235fc5443cd484a889b2bdd579b2fbc50273176929104f1d85c20924973dd90"
+  "sourceSha256": "daa9a573634df82be37de4a9e34dc306d048f3044273132289152f444ecbd3b9"
 }

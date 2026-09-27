@@ -392,12 +392,12 @@ void MMVR_StateVisit_551950d28fff1602(MMVR_StateSink* sink) {
     }
     sink->block(sink->context, "overlays/actors/ovl_En_Trt/z_en_trt.c::EnTrt_PositionSelectedItem::sSelectedItemPosition::local0", &mmvr_local_63448e15b443ba16, sizeof(mmvr_local_63448e15b443ba16));
     if(sink->layout) {
-    sink->layout(sink->context, "overlays/actors/ovl_En_Trt/z_en_trt.c::EnTrt_Draw::sEyeTextures::local0", "array:3:pointer:scalar:void", 0, sizeof(mmvr_local_602709a84c953577), MMVR_STATE_ALIGN_TYPE(void*), 3);
-    sink->layout(sink->context, "overlays/actors/ovl_En_Trt/z_en_trt.c::EnTrt_Draw::sEyeTextures::local0[]", "pointer:scalar:void", (size_t)((const unsigned char*)&(mmvr_local_602709a84c953577[0])-(const unsigned char*)&(mmvr_local_602709a84c953577)), sizeof(mmvr_local_602709a84c953577[0]), MMVR_STATE_ALIGN_TYPE(void*), 1);
+    sink->layout(sink->context, "overlays/actors/ovl_En_Trt/z_en_trt.c::EnTrt_Draw::sEyeTextures::local0", "array:3:pointer:scalar:void", 0, sizeof(mmvr_local_c41663c45a952d5c), MMVR_STATE_ALIGN_TYPE(void*), 3);
+    sink->layout(sink->context, "overlays/actors/ovl_En_Trt/z_en_trt.c::EnTrt_Draw::sEyeTextures::local0[]", "pointer:scalar:void", (size_t)((const unsigned char*)&(mmvr_local_c41663c45a952d5c[0])-(const unsigned char*)&(mmvr_local_c41663c45a952d5c)), sizeof(mmvr_local_c41663c45a952d5c[0]), MMVR_STATE_ALIGN_TYPE(void*), 1);
     }
-    sink->block(sink->context, "overlays/actors/ovl_En_Trt/z_en_trt.c::EnTrt_Draw::sEyeTextures::local0", &mmvr_local_602709a84c953577, sizeof(mmvr_local_602709a84c953577));
+    sink->block(sink->context, "overlays/actors/ovl_En_Trt/z_en_trt.c::EnTrt_Draw::sEyeTextures::local0", &mmvr_local_c41663c45a952d5c, sizeof(mmvr_local_c41663c45a952d5c));
     for (size_t mmvr_i0=0; mmvr_i0<3; ++mmvr_i0) {
-    sink->pointer(sink->context, (const void*)&(mmvr_local_602709a84c953577[mmvr_i0]), 0, "overlays/actors/ovl_En_Trt/z_en_trt.c::EnTrt_Draw::sEyeTextures::local0[]");
+    sink->pointer(sink->context, (const void*)&(mmvr_local_c41663c45a952d5c[mmvr_i0]), 0, "overlays/actors/ovl_En_Trt/z_en_trt.c::EnTrt_Draw::sEyeTextures::local0[]");
     }
     sink->function(sink->context, "overlays/actors/ovl_En_Trt/z_en_trt.c::EnTrt_ChangeAnim", (void (*)(void))EnTrt_ChangeAnim);
     sink->function(sink->context, "overlays/actors/ovl_En_Trt/z_en_trt.c::EnTrt_TestItemSelected", (void (*)(void))EnTrt_TestItemSelected);

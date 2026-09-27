@@ -5,6 +5,7 @@
  */
 
 #include "../../../2ship2harkinian/mm/src/overlays/actors/ovl_En_Skb/z_en_skb.h"
+#include "2s2h/VR/ScriptedMelee.h"
 #include "overlays/actors/ovl_En_Encount4/z_en_encount4.h"
 #include "overlays/actors/ovl_En_Part/z_en_part.h"
 #include "overlays/effects/ovl_Effect_Ss_Hahen/z_eff_ss_hahen.h"
@@ -980,10 +981,10 @@ void func_8099672C(EnSkb* this, PlayState* play) {
                     this->unk_3D8 |= 1;
 
                 case 15:
-                    if ((player->meleeWeaponAnimation == PLAYER_MWA_RIGHT_SLASH_1H) ||
-                        (player->meleeWeaponAnimation == PLAYER_MWA_LEFT_COMBO_2H) ||
-                        (player->meleeWeaponAnimation == PLAYER_MWA_BACKSLASH_RIGHT) ||
-                        (player->meleeWeaponAnimation == PLAYER_MWA_BACKSLASH_LEFT)) {
+                    if ((MMVR_ScriptedMeleeAnimation(player) == PLAYER_MWA_RIGHT_SLASH_1H) ||
+                        (MMVR_ScriptedMeleeAnimation(player) == PLAYER_MWA_LEFT_COMBO_2H) ||
+                        (MMVR_ScriptedMeleeAnimation(player) == PLAYER_MWA_BACKSLASH_RIGHT) ||
+                        (MMVR_ScriptedMeleeAnimation(player) == PLAYER_MWA_BACKSLASH_LEFT)) {
                         this->unk_3D8 |= 1;
                     }
 
@@ -1017,9 +1018,9 @@ void func_80996AD0(EnSkb* this, PlayState* play) {
     }
 }
 
-static Color_RGBA8 mmvr_local_34fb72d7a30033f1 = { 170, 255, 255, 255 };
-static Color_RGBA8 mmvr_local_b431d399d090e09a = { 200, 200, 255, 255 };
-static Vec3f mmvr_local_b4d5d90819fe4c11 = { 0.0f, -1.0f, 0.0f };
+static Color_RGBA8 mmvr_local_29723487c1fc01b4 = { 170, 255, 255, 255 };
+static Color_RGBA8 mmvr_local_f115a43a6b359b7d = { 200, 200, 255, 255 };
+static Vec3f mmvr_local_5d342bcd9cc27415 = { 0.0f, -1.0f, 0.0f };
 void func_80996BEC(EnSkb* this, PlayState* play) {
     /* persistent local storage is declared above */
     /* persistent local storage is declared above */
@@ -1042,7 +1043,7 @@ void func_80996BEC(EnSkb* this, PlayState* play) {
         sp84.x = Math_SinS(yaw) * 3.0f;
         sp84.z = Math_CosS(yaw) * 3.0f;
         sp84.y = (Rand_ZeroOne() * 4.0f) + 4.0f;
-        EffectSsEnIce_Spawn(play, &this->bodyPartsPos[i], 0.6f, &sp84, &mmvr_local_b4d5d90819fe4c11, &mmvr_local_34fb72d7a30033f1, &mmvr_local_b431d399d090e09a, 30);
+        EffectSsEnIce_Spawn(play, &this->bodyPartsPos[i], 0.6f, &sp84, &mmvr_local_5d342bcd9cc27415, &mmvr_local_29723487c1fc01b4, &mmvr_local_f115a43a6b359b7d, 30);
     }
 }
 
@@ -1118,7 +1119,7 @@ s32 EnSkb_OverrideLimbDraw(PlayState* play, s32 limbIndex, Gfx** dList, Vec3f* p
     return false;
 }
 
-static Vec3f mmvr_local_cb84ad21fc285e26 = { 800.0f, 1200.0f, 0.0f };
+static Vec3f mmvr_local_20334931108f5894 = { 800.0f, 1200.0f, 0.0f };
 void EnSkb_PostLimbDraw(PlayState* play, s32 limbIndex, Gfx** dList, Vec3s* rot, Actor* thisx) {
     /* persistent local storage is declared above */
     EnSkb* this = (EnSkb*)thisx;
@@ -1146,7 +1147,7 @@ void EnSkb_PostLimbDraw(PlayState* play, s32 limbIndex, Gfx** dList, Vec3s* rot,
             Matrix_MultZero(&this->bodyPartsPos[this->bodyPartsCount]);
             this->bodyPartsCount++;
         } else if ((limbIndex == STALCHILD_LIMB_HEAD) && !(this->unk_3D8 & 2)) {
-            Matrix_MultVec3f(&mmvr_local_cb84ad21fc285e26, &this->bodyPartsPos[this->bodyPartsCount]);
+            Matrix_MultVec3f(&mmvr_local_20334931108f5894, &this->bodyPartsPos[this->bodyPartsCount]);
             this->bodyPartsCount++;
         }
     }

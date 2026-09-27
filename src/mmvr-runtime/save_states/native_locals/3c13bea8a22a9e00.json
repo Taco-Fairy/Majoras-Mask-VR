@@ -3,33 +3,33 @@
   "include": "3c13bea8a22a9e00.inc",
   "variables": [
     {
-      "name": "mmvr_local_33ed1694c8e60d2f",
+      "name": "mmvr_local_4687120a034c1c25",
       "original": "sEffectPrimColors",
       "function": "BgDyYoseizo_SpawnEffects",
-      "line": 118,
-      "at": 4602
+      "line": 119,
+      "at": 4638
     },
     {
-      "name": "mmvr_local_a5221c14cb8d49b6",
+      "name": "mmvr_local_3e2a68534b32fef8",
       "original": "sEffectEnvColors",
       "function": "BgDyYoseizo_SpawnEffects",
-      "line": 126,
-      "at": 4928
+      "line": 127,
+      "at": 4964
     },
     {
-      "name": "mmvr_local_73a96deb9497c9fb",
+      "name": "mmvr_local_8a2f2f90ff77ffe7",
       "original": "sMouthTextures",
       "function": "BgDyYoseizo_Draw",
-      "line": 579,
-      "at": 23248
+      "line": 580,
+      "at": 23298
     },
     {
-      "name": "mmvr_local_c90ce9cc17c6a10f",
+      "name": "mmvr_local_d370cdb916ee763a",
       "original": "sStretchFactors",
       "function": "BgDyYoseizo_DrawEffects",
-      "line": 731,
-      "at": 28340
+      "line": 732,
+      "at": 28390
     }
   ],
-  "sourceSha256": "658daef6a6ebdef3e9798f0de5bfee2d0110134bb6f181c2121ffc943953dae2"
+  "sourceSha256": "9e80b35f65148db534aad7dcaac06e08a38e1438d66c21d591bf40e2367f3132"
 }

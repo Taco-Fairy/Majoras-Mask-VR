@@ -25,7 +25,7 @@ constexpr DebugNativeTrigger debugNativeTriggers[] = {
      DebugNativeTriggerKind::EastClockTownArrival},
     {"Tingle balloon pop and fall", ENTRANCE(NORTH_CLOCK_TOWN, 0), SCENE_BACKTOWN,
      DebugNativeTriggerKind::TingleBalloon},
-    {"Woodfall crystal camera", ENTRANCE(WOODFALL_TEMPLE, 3), SCENE_MITURIN,
+    {"Woodfall crystal camera", ENTRANCE(WOODFALL_TEMPLE, 0), SCENE_MITURIN,
      DebugNativeTriggerKind::WoodfallCrystal},
 };
 // The Woodfall room-0 recipe is retained for an opt-in native fixture until

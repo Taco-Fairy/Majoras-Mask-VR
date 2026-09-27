@@ -1730,6 +1730,10 @@ void EnFsn_Draw(Actor* thisx, PlayState* play) {
                           EnFsn_OverrideLimbDraw, EnFsn_PostLimbDraw, &this->actor);
 
     for (i = 0; i < this->totalSellingItems; i++) {
+        // Shelf actors may be absent when their spawn could not be satisfied.
+        if (this->items[i] == NULL) {
+            continue;
+        }
         this->items[i]->actor.scale.x = 0.2f;
         this->items[i]->actor.scale.y = 0.2f;
         this->items[i]->actor.scale.z = 0.2f;

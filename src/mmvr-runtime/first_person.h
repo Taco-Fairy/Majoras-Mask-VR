@@ -13,6 +13,8 @@ struct TrackingFrame {
     uint64_t epoch = 0, originEpoch = 0, systemRecenterEpoch = 0;
     double timeSeconds = 0;
     float snapYaw = 0;
+    float trackingScale = 1; // Game-space tracking only; never submitted to OpenXR.
+    float calibratedFloorEyeHeight = 0; // Physical metres at recenter; zero means unavailable.
     float visualHeadOffset[3]{};
     bool visualHeadValid = false;
     float visualOffset[3]{};
@@ -29,6 +31,7 @@ struct TrackingFrame {
 struct CameraFrame {
     bool active = false, exclusiveView = false;
     float projectionZoom = 1;
+    float trackingScale = 1;
     Matrix view{}, bodyCorrection{}, hands[2]{}, handExtras[2]{}, bowString{}, bowArrow{}, itemReticle{}, heldMask{};
     bool handExtraActive[2]{};
     Matrix formFins[2]{}, formEffectAnchor{}, shieldEffectAnchor{}, dekuGuard{}, dekuGuardCorrection{}, dekuBubble{};
@@ -143,7 +146,13 @@ inline Matrix TrackedHandModel(const TrackingFrame& frame, const Matrix& view, c
     hand.m[3][0] = (hand.m[3][0] - relativeHead.m[3][0]) * 40;
     hand.m[3][1] *= 40;
     hand.m[3][2] = (hand.m[3][2] - relativeHead.m[3][2]) * 40;
-    return Multiply(Multiply(ModelHandCalibration(nativeHand, controller, settings), hand), view);
+    auto calibration = ModelHandCalibration(nativeHand, controller, settings);
+    // Preserve real-world hand/equipment size as the metres-to-game conversion
+    // changes. Scale the calibrated grip offset too, but never the world anchor.
+    for (int row = 0; row < 4; ++row)
+        for (int col = 0; col < 3; ++col)
+            calibration.m[row][col] *= frame.trackingScale;
+    return Multiply(Multiply(calibration, hand), view);
 }
 inline int ItemHandController(int nativeHand, bool hookshot, bool paired, const Settings& settings) {
     // Hookshot is authored in the right mesh; swords in the left mesh.

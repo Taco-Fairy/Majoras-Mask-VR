@@ -340,7 +340,8 @@ class TheaterRuntime {
     XrInstance instance = XR_NULL_HANDLE;
     XrSystemId system = XR_NULL_SYSTEM_ID;
     XrSession session = XR_NULL_HANDLE;
-    XrSpace localSpace = XR_NULL_HANDLE, viewSpace = XR_NULL_HANDLE;
+    XrSpace localSpace = XR_NULL_HANDLE, viewSpace = XR_NULL_HANDLE, floorSpace = XR_NULL_HANDLE;
+    float calibratedFloorEyeHeight = 0;
     XrSwapchain chain = XR_NULL_HANDLE;
     std::vector<SwapchainImage> images;
     XrSwapchain dialogueChain = XR_NULL_HANDLE;
@@ -921,6 +922,15 @@ class TheaterRuntime {
         leftGripValue = Float(buttons[6]);
         useValue = Float(shield);
         bool clicked = false;
+        if (systemMenuOpenRequested && drawUi) {
+            systemMenuOpenRequested = false;
+            menu.Enter(physicalControls.value[11], physicalControls.value[12]);
+            menuPositionPending = true;
+            inputRelease = true;
+            selector.Cancel(); assignment.Cancel(); ClearPad();
+            nextMenuStep = displayTime + 250000000;
+            return;
+        }
         bool menuClick = Bool(buttons[8], &clicked);
         // Recovery is independent of saved bindings: hold both original stick
         // clicks (Vive: left pad center + right menu). Release rearms it.
@@ -942,6 +952,10 @@ class TheaterRuntime {
         if (!GetBindingEditor().Active() && menuClick && clicked && drawUi &&
             (!inputRelease || menu.open)) {
             sceneRelease = false;
+            if (menu.open && setupGuideVisible && setupGuideRendered) {
+                setupGuideVisible = false;
+                setupGuideCompleted = true;
+            }
             if (menu.open) menu.Close(); else menu.open = true;
             menu.Enter(physicalControls.value[11], physicalControls.value[12]);
             menuPositionPending = menu.open;
@@ -962,6 +976,20 @@ class TheaterRuntime {
             return;
         }
         if (menu.open) {
+            if (setupGuideVisible) {
+                bool confirmChanged=false, backChanged=false;
+                const bool confirm=Bool(buttons[0], &confirmChanged);
+                const bool back=Bool(buttons[1], &backChanged);
+                if (setupGuideRendered && ((confirm && confirmChanged) || (back && backChanged))) {
+                    setupGuideVisible=false;
+                    setupGuideCompleted=true;
+                    if(back) menu.Close();
+                    inputRelease=true;
+                    nextMenuStep=displayTime+250000000;
+                }
+                ClearPad();
+                return;
+            }
             if (menu.nativeCloseRequested) {
                 menu.nativeCloseRequested = false;
                 menu.Close();
@@ -1065,12 +1093,21 @@ class TheaterRuntime {
                 } else if (confirmed == ResetSettingsRow)
                     for (int i = 0; i < AssignmentFirst; ++i)
                         changeSetting(Setting(i), SettingDefinitions[i].initial);
+                else if (confirmed == DiagnosticExportRow) {
+                    if (exportDiagnostics) exportDiagnostics();
+                } else if (confirmed == SetupGuideRow) {
+                    setupGuideVisible = !setupGuideVisible;
+                    if(setupGuideVisible) setupGuideRendered=false;
+                }
                 else if (confirmed == RecenterRow)
                     centerPending = true;
                 else if (ExactStateRow(confirmed) && sceneGameplay && menu.exactStatesAvailable) {
                     const int slot=(confirmed-SaveStateFirstRow)/2;
                     const bool load=(confirmed-SaveStateFirstRow)%2;
                     if(load&&!menu.stateSlotsPresent[slot]) menu.stateStatus="That save-state slot is empty.";
+                    else if(load && statePreflight && !statePreflight(slot+1)) {
+                        menu.confirmStateRow=-1;
+                    }
                     else if(menu.stateSlotsPresent[slot]&&menu.confirmStateRow!=confirmed)
                         menu.confirmStateRow=confirmed;
                     else {
@@ -1095,8 +1132,19 @@ class TheaterRuntime {
                     if (menu.CloseAndRequest(debugReturnRequested)) inputRelease = true;
                 } else if (confirmed == SharedFilesRow)
                     RequestSharedFiles();
-                else if (confirmed == CheckUpdateRow || confirmed == InstallUpdateRow)
-                    RequestUpdate(confirmed == InstallUpdateRow);
+                else if (confirmed == CheckUpdateRow) {
+                    confirmUpdateInstall=false;
+                    RequestUpdate(false);
+                } else if (confirmed == InstallUpdateRow) {
+                    if (!confirmUpdateInstall) {
+                        confirmUpdateInstall=true;
+                        supportStatus.clear();
+                        updateStatus="Save normally first. Save states may break after updating. Press Install again to continue.";
+                    } else {
+                        confirmUpdateInstall=false;
+                        RequestUpdate(true);
+                    }
+                }
             }
             ClearPad();
             return;
@@ -1170,8 +1218,10 @@ class TheaterRuntime {
             item = {};
         } else
             snapLatched = false;
+        const bool originalThirdPerson = !firstPersonRequested &&
+            settings.Get(Setting::ThirdPersonOriginalControls) > .5f;
         const auto pageButtons = pauseTriggers.Update(Float(target), useValue, nativePause);
-        if (nativePause) {
+        if (nativePause && !originalThirdPerson) {
             if (pageButtons)
                 assignment.Cancel();
             bool wasOpen = assignment.open;
@@ -1190,7 +1240,7 @@ class TheaterRuntime {
         } else
             assignment.Cancel();
         if (sceneGameplay && !nativePause && !ocarina && !(firstPersonRequested && nativeFirstPersonEligible) &&
-            !climbing) {
+            !climbing && !originalThirdPerson) {
             pad.rightX = Axis(item.x, item.y);
             pad.rightY = Axis(item.y, item.x);
             item = {};
@@ -1200,9 +1250,8 @@ class TheaterRuntime {
         pad.buttons = (Bool(buttons[0]) ? 0x8000 : 0) | (Bool(buttons[1]) ? 0x4000 : 0) | (Bool(buttons[2]) ? 8 : 0) |
                       LeftUpperButton(Bool(buttons[3]), sceneGameplay, ocarina, nativePause, climbing) |
                       (Bool(buttons[4]) ? 0x1000 : 0) | CButtons(item.x, item.y) | pageButtons;
-        if (sceneGameplay && !nativePause && !ocarina && !(firstPersonRequested && nativeFirstPersonEligible) &&
-            OffhandInput(settings, leftGripValue, gripValue) > .65f)
-            pad.buttons |= 0x10;
+        pad.buttons |= ThirdPersonButtons(Float(target), leftGripValue, useValue,
+            sceneGameplay && !nativePause && !ocarina && !firstPersonRequested && !climbing && !dialogueChoice);
         if (ocarina && !nativePause) {
             pad.buttons = InstrumentButtons(stick.x, stick.y, item.x, item.y, Bool(buttons[0]), Bool(buttons[2]),
                                             Bool(buttons[1]), Bool(buttons[3]));
@@ -1218,7 +1267,7 @@ class TheaterRuntime {
             pad.buttons = (Bool(buttons[0]) || Bool(buttons[2]) ? 0x8000 : 0) |
                           (Bool(buttons[1]) ? 0x4000 : 0);
         }
-        pad = ItemWheelInput(pad, SelectorGrip() > .25f && canSelect && !ocarina && !climbing && !dialogueChoice);
+        pad = ItemWheelInput(pad, SelectorGrip() > .25f && canSelect && !originalThirdPerson && !ocarina && !climbing && !dialogueChoice);
         bool changed = false;
         if (Bool(buttons[5], &changed) && changed)
             centerPending = true;
@@ -1295,6 +1344,7 @@ class TheaterRuntime {
     RenderFrameTiming preparedTiming{};
     std::chrono::steady_clock::time_point preparedWaitStart{}, preparedWaitEnd{};
     bool centerPending = true, hasCenter = false;
+    bool firstFocusCenterPending = true;
     XrTime referenceChangeTime = 0;
     bool referenceChangePending = false, systemCenterPending = false;
     uint64_t frames = 0;
@@ -1437,6 +1487,7 @@ class TheaterRuntime {
                     Check(xrBeginSession(session, &begin), "Begin session");
                     running = true;
                     centerPending = true;
+                    firstFocusCenterPending = true;
                     ResetPerformanceNotifications();
 #ifdef __ANDROID__
                     ReadRefresh(true);
@@ -1445,6 +1496,13 @@ class TheaterRuntime {
                     ReadRefresh(false);
 #endif
                 } else if (change.state == XR_SESSION_STATE_FOCUSED) {
+                    // READY/VISIBLE can run while a PC headset rests on a desk.
+                    // Calibrate again on first focus, but never on an ordinary
+                    // dashboard return (which could occur while crouching).
+                    if (firstFocusCenterPending) {
+                        centerPending = true;
+                        firstFocusCenterPending = false;
+                    }
 #ifdef __ANDROID__
                     // Quest may defer a READY-state request until foreground ownership.
                     // Retry once per focus transition, never on every rendered frame.
@@ -1679,6 +1737,8 @@ class TheaterRuntime {
         for (auto space : aimSpaces)
             if (space)
                 xrDestroySpace(space);
+        if (floorSpace)
+            xrDestroySpace(floorSpace);
         if (viewSpace)
             xrDestroySpace(viewSpace);
         if (localSpace)
@@ -1800,6 +1860,13 @@ class TheaterRuntime {
                                          type == XR_REFERENCE_SPACE_TYPE_LOCAL ? &localSpace : &viewSpace),
                   "Create space");
         }
+        // STAGE supplies the runtime's calibrated floor without changing the
+        // user's boundary or moving gameplay into a different reference space.
+        XrReferenceSpaceCreateInfo floorInfo{XR_TYPE_REFERENCE_SPACE_CREATE_INFO};
+        floorInfo.referenceSpaceType = XR_REFERENCE_SPACE_TYPE_STAGE;
+        floorInfo.poseInReferenceSpace.orientation.w = 1;
+        if (XR_FAILED(xrCreateReferenceSpace(session, &floorInfo, &floorSpace)))
+            floorSpace = XR_NULL_HANDLE;
         Check(xrEnumerateSwapchainFormats(session, 0, &count, nullptr), "Count formats");
         std::vector<int64_t> formats(count);
         Check(xrEnumerateSwapchainFormats(session, count, &count, formats.data()), "Read formats");
@@ -2031,6 +2098,16 @@ class TheaterRuntime {
                 menuPositionPending = menu.open;
                 assignmentPositionPending = true;
                 selector.Cancel();
+                calibratedFloorEyeHeight = 0;
+                if (floorSpace != XR_NULL_HANDLE) {
+                    XrSpaceLocation floorLocation{XR_TYPE_SPACE_LOCATION};
+                    if (XR_SUCCEEDED(xrLocateSpace(floorSpace, localSpace, displayTime, &floorLocation)) &&
+                        (floorLocation.locationFlags & XR_SPACE_LOCATION_POSITION_VALID_BIT)) {
+                        const float metres = location.pose.position.y - floorLocation.pose.position.y;
+                        if (std::isfinite(metres) && metres >= .4f && metres <= 2.5f)
+                            calibratedFloorEyeHeight = metres;
+                    }
+                }
                 origin = location.pose;
                 origin.orientation = TheaterPose(location.pose).orientation;
                 screen = TheaterPose(location.pose);
@@ -2097,6 +2174,7 @@ class TheaterRuntime {
                 tracking.grips[1] = gripValue;
                 tracking.snapYaw = snapYaw;
                 tracking.origin = origin;
+                tracking.calibratedFloorEyeHeight = calibratedFloorEyeHeight;
                 XrSpaceLocation head{ XR_TYPE_SPACE_LOCATION };
                 const auto poseValid = XR_SPACE_LOCATION_POSITION_VALID_BIT | XR_SPACE_LOCATION_ORIENTATION_VALID_BIT;
                 if (validStereoViews) {
@@ -2159,7 +2237,8 @@ class TheaterRuntime {
                     }
 
                     int previousHover = selector.hover;
-                    int chosen = selector.UpdateHands(!resumingState && canSelect && !climbing && !ocarina && !menu.open && !inputRelease,
+                    int chosen = selector.UpdateHands(!resumingState && canSelect &&
+                                                      (firstPersonRequested || settings.Get(Setting::ThirdPersonOriginalControls) <= .5f) && !climbing && !ocarina && !menu.open && !inputRelease,
                                                       tracking, settings);
                     if (selector.hover >= 0 && selector.hover != previousHover)
                         Pulse(DominantController(settings), .15f);
@@ -3235,6 +3314,13 @@ void SetInputContext(bool allowed, bool instrument) noexcept {
         pendingSlot = -1;
     }
 }
+void OpenSystemSettings() {
+    menu.open = true;
+    menu.CollapseAll();
+    menu.tab = SystemTab;
+    menu.Normalize();
+    systemMenuOpenRequested = true;
+}
 MenuState& GetMenu() noexcept {
     return menu;
 }
@@ -3532,7 +3618,8 @@ bool OverrideProjection(float matrix[4][4]) noexcept {
             fogScale = -matrix[2][3];
             const float nearPlane = cameraFrame.active ? 1.f : std::clamp(fogB / (fogA - fogScale), .1f, 1000.f);
             const auto projection = EyeProjectionMatrix(
-                currentEye, MagnifiedFov(currentFov, cameraFrame.projectionZoom), currentOrigin, nearPlane);
+                currentEye, MagnifiedFov(currentFov, cameraFrame.projectionZoom), currentOrigin, nearPlane, 30000.f,
+                40.f * (cameraFrame.active ? cameraFrame.trackingScale : 1.f));
             if (settings.Get(Setting::HeadsetCulling) > .5f)
                 currentCullingGuard = MakeCullingGuard(MagnifiedFov(currentFov, cameraFrame.projectionZoom),
                                                        settings.Get(Setting::CullingMargin) + cullingTurnMargin);
@@ -3831,7 +3918,8 @@ bool OverrideModelMatrix(const void* address, float matrix[4][4], const float na
     if ((renderPass == 1 || renderPass == 2) && address == skyboxMatrix) {
         Matrix model;
         std::memcpy(&model, matrix, sizeof(model));
-        model = CenterSkybox(model, worldView, currentEye, currentOrigin);
+        model = CenterSkybox(model, worldView, currentEye, currentOrigin,
+                              40.f * (cameraFrame.active ? cameraFrame.trackingScale : 1.f));
         std::memcpy(matrix, &model, sizeof(model));
         return true;
     }

@@ -5,6 +5,7 @@
  */
 
 #include "z_en_rail_skb.h"
+#include "2s2h/VR/ScriptedMelee.h"
 #include "overlays/actors/ovl_En_Part/z_en_part.h"
 #include "overlays/effects/ovl_Effect_Ss_Hahen/z_eff_ss_hahen.h"
 
@@ -1061,10 +1062,10 @@ void func_80B72970(EnRailSkb* this, PlayState* play) {
                 this->unk_402 |= 1;
 
             case 15:
-                if ((player->meleeWeaponAnimation == PLAYER_MWA_RIGHT_SLASH_1H) ||
-                    (player->meleeWeaponAnimation == PLAYER_MWA_LEFT_COMBO_2H) ||
-                    (player->meleeWeaponAnimation == PLAYER_MWA_BACKSLASH_RIGHT) ||
-                    (player->meleeWeaponAnimation == PLAYER_MWA_BACKSLASH_LEFT)) {
+                if ((MMVR_ScriptedMeleeAnimation(player) == PLAYER_MWA_RIGHT_SLASH_1H) ||
+                    (MMVR_ScriptedMeleeAnimation(player) == PLAYER_MWA_LEFT_COMBO_2H) ||
+                    (MMVR_ScriptedMeleeAnimation(player) == PLAYER_MWA_BACKSLASH_RIGHT) ||
+                    (MMVR_ScriptedMeleeAnimation(player) == PLAYER_MWA_BACKSLASH_LEFT)) {
                     this->unk_402 |= 1;
                 }
 

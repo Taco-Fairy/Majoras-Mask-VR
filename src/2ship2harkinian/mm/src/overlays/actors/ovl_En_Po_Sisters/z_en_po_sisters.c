@@ -5,6 +5,7 @@
  */
 
 #include "2s2h/VR/YawBillboard.h"
+#include "2s2h/VR/ScriptedMelee.h"
 #include "z_en_po_sisters.h"
 #include "overlays/actors/ovl_En_Clear_Tag/z_en_clear_tag.h"
 #include "objects/gameplay_keep/gameplay_keep.h"
@@ -242,8 +243,8 @@ void EnPoSisters_MatchPlayerXZ(EnPoSisters* this, PlayState* play) {
     f32 dist;
 
     if ((this->megCloneId == POE_SISTERS_MEG_REAL) || (this->actionFunc != EnPoSisters_DamageFlinch)) {
-        if (((player->meleeWeaponState == PLAYER_MELEE_WEAPON_STATE_0) ||
-             (player->meleeWeaponAnimation >= PLAYER_MWA_SPIN_ATTACK_1H)) &&
+        if (((MMVR_ScriptedMeleeState(player) == PLAYER_MELEE_WEAPON_STATE_0) ||
+             (MMVR_ScriptedMeleeAnimation(player) >= PLAYER_MWA_SPIN_ATTACK_1H)) &&
             ((player->actor.world.pos.y - player->actor.floorHeight) < 1.0f)) {
             Math_StepToF(&this->megDistToPlayer, 110.0f, 3.0f);
         } else {

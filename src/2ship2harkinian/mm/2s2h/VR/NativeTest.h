@@ -11,11 +11,15 @@ void CollisionCheck_AC_CylVsQuad(PlayState*,CollisionCheckContext*,Collider*,Col
 }
 // Controlled gameplay pipeline checks run only in the existing isolated harness.
 #include "CombatPipelineTest.h"
+#include "HeadAimTest.h"
 #ifdef MMVR_LOCAL_TEST_TOOLS
 #include "GoronRayReviewTest.h"
 #endif
 #include "NativeArmRunTest.h"
 #include "SwordMultiTest.h"
+#include "DamageMatrixTest.h"
+#include "MessageLookupTest.h"
+#include "MessageDecodeTest.h"
 #include "PropContactTest.h"
 #include "CarryablesReviewTest.h"
 #include "PhysicalPushTest.h"
@@ -55,6 +59,7 @@ static void NativeCombatFixture(PlayState* play){
  Collider_DestroyCylinder(play,&target);
 }
 #include "FormLifecycleTest.h"
+#include "ThirdPersonLifecycleTest.h"
 #include "BottleReleaseLifecycleTest.h"
 #include "FlowerLifecycleTest.h"
 #include "ClimbLifecycleTest.h"
@@ -74,6 +79,10 @@ static void NativeCombatFixture(PlayState* play){
 #include "RenderCadenceTest.h"
 #include "KafeiDrawLifecycleTest.h"
 #include "LessonLifecycleTest.h"
+#include "PotionShopLifecycleTest.h"
+#include "ScriptLifecycleTest.h"
+#include "SceneResourceAudit.h"
+#include "EncounterAudit.h"
 extern "C" void MMVR_VerifySettingsRepair(PlayState*);
 extern "C" void MMVR_VerifyNativeOptions();
 #ifdef MMVR_STATE_NATIVE_BACKEND
@@ -101,6 +110,9 @@ static mmvr::Pad NativeTestInput(){
  }
  static unsigned tick=0,fileTicks=0,playTicks=0;static std::ofstream log("native-test.log");
  mmvr::Pad pad;pad.active=true;++tick;
+ // Script diagnostics must also follow credits/ending play states.
+ if(!gPlayState&&std::getenv("MMVR_SCRIPT_TEST")&&NativeScriptTerminalBoundary())return pad;
+ if(gPlayState&&std::getenv("MMVR_SCRIPT_TEST"))return NativeScriptLifecycle(gPlayState,++playTicks);
  if(!gPlayState&&gSaveContext.gameMode==GAMEMODE_FILE_SELECT){
   auto* file=(FileSelectState*)gGameState;++fileTicks;
   if(fileTicks==75||fileTicks==95)pad.y=-85;
@@ -108,6 +120,46 @@ static mmvr::Pad NativeTestInput(){
   log<<tick<<" file "<<fileTicks<<" index="<<file->buttonIndex<<" mode="<<file->menuMode<<" config="<<file->configMode<<" y="<<int(pad.y)<<"\n";
  }else if(gPlayState&&gSaveContext.gameMode==GAMEMODE_NORMAL){
   ++playTicks;
+  if(std::getenv("MMVR_COMPONENT_AUDIT")) {
+   if(playTicks==60) {
+    auto* oldInput=sPlayerControlInput;sPlayerControlInput=CONTROLLER1(&gPlayState->state);
+    mmvr::ApplyViewMode(2);mmvr::SetNativeTestTracking(true);
+    const auto baseline=*GET_PLAYER(gPlayState);
+    std::ofstream result("native-component-audit.json");result<<"{\"fixture\":true";
+    const std::string component=std::getenv("MMVR_COMPONENT_AUDIT");
+    if(component=="exchange")NativeExchangeTest(gPlayState,baseline,result);
+    else if(component=="bottle-campaign")NativeBottleCampaignTest(gPlayState,baseline,result);
+    else if(component=="throw-jump")NativeThrowJumpTest(gPlayState,baseline,result);
+    else if(component=="mirror")NativeShieldReflectionTest(gPlayState,baseline,result);
+    else if(component=="item-use")NativeItemUseTest(gPlayState,baseline,result);
+    else if(component=="targeting")NativeTargetingTest(gPlayState,baseline,result);
+    else if(component=="actions")NativeActionTest(gPlayState,baseline,result);
+    else result<<",\"unknownComponent\":true";
+    result<<"}";result.close();
+    mmvrgame::ClearTracking();mmvr::SetNativeTestTracking(false);sPlayerControlInput=oldInput;
+    Ship::Context::GetRawInstance()->GetWindow()->Close();
+   }
+   return pad;
+  }
+  if(std::getenv("MMVR_FIN_CONTACT_AUDIT")) {
+   if(playTicks==60) {
+    auto* oldInput=sPlayerControlInput;sPlayerControlInput=CONTROLLER1(&gPlayState->state);
+    mmvr::SetNativeTestTracking(true);
+    std::ofstream result("native-fin-contact-audit.json");result<<"{\"fixture\":true";
+    const auto baseline=*GET_PLAYER(gPlayState);
+    NativeFinCombatTest(gPlayState,baseline,result);result<<"}";result.close();
+    mmvr::SetNativeTestTracking(false);sPlayerControlInput=oldInput;
+    Ship::Context::GetRawInstance()->GetWindow()->Close();
+   }
+   return pad;
+  }
+  if(std::getenv("MMVR_HEAD_AIM_TEST")){if(playTicks==60)NativeHeadAimTest(gPlayState);return pad;}
+  if(std::getenv("MMVR_ENCOUNTER_TEST"))return NativeEncounterAudit(gPlayState,playTicks);
+  if(std::getenv("MMVR_SCENE_RESOURCE_AUDIT")){if(playTicks==60)NativeSceneResourceAudit();return pad;}
+  if(std::getenv("MMVR_MESSAGE_DECODE_TEST") || std::getenv("MMVR_MESSAGE_PAGES_TEST")){if(playTicks==60)NativeMessageDecodeTest(gPlayState);return pad;}
+  if(std::getenv("MMVR_MESSAGE_LOOKUP_TEST")){if(playTicks==60)NativeMessageLookupTest(gPlayState);return pad;}
+  if(std::getenv("MMVR_DAMAGE_MATRIX_TEST")){if(playTicks==60)NativeDamageMatrixTest(gPlayState);return pad;}
+  if(std::getenv("MMVR_POTION_SHOP_TEST"))return NativePotionShopLifecycle(gPlayState,playTicks);
   if(std::getenv("MMVR_KAFEI_DRAW_TEST"))return NativeKafeiDrawLifecycle(gPlayState,playTicks);
   if(std::getenv("MMVR_FORM_ABILITIES_TEST")) {
    if(playTicks==60) {
@@ -214,6 +266,7 @@ static mmvr::Pad NativeTestInput(){
   if(const char* profile=std::getenv("MMVR_PERFORMANCE_TEST");profile&&std::string(profile)=="1")return NativePerformanceTour(gPlayState,playTicks);
   if(const char* flower=std::getenv("MMVR_FLOWER_TEST");flower&&std::string(flower)=="1")return NativeFlowerLifecycle(gPlayState,playTicks);
   if(const char* town=std::getenv("MMVR_TOWN_TEST");town&&std::string(town)=="1")return NativeTownTest(gPlayState,playTicks);
+  if(std::getenv("MMVR_THIRD_PERSON_TEST")) return NativeThirdPersonLifecycle(gPlayState,playTicks);
   if(const char* lifecycle=std::getenv("MMVR_LIFECYCLE_TEST");lifecycle&&std::string(lifecycle)=="1")return NativeFormLifecycle(gPlayState,playTicks);
   if(const char* roomTest=std::getenv("MMVR_DEBUG_TEST");roomTest&&std::string(roomTest)=="1"){
    if(playTicks==1&&!MMVR_DebugRoomActive(gPlayState)){
@@ -252,7 +305,12 @@ static mmvr::Pad NativeTestInput(){
   if(playTicks>310){log.flush();Ship::Context::GetRawInstance()->GetWindow()->Close();}
  }else if(std::getenv("MMVR_PERFORMANCE_INTERACTIVE")&&gSaveContext.gameMode==GAMEMODE_NORMAL)return mmvr::ConsumePad();
  else if(tick%20==1)pad.buttons=BTN_A;
- if(tick>900){log.flush();Ship::Context::GetRawInstance()->GetWindow()->Close();}
+ // A scripted transition may temporarily leave PlayState after frame 900.
+ // Do not let the unrelated generic smoke timeout terminate that transition.
+ const unsigned terminalLimit=std::getenv("MMVR_SCRIPT_TEST")?65000u:900u;
+ if(std::getenv("MMVR_SCRIPT_TEST") && tick%60==0)
+  log<<"script-between-play tick="<<tick<<" gameMode="<<int(gSaveContext.gameMode)<<"\n"<<std::flush;
+ if(tick>terminalLimit){log.flush();Ship::Context::GetRawInstance()->GetWindow()->Close();}
  return pad;
 }
 

@@ -562,6 +562,8 @@ int main(){
     }
     for(const auto& form:mmvr::FormProfiles) {
       mmvr::Settings heightSettings;
+      heightSettings.values[size_t(mmvr::Setting::ModelFormHeight)] = 0.f;
+      check(heightSettings.Get(mmvr::Setting::ModelFormHeight) == 1.f);
       const auto nominal=mmvr::SettingDefinitions[size_t(form.eyeHeight)].initial;
       check(close(mmvr::AdjustedEyeHeight(heightSettings,form.eyeHeight,nominal-3),nominal-3));
       heightSettings.Set(form.eyeHeight,nominal+1);
@@ -1218,6 +1220,20 @@ int main(){
         for(bool mode:{false,true})check(mmvr::ResolveSceneView(f,mode)==mmvr::SceneView::Player);
         f.areaIntroduction=false;f.puzzleReveal=true;
         for(bool mode:{false,true})check(mmvr::ResolveSceneView(f,mode)==mmvr::SceneView::Player);
+    }
+    check(mmvr::ThirdPersonButtons(1, 0, 0, true) == 0x10);
+    check(mmvr::ThirdPersonButtons(0, 1, 0, true) == 0x2000);
+    check(mmvr::ThirdPersonButtons(0, 0, 1, true) == 4);
+    check(mmvr::ThirdPersonButtons(1, 1, 1, false) == 0);
+    check(mmvr::Settings{}.Get(mmvr::Setting::ThirdPersonToggleLockOn) == 0);
+    {
+        auto socket=mmvr::YawPose(0,3,4,5), head=mmvr::YawPose(1.57079632679f);
+        auto aimed=mmvr::HeadAimedPose(socket,head,true);
+        check(aimed.m[3][0]==3 && aimed.m[3][1]==4 && aimed.m[3][2]==5);
+        check(std::abs(aimed.m[2][0]-head.m[2][0])<.0001f);
+        check(mmvr::HeadAimedPose(socket,head,false).m[2][2]==socket.m[2][2]);
+        check(mmvr::HeadAimedPose(socket,mmvr::Matrix{},true).m[2][2]==socket.m[2][2]);
+        check(mmvr::Settings{}.Get(mmvr::Setting::HeadItemAim)==0);
     }
     ArmRunChecks();
     StateTrackingChecks();

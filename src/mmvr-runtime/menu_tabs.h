@@ -1,6 +1,7 @@
 #pragma once
 #include "native_menu_input.h"
 #include "settings.h"
+#include "updater.h"
 #include "forms.h"
 #include "mods.h"
 #include "control_tutorial.h"
@@ -20,7 +21,12 @@ inline constexpr int AssignmentFirst = int(Setting::Count), ResetSettingsRow = A
                      SkipTwoHoursRow = SaveStateFirstRow + 6,
                      TutorialFirstRow = SkipTwoHoursRow + 1,
                      NativeOptionsRow = TutorialFirstRow + ControlTutorialCount,
-                     MenuRows = NativeOptionsRow + 1;
+                     DiagnosticExportRow = NativeOptionsRow + 1,
+                     SetupGuideRow = NativeOptionsRow + 2,
+                     ReleaseNotesFirstRow = NativeOptionsRow + 3,
+                     ReleaseNotesCount = 8,
+                     MenuRows = ReleaseNotesFirstRow + ReleaseNotesCount;
+inline bool ReleaseNotesRow(int row) { return row >= ReleaseNotesFirstRow && row < MenuRows; }
 inline bool TutorialRow(int row) { return row >= TutorialFirstRow && row < NativeOptionsRow; }
 inline bool ExactStateRow(int row) { return row >= SaveStateFirstRow && row < SaveStateFirstRow + 6; }
 enum MenuTab {
@@ -69,6 +75,8 @@ inline constexpr MenuSection MenuSections[] = {
     { SystemTab, "Save states", false },
     { ControlsTab, "How to play tutorial (scroll to read)", false },
     { NativeTab, "2Ship options", false },
+    { ViewTab, "World scale", false },
+    { SystemTab, "v0.2 - World Scale and Hotfix Update", false },
 };
 inline constexpr int MenuSectionCount = sizeof(MenuSections) / sizeof(MenuSections[0]);
 struct MenuEntry {
@@ -76,6 +84,23 @@ struct MenuEntry {
 };
 // Explicit presentation order is independent of persistent setting IDs.
 inline constexpr MenuEntry OrderedMenu[] = {
+    { ReleaseNotesFirstRow + 0, 39 },
+    { ReleaseNotesFirstRow + 1, 39 },
+    { ReleaseNotesFirstRow + 2, 39 },
+    { ReleaseNotesFirstRow + 3, 39 },
+    { ReleaseNotesFirstRow + 4, 39 },
+    { ReleaseNotesFirstRow + 5, 39 },
+    { ReleaseNotesFirstRow + 6, 39 },
+    { ReleaseNotesFirstRow + 7, 39 },
+
+    { int(Setting::WorldScaleCalibration), 38 },
+    { int(Setting::StandingEyeHeight), 38 },
+    { int(Setting::HumanWorldSize), 38 },
+    { int(Setting::DekuWorldSize), 38 },
+    { int(Setting::GoronWorldSize), 38 },
+    { int(Setting::ZoraWorldSize), 38 },
+    { int(Setting::DeityWorldSize), 38 },
+
     { int(Setting::HideFairy), 31 },
     { int(Setting::HideFairyArrow), 31 },
     { int(Setting::MuteFairy), 31 },
@@ -117,6 +142,8 @@ inline constexpr MenuEntry OrderedMenu[] = {
     { int(Setting::RightYaw), 6 },
     { int(Setting::RightRoll), 6 },
     { int(Setting::ToggleLockOn), 7 },
+    { int(Setting::ThirdPersonToggleLockOn), 7 },
+    { int(Setting::ThirdPersonOriginalControls), 7 },
     { int(Setting::TriggerSpinTurn), 7 },
     { int(Setting::DisableButtonMelee), 7 },
     { int(Setting::DisableHitStop), 7 },
@@ -172,6 +199,7 @@ inline constexpr MenuEntry OrderedMenu[] = {
     { int(Setting::ShoulderHolster), 13 },
     { int(Setting::AlwaysSwordTrails), 13 },
     { int(Setting::ItemSmoothing), 13 },
+    { int(Setting::HeadItemAim), 14 },
     { int(Setting::BowReticle), 14 },
     { int(Setting::BetaReticle), 14 },
     { int(Setting::HookshotReticle), 14 },
@@ -243,6 +271,9 @@ inline constexpr MenuEntry OrderedMenu[] = {
     { RefreshModsRow, 34 },
     { int(Setting::HapticStrength), 22 },
     { int(Setting::PauseOnFocusLoss), 22 },
+    { int(Setting::CheckUpdatesOnLaunch), 23 },
+    { DiagnosticExportRow, 24 },
+    { SetupGuideRow, 22 },
     { CheckUpdateRow, 23 },
     { InstallUpdateRow, 23 },
     { int(Setting::DebugRoomSpawn), 33 },
@@ -309,6 +340,11 @@ inline constexpr MenuEntry OrderedMenu[] = {
     { TutorialFirstRow + 39, 36 },
     { TutorialFirstRow + 40, 36 },
     { TutorialFirstRow + 41, 36 },
+    { TutorialFirstRow + 42, 36 },
+    { TutorialFirstRow + 43, 36 },
+    { TutorialFirstRow + 44, 36 },
+    { TutorialFirstRow + 45, 36 },
+    { TutorialFirstRow + 46, 36 },
     { NativeOptionsRow, 37 },
 
 };
@@ -421,6 +457,7 @@ struct MenuState {
             first = row - MenuVisibleRows + 1;
     }
     void CollapseAll() {
+        confirmUpdateInstall = false;
         ++nativeSession;
         nativeInput = {};
         nativeCloseRequested = false;

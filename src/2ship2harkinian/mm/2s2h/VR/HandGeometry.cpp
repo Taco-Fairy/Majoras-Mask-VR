@@ -170,11 +170,12 @@ mmvr::TrackingFrame ResolveHandGeometry(PlayState* play, Player* player,
         mmvr::HandPoint palm{};
         for(int k=0;k<3;++k)palm[k]=model.m[3][k]+275.f*model.m[1][k]-target[k];
         target=mmvr::HandAdd(target,palm);controller=mmvr::HandAdd(controller,palm);
-        float radius=(player->transformation==PLAYER_FORM_GORON?6.f:3.5f)*mmvr::GetSettings().Get(mmvr::Setting::HandScale);
+        float radius=(player->transformation==PLAYER_FORM_GORON?6.f:3.5f)*mmvr::GetSettings().Get(mmvr::Setting::HandScale)*raw.trackingScale;
         auto query=[&](mmvr::HandPoint point,float r,mmvr::HandContact& hit) {
             return WorldContact(play->colCtx,player,point,r,hit)||PropContact(play,player,point,r,hit);
         };
-        auto resolved=hands[h].Update(target,controller,radius,query);
+        auto resolved=hands[h].Update(target,controller,radius,query,
+            mmvr::HandCollision::RecoveryDistance * raw.trackingScale);
         auto worldDelta=mmvr::HandSub(resolved,target);
         mmvr::HandPoint local{},xrDelta{};
         for(int c=0;c<3;++c)for(int r=0;r<3;++r)local[c]+=worldDelta[r]*inverse.m[r][c]/40.f;

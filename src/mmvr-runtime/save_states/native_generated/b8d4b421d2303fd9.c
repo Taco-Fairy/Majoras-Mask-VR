@@ -1,2 +1,2 @@
-#include "../../../2ship2harkinian/mm/src/overlays/actors/ovl_En_Kaizoku/z_en_kaizoku.c"
+#include "../native_locals/b8d4b421d2303fd9.inc"
 #include "b8d4b421d2303fd9.inc"

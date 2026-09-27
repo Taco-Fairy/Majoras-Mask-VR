@@ -5,6 +5,7 @@
  */
 
 #include "../../../2ship2harkinian/mm/src/overlays/actors/ovl_Bg_Dy_Yoseizo/z_bg_dy_yoseizo.h"
+#include "2s2h/VR/ScriptedMelee.h"
 #include "overlays/actors/ovl_Demo_Effect/z_demo_effect.h"
 #include "2s2h/GameInteractor/GameInteractor.h"
 
@@ -114,7 +115,7 @@ typedef enum GreatFairyEffectTrajectory {
  * @param trajectoryType use the `GreatFairyEffectTrajectory` enum.
  * @param count number to spawn.
  */
-static Color_RGB8 mmvr_local_33ed1694c8e60d2f[] = {
+static Color_RGB8 mmvr_local_4687120a034c1c25[] = {
         { 255, 235, 220 }, // Magic
         { 255, 220, 220 }, // Power
         { 220, 255, 220 }, // Wisdom
@@ -122,7 +123,7 @@ static Color_RGB8 mmvr_local_33ed1694c8e60d2f[] = {
         { 255, 255, 200 }, // Kindness
         { 255, 255, 170 }, // GREAT_FAIRY_EFFECT_TRAJECTORY_CONVERGE_ON_PLAYER
     };
-static Color_RGB8 mmvr_local_a5221c14cb8d49b6[] = {
+static Color_RGB8 mmvr_local_3e2a68534b32fef8[] = {
         { 255, 150, 0 },   // Magic
         { 255, 0, 0 },     // Power
         { 0, 255, 0 },     // Wisdom
@@ -199,12 +200,12 @@ void BgDyYoseizo_SpawnEffects(BgDyYoseizo* this, s16 trajectoryType, s32 count) 
                 break;
         }
 
-        primColor.r = mmvr_local_33ed1694c8e60d2f[effectType].r;
-        primColor.g = mmvr_local_33ed1694c8e60d2f[effectType].g;
-        primColor.b = mmvr_local_33ed1694c8e60d2f[effectType].b;
-        envColor.r = mmvr_local_a5221c14cb8d49b6[effectType].r;
-        envColor.g = mmvr_local_a5221c14cb8d49b6[effectType].g;
-        envColor.b = mmvr_local_a5221c14cb8d49b6[effectType].b;
+        primColor.r = mmvr_local_4687120a034c1c25[effectType].r;
+        primColor.g = mmvr_local_4687120a034c1c25[effectType].g;
+        primColor.b = mmvr_local_4687120a034c1c25[effectType].b;
+        envColor.r = mmvr_local_3e2a68534b32fef8[effectType].r;
+        envColor.g = mmvr_local_3e2a68534b32fef8[effectType].g;
+        envColor.b = mmvr_local_3e2a68534b32fef8[effectType].b;
 
         BgDyYoseizo_SpawnEffect(this, &pos, &velocity, &accel, &primColor, &envColor, scale, life, effectType);
     }
@@ -471,8 +472,8 @@ void BgDyYoseizo_TrainPlayer(BgDyYoseizo* this, PlayState* play) {
                     CutsceneManager_Queue(this->actor.csId);
                 }
             }
-        } else if (!(this->unk302 & 2) && (player->meleeWeaponState != 0)) {
-            if (player->meleeWeaponAnimation >= PLAYER_MWA_SPIN_ATTACK_1H) {
+        } else if (!(this->unk302 & 2) && (MMVR_ScriptedMeleeState(player) != 0)) {
+            if (MMVR_ScriptedMeleeAnimation(player) >= PLAYER_MWA_SPIN_ATTACK_1H) {
                 if (player->unk_B08 >= 0.85f) {
                     this->unk302 |= 1;
                     this->unk302 |= 2;
@@ -577,7 +578,7 @@ typedef enum GreatFairyAppearance {
     /* 4 */ GREAT_FAIRY_APPEARANCE_KINDNESS // Yellow
 } GreatFairyAppearance;
 
-static TexturePtr mmvr_local_73a96deb9497c9fb[] = {
+static TexturePtr mmvr_local_8a2f2f90ff77ffe7[] = {
         gGreatFairyMouthClosedTex,
         gGreatFairyMouthOpenTex,
     };
@@ -616,7 +617,7 @@ void BgDyYoseizo_Draw(Actor* thisx, PlayState* play) {
     {
         Gfx* gfx = POLY_OPA_DISP;
         s16 index = this->mouthIndex;
-        TexturePtr mouthTex = Lib_SegmentedToVirtual(mmvr_local_73a96deb9497c9fb[index]);
+        TexturePtr mouthTex = Lib_SegmentedToVirtual(mmvr_local_8a2f2f90ff77ffe7[index]);
 
         gSPSegment(&gfx[0], 0x09, mouthTex);
         POLY_OPA_DISP = &gfx[1];
@@ -730,7 +731,7 @@ void BgDyYoseizo_UpdateEffects(BgDyYoseizo* this, PlayState* play) {
     }
 }
 
-static f32 mmvr_local_c90ce9cc17c6a10f[] = {
+static f32 mmvr_local_d370cdb916ee763a[] = {
         1.0f, 1.1f, 1.15f, 1.1f, 1.0f, 0.9f, 0.85f, 0.9f,
     };
 void BgDyYoseizo_DrawEffects(BgDyYoseizo* this, PlayState* play) {
@@ -738,7 +739,7 @@ void BgDyYoseizo_DrawEffects(BgDyYoseizo* this, PlayState* play) {
     GraphicsContext* gfxCtx = play->state.gfxCtx;
     u8 setup = 0;
     BgDyYoseizoEffect* effect = this->effects;
-    f32 stretchFactor = mmvr_local_c90ce9cc17c6a10f[play->gameplayFrames % ARRAY_COUNT(mmvr_local_c90ce9cc17c6a10f)];
+    f32 stretchFactor = mmvr_local_d370cdb916ee763a[play->gameplayFrames % ARRAY_COUNT(mmvr_local_d370cdb916ee763a)];
     s16 i;
 
     OPEN_DISPS(gfxCtx);

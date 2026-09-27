@@ -5,6 +5,7 @@
  */
 
 #include "z_en_maruta.h"
+#include "2s2h/VR/ScriptedMelee.h"
 #include "overlays/actors/ovl_En_Kendo_Js/z_en_kendo_js.h"
 #include "objects/object_maruta/object_maruta.h"
 
@@ -359,7 +360,7 @@ void func_80B37590(EnMaruta* this, PlayState* play) {
             break;
 
         case 4:
-            if (player->meleeWeaponAnimation == PLAYER_MWA_LEFT_SLASH_1H) {
+            if (MMVR_ScriptedMeleeAnimation(player) == PLAYER_MWA_LEFT_SLASH_1H) {
                 sp48 = D_80B3876C;
             } else {
                 sp48 = D_80B38778;
@@ -368,7 +369,7 @@ void func_80B37590(EnMaruta* this, PlayState* play) {
             break;
 
         case 5:
-            if (player->meleeWeaponAnimation == PLAYER_MWA_FORWARD_SLASH_1H) {
+            if (MMVR_ScriptedMeleeAnimation(player) == PLAYER_MWA_FORWARD_SLASH_1H) {
                 sp48 = D_80B38784;
             } else {
                 sp48 = D_80B38790;
@@ -377,7 +378,7 @@ void func_80B37590(EnMaruta* this, PlayState* play) {
             break;
 
         case 6:
-            if (player->meleeWeaponAnimation == PLAYER_MWA_FORWARD_SLASH_1H) {
+            if (MMVR_ScriptedMeleeAnimation(player) == PLAYER_MWA_FORWARD_SLASH_1H) {
                 sp48 = D_80B3879C;
             } else {
                 sp48 = D_80B387A8;
@@ -386,7 +387,7 @@ void func_80B37590(EnMaruta* this, PlayState* play) {
             break;
 
         case 8:
-            if (player->meleeWeaponAnimation == PLAYER_MWA_RIGHT_SLASH_1H) {
+            if (MMVR_ScriptedMeleeAnimation(player) == PLAYER_MWA_RIGHT_SLASH_1H) {
                 sp48 = D_80B387B4;
             } else {
                 sp48 = D_80B387C0;
@@ -489,11 +490,11 @@ s32 func_80B37B78(EnMaruta* this, PlayState* play) {
     s16 temp_v1 = BINANG_SUB(this->actor.yawTowardsPlayer, 0x8000);
 
     temp_v1 = BINANG_SUB(temp_v1, player->actor.shape.rot.y);
-    if ((ABS_ALT(temp_v1) < 0x1555) || ((player->meleeWeaponState != PLAYER_MELEE_WEAPON_STATE_0) &&
-                                        ((player->meleeWeaponAnimation == PLAYER_MWA_RIGHT_SLASH_1H) ||
-                                         (player->meleeWeaponAnimation == PLAYER_MWA_RIGHT_COMBO_1H) ||
-                                         (player->meleeWeaponAnimation == PLAYER_MWA_SPIN_ATTACK_1H) ||
-                                         (player->meleeWeaponAnimation == PLAYER_MWA_BIG_SPIN_1H)))) {
+    if ((ABS_ALT(temp_v1) < 0x1555) || ((MMVR_ScriptedMeleeState(player) != PLAYER_MELEE_WEAPON_STATE_0) &&
+                                        ((MMVR_ScriptedMeleeAnimation(player) == PLAYER_MWA_RIGHT_SLASH_1H) ||
+                                         (MMVR_ScriptedMeleeAnimation(player) == PLAYER_MWA_RIGHT_COMBO_1H) ||
+                                         (MMVR_ScriptedMeleeAnimation(player) == PLAYER_MWA_SPIN_ATTACK_1H) ||
+                                         (MMVR_ScriptedMeleeAnimation(player) == PLAYER_MWA_BIG_SPIN_1H)))) {
         return true;
     }
     return false;
@@ -525,17 +526,17 @@ void func_80B37CA0(EnMaruta* this, PlayState* play) {
             this->collider.base.acFlags &= ~AC_HIT;
             Actor_PlaySfx(&this->actor, NA_SE_IT_SWORD_STRIKE);
 
-            if (D_80B386CC[player->meleeWeaponAnimation] != 0) {
-                s32 temp = D_80B386CC[player->meleeWeaponAnimation] + 1;
+            if (D_80B386CC[MMVR_ScriptedMeleeAnimation(player)] != 0) {
+                s32 temp = D_80B386CC[MMVR_ScriptedMeleeAnimation(player)] + 1;
 
                 temp = (temp << 8) & 0xFF00;
-                this->unk_210 = D_80B386CC[player->meleeWeaponAnimation];
+                this->unk_210 = D_80B386CC[MMVR_ScriptedMeleeAnimation(player)];
                 Actor_SpawnAsChild(&play->actorCtx, &this->actor, play, ACTOR_EN_MARUTA, this->actor.world.pos.x,
                                    this->actor.world.pos.y, this->actor.world.pos.z, 0, this->actor.shape.rot.y, 0,
                                    temp);
                 this->actor.world.rot.y = this->actor.shape.rot.y;
                 if ((this->unk_210 == 5) ||
-                    ((this->unk_210 == 7) && (player->meleeWeaponAnimation == PLAYER_MWA_STAB_1H))) {
+                    ((this->unk_210 == 7) && (MMVR_ScriptedMeleeAnimation(player) == PLAYER_MWA_STAB_1H))) {
                     func_80B37590(this, play);
                 } else {
                     func_80B374B8(this);

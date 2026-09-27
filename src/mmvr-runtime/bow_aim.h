@@ -1,6 +1,14 @@
 #pragma once
 #include "first_person.h"
 namespace mmvr {
+// Change direction only: projectiles still originate at the held item's socket.
+inline Matrix HeadAimedPose(Matrix socket, const Matrix& head, bool enabled) {
+    if (enabled && head.m[3][3] != 0)
+        for (int row=0; row<3; ++row)
+            for (int col=0; col<3; ++col) socket.m[row][col]=head.m[row][col];
+    return socket;
+}
+
 inline XrVector3f CalibrateBowAim(XrVector3f direction, float yawDegrees, float pitchDegrees) {
     const float yaw = std::atan2(direction.x, direction.z) + yawDegrees * .01745329252f;
     const float pitch =
@@ -13,7 +21,7 @@ constexpr float ArrowTipX = -396.f, ArrowNockX = 2001.f, ArrowLength = (ArrowNoc
 inline float LimitedArrowDraw(float worldDistance) {
     return std::clamp(worldDistance, 0.f, ArrowLength - 2.f);
 }
-inline Matrix ArrowPose(XrVector3f direction, XrVector3f nock) {
+inline Matrix ArrowPose(XrVector3f direction, XrVector3f nock, float trackingScale = 1.f) {
     auto m = YawPose(0);
     float horizontal = std::hypot(direction.x, direction.z);
     XrVector3f side = horizontal > .00001f ? XrVector3f{ direction.z / horizontal, 0, -direction.x / horizontal }
@@ -21,10 +29,10 @@ inline Matrix ArrowPose(XrVector3f direction, XrVector3f nock) {
     XrVector3f up{ side.y * direction.z - side.z * direction.y, side.z * direction.x - side.x * direction.z,
                    side.x * direction.y - side.y * direction.x };
     for (int k = 0; k < 3; ++k) {
-        m.m[0][k] = -(&direction.x)[k] * .01f;
-        m.m[1][k] = (&up.x)[k] * .01f;
-        m.m[2][k] = -(&side.x)[k] * .01f;
-        m.m[3][k] = (&nock.x)[k] + (&direction.x)[k] * ArrowNockX * .01f;
+        m.m[0][k] = -(&direction.x)[k] * (.01f * trackingScale);
+        m.m[1][k] = (&up.x)[k] * (.01f * trackingScale);
+        m.m[2][k] = -(&side.x)[k] * (.01f * trackingScale);
+        m.m[3][k] = (&nock.x)[k] + (&direction.x)[k] * ArrowNockX * (.01f * trackingScale);
     }
     return m;
 }

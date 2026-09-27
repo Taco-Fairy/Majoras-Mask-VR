@@ -10,6 +10,9 @@
   <activity android:name=".SetupActivity" android:exported="true" android:launchMode="singleTask" android:screenOrientation="landscape">
    <intent-filter><action android:name="android.intent.action.MAIN" /><category android:name="android.intent.category.LAUNCHER" /></intent-filter>
   </activity>
+  <activity android:name=".RecoveryActivity" android:exported="true" android:label="MMVR - Recover settings">
+   <intent-filter><action android:name="android.intent.action.MAIN" /><category android:name="android.intent.category.LAUNCHER" /></intent-filter>
+  </activity>
   <activity android:name=".GameActivity" android:exported="false" android:launchMode="singleTask" android:screenOrientation="landscape" android:configChanges="density|keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|navigation" android:hardwareAccelerated="true" android:resizeableActivity="false">
    <intent-filter><action android:name="android.intent.action.MAIN" /><category android:name="org.khronos.openxr.intent.category.IMMERSIVE_HMD" /></intent-filter>
   </activity>

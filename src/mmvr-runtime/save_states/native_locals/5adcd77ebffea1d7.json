@@ -1,0 +1,6 @@
+{
+  "source": "overlays/actors/ovl_Obj_Kendo_Kanban/z_obj_kendo_kanban.c",
+  "include": "5adcd77ebffea1d7.inc",
+  "variables": [],
+  "sourceSha256": "c2d2c167e8f8daee2cb1c58b52109cfa942b4fe891508b4c77d297fff0082982"
+}

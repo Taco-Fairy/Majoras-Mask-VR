@@ -1,7 +1,9 @@
-# Majora's Mask VR — standalone Quest player guide
+# Majora's Mask VR â€” standalone Quest player guide
 Full Motion Majora's Mask VR mod, made by Full Dive Games.
 
 Disclaimer: This is made using Vibe coding. I make no money from this mod, and I've put a lot of time and testing into making it polished, fun, and fully playable.
+
+**v0.2 - World Scale and Hotfix Update:** World scale and floor calibration, correct hand/item sizing, startup setup and update checks, recovery/diagnostics, save-state safeguards, and physical sword fixes. Release notes are also in the VR menu under System.
 
 ## First installation
 
@@ -109,7 +111,7 @@ The headset's system button stays reserved for its operating system. **Controls 
 
 **Goron:** with hands otherwise free, tap B to ready physical fists; tap again to stow. Deliberate punches produce attacks. Offhand grip invokes the native curl/defense action; use native action prompts for rolling and pounding. While rolling, B retains the native ball-jump role. Powder kegs and heavy lifting still require eligibility.
 
-**Zora:** physical fin strikes work with deliberate hand motion. Hold B to aim the fin boomerangs and release to throw; aiming follows headset direction. Targeting ends automatically when both fins return to your hands; press Y again to lock on. Offhand grip presents the shield. Swimming and the initial swim dash are headset-directed; use native swim/dive prompts and the movement stick. **Forms > Form effects and aiming** contains swimming pitch limit and swimming speed (50–200%). Attached fin size is visual and does not change strike reach.
+**Zora:** physical fin strikes work with deliberate hand motion. Hold B to aim the fin boomerangs and release to throw; aiming follows headset direction. Targeting ends automatically when both fins return to your hands; press Y again to lock on. Offhand grip presents the shield. Swimming and the initial swim dash are headset-directed; use native swim/dive prompts and the movement stick. **Forms > Form effects and aiming** contains swimming pitch limit and swimming speed (50â€“200%). Attached fin size is visual and does not change strike reach.
 
 **Kafei quest:** while you control Kafei, his hands follow your controllers and you cannot equip or use Link's items. The fairy is hidden while Kafei is active and returns when control switches back to Link.
 
@@ -174,3 +176,30 @@ Mods are not fully tested. One texture pack has been tested and works; this does
 ### Climbing out of water
 
 With physical climbing enabled, press a trigger against a climbable surface while swimming at the surface or underwater. A held physical climb takes priority over swimming. Release to resume normal water behavior, or climb onto dry land.
+
+### Third-person and theater controls
+
+With VR controllers, use the left trigger to shield, hold the left grip to lock on, and press the right trigger to use your selected item or mask. Third-person toggle lock-on is a separate option in Combat and is off by default. Original third-person VR controls replaces the item wheel with right-stick C-button selection. These modes show the original C-button HUD. A regular gamepad keeps the native 2Ship button layout. Transformations play their original animation on the theater screen. First-person controls are unchanged.
+
+For first-person play, Items also offers **Head aim for bow and hookshot**. It is off by default. When enabled, shots follow your headset direction; the item stays in your hand. Physical bow drawing still works the same way.
+
+### Optional standing world scale
+
+In **VR settings > View > World scale (experimental)**, turn on **Standing world-scale calibration**. It is off by default. Recenter in your normal seated or standing playing position. The runtime floor is used when available; otherwise set **Fallback floor-to-eye height** to the distance from the floor to your eyes in centimetres (not the top of your head). At 100% world size, each form uses its normal standing eye height while scaling the world and controller movement together.
+
+Use the separate Human, Deku, Goron, Zora and Fierce Deity world-size sliders to fine-tune each form. Increasing a value makes the world look larger and reduces your reach; decreasing it does the opposite. Your existing form-height adjustments still work. This affects first-person play, not theater mode or the VR settings panel. Turn calibration off to return to the normal scale. Hand collisions still apply; calibration does not remove them.
+
+### Setup, recovery and reports
+
+The first launch shows a short setup guide. Stand or sit comfortably and recenter. Choose your dominant hand under Hands. Controls contains the full tutorial and button rebinding. You can reopen the guide under System > Session and files. Close settings to save changes. World scale is optional; measure floor to your eyes, not the top of your head. Hands and carried equipment follow that scale together.
+
+The game checks for updates once on launch by default. A newer version is shown in the VR menu; checking never installs automatically. You can turn launch checks off under System > Updates. Before installing, make an ordinary game save. Exact save states may not work after changing builds, platforms or mods. Incompatible states are rejected and kept; ordinary saves are the reliable way to continue after updating.
+
+System > Diagnostics and reset > Export diagnostic report writes `diagnostics/mmvr-report.json` in the game's files folder. It includes build, runtime, numeric VR settings, anonymous mod identifiers and recent error counts. It excludes saves, personal paths and raw logs. Review it before sharing it with a bug report. Describe where you were and what you did too.
+
+If the menu becomes unusable, close the game. On Windows, run **Recover VR settings.cmd** beside the game. On Quest, open **MMVR - Recover settings** from your app library and confirm. This resets VR settings on the next start while keeping saves and mods; a copy of the previous settings is retained. It does not change your system's OpenXR runtime.
+
+Update downloads are verified before installation. Windows keeps rollback files and restores them if applying an update fails. Android uses its package installer so a failed installation keeps the installed app. Neither method makes old save states compatible with a new build.
+
+### World scale and reaching the floor
+With world scale enabled (the default for new settings), recenter while sitting or standing in your normal playing position. If your VR runtime supplies a calibrated floor, the game uses your eye-to-floor distance at recenter for every form. It does not change your boundary. If the runtime has no floor, set **Fallback floor-to-eye height** to your seated or standing eye height above the floor, then recenter. The default 100% form scales align the physical floor with the character’s floor; custom form world-size percentages intentionally change that relationship. Hands and held equipment retain their physical size.

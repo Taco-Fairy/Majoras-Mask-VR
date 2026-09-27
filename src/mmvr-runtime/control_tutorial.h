@@ -7,6 +7,8 @@ inline constexpr ControlTutorialEntry ControlTutorial[] = {
     { "Your dominant hand", "Hands > Dominant hand swaps sword, items, wheel and shield.", "It does not swap menu sticks or physical buttons; Controls can rebind actions." },
     { "Walk, turn and run", "Left stick walks; right stick turns. Left stick click recenters.", "Alternate your arms while walking for a 20% ground-speed boost by default; adjust it in Forms." },
     { "Buttons and targeting", "A interacts/confirms or performs the displayed native action.", "Y toggles targeting; Combat can change this to hold targeting." },
+    { "Third-person / theater controls", "Left trigger shields; hold left grip to lock on. Right trigger uses the selected item or mask.", "Combat offers separate third-person toggle targeting; transformations use the theater screen." },
+    { "Original third-person controls", "Enable Original third-person VR controls to use right-stick C-buttons instead of the wheel.", "A regular gamepad keeps its native 2Ship controls and C-button HUD in third-person/theater." },
     { "Sword / form action / fairy", "B draws or stows equipment; hold B for supported form attacks.", "X answers the fairy. Controls offers optional double-tap sword draw." },
     { "Pause and settings", "Left menu button opens inventory; triggers change its pages.", "Right stick click opens VR settings, including on the title screen." },
     { "Assign your item wheel", "Browse inventory with the left stick and highlight an owned item.", "Push the right stick toward a wheel slot, then center it to assign." },
@@ -18,7 +20,7 @@ inline constexpr ControlTutorialEntry ControlTutorial[] = {
     { "Spin comfort and holster", "Combat can disable the triggered 360-degree camera turn.", "Empty hand/item slot: reach behind shoulder and trigger to holster." },
     { "Blocking", "Hold offhand grip; put your shield between you and the attack.", "Deku and Zora shields need physical placement too." },
     { "Bow and elemental arrows", "Select the bow or arrow type; the bow is held in your offhand.", "Hold dominant trigger near the string, pull back, release to shoot." },
-    { "Hookshot", "Point the equipped hookshot and press the dominant trigger.", "B puts it away. Only native hookable targets can pull you." },
+    { "Hookshot", "Point the equipped hookshot and press the dominant trigger.", "Items offers optional head aim for bow/hookshot; controller aim is the default." },
     { "Bombs, nuts and powder kegs", "Select, hold the dominant trigger to ready, then release to throw.", "Move your hand to throw; release gently to drop. Form rules apply." },
     { "Bombchus", "Hold trigger to ready one; release to place it.", "The placement reticle follows your headset direction." },
     { "Picking up and throwing", "Reach a permitted object with either free hand and press trigger.", "Hold to carry; release to drop or throw. Cuccos allow native gliding." },
@@ -44,7 +46,11 @@ inline constexpr ControlTutorialEntry ControlTutorial[] = {
     { "Climbing from water", "Grab a native climbable with a trigger, even while swimming.", "Pull onto land, or release to swim again." },
     { "Settings and rebinding", "A toggles switches, opens sections, or resets sliders to default.", "For bindings: select action, release inputs, press new input, confirm." },
     { "Escaping a grab", "Shake your controllers back and forth to struggle out of a ReDead grab.", "Repeated deliberate shakes help; the original buttons and stick still work." },
+    { "Floor-calibrated world scale", "View > World scale: enable, then recenter in your seated or standing play position.", "Tune each form world size. Larger worlds shorten reach. Off restores normal scale." },
     { "Preserving your preferences", "Close the settings menu to save; check for a storage-error message.", "Keep ordinary game saves too. VR settings apply across save files." },
+    { "Recovery and diagnostics", "System has the setup guide and a private-safe diagnostic report export.", "Close the game to use Recover VR settings on PC or the Quest recovery app." },
+    { "Updates and save states", "Launch checks only notify. Install needs confirmation and may invalidate states.", "Make an ordinary save before updating. Incompatible states are kept, not loaded." },
+
 };
 inline constexpr int ControlTutorialCount = sizeof(ControlTutorial) / sizeof(ControlTutorial[0]);
 }

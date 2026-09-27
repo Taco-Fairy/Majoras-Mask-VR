@@ -64,8 +64,8 @@ void UpdateMaskContext(PlayState* play) {
     if (player && observedForm != player->transformation) {
         observedForm = player->transformation;
         restoreSelection = currentSelection;
-        restoreEmptyHands = currentSelection == ITEM_NONE ||
-                            (currentSelection >= ITEM_MASK_DEKU && currentSelection <= ITEM_MASK_GIANT);
+        restoreEmptyHands = mmvr::FirstPersonSelected() && (currentSelection == ITEM_NONE ||
+                            (currentSelection >= ITEM_MASK_DEKU && currentSelection <= ITEM_MASK_GIANT));
     }
     if (restoreEmptyHands && currentSelection != restoreSelection) restoreEmptyHands = false;
     if (restoreEmptyHands && MaskAllowed(play) && !player->actor.init &&
@@ -217,7 +217,7 @@ mmvr::Matrix HeldMaskPose(const mmvr::TrackingFrame& frame, const mmvr::Matrix& 
     pose.m[3][1] = grip.m[3][1] * 40;
     pose.m[3][2] = (grip.m[3][2] - head.m[3][2]) * 40;
     pose = mmvr::Multiply(pose, view);
-    float scale = 40 * mmvr::GetSettings().Get(mmvr::Setting::MaskSize) / mask->height;
+    float scale = 40 * frame.trackingScale * mmvr::GetSettings().Get(mmvr::Setting::MaskSize) / mask->height;
     for (int row = 0; row < 3; ++row)
         for (int col = 0; col < 3; ++col)
             pose.m[row][col] *= scale;

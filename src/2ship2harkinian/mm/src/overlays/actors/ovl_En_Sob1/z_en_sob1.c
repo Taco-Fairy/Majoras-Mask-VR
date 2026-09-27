@@ -1697,6 +1697,10 @@ void EnSob1_ZoraShopkeeper_Draw(Actor* thisx, PlayState* play) {
     SkelAnime_DrawFlexOpa(play, this->skelAnime.skeleton, this->skelAnime.jointTable, this->skelAnime.dListCount,
                           EnSob1_ZoraShopkeeper_OverrideLimbDraw, NULL, &this->actor);
     for (i = 0; i < ARRAY_COUNT(this->items); i++) {
+        // Shelf actors may be absent when their spawn could not be satisfied.
+        if (this->items[i] == NULL) {
+            continue;
+        }
         this->items[i]->actor.scale.x = 0.2f;
         this->items[i]->actor.scale.y = 0.2f;
         this->items[i]->actor.scale.z = 0.2f;
@@ -1720,6 +1724,10 @@ void EnSob1_GoronShopkeeper_Draw(Actor* thisx, PlayState* play) {
     SkelAnime_DrawFlexOpa(play, this->skelAnime.skeleton, this->skelAnime.jointTable, this->skelAnime.dListCount, NULL,
                           NULL, &this->actor);
     for (i = 0; i < ARRAY_COUNT(this->items); i++) {
+        // Shelf actors may be absent when their spawn could not be satisfied.
+        if (this->items[i] == NULL) {
+            continue;
+        }
         this->items[i]->actor.scale.x = 0.2f;
         this->items[i]->actor.scale.y = 0.2f;
         this->items[i]->actor.scale.z = 0.2f;
@@ -1743,6 +1751,10 @@ void EnSob1_BombShopkeeper_Draw(Actor* thisx, PlayState* play) {
     SkelAnime_DrawFlexOpa(play, this->skelAnime.skeleton, this->skelAnime.jointTable, this->skelAnime.dListCount,
                           EnSob1_BombShopkeeper_OverrideLimbDraw, EnSob1_BombShopkeeper_PostLimbDraw, &this->actor);
     for (i = 0; i < ARRAY_COUNT(this->items); i++) {
+        // Shelf actors may be absent when their spawn could not be satisfied.
+        if (this->items[i] == NULL) {
+            continue;
+        }
         this->items[i]->actor.scale.x = 0.2f;
         this->items[i]->actor.scale.y = 0.2f;
         this->items[i]->actor.scale.z = 0.2f;

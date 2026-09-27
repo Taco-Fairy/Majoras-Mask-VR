@@ -3,103 +3,103 @@
   "include": "f74caf6665c61504.inc",
   "variables": [
     {
-      "name": "mmvr_local_168d3e3a5e052b3d",
+      "name": "mmvr_local_6209494744a1fb7f",
       "original": "sPrimColor",
-      "function": "EnKnight_SpawnDust",
-      "line": 1977,
-      "at": 73139
-    },
-    {
-      "name": "mmvr_local_db11987a5f595704",
-      "original": "sEnvColor",
       "function": "EnKnight_SpawnDust",
       "line": 1978,
-      "at": 73197
+      "at": 73175
     },
     {
-      "name": "mmvr_local_36bcb3f96b107ea9",
+      "name": "mmvr_local_6e9ff1ac221ebcdc",
+      "original": "sEnvColor",
+      "function": "EnKnight_SpawnDust",
+      "line": 1979,
+      "at": 73233
+    },
+    {
+      "name": "mmvr_local_6ce5de64e0980b91",
       "original": "sPrimColor",
       "function": "EnKnight_SpawnIceShards",
-      "line": 3181,
-      "at": 124101
+      "line": 3182,
+      "at": 124151
     },
     {
-      "name": "mmvr_local_ed7026e5ffea968e",
+      "name": "mmvr_local_8833ccf5bea762f5",
       "original": "sEnvColor",
       "function": "EnKnight_SpawnIceShards",
-      "line": 3182,
-      "at": 124162
+      "line": 3183,
+      "at": 124212
     },
     {
-      "name": "mmvr_local_f3ae9db91ad973a8",
+      "name": "mmvr_local_1a5d5644b21453c7",
       "original": "sAccel",
       "function": "EnKnight_SpawnIceShards",
-      "line": 3183,
-      "at": 124216
+      "line": 3184,
+      "at": 124266
     },
     {
-      "name": "mmvr_local_77c2953e46b0dcf7",
+      "name": "mmvr_local_ca9da9c18e102930",
       "original": "sFocusPosModelOffset",
-      "function": "EnKnight_PostLimbDraw",
-      "line": 4047,
-      "at": 160682
-    },
-    {
-      "name": "mmvr_local_a655d16d69bbec0f",
-      "original": "sShieldColliderModelOffset",
       "function": "EnKnight_PostLimbDraw",
       "line": 4048,
-      "at": 160747
+      "at": 160732
     },
     {
-      "name": "mmvr_local_c89aa98a237578ed",
-      "original": "sShieldParticlesModelOffset",
+      "name": "mmvr_local_65ad04c44b437bd7",
+      "original": "sShieldColliderModelOffset",
       "function": "EnKnight_PostLimbDraw",
       "line": 4049,
-      "at": 160818
+      "at": 160797
     },
     {
-      "name": "mmvr_local_3ac170682551bac6",
-      "original": "sSwordColliderModelOffset",
+      "name": "mmvr_local_01d70127c12beeb8",
+      "original": "sShieldParticlesModelOffset",
       "function": "EnKnight_PostLimbDraw",
       "line": 4050,
-      "at": 160893
+      "at": 160868
     },
     {
-      "name": "mmvr_local_773f99a523ac7884",
-      "original": "sLimbToBodyParts",
+      "name": "mmvr_local_b42c34fe6586f424",
+      "original": "sSwordColliderModelOffset",
       "function": "EnKnight_PostLimbDraw",
       "line": 4051,
-      "at": 160961
+      "at": 160943
     },
     {
-      "name": "mmvr_local_8114eca3953305d7",
+      "name": "mmvr_local_323a17c2d6f1b827",
+      "original": "sLimbToBodyParts",
+      "function": "EnKnight_PostLimbDraw",
+      "line": 4052,
+      "at": 161011
+    },
+    {
+      "name": "mmvr_local_a778eefa60d266d9",
       "original": "sBreathBaseModelOffset",
       "function": "EnKnight_PostLimbDraw",
-      "line": 4083,
-      "at": 161950
+      "line": 4084,
+      "at": 162000
     },
     {
-      "name": "mmvr_local_8a42aaf2c33fcbd0",
+      "name": "mmvr_local_27b425047471d4ca",
       "original": "sBodyCollider0ModelOffset",
       "function": "EnKnight_PostLimbDraw",
-      "line": 4084,
-      "at": 162019
+      "line": 4085,
+      "at": 162069
     },
     {
-      "name": "mmvr_local_2cb4cf83c81e736b",
+      "name": "mmvr_local_6335397781a43857",
       "original": "sBodyCollider1ModelOffset",
       "function": "EnKnight_PostLimbDraw",
-      "line": 4085,
-      "at": 162090
+      "line": 4086,
+      "at": 162140
     },
     {
-      "name": "mmvr_local_c6d32f7fc9e0068c",
+      "name": "mmvr_local_7713c8af7fb60c75",
       "original": "sFocusPosModelOffset",
       "function": "EnKnight_PostLimbDrawHead",
-      "line": 4132,
-      "at": 163967
+      "line": 4133,
+      "at": 164017
     }
   ],
-  "sourceSha256": "798006ade43a7eb26a2d6fac48f0b7a87639aec5019999397609f58a8690efe8"
+  "sourceSha256": "722a6ca62389ea665bc2a1965161ac2ca3c759ddab3d58caf85e35f0c3a2e3c8"
 }

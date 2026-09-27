@@ -5,6 +5,7 @@
  */
 
 #include "prevent_bss_reordering.h"
+#include "2s2h/VR/ScriptedMelee.h"
 #include "z_en_knight.h"
 #include "z64shrink_window.h"
 #include "overlays/actors/ovl_Mir_Ray3/z_mir_ray3.h"
@@ -3063,8 +3064,8 @@ void EnKnight_UpdateDamage(EnKnight* this, PlayState* play) {
         this->shieldCollider.elements[0].base.acElemFlags &= ~ACELEM_HIT;
         this->shieldingInvulnerabilityTimer = 5;
 
-        if ((player->meleeWeaponState != PLAYER_MWA_FORWARD_SLASH_1H) &&
-            (player->meleeWeaponAnimation >= PLAYER_MWA_SPIN_ATTACK_1H) && (this->shieldHitTimer == 0)) {
+        if ((MMVR_ScriptedMeleeState(player) != PLAYER_MWA_FORWARD_SLASH_1H) &&
+            (MMVR_ScriptedMeleeAnimation(player) >= PLAYER_MWA_SPIN_ATTACK_1H) && (this->shieldHitTimer == 0)) {
             Audio_PlaySfx(NA_SE_IT_SHIELD_REFLECT_SW);
             CollisionCheck_SpawnShieldParticlesMetal(play, &this->shieldParticlesPos);
             this->shieldHitTimer = 5;

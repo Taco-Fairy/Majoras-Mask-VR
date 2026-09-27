@@ -167,6 +167,22 @@ Snapshot Decode(std::span<const uint8_t> bytes, const Identity& expected) {
     if(result.identity!=expected)throw Error("Save state belongs to a different build, content set or platform");
     return result;
 }
+Identity Store::PeekIdentity(int slot) const {
+    std::ifstream file(Slot(slot), std::ios::binary);
+    if (!file) throw Error("Cannot open save-state slot");
+    Bytes prefix(24 + 3 * (4 + 4096));
+    file.read(reinterpret_cast<char*>(prefix.data()), prefix.size());
+    prefix.resize(size_t(file.gcount()));
+    Reader reader{prefix};
+    const auto magic=reader.Data(8);
+    if(!std::equal(magic.begin(),magic.end(),Magic)||reader.Number(4)!=Version)
+        throw Error("Unknown save-state format");
+    if(reader.Number(8)>MaxArchiveBytes)throw Error("State exceeds archive limit");
+    reader.Number(4); // Full checksum verification remains in Load.
+    Identity identity{reader.Text(),reader.Text(),reader.Text()};
+    Name(identity.build);Name(identity.assets);Name(identity.abi);
+    return identity;
+}
 Store::Store(std::filesystem::path root):directory(std::move(root)/"save-states") {}
 std::filesystem::path Store::Slot(int slot) const {
     if(slot<1||slot>3)throw Error("Save-state slot must be 1, 2 or 3");

@@ -5956,7 +5956,7 @@ void Interface_DrawItemButtons(PlayState* play) {
     gDPPipeSync(OVERLAY_DISP++);
 
 #ifdef MMVR_ENABLE
-    if (!MMVR_WideVisibility()) {
+    if (!MMVR_HudLayout()) {
 #endif
     // C-Left Button Color & Texture
     HudEditor_SetActiveElement(HUD_EDITOR_ELEMENT_C_LEFT);
@@ -6095,7 +6095,7 @@ void Interface_DrawItemButtons(PlayState* play) {
 
     // Empty C Button Arrows
 #ifdef MMVR_ENABLE
-    if (!MMVR_WideVisibility())
+    if (!MMVR_HudLayout())
 #endif
     for (temp = EQUIP_SLOT_C_LEFT; temp <= EQUIP_SLOT_C_RIGHT; temp++) {
         if (GET_CUR_FORM_BTN_ITEM(temp) > 0xF0) {
@@ -6311,7 +6311,7 @@ void Interface_DrawVRMaskIcon(PlayState* play) {
     s32 item = Player_GetCurMaskItemId(play);
     s16 x = sBCButtonXPositions[EQUIP_SLOT_B] - 24, y = sBCButtonYPositions[EQUIP_SLOT_B] + 4;
     s16 w = 20, h = 20, ds = (32 << 9) / 20, dt = (32 << 9) / 20;
-    if (!MMVR_WideVisibility() || CVarGetFloat("gVR.MaskStatus", 1) < .5f ||
+    if (!MMVR_HudLayout() || CVarGetFloat("gVR.MaskStatus", 1) < .5f ||
         item < ITEM_MASK_DEKU || item > ITEM_MASK_GIANT || IS_PAUSED(&play->pauseCtx)) return;
     OPEN_DISPS(play->state.gfxCtx);
     Gfx_SetupDL39_Overlay(play->state.gfxCtx);
@@ -9396,7 +9396,7 @@ void Interface_Draw(PlayState* play) {
 #endif
         }
 #ifdef MMVR_ENABLE
-        if (!MMVR_WideVisibility())
+        if (!MMVR_HudLayout())
 #endif
         Interface_DrawCButtonIcons(play);
 

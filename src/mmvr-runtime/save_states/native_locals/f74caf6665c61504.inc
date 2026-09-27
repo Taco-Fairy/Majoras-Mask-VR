@@ -5,6 +5,7 @@
  */
 
 #include "prevent_bss_reordering.h"
+#include "2s2h/VR/ScriptedMelee.h"
 #include "../../../2ship2harkinian/mm/src/overlays/actors/ovl_En_Knight/z_en_knight.h"
 #include "z64shrink_window.h"
 #include "overlays/actors/ovl_Mir_Ray3/z_mir_ray3.h"
@@ -1973,8 +1974,8 @@ void EnKnight_SetupIgosSitting(EnKnight* this, PlayState* play) {
     this->subAction = KNIGHT_SUB_ACTION_IGOS_SITTING_0;
 }
 
-static Color_RGBA8 mmvr_local_168d3e3a5e052b3d = { 60, 50, 20, 255 };
-static Color_RGBA8 mmvr_local_db11987a5f595704 = { 40, 30, 30, 255 };
+static Color_RGBA8 mmvr_local_6209494744a1fb7f = { 60, 50, 20, 255 };
+static Color_RGBA8 mmvr_local_6e9ff1ac221ebcdc = { 40, 30, 30, 255 };
 void EnKnight_SpawnDust(PlayState* play, u8 numEffects) {
     /* persistent local storage is declared above */
     /* persistent local storage is declared above */
@@ -1993,7 +1994,7 @@ void EnKnight_SpawnDust(PlayState* play, u8 numEffects) {
         pos.x = player->actor.world.pos.x + Rand_CenteredFloat(30.0f);
         pos.y = player->actor.world.pos.y + 20.0f + Rand_CenteredFloat(30.0f);
         pos.z = player->actor.world.pos.z + Rand_CenteredFloat(30.0f);
-        func_800B0EB0(play, &pos, &velocity, &accel, &mmvr_local_168d3e3a5e052b3d, &mmvr_local_db11987a5f595704, Rand_ZeroFloat(50.0f) + 100.0f, 10,
+        func_800B0EB0(play, &pos, &velocity, &accel, &mmvr_local_6209494744a1fb7f, &mmvr_local_6e9ff1ac221ebcdc, Rand_ZeroFloat(50.0f) + 100.0f, 10,
                       Rand_ZeroFloat(5.0f) + 14.0f);
     }
 }
@@ -3065,8 +3066,8 @@ void EnKnight_UpdateDamage(EnKnight* this, PlayState* play) {
         this->shieldCollider.elements[0].base.acElemFlags &= ~ACELEM_HIT;
         this->shieldingInvulnerabilityTimer = 5;
 
-        if ((player->meleeWeaponState != PLAYER_MWA_FORWARD_SLASH_1H) &&
-            (player->meleeWeaponAnimation >= PLAYER_MWA_SPIN_ATTACK_1H) && (this->shieldHitTimer == 0)) {
+        if ((MMVR_ScriptedMeleeState(player) != PLAYER_MWA_FORWARD_SLASH_1H) &&
+            (MMVR_ScriptedMeleeAnimation(player) >= PLAYER_MWA_SPIN_ATTACK_1H) && (this->shieldHitTimer == 0)) {
             Audio_PlaySfx(NA_SE_IT_SHIELD_REFLECT_SW);
             CollisionCheck_SpawnShieldParticlesMetal(play, &this->shieldParticlesPos);
             this->shieldHitTimer = 5;
@@ -3179,9 +3180,9 @@ void EnKnight_UpdateDamageFallenOver(EnKnight* this, PlayState* play) {
     }
 }
 
-static Color_RGBA8 mmvr_local_36bcb3f96b107ea9 = { 170, 255, 255, 255 };
-static Color_RGBA8 mmvr_local_ed7026e5ffea968e = { 200, 200, 255, 255 };
-static Vec3f mmvr_local_f3ae9db91ad973a8 = { 0.0f, -1.0f, 0.0f };
+static Color_RGBA8 mmvr_local_6ce5de64e0980b91 = { 170, 255, 255, 255 };
+static Color_RGBA8 mmvr_local_8833ccf5bea762f5 = { 200, 200, 255, 255 };
+static Vec3f mmvr_local_1a5d5644b21453c7 = { 0.0f, -1.0f, 0.0f };
 void EnKnight_SpawnIceShards(EnKnight* this, PlayState* play) {
     /* persistent local storage is declared above */
     /* persistent local storage is declared above */
@@ -3199,7 +3200,7 @@ void EnKnight_SpawnIceShards(EnKnight* this, PlayState* play) {
         pos.x = velocity.x + this->bodyPartsPos[i].x;
         pos.y = velocity.y + this->bodyPartsPos[i].y;
         pos.z = velocity.z + this->bodyPartsPos[i].z;
-        EffectSsEnIce_Spawn(play, &pos, Rand_ZeroFloat(0.5f) + 0.7f, &velocity, &mmvr_local_f3ae9db91ad973a8, &mmvr_local_36bcb3f96b107ea9, &mmvr_local_ed7026e5ffea968e, 30);
+        EffectSsEnIce_Spawn(play, &pos, Rand_ZeroFloat(0.5f) + 0.7f, &velocity, &mmvr_local_1a5d5644b21453c7, &mmvr_local_6ce5de64e0980b91, &mmvr_local_8833ccf5bea762f5, 30);
     }
 }
 
@@ -4048,11 +4049,11 @@ s32 EnKnight_OverrideLimbDraw(PlayState* play, s32 limbIndex, Gfx** dList, Vec3f
     return false;
 }
 
-static Vec3f mmvr_local_77c2953e46b0dcf7 = { 100.0f, 0.0f, 0.0f };
-static Vec3f mmvr_local_a655d16d69bbec0f = { 0.0f, 600.0f, 0.0f };
-static Vec3f mmvr_local_c89aa98a237578ed = { 0.0f, 600.0f, 1000.0f };
-static Vec3f mmvr_local_3ac170682551bac6 = { 1000.0f, 0.0f, 0.0f };
-static s8 mmvr_local_773f99a523ac7884[KNIGHT_LIMB_MAX + 1] = {
+static Vec3f mmvr_local_ca9da9c18e102930 = { 100.0f, 0.0f, 0.0f };
+static Vec3f mmvr_local_65ad04c44b437bd7 = { 0.0f, 600.0f, 0.0f };
+static Vec3f mmvr_local_01d70127c12beeb8 = { 0.0f, 600.0f, 1000.0f };
+static Vec3f mmvr_local_b42c34fe6586f424 = { 1000.0f, 0.0f, 0.0f };
+static s8 mmvr_local_323a17c2d6f1b827[KNIGHT_LIMB_MAX + 1] = {
         BODYPART_NONE,
         BODYPART_NONE,
         BODYPART_NONE,
@@ -4084,9 +4085,9 @@ static s8 mmvr_local_773f99a523ac7884[KNIGHT_LIMB_MAX + 1] = {
         KNIGHT_BODYPART_RIGHT_FOOT,
         BODYPART_NONE,
     };
-static Vec3f mmvr_local_8114eca3953305d7 = { 300.0f, 500.0f, 0.0f };
-static Vec3f mmvr_local_8a42aaf2c33fcbd0 = { 1000.0f, 0.0f, 0.0f };
-static Vec3f mmvr_local_2cb4cf83c81e736b = { 700.0f, -500.0f, 0.0f };
+static Vec3f mmvr_local_a778eefa60d266d9 = { 300.0f, 500.0f, 0.0f };
+static Vec3f mmvr_local_27b425047471d4ca = { 1000.0f, 0.0f, 0.0f };
+static Vec3f mmvr_local_6335397781a43857 = { 700.0f, -500.0f, 0.0f };
 void EnKnight_PostLimbDraw(PlayState* play, s32 limbIndex, Gfx** dList, Vec3s* rot, Actor* thisx, Gfx** gfx) {
     /* persistent local storage is declared above */
     /* persistent local storage is declared above */
@@ -4100,35 +4101,35 @@ void EnKnight_PostLimbDraw(PlayState* play, s32 limbIndex, Gfx** dList, Vec3s* r
     Vec3f colliderPos;
 
     if ((this->actionFunc == EnKnight_Die) || (this->drawDmgEffAlpha > 0.0f)) {
-        s8 bodyPartIndex = mmvr_local_773f99a523ac7884[limbIndex];
+        s8 bodyPartIndex = mmvr_local_323a17c2d6f1b827[limbIndex];
         if (bodyPartIndex > BODYPART_NONE) {
             Matrix_MultZero(&this->bodyPartsPos[bodyPartIndex]);
         }
     }
 
     if (limbIndex == KNIGHT_LIMB_NECK) {
-        Matrix_MultVec3f(&mmvr_local_77c2953e46b0dcf7, &this->actor.focus.pos);
-        Matrix_MultVec3f(&mmvr_local_8114eca3953305d7, &this->breathBasePos);
+        Matrix_MultVec3f(&mmvr_local_ca9da9c18e102930, &this->actor.focus.pos);
+        Matrix_MultVec3f(&mmvr_local_a778eefa60d266d9, &this->breathBasePos);
     }
 
     if (limbIndex == KNIGHT_LIMB_TORSO) {
-        Matrix_MultVec3f(&mmvr_local_8a42aaf2c33fcbd0, &colliderPos);
+        Matrix_MultVec3f(&mmvr_local_27b425047471d4ca, &colliderPos);
         EnKnight_SetColliderSphere(this, 0, &this->bodyCollider, &colliderPos);
     }
 
     if (limbIndex == KNIGHT_LIMB_PELVIS) {
-        Matrix_MultVec3f(&mmvr_local_2cb4cf83c81e736b, &colliderPos);
+        Matrix_MultVec3f(&mmvr_local_6335397781a43857, &colliderPos);
         EnKnight_SetColliderSphere(this, 1, &this->bodyCollider, &colliderPos);
     }
 
     if ((limbIndex == KNIGHT_LIMB_SHIELD) && (this->actionFunc != EnKnight_IgosSitting)) {
-        Matrix_MultVec3f(&mmvr_local_a655d16d69bbec0f, &colliderPos);
+        Matrix_MultVec3f(&mmvr_local_65ad04c44b437bd7, &colliderPos);
         EnKnight_SetColliderSphere(this, 0, &this->shieldCollider, &colliderPos);
-        Matrix_MultVec3f(&mmvr_local_c89aa98a237578ed, &this->shieldParticlesPos);
+        Matrix_MultVec3f(&mmvr_local_01d70127c12beeb8, &this->shieldParticlesPos);
     }
 
     if (limbIndex == KNIGHT_LIMB_SWORD) {
-        Matrix_MultVec3f(&mmvr_local_3ac170682551bac6, &colliderPos);
+        Matrix_MultVec3f(&mmvr_local_b42c34fe6586f424, &colliderPos);
         EnKnight_SetColliderSphere(this, 0, &this->swordCollider, &colliderPos);
     }
 
@@ -4141,13 +4142,13 @@ void EnKnight_PostLimbDraw(PlayState* play, s32 limbIndex, Gfx** dList, Vec3s* r
     }
 }
 
-static Vec3f mmvr_local_c6d32f7fc9e0068c = { 300.0f, 500.0f, 0.0f };
+static Vec3f mmvr_local_7713c8af7fb60c75 = { 300.0f, 500.0f, 0.0f };
 void EnKnight_PostLimbDrawHead(PlayState* play, s32 limbIndex, Gfx** dList, Vec3s* rot, Actor* thisx) {
     /* persistent local storage is declared above */
     EnKnight* this = (EnKnight*)thisx;
 
     if (limbIndex == KNIGHT_LIMB_NECK) {
-        Matrix_MultVec3f(&mmvr_local_c6d32f7fc9e0068c, &this->actor.focus.pos);
+        Matrix_MultVec3f(&mmvr_local_7713c8af7fb60c75, &this->actor.focus.pos);
         Math_Vec3f_Copy(&this->breathBasePos, &this->actor.focus.pos);
     }
 }

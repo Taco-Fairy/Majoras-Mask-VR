@@ -5,6 +5,7 @@
  */
 
 #include "../../../2ship2harkinian/mm/src/overlays/actors/ovl_En_Rail_Skb/z_en_rail_skb.h"
+#include "2s2h/VR/ScriptedMelee.h"
 #include "overlays/actors/ovl_En_Part/z_en_part.h"
 #include "overlays/effects/ovl_Effect_Ss_Hahen/z_eff_ss_hahen.h"
 
@@ -898,9 +899,9 @@ void func_80B725C0(EnRailSkb* this, PlayState* play) {
     }
 }
 
-static Color_RGBA8 mmvr_local_1091cf4806738418 = { 170, 255, 255, 255 };
-static Color_RGBA8 mmvr_local_e8f341d57dde8c0c = { 200, 200, 255, 255 };
-static Vec3f mmvr_local_162518933dffcd69 = { 0.0f, -1.0f, 0.0f };
+static Color_RGBA8 mmvr_local_605e370c47fa796a = { 170, 255, 255, 255 };
+static Color_RGBA8 mmvr_local_cc33c7334c05bf12 = { 200, 200, 255, 255 };
+static Vec3f mmvr_local_2d3afd316091b0a8 = { 0.0f, -1.0f, 0.0f };
 void func_80B726B4(EnRailSkb* this, PlayState* play) {
     /* persistent local storage is declared above */
     /* persistent local storage is declared above */
@@ -925,7 +926,7 @@ void func_80B726B4(EnRailSkb* this, PlayState* play) {
         sp84.z = Math_CosS(yaw) * 3.0f;
         sp84.y = (Rand_ZeroOne() * 4.0f) + 4.0f;
 
-        EffectSsEnIce_Spawn(play, &this->bodyPartsPos[i], 0.6f, &sp84, &mmvr_local_162518933dffcd69, &mmvr_local_1091cf4806738418, &mmvr_local_e8f341d57dde8c0c, 30);
+        EffectSsEnIce_Spawn(play, &this->bodyPartsPos[i], 0.6f, &sp84, &mmvr_local_2d3afd316091b0a8, &mmvr_local_605e370c47fa796a, &mmvr_local_cc33c7334c05bf12, 30);
     }
 }
 
@@ -1064,10 +1065,10 @@ void func_80B72970(EnRailSkb* this, PlayState* play) {
                 this->unk_402 |= 1;
 
             case 15:
-                if ((player->meleeWeaponAnimation == PLAYER_MWA_RIGHT_SLASH_1H) ||
-                    (player->meleeWeaponAnimation == PLAYER_MWA_LEFT_COMBO_2H) ||
-                    (player->meleeWeaponAnimation == PLAYER_MWA_BACKSLASH_RIGHT) ||
-                    (player->meleeWeaponAnimation == PLAYER_MWA_BACKSLASH_LEFT)) {
+                if ((MMVR_ScriptedMeleeAnimation(player) == PLAYER_MWA_RIGHT_SLASH_1H) ||
+                    (MMVR_ScriptedMeleeAnimation(player) == PLAYER_MWA_LEFT_COMBO_2H) ||
+                    (MMVR_ScriptedMeleeAnimation(player) == PLAYER_MWA_BACKSLASH_RIGHT) ||
+                    (MMVR_ScriptedMeleeAnimation(player) == PLAYER_MWA_BACKSLASH_LEFT)) {
                     this->unk_402 |= 1;
                 }
 
@@ -1140,7 +1141,7 @@ s32 EnRailSkb_OverrideLimbDraw(PlayState* play, s32 limbIndex, Gfx** dList, Vec3
     return false;
 }
 
-static Vec3f mmvr_local_a8d2ffb6ffbfff3c = { 800.0f, 1200.0f, 0.0f };
+static Vec3f mmvr_local_994f4b392f5e85fd = { 800.0f, 1200.0f, 0.0f };
 void EnRailSkb_PostLimbDraw(PlayState* play, s32 limbIndex, Gfx** dList, Vec3s* rot, Actor* thisx) {
     /* persistent local storage is declared above */
     EnRailSkb* this = (EnRailSkb*)thisx;
@@ -1167,7 +1168,7 @@ void EnRailSkb_PostLimbDraw(PlayState* play, s32 limbIndex, Gfx** dList, Vec3s* 
                 Matrix_MultZero(&this->bodyPartsPos[this->bodyPartsCount]);
                 this->bodyPartsCount++;
             } else if ((limbIndex == STALCHILD_LIMB_HEAD) && !(this->unk_402 & 2)) {
-                Matrix_MultVec3f(&mmvr_local_a8d2ffb6ffbfff3c, &this->bodyPartsPos[this->bodyPartsCount]);
+                Matrix_MultVec3f(&mmvr_local_994f4b392f5e85fd, &this->bodyPartsPos[this->bodyPartsCount]);
                 this->bodyPartsCount++;
             }
         }

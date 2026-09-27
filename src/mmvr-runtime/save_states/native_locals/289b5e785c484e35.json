@@ -31,285 +31,285 @@
       "at": 264070
     },
     {
-      "name": "mmvr_local_4ae1c07bb78e042c",
+      "name": "mmvr_local_158435c68892a703",
       "original": "sDpadItemIconWidth",
       "function": "Interface_Dpad_DrawItemIconTexture",
       "line": 6144,
-      "at": 275875
+      "at": 275865
     },
     {
-      "name": "mmvr_local_df1a309fc5b1f522",
+      "name": "mmvr_local_7e83cfc086ff3798",
       "original": "sItemIconTextureDimensions",
       "function": "Interface_DrawItemIconTexture",
       "line": 6263,
-      "at": 280738
+      "at": 280728
     },
     {
-      "name": "mmvr_local_90b344596708c840",
+      "name": "mmvr_local_c91139fb995956a3",
       "original": "sAmmoDigitsXPositions",
       "function": "Interface_DrawAmmoCount",
       "line": 6332,
-      "at": 284446
+      "at": 284431
     },
     {
-      "name": "mmvr_local_249e48916f024918",
+      "name": "mmvr_local_d6419bf4d8e84a85",
       "original": "sAmmoDigitsYPositions",
       "function": "Interface_DrawAmmoCount",
       "line": 6333,
-      "at": 284512
+      "at": 284497
     },
     {
-      "name": "mmvr_local_4fc8797f0a39ded4",
+      "name": "mmvr_local_a03dd32760ccdd0f",
       "original": "sMagicArrowEffectsR",
       "function": "Interface_DrawPauseMenuEquippingIcons",
       "line": 6742,
-      "at": 307298
+      "at": 307283
     },
     {
-      "name": "mmvr_local_64662a440e355eb7",
+      "name": "mmvr_local_fb449e75e4afab0e",
       "original": "sMagicArrowEffectsG",
       "function": "Interface_DrawPauseMenuEquippingIcons",
       "line": 6743,
-      "at": 307357
+      "at": 307342
     },
     {
-      "name": "mmvr_local_d2ce936fcfef302e",
+      "name": "mmvr_local_c19cb8c986c32e1c",
       "original": "sMagicArrowEffectsB",
       "function": "Interface_DrawPauseMenuEquippingIcons",
       "line": 6744,
-      "at": 307414
+      "at": 307399
     },
     {
-      "name": "mmvr_local_d70c82a9b0b2e500",
+      "name": "mmvr_local_4bebed449c87ecff",
       "original": "sThreeDayClockAlpha",
       "function": "Interface_DrawClock",
       "line": 6818,
-      "at": 311629
+      "at": 311614
     },
     {
-      "name": "mmvr_local_431ab765962bf2bb",
+      "name": "mmvr_local_341c224a2bce8280",
       "original": "sClockAlphaTimer1",
       "function": "Interface_DrawClock",
       "line": 6819,
-      "at": 311672
+      "at": 311657
     },
     {
-      "name": "mmvr_local_cb8a3a45bde846e9",
+      "name": "mmvr_local_033c178e53295275",
       "original": "sClockAlphaTimer2",
       "function": "Interface_DrawClock",
       "line": 6820,
-      "at": 311711
+      "at": 311696
     },
     {
-      "name": "mmvr_local_e6f88af86a9217a1",
+      "name": "mmvr_local_9b9176ec00b5aa65",
       "original": "sThreeDayClockHours",
       "function": "Interface_DrawClock",
       "line": 6821,
-      "at": 311750
+      "at": 311735
     },
     {
-      "name": "mmvr_local_1a714984af4174b0",
+      "name": "mmvr_local_0585a220ff832f05",
       "original": "sThreeDayClockHourTextures",
       "function": "Interface_DrawClock",
       "line": 6831,
-      "at": 312523
+      "at": 312508
     },
     {
-      "name": "mmvr_local_d71b94859e4e2739",
+      "name": "mmvr_local_5922a0219b4cf043",
       "original": "sThreeDayClockHourTwentyFourHoursTextures",
       "function": "Interface_DrawClock",
       "line": 6842,
-      "at": 313463
+      "at": 313448
     },
     {
-      "name": "mmvr_local_b4275194cfff9c28",
+      "name": "mmvr_local_ced77113b6dda320",
       "original": "sClockInvDiamondPrimRed",
       "function": "Interface_DrawClock",
       "line": 6853,
-      "at": 314393
+      "at": 314378
     },
     {
-      "name": "mmvr_local_b56c760961978817",
+      "name": "mmvr_local_c55c92351b176a78",
       "original": "sClockInvDiamondPrimGreen",
       "function": "Interface_DrawClock",
       "line": 6854,
-      "at": 314438
+      "at": 314423
     },
     {
-      "name": "mmvr_local_6f01025616342b99",
+      "name": "mmvr_local_b1f46f88e7034c2b",
       "original": "sClockInvDiamondPrimBlue",
       "function": "Interface_DrawClock",
       "line": 6855,
-      "at": 314487
+      "at": 314472
     },
     {
-      "name": "mmvr_local_1cde5b76d2dd902c",
+      "name": "mmvr_local_d32bb1ba6648e1c4",
       "original": "sClockInvDiamondEnvRed",
       "function": "Interface_DrawClock",
       "line": 6856,
-      "at": 314535
+      "at": 314520
     },
     {
-      "name": "mmvr_local_6431c0a24743cf44",
+      "name": "mmvr_local_5e2f96beca0dd0c0",
       "original": "sClockInvDiamondEnvGreen",
       "function": "Interface_DrawClock",
       "line": 6857,
-      "at": 314579
+      "at": 314564
     },
     {
-      "name": "mmvr_local_cf83f2fcd3dd470f",
+      "name": "mmvr_local_83d8f90de535f9fb",
       "original": "sClockInvDiamondEnvBlue",
       "function": "Interface_DrawClock",
       "line": 6858,
-      "at": 314625
+      "at": 314610
     },
     {
-      "name": "mmvr_local_32b9c266e30a197b",
+      "name": "mmvr_local_22c7875417a74fdd",
       "original": "sClockInvDiamondTimer",
       "function": "Interface_DrawClock",
       "line": 6859,
-      "at": 314670
+      "at": 314655
     },
     {
-      "name": "mmvr_local_979bb252476692d4",
+      "name": "mmvr_local_752a54e1a963c13e",
       "original": "sClockInvDiamondTargetIndex",
       "function": "Interface_DrawClock",
       "line": 6860,
-      "at": 314714
+      "at": 314699
     },
     {
-      "name": "mmvr_local_d0580dd2a573ffae",
+      "name": "mmvr_local_eb8f7639bba7b11a",
       "original": "sClockInvDiamondPrimRedTargets",
       "function": "Interface_DrawClock",
       "line": 6861,
-      "at": 314763
+      "at": 314748
     },
     {
-      "name": "mmvr_local_8ee2d03af93a8144",
+      "name": "mmvr_local_fe53d9addae30518",
       "original": "sClockInvDiamondPrimGreenTargets",
       "function": "Interface_DrawClock",
       "line": 6862,
-      "at": 314826
+      "at": 314811
     },
     {
-      "name": "mmvr_local_c4ec2667e3b27ea3",
+      "name": "mmvr_local_47aac0104c506f7c",
       "original": "sClockInvDiamondPrimBlueTargets",
       "function": "Interface_DrawClock",
       "line": 6863,
-      "at": 314893
+      "at": 314878
     },
     {
-      "name": "mmvr_local_d88907684b38b659",
+      "name": "mmvr_local_f6d60f7ea4b2aae7",
       "original": "sClockInvDiamondEnvRedTargets",
       "function": "Interface_DrawClock",
       "line": 6864,
-      "at": 314959
+      "at": 314944
     },
     {
-      "name": "mmvr_local_4e81d7769b145c22",
+      "name": "mmvr_local_b76f522113c1ed3b",
       "original": "sClockInvDiamondEnvGreenTargets",
       "function": "Interface_DrawClock",
       "line": 6865,
-      "at": 315020
+      "at": 315005
     },
     {
-      "name": "mmvr_local_5656e65a6a8bdcab",
+      "name": "mmvr_local_1d76ab81790c909b",
       "original": "sClockInvDiamondEnvBlueTargets",
       "function": "Interface_DrawClock",
       "line": 6866,
-      "at": 315083
+      "at": 315068
     },
     {
-      "name": "mmvr_local_e4551ef29e57c35c",
+      "name": "mmvr_local_3ea7aab43496233d",
       "original": "sFinalHoursClockDigitsRedTargets",
       "function": "Interface_DrawClock",
       "line": 6867,
-      "at": 315146
+      "at": 315131
     },
     {
-      "name": "mmvr_local_a7447f4bb8d0e5ed",
+      "name": "mmvr_local_a990c3581c5a1fdb",
       "original": "sFinalHoursClockFrameEnvRedTargets",
       "function": "Interface_DrawClock",
       "line": 6868,
-      "at": 315211
+      "at": 315196
     },
     {
-      "name": "mmvr_local_23ad956b6c6a2193",
+      "name": "mmvr_local_d3abe52c03a34997",
       "original": "sFinalHoursClockFrameEnvGreenTargets",
       "function": "Interface_DrawClock",
       "line": 6869,
-      "at": 315278
+      "at": 315263
     },
     {
-      "name": "mmvr_local_5e8f5d7ab45e8ea3",
+      "name": "mmvr_local_50361bfe61ba0163",
       "original": "sFinalHoursClockFrameEnvBlueTargets",
       "function": "Interface_DrawClock",
       "line": 6870,
-      "at": 315346
+      "at": 315331
     },
     {
-      "name": "mmvr_local_ac0d2b16f114877c",
+      "name": "mmvr_local_5ddab6188c5461fd",
       "original": "sFinalHoursDigitTextures",
       "function": "Interface_DrawClock",
       "line": 6871,
-      "at": 315421
+      "at": 315406
     },
     {
-      "name": "mmvr_local_7d565af27f50c185",
+      "name": "mmvr_local_38a7624b93e088e8",
       "original": "sFinalHoursDigitSlotPosXOffset",
       "function": "Interface_DrawClock",
       "line": 6876,
-      "at": 315799
+      "at": 315784
     },
     {
-      "name": "mmvr_local_fa9b50de3dcad0a1",
+      "name": "mmvr_local_99cc80d9cb569606",
       "original": "sTimerStateTimer",
       "function": "Interface_DrawTimers",
       "line": 8140,
-      "at": 378586
+      "at": 378571
     },
     {
-      "name": "mmvr_local_596768c3fcd4e47d",
+      "name": "mmvr_local_cc5b84448478a8fe",
       "original": "sTimerDigits",
       "function": "Interface_DrawTimers",
       "line": 8141,
-      "at": 378624
+      "at": 378609
     },
     {
-      "name": "mmvr_local_c99e5e71d076f4f7",
+      "name": "mmvr_local_bfe6514ecf42d45a",
       "original": "sTimerBeepSfxSeconds",
       "function": "Interface_DrawTimers",
       "line": 8142,
-      "at": 378685
+      "at": 378670
     },
     {
-      "name": "mmvr_local_9b2f04b0f5c29426",
+      "name": "mmvr_local_73114d332ddd1e30",
       "original": "sTimerDigitsOffsetX",
       "function": "Interface_DrawTimers",
       "line": 8143,
-      "at": 378728
+      "at": 378713
     },
     {
-      "name": "mmvr_local_d7f210a942830dd1",
+      "name": "mmvr_local_f620e60f98b6c65b",
       "original": "sTimerDigitsWidth",
       "function": "Interface_DrawTimers",
       "line": 8146,
-      "at": 378819
+      "at": 378804
     },
     {
-      "name": "mmvr_local_d183f9ac05719438",
+      "name": "mmvr_local_1813cc62deef65f0",
       "original": "sIsSunsPlayedAtDay",
       "function": "Interface_Update",
       "line": 9622,
-      "at": 456370
+      "at": 456350
     },
     {
-      "name": "mmvr_local_0ba1c13ad0cbef8e",
+      "name": "mmvr_local_b28c4f631ac1956c",
       "original": "sPrevTimeSpeed",
       "function": "Interface_Update",
       "line": 9623,
-      "at": 456414
+      "at": 456394
     }
   ],
-  "sourceSha256": "106075765f91c188e24349a18592d1e7dd4a96ed796c5bb33e9f3872f479e909"
+  "sourceSha256": "d93934de34493c74924d34c96d3ce9239a9ed54c7794d9e862cc1d2c30536810"
 }

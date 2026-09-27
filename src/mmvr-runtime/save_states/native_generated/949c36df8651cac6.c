@@ -1,2 +1,2 @@
-#include "../../../2ship2harkinian/mm/src/overlays/actors/ovl_En_Butte/z_en_butte.c"
+#include "../native_locals/949c36df8651cac6.inc"
 #include "949c36df8651cac6.inc"

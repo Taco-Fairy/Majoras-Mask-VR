@@ -5,6 +5,7 @@
  */
 
 #include "z_en_butte.h"
+#include "2s2h/VR/ScriptedMelee.h"
 #include "overlays/actors/ovl_En_Elf/z_en_elf.h"
 #include "objects/gameplay_field_keep/gameplay_field_keep.h"
 #include "objects/gameplay_keep/gameplay_keep.h"
@@ -415,7 +416,7 @@ void EnButte_Update(Actor* thisx, PlayState* play) {
     this->unk_258 += 0x600;
 
     if (BUTTERFLY_GET_1(&this->actor) == BUTTERFLY_1) {
-        if (GET_PLAYER(play)->meleeWeaponState == PLAYER_MELEE_WEAPON_STATE_0) {
+        if (MMVR_ScriptedMeleeState(GET_PLAYER(play)) == PLAYER_MELEE_WEAPON_STATE_0) {
             if (this->unk_252 > 0) {
                 this->unk_252--;
             }

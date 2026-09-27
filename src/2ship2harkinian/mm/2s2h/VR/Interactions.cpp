@@ -1,12 +1,15 @@
 #include "NativeActions.h"
 #ifdef MMVR_ENABLE
 #include "Bow.h"
+#include "bow_aim.h"
 #include "Bombchu.h"
 #include "NativeForms.h"
 #include "FormAim.h"
 #include "FormPresentation.h"
 #include "ItemUse.h"
 #include "Carry.h"
+#include "NativeForms.h"
+#include "world_scale.h"
 #include "Holster.h"
 #include "Bottle.h"
 #include "Interactions.h"
@@ -52,7 +55,7 @@ extern "C" int MMVR_ButtonInteractionVisible(PlayState* play,Actor* actor) {
     return visible(middle) || (hasFocus && visible(focus));
 }
 namespace {
-mmvr::Matrix aim{}, grip{}, trackingBasis{}, nativeHand{}, relativeWeapon{}, drawActorPose{};
+mmvr::Matrix headAim{}, aim{}, grip{}, trackingBasis{}, nativeHand{}, relativeWeapon{}, drawActorPose{};
 mmvr::Matrix handAim[2]{}, handGrip[2]{};
 // Render-derived attachment, always rebuilt from the fresh controller sample.
 mmvr::Matrix trackedItemHand{};
@@ -93,11 +96,14 @@ bool BoundedPose(PlayState* play, Player* player, const mmvr::Matrix& pose, floa
     if (!Eligible(play, player))
         return false;
     result = pose;
+    const float factor=mmvr::WorldTrackingScale(mmvr::GetSettings(),player->transformation,
+                                               mmvrgame::StandingFormEyeHeight(player));
+    offset*=factor;
     Vec3f muzzle{ pose.m[3][0] - pose.m[2][0] * offset, pose.m[3][1] - pose.m[2][1] * offset,
                   pose.m[3][2] - pose.m[2][2] * offset };
     Vec3f delta{ muzzle.x - head.x, muzzle.y - head.y, muzzle.z - head.z };
     float distance = std::sqrt(delta.x * delta.x + delta.y * delta.y + delta.z * delta.z);
-    if (!std::isfinite(distance) || distance > 40 * mmvr::GetSettings().Get(mmvr::Setting::AimReach))
+    if (!std::isfinite(distance) || distance > 40 * factor * mmvr::GetSettings().Get(mmvr::Setting::AimReach))
         return false;
     CollisionPoly* wall = nullptr;
     int bg = BGCHECK_SCENE;
@@ -118,7 +124,8 @@ bool Muzzle(PlayState* play, Player* player, mmvr::Matrix& result) {
     if (MMVR_IndependentHookshot(player) && trackedItemHand.m[3][3]) {
         auto socket=mmvr::HookshotSocket(trackedItemHand);
         if(!socket.m[3][3])return false;
-        return BoundedPose(play,player,mmvr::NativeProjectilePose(socket),0,result);
+        return BoundedPose(play,player,mmvr::HeadAimedPose(mmvr::NativeProjectilePose(socket),headAim,
+            mmvr::GetSettings().Get(mmvr::Setting::HeadItemAim)>.5f),0,result);
     }
     return mmvr::GetSettings().Get(mmvr::Setting::TrackedAim) > .5f &&
            BoundedPose(play, player, aim, 40 * mmvr::GetSettings().Get(mmvr::Setting::MuzzleOffset), result);
@@ -319,6 +326,8 @@ void RecordTracking(const mmvr::TrackingFrame& frame, const mmvr::Matrix& view, 
     local.m[3][1] *= 40;
     local.m[3][2] = (local.m[3][2] - relativeHead.m[3][2]) * 40;
     aim = mmvr::Multiply(local, view);
+    headAim = mmvr::Multiply(relativeHead, view);
+    aim = mmvr::HeadAimedPose(aim, headAim, mmvr::GetSettings().Get(mmvr::Setting::HeadItemAim)>.5f);
     auto hand =
         mmvr::Multiply(mmvr::PoseMatrix(frame.hands[itemHand]), mmvr::InversePose(mmvr::PoseMatrix(frame.origin)));
     runtimeVelocity = frame.handVelocityValid[itemHand] && frame.handTracked[itemHand];
@@ -409,6 +418,11 @@ void FillHeldActorFrame(mmvr::CameraFrame& result) {
                 return;
             for (int c = 0; c < 3; ++c)
                 held.m[3][c] += held.m[1][c] * p->heldActor->shape.yOffset * p->heldActor->scale.y;
+            // The draw root already contains the held scale. Replay only the
+            // rigid pose here, otherwise retained rendering applies it twice.
+            const float factor=mmvr::WorldTrackingScale(mmvr::GetSettings(),p->transformation,
+                                                       StandingFormEyeHeight(p));
+            for(int row=0;row<3;++row)for(int col=0;col<3;++col)held.m[row][col]/=factor;
             result.heldActorCorrection = mmvr::Multiply(mmvr::InversePose(drawActorPose), held);
         } else
             result.heldActorCorrection =
@@ -417,6 +431,11 @@ void FillHeldActorFrame(mmvr::CameraFrame& result) {
     } else {
         if (!Muzzle(play, p, target))
             return;
+        if (MMVR_IndependentHookshot(p)) {
+            const float factor=mmvr::WorldTrackingScale(mmvr::GetSettings(),p->transformation,
+                                                       StandingFormEyeHeight(p));
+            for(int row=0;row<3;++row)for(int col=0;col<3;++col)target.m[row][col]/=factor;
+        }
         result.heldActorCorrection =
             mmvr::Multiply(mmvr::InversePose(drawActorPose), mmvr::NativeProjectilePose(target));
     }
@@ -428,7 +447,11 @@ void OverrideTrackedItemHand(mmvr::Matrix& hand) {
     if (MMVR_IndependentHookshot(p))
         return; // Keep the calibrated controller hand through launch, flight and retraction.
     if (haveWeapon && Muzzle(gPlayState, p, muzzle)) {
-        hand = mmvr::Multiply(relativeWeapon, mmvr::NativeProjectilePose(muzzle));
+        auto equipment=relativeWeapon;
+        const float factor=mmvr::WorldTrackingScale(mmvr::GetSettings(),p->transformation,
+                                                   StandingFormEyeHeight(p));
+        for(int r=0;r<4;++r)for(int c=0;c<3;++c)equipment.m[r][c]*=factor;
+        hand = mmvr::Multiply(equipment, mmvr::NativeProjectilePose(muzzle));
         if (Player_IsHoldingHookshot(p) && mmvr::SwordController(mmvr::GetSettings()) == 0)
             for (int c = 0; c < 3; ++c)
                 hand.m[2][c] = -hand.m[2][c];
@@ -536,6 +559,11 @@ extern "C" void MMVR_TrackedActorBegin(PlayState* play, Actor* actor) {
                 held.m[3][c] += held.m[1][c] * actor->shape.yOffset;
             Matrix_Put(reinterpret_cast<MtxF*>(&held));
         }
+    }
+    if (!mmvrgame::CarriedObject(p)) {
+        const float factor=mmvr::WorldTrackingScale(mmvr::GetSettings(),p->transformation,
+                                                   mmvrgame::StandingFormEyeHeight(p));
+        Matrix_Scale(factor,factor,factor,MTXMODE_APPLY);
     }
     // Visual-only held keg scale. Native actor/collider/explosion dimensions
     // are untouched; the draw override disappears on the release frame.

@@ -96,6 +96,15 @@ void RecordFormEyeHeight(Player* p) {
             h = {};
     }
 }
+float StandingFormEyeHeight(Player* p) {
+    if (!p) return 52.f;
+    const auto* profile = mmvr::ProfileForForm(p->transformation);
+    if (!profile) return 52.f;
+    // Stable authored anchor: idle calibration, rolling and defensive poses must
+    // never make the entire world breathe or change scale during an animation.
+    return mmvr::AdjustedEyeHeight(mmvr::GetSettings(), profile->eyeHeight,
+                                  StandingEyeAnchor[p->transformation]);
+}
 float FormEyeHeight(Player* p) {
     if (!p)
         return 52.f;
@@ -109,6 +118,10 @@ float FormEyeHeight(Player* p) {
     // have their own stable eye anchor, independent of that comfort option.
     float model = p == headOwner ? formHeads[p->transformation].height : 0.f;
     if (!(model >= 15.f && model <= 160.f))
+        model = StandingEyeAnchor[p->transformation];
+    // Floor-calibrated tracking uses this same stable anchor for its conversion.
+    // Idle model sampling must not move the virtual floor away from the real one.
+    if (mmvr::GetSettings().Get(mmvr::Setting::WorldScaleCalibration) > .5f)
         model = StandingEyeAnchor[p->transformation];
     const bool compactPosture = p->transformation == PLAYER_FORM_GORON &&
         ((p->stateFlags3 & PLAYER_STATE3_1000) || (p->stateFlags1 & PLAYER_STATE1_400000));

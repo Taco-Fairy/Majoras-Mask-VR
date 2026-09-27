@@ -13,6 +13,7 @@ extern "C" {
 static mmvr::Pad NativeWoodfallCrystalTest(PlayState* play, unsigned tick) {
     static bool started = false, hit = false, passed = false;
     static unsigned sceneTicks = 0;
+    static bool requestedRoom=false, readyRoom=false;
     static std::ofstream log("native-woodfall-crystal.log");
     mmvr::Pad pad;
     pad.active = true;
@@ -25,6 +26,17 @@ static mmvr::Pad NativeWoodfallCrystalTest(PlayState* play, unsigned tick) {
     }
     if (!started || play->sceneId != SCENE_MITURIN || play->transitionTrigger != TRANS_TRIGGER_OFF)
         return pad;
+    if (play->transitionMode != TRANS_MODE_OFF || play->roomCtx.status) return pad;
+    if (!readyRoom) {
+        if (!requestedRoom && play->roomCtx.curRoom.num != 0) {
+            requestedRoom = Room_RequestNewRoom(play, &play->roomCtx, 0) != 0;
+            if (!requestedRoom) throw std::runtime_error("Woodfall room 0 load rejected");
+            return pad;
+        }
+        if (requestedRoom) Room_FinishRoomChange(play, &play->roomCtx);
+        readyRoom=true;
+        log << "room=" << int(play->roomCtx.curRoom.num) << '\n' << std::flush;
+    }
     ++sceneTicks;
     ObjSwitch* crystal = nullptr;
     for (Actor* actor = play->actorCtx.actorLists[ACTORCAT_SWITCH].first; actor; actor = actor->next) {
