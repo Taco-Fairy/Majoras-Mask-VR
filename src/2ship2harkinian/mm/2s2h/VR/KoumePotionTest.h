@@ -29,6 +29,24 @@ static mmvr::Pad NativeKoumePotionTest(PlayState* play,unsigned tick) {
         if(requestedRoom)Room_FinishRoomChange(play,&play->roomCtx);
         p->actor.world.pos={-1762.f,0.f,64.f};p->actor.prevPos=p->actor.world.pos;roomReady=true;
     }
+    if(std::getenv("MMVR_KOUME_MANUAL")) {
+        // One-shot checkpoint only: never automate dialogue or replace live XR input.
+        if(++age<45)return pad;
+        p->actor.world.pos={-1698.f,0.f,-50.f};p->actor.prevPos=p->actor.world.pos;
+        p->actor.shape.rot.y=p->actor.world.rot.y=static_cast<s16>(-9701);
+        p->actor.velocity={};p->actor.speed=0;
+        mmvrgame::SelectItem(play,SLOT_BOTTLE_1,ITEM_POTION_RED);
+        mmvr::SetNativeTestTracking(false);
+        nativeTestReleased=true;
+#ifdef _WIN32
+        _putenv_s("MMVR_NATIVE_TEST", "");
+#else
+        unsetenv("MMVR_NATIVE_TEST");
+#endif
+        MMVR_CameraCoordinateBoundary(play);mmvr::Recenter();
+        log<<"READY manual Koume handoff; live controls restored; save protection retained\n"<<std::flush;
+        return {};
+    }
     ++age;mmvr::ApplyViewMode(2);mmvr::SetNativeTestTracking(true);
     mmvr::TrackingFrame frame{};frame.head.orientation.w=frame.origin.orientation.w=1;frame.timeSeconds=tick/20.;frame.epoch=1;
     for(int h=0;h<2;++h){frame.hands[h].orientation.w=frame.aims[h].orientation.w=1;

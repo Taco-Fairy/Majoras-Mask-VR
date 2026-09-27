@@ -8039,6 +8039,13 @@ PlayerAnimationHeader* D_8085D160[PLAYER_FORM_MAX] = {
 void func_808388B8(PlayState* play, Player* this, PlayerTransformation playerForm) {
     func_8082DE50(play, this);
     Player_SetAction_PreserveItemAction(play, this, Player_Action_86, 0);
+#ifdef MMVR_ENABLE
+    // A previous effect may leave a negative fade step. Action_86 adds this
+    // value while waiting for full white; inheriting a negative step can never
+    // reach its form-reload threshold and leaves the transformation locked.
+    R_PLAY_FILL_SCREEN_ON = 0;
+    R_PLAY_FILL_SCREEN_ALPHA = 0;
+#endif
     Player_Anim_PlayOnceMorphAdjusted(play, this, D_8085D160[this->transformation]);
     gSaveContext.save.playerForm = playerForm;
     this->stateFlags1 |= PLAYER_STATE1_2;

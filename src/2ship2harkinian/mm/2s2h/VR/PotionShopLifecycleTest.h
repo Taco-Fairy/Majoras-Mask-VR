@@ -1,5 +1,8 @@
 #pragma once
 #include "KoumePotionTest.h"
+#include "ShiroHandoffTest.h"
+#include "GibdoHandoffTest.h"
+#include "PaperHandoffTest.h"
 extern "C" {
 #include "overlays/actors/ovl_En_Trt/z_en_trt.h"
 void EnTrt_GiveRedPotionForKoume(EnTrt*, PlayState*);
@@ -8,6 +11,9 @@ void EnTrt_BuyItemWithFanfare(EnTrt*, PlayState*);
 // Private, isolated fixture. Native simulation and reward animations retain
 // normal cadence; only dialogue advance input is automated.
 static mmvr::Pad NativePotionShopLifecycle(PlayState* play, unsigned tick) {
+    if(std::getenv("MMVR_PAPER_HANDOFF"))return NativePaperHandoff(play,tick);
+    if(std::getenv("MMVR_GIBDO_HANDOFF"))return NativeGibdoHandoff(play,tick);
+    if(std::getenv("MMVR_SHIRO_HANDOFF"))return NativeShiroHandoff(play,tick);
     if(std::getenv("MMVR_KOUME_POTION_TEST"))return NativeKoumePotionTest(play,tick);
     static int phase=0, age=0;
     static const int scenario=[] { const char* v=std::getenv("MMVR_POTION_CASE"); return v ? std::clamp(std::atoi(v),0,3) : 0; }();

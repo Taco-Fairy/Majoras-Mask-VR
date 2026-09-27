@@ -4,7 +4,8 @@
 extern "C" {
 #include "overlays/gamestates/ovl_file_choose/z_file_select.h"
 }
-static bool NativeTestEnabled(){static bool enabled=[](){const char* e=std::getenv("MMVR_NATIVE_TEST");return mmvr::PrivateDebugTools&&e&&std::string(e)=="1";}();return enabled;}
+static bool nativeTestReleased=false;
+static bool NativeTestEnabled(){static bool enabled=[](){const char* e=std::getenv("MMVR_NATIVE_TEST");return mmvr::PrivateDebugTools&&e&&std::string(e)=="1";}();return enabled&&!nativeTestReleased;}
 extern "C" {
 void CollisionCheck_AC_QuadVsCyl(PlayState*,CollisionCheckContext*,Collider*,Collider*);
 void CollisionCheck_AC_CylVsQuad(PlayState*,CollisionCheckContext*,Collider*,Collider*);
@@ -59,6 +60,7 @@ static void NativeCombatFixture(PlayState* play){
  Collider_DestroyCylinder(play,&target);
 }
 #include "FormLifecycleTest.h"
+#include "FlameHotfixTest.h"
 #include "ThirdPersonLifecycleTest.h"
 #include "BottleReleaseLifecycleTest.h"
 #include "FlowerLifecycleTest.h"
@@ -159,6 +161,7 @@ static mmvr::Pad NativeTestInput(){
   if(std::getenv("MMVR_MESSAGE_DECODE_TEST") || std::getenv("MMVR_MESSAGE_PAGES_TEST")){if(playTicks==60)NativeMessageDecodeTest(gPlayState);return pad;}
   if(std::getenv("MMVR_MESSAGE_LOOKUP_TEST")){if(playTicks==60)NativeMessageLookupTest(gPlayState);return pad;}
   if(std::getenv("MMVR_DAMAGE_MATRIX_TEST")){if(playTicks==60)NativeDamageMatrixTest(gPlayState);return pad;}
+  if(std::getenv("MMVR_FLAME_HOTFIX_TEST")){if(playTicks==80)NativeFlameHotfixTest(gPlayState);return pad;}
   if(std::getenv("MMVR_POTION_SHOP_TEST"))return NativePotionShopLifecycle(gPlayState,playTicks);
   if(std::getenv("MMVR_KAFEI_DRAW_TEST"))return NativeKafeiDrawLifecycle(gPlayState,playTicks);
   if(std::getenv("MMVR_FORM_ABILITIES_TEST")) {

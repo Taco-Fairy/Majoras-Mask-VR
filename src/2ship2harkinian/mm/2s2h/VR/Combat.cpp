@@ -70,7 +70,7 @@ struct SwordTarget { const void* owner; Vec3f patch; bool grass; };
 std::array<SwordTarget, 512> swordTargets{};
 size_t swordTargetCount = 0;
 double swordTime = 0, lastDamageTime = -100;
-Vec3f swordBase{}, swordTip{};
+Vec3f swordBase{}, swordTip{}, stickFireTip{};
 mmvr::SwingGate swordGate;
 int physicalSwordAnimation = PLAYER_MWA_FORWARD_SLASH_1H;
 mmvr::MotionPoint lastRawBlade{};
@@ -418,6 +418,9 @@ void UpdateSwordDiagnostics(const mmvr::TrackingFrame& frame, mmvr::Matrix& left
         return point;
     };
     auto base = bladePoint(leftHand, baseX), tip = bladePoint(leftHand, length);
+    // Flame follows the rendered tip; attack clipping must not move it onto a
+    // different collision surface before native torch/web proximity checks.
+    if (stick) stickFireTip = tip;
     bool magicExtended = false;
     // Match the live native blue/orange disk radius, including its expansion
     // and disappearance. Keep the physical blade directional, with the same
@@ -476,8 +479,15 @@ void UpdateSwordDiagnostics(const mmvr::TrackingFrame& frame, mmvr::Matrix& left
     int sceneBg = BGCHECK_SCENE;
     bool bladeWall = BgCheck_EntityLineTest2(&play->colCtx, &base, &tip, &sceneHit, &scenePoly, true, true, true, true,
                                              &sceneBg, &p->actor) != 0;
-    if (bladeWall)
+    if (bladeWall) {
         tip = sceneHit;
+        auto* surface = sceneBg != BGCHECK_SCENE ? DynaPoly_GetActor(&play->colCtx, sceneBg) : nullptr;
+        const bool burnableWeb = surface && (surface->actor.id == ACTOR_BG_SPDWEB ||
+                                             surface->actor.id == ACTOR_OBJ_SPIDERTENT);
+        // Only webs permit the flame to reach their separate ignition mesh.
+        // Ordinary solid walls must still stop fire interaction through them.
+        if (stick && !burnableWeb) stickFireTip = sceneHit;
+    }
     if (previousBlade && line(previousBase, base))
         d.blocked = true;
     if (!rawBladeValid || frame.timeSeconds != lastRawBlade.time) {
@@ -507,8 +517,8 @@ void UpdateSwordDiagnostics(const mmvr::TrackingFrame& frame, mmvr::Matrix& left
     swordTip = tip;
     // Lighting/burning reads this tip even when a strike is not armed.
     p->meleeWeaponInfo[0].base = base;
-    p->meleeWeaponInfo[0].tip = tip;
-    if (stick && !d.blocked && bladeWall && (swung || swordWindow.Active(swordTime))) {
+    p->meleeWeaponInfo[0].tip = stick ? stickFireTip : tip;
+    if (stick && p->unk_B28 == 0 && !d.blocked && bladeWall && (swung || swordWindow.Active(swordTime))) {
         stickWallPending = true;
         stickWallHit = sceneHit;
     }
@@ -933,7 +943,7 @@ extern "C" void MMVR_AfterAttackCollision(PlayState* play) {
     if (stickWallPending) {
         stickWallPending = false;
         if (MMVR_IndependentSword(p) && Player_GetMeleeWeaponHeld(p) == PLAYER_MELEEWEAPON_DEKU_STICK &&
-            CombatEligible(play, p) &&
+            CombatEligible(play, p) && p->unk_B28 == 0 &&
             swordTime - lastDamageTime >= mmvr::GetSettings().Get(mmvr::Setting::SwingCooldown)) {
             swordWindow.Contact();
             lastDamageTime = swordTime;
@@ -1138,6 +1148,12 @@ extern "C" int MMVR_AcceptSwordTarget(PlayState* play, Collider* attack, Collide
     // The native magic disk and tracked blade belong to one attack. An enemy
     // cannot be damaged twice because both overlap it on the same release.
     if (!blade && !magic && !physicalArea) return 1;
+    // Torch contact must light an unlit stick as well as accept a burning one.
+    // A damaging hit would preempt native flame proximity or break the stick.
+    const auto* player = GET_PLAYER(play);
+    if (blade && player->heldItemAction == PLAYER_IA_DEKU_STICK && target && target->actor &&
+        (target->actor->id == ACTOR_OBJ_SYOKUDAI || (player->unk_B28 > 0 &&
+         (target->actor->id == ACTOR_BG_SPDWEB || target->actor->id == ACTOR_OBJ_SPIDERTENT)))) return 0;
     // The native attack colliders rely on geometric overlap rather than a
     // center-to-center ray. A LOS ray from this cylinder's center can reject
     // grass blades and hurtboxes near the edge of a valid spin overlap.
@@ -1388,7 +1404,7 @@ extern "C" int MMVR_PhysicalSwordCollider(PlayState* play, Player* p) {
         bladeSamples.clear();
         bladeSamples.push_back(last);
     }
-    p->meleeWeaponInfo[0].tip = swordTip;
+    p->meleeWeaponInfo[0].tip = weapon == PLAYER_MELEEWEAPON_DEKU_STICK ? stickFireTip : swordTip;
     p->meleeWeaponInfo[0].base = swordBase;
     p->meleeWeaponInfo[1].active = p->meleeWeaponInfo[2].active = false;
     return true;
@@ -1442,6 +1458,7 @@ extern "C" void MMVR_VisitVrCombatState(MMVR_StateSink* sink) {
     mmvrgame::NativeStateField(sink,"vr/combat/lastDamageTime",lastDamageTime);
     mmvrgame::NativeStateField(sink,"vr/combat/swordBase",swordBase);
     mmvrgame::NativeStateField(sink,"vr/combat/swordTip",swordTip);
+    mmvrgame::NativeStateField(sink,"vr/combat/stickFireTip",stickFireTip);
     mmvrgame::NativeStateField(sink,"vr/combat/swordGate",swordGate);
     mmvrgame::NativeStateField(sink,"vr/combat/physicalSwordAnimation",physicalSwordAnimation);
     mmvrgame::NativeStateField(sink,"vr/combat/lastRawBlade",lastRawBlade);

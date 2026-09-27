@@ -45,7 +45,8 @@ extern "C" void MMVR_AndroidPrepare() {
     request.close();
     if (!test.empty() && test.back() == '\r')
         test.pop_back();
-    if (test == "koume-potion") {
+    if (test == "koume-potion" || test == "koume-manual") {
+        if (test == "koume-manual") setenv("MMVR_KOUME_MANUAL", "1", 1);
         std::remove("mmvr-test-request.txt");
         setenv("MMVR_NATIVE_TEST", "1", 1);
         setenv("MMVR_PROTECT_SAVES", "1", 1);
