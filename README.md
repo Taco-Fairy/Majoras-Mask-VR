@@ -26,7 +26,7 @@ Download the platform asset from this repository's **Releases** page once availa
 1. Download the Windows release ZIP and extract the it's contents into a folder.
 2. Prepare a clean, legally obtained self-dump of **Majora's Mask (USA), Nintendo 64 revision 1.0**, or the **N64 Majora's Mask ROM extracted from the US The Legend of Zelda: Collector's Edition GameCube disc**. Use an uncompressed `.z64`, `.v64` or `.n64` file. A matching existing `mm.o2r` can instead be placed beside `2ship.exe`. Place it into your extracted folder.
 3. Open the game one time and follow the on screen instructions. Close the game when done.
-4. Connect the headset and controllers through your chosen OpenXR runtime/streamer, then run **Play Majoras Mask VR.cmd**. The executable in the extracted release is `2ship.exe`; keep the launcher and its companion files together. On first launch, follow the extraction prompt and choose your prepared ROM file.
+4. Connect the headset and controllers through your chosen OpenXR runtime/streamer, then run **Play Majoras Mask VR.cmd**. On first launch, follow the extraction prompt and choose your prepared ROM file.
 5. Adjust VR settings with right-stick click before or after entering a save. Start a normal game through file select.
 
 ### Quest standalone
