@@ -234,6 +234,10 @@ void append_interpolation_plan(Path* oldPath, Path* newPath) {
             if (previous != oldPath->ops.end() && item.second < previous->second.size()) {
                 interpolationPlan.items.push_back({item.first, &previous->second[item.second], &current,
                                                    oldPath == newPath});
+            } else {
+                // A newly visible limb/item still owns real stack operations.
+                // Skipping them can unbalance the matrix stack across frames.
+                interpolationPlan.items.push_back({item.first, &current, &current, true});
             }
         }
     }
@@ -499,8 +503,12 @@ struct InterpolateCtx {
                 if (item.second < it->second.size()) {
                     Data& old_op = it->second[item.second];
                     interpolate_op(item.first, old_op, new_op, self_paired);
+                    continue;
                 }
             }
+            // No previous sample means use the current operation, not omit it.
+            // In particular Push/Pop must exactly follow the current draw.
+            interpolate_op(item.first, new_op, new_op, true);
         }
     }
 };

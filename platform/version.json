@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "product": "mmvr",
-  "version": "0.2.0",
-  "build": 196,
+  "version": "0.21",
+  "build": 197,
   "channel": "beta",
   "updateFeedUrl": "https://github.com/fulldivegames/Majoras-Mask-VR/releases/download/beta-channel/latest.json"
 }

@@ -24,7 +24,7 @@ inline constexpr int AssignmentFirst = int(Setting::Count), ResetSettingsRow = A
                      DiagnosticExportRow = NativeOptionsRow + 1,
                      SetupGuideRow = NativeOptionsRow + 2,
                      ReleaseNotesFirstRow = NativeOptionsRow + 3,
-                     ReleaseNotesCount = 8,
+                     ReleaseNotesCount = 9,
                      MenuRows = ReleaseNotesFirstRow + ReleaseNotesCount;
 inline bool ReleaseNotesRow(int row) { return row >= ReleaseNotesFirstRow && row < MenuRows; }
 inline bool TutorialRow(int row) { return row >= TutorialFirstRow && row < NativeOptionsRow; }
@@ -77,6 +77,7 @@ inline constexpr MenuSection MenuSections[] = {
     { NativeTab, "2Ship options", false },
     { ViewTab, "World scale", false },
     { SystemTab, "v0.2 - World Scale and Hotfix Update", false },
+    { SystemTab, "v0.21 - Potion crash hotfix", false },
 };
 inline constexpr int MenuSectionCount = sizeof(MenuSections) / sizeof(MenuSections[0]);
 struct MenuEntry {
@@ -84,6 +85,7 @@ struct MenuEntry {
 };
 // Explicit presentation order is independent of persistent setting IDs.
 inline constexpr MenuEntry OrderedMenu[] = {
+    { ReleaseNotesFirstRow + 8, 40 },
     { ReleaseNotesFirstRow + 0, 39 },
     { ReleaseNotesFirstRow + 1, 39 },
     { ReleaseNotesFirstRow + 2, 39 },

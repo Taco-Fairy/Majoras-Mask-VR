@@ -45,6 +45,16 @@ extern "C" void MMVR_AndroidPrepare() {
     request.close();
     if (!test.empty() && test.back() == '\r')
         test.pop_back();
+    if (test == "koume-potion") {
+        std::remove("mmvr-test-request.txt");
+        setenv("MMVR_NATIVE_TEST", "1", 1);
+        setenv("MMVR_PROTECT_SAVES", "1", 1);
+        setenv("MMVR_CREATE_COMPLETE_SLOT3", "0", 1);
+        setenv("MMVR_POTION_SHOP_TEST", "1", 1);
+        setenv("MMVR_KOUME_POTION_TEST", "1", 1);
+        setenv("MMVR_KOUME_PHYSICAL", "1", 1);
+        SDL_Log("MMVR protected Koume handoff diagnostic");
+    }
     if (test == "state-capture-flat" || test == "state-reload-flat" || test == "state-import-flat") {
         // Explicit private fixture, never a player slot or immersive session.
         std::remove("mmvr-test-request.txt");

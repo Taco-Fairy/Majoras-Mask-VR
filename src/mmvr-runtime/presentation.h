@@ -199,7 +199,8 @@ inline void Draw(ImDrawList& list, const UiDrawFrame& frame, ImTextureID frameTe
                     { "Physical sword hotfixes", "Improved blade-tip and scripted sword interactions.", "Fixed monkey rope targeting and dojo jump-slash detection." },
                     { "Aiming and third-person controls", "Optional head aiming, original controls and gamepad HUD.", "Separate lock-on toggle and native mask transformations." },
                     { "Gameplay hotfixes", "Corrected default form height and potion/message crashes.", "Existing height adjustments remain available." },
-                    { "Beta reminder", "Cutscenes, performance and mod compatibility can vary.", "Old save states may require their original build and mods." }
+                    { "Beta reminder", "Cutscenes, performance and mod compatibility can vary.", "Old save states may require their original build and mods." },
+                    { "Potion crash hotfix", "Fixed the crash when giving Koume the red potion.", "Available on Quest and PCVR." }
                 };
                 const auto& note = notes[i - ReleaseNotesFirstRow];
                 Text(list, 64, y - 3, note[0], 22);

@@ -1086,6 +1086,7 @@ extern "C" void MMVR_DebugRoomUpdate(PlayState *play) {
     if (mmvr::debugReturnRequested.exchange(false))
         MMVR_DebugTrialReturn(play);
     MaybeStartTownPanorama(play);
+    MaybePlaceKoumeCheckpoint(play);
     if (!MMVR_DebugRoomActive(play) || !GET_PLAYER(play))
         return;
     if (!ready) {

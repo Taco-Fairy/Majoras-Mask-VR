@@ -285,6 +285,29 @@ bool FrameInterpolation_VerifyScratch(){
         benchmark.close();
         if(!benchmark)throw std::runtime_error("Could not write interpolation-plan benchmark");
 
+        // Item appearance can move balanced stack operations across child paths.
+        // Both replay paths must retain every NEW operation, even without an old
+        // sample. Dropping the second parent push but replaying a new child's pop
+        // previously walked below the stack base on every interpolated frame.
+        for(int frame=0;frame<2;++frame){
+            FrameInterpolation_ShouldInterpolateFrame(true);FrameInterpolation_StartRecord();
+            Matrix_Push();
+            if(frame)Matrix_Push();
+            FrameInterpolation_RecordOpenChild(&labels[0],42);
+            Matrix_Pop();FrameInterpolation_RecordCloseChild();
+            if(frame){
+                FrameInterpolation_RecordOpenChild(&labels[1],43);
+                Matrix_Pop();FrameInterpolation_RecordCloseChild();
+            }
+            FrameInterpolation_StopRecord();
+        }
+        for(bool compiled:{false,true})for(int frame=0;frame<120;++frame){
+            auto* before=Matrix_GetCurrent();ScratchProbeMap output;
+            interpolate_into(float(frame%6)/6.f,output,compiled);
+            if(Matrix_GetCurrent()!=before)
+                throw std::runtime_error("New item interpolation unbalanced the matrix stack");
+        }
+
         // An authored camera cut must not discard unrelated actor interpolation
         // when the headset remains anchored to the player. Exercise real records.
         for (int frame=0; frame<2; ++frame) {

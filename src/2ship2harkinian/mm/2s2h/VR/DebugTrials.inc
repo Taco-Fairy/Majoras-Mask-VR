@@ -10,6 +10,7 @@ constexpr Trial trials[]={
  {"GIANT PRACTICE",ENTRANCE(TWINMOLDS_LAIR,0),SCENE_INISIE_BS,ACTOR_BOSS_02}};
 int trial=-1;bool trialSnapshot=false,trialReturning=false;
 int townPanoramaPending=-1;
+int koumeRoomPending=0;
 Save trialSave{};u8 trialEvents[8]{};CycleSceneFlags trialCycles[120]{};
 u16 trialSkyboxTime=0;s16 trialTimeSpeed=0;
 bool IsTownArrival(DebugNativeTriggerKind kind){
@@ -99,6 +100,7 @@ extern "C" int MMVR_DebugLocationBegin(PlayState* play,int index){
  trialSnapshot=true;trialReturning=false;trial=-1;
  PrepareKafeiCheckpoint(debugLocations[index].kafeiPreset);
  const int interaction=debugLocations[index].interactionPreset;
+ koumeRoomPending=0;
  if(interaction>=0) {
   // This is inside the existing reversible trial snapshot, not the player's save.
   gSaveContext.save.day=1;gSaveContext.save.eventDayCount=1;
@@ -111,6 +113,14 @@ extern "C" int MMVR_DebugLocationBegin(PlayState* play,int index){
    CLEAR_WEEKEVENTREG(WEEKEVENTREG_RECEIVED_KOTAKE_BOTTLE);
    CLEAR_WEEKEVENTREG(WEEKEVENTREG_FAILED_RECEIVED_RED_POTION_FOR_KOUME_SHOP);
    gSaveContext.save.saveInfo.inventory.items[SLOT_BOTTLE_1]=ITEM_NONE;
+  } else if(interaction==3) {
+   SET_WEEKEVENTREG(WEEKEVENTREG_TALKED_KOUME_INJURED);
+   CLEAR_WEEKEVENTREG(WEEKEVENTREG_SAVED_KOUME);
+   gSaveContext.save.saveInfo.inventory.items[SLOT_BOTTLE_1]=ITEM_POTION_RED;
+   BUTTON_ITEM_EQUIP(0,EQUIP_SLOT_C_DOWN)=ITEM_POTION_RED;
+   C_SLOT_EQUIP(0,EQUIP_SLOT_C_DOWN)=SLOT_BOTTLE_1;
+   gSaveContext.buttonStatus[EQUIP_SLOT_C_DOWN]=BTN_ENABLED;
+   koumeRoomPending=1;
   } else if(interaction==1) {
    CLEAR_WEEKEVENTREG(WEEKEVENTREG_09_80);
    CLEAR_WEEKEVENTREG(WEEKEVENTREG_23_20);
@@ -172,6 +182,26 @@ extern "C" int MMVR_DebugNativeTriggerBegin(PlayState* play,int index){
  townPanoramaPending=IsTownArrival(entry.kind)?index:-1;
  return true;
 }
+void MaybePlaceKoumeCheckpoint(PlayState* play){
+ if(!koumeRoomPending||!play||!trialSnapshot||trialReturning)return;
+ if(play->sceneId!=SCENE_26SARUNOMORI||play->transitionTrigger!=TRANS_TRIGGER_OFF||
+    play->transitionMode!=TRANS_MODE_OFF||!GET_PLAYER(play))return;
+ if(play->roomCtx.status)return;
+ if(koumeRoomPending==1&&play->roomCtx.curRoom.num!=7){
+  if(Room_RequestNewRoom(play,&play->roomCtx,7))koumeRoomPending=2;
+  return;
+ }
+ if(koumeRoomPending==2)Room_FinishRoomChange(play,&play->roomCtx);
+ auto* player=GET_PLAYER(play);
+ // Day-one Koume's authored room and approach side; leave her native AI intact.
+ player->actor.world.pos={-1698.f,0.f,-50.f};
+ player->actor.prevPos=player->actor.world.pos;
+ player->actor.shape.rot.y=player->actor.world.rot.y=static_cast<s16>(-9701);
+ player->actor.velocity={};player->actor.speed=0;
+ MMVR_CameraCoordinateBoundary(play);mmvr::Recenter();
+ koumeRoomPending=0;
+ Log()<<"koume-handoff-checkpoint room=7 ready\n"<<std::flush;
+}
 void MaybeStartTownPanorama(PlayState* play){
  if(townPanoramaPending<0||!play||!trialSnapshot||trialReturning)return;
  const auto& target=debugNativeTriggers[townPanoramaPending];
@@ -211,7 +241,7 @@ extern "C" int MMVR_DebugTrialReturn(PlayState* play){
  // Check the existing room identity before enabling a new hall request.
  if(MMVR_DebugRoomActive(play))return false;
  requested=true; audioProbe=true;
- townPanoramaPending=-1;
+ townPanoramaPending=-1;koumeRoomPending=0;
  RestoreTrial();trialReturning=true;TrialTransition(play,ENTRANCE(CUTSCENE,0),true);return true;
 }
 

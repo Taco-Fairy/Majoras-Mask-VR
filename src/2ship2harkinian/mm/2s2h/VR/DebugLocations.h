@@ -103,5 +103,6 @@ constexpr DebugLocation debugLocations[]={
  {"Zora Hall Rooms",ENTRANCE(ZORA_HALL_ROOMS,0),SCENE_BANDROOM},
  {"Potion handoff - rescue Koume",ENTRANCE(MAGIC_HAGS_POTION_SHOP,0),SCENE_WITCH_SHOP,-1,0},
  {"Monkey - sword rope interaction",ENTRANCE(DEKU_KINGS_CHAMBER,1),SCENE_DEKU_KING,-1,1},
+ {"Give red potion to Koume - Woods",ENTRANCE(WOODS_OF_MYSTERY,0),SCENE_26SARUNOMORI,-1,3},
  {"Sword Dojo - lessons and challenge",ENTRANCE(SWORDMANS_SCHOOL,0),SCENE_DOUJOU,-1,2},
 };
