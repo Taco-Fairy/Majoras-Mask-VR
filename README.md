@@ -7,10 +7,9 @@ One project for **Windows PCVR** and **standalone Meta Quest**. Choose the downl
 
 **Version 0.1 beta downloads:** [Windows PCVR ZIP](https://github.com/fulldivegames/Majoras-Mask-VR/releases/download/v0.1.0-beta.2/MMVR-Windows-0.1.0-beta.2.zip) | [Quest standalone APK](https://github.com/fulldivegames/Majoras-Mask-VR/releases/download/v0.1.0-beta.2/MMVR-Quest-0.1.0-beta.2.apk) | [Release notes](https://github.com/fulldivegames/Majoras-Mask-VR/releases/tag/v0.1.0-beta.2)
 
+## INDEX
 [Installation](#first-installation) · [Controls](#default-controls) · [Physical items](#physical-items-and-combat) · [Forms and gestures](#forms-movement-and-songs) · [Save states](#exact-save-states-and-ordinary-saves)
 
-
-## Scroll for gameplay instructions
 
 ## First installation
 
