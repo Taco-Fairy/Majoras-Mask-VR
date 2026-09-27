@@ -1,7 +1,7 @@
 # Majora's Mask VR
 Full Motion Majora's Mask VR mod, made by FullDiveGames.
 
-Disclaimer: I made this mod using Vibe coding. I make no money from this mod, I've put a lot of time and testing into making it polished, fun, and fully playable. I don't support all AI, but I don't mind using it for coding non profit mods for the games I love. Sorry if this fact bothers anyone, I hope you enjoy!
+Disclaimer: I made this mod using Vibe coding. I make no money from this mod, I've put a lot of time and testing into making it polished, fun, and fully playable. I don't support all AI, but I don't mind using it for coding non profit mods for the games I love. I am sorry if this fact bothers anyone or is a deal breaker, but I hope you enjoy!
 
 One project for **Windows PCVR** and **standalone Meta Quest**. Choose the download for your platform.
 
