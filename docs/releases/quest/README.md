@@ -203,3 +203,15 @@ Update downloads are verified before installation. Windows keeps rollback files 
 
 ### World scale and reaching the floor
 With world scale enabled (the default for new settings), recenter while sitting or standing in your normal playing position. If your VR runtime supplies a calibrated floor, the game uses your eye-to-floor distance at recenter for every form. It does not change your boundary. If the runtime has no floor, set **Fallback floor-to-eye height** to your seated or standing eye height above the floor, then recenter. The default 100% form scales align the physical floor with the character’s floor; custom form world-size percentages intentionally change that relationship. Hands and held equipment retain their physical size.
+
+
+### Private preview additions (not published)
+- **2Ship:** search setting names with the VR keyboard. **Items and masks** includes Persistent Bunny Hood and Blast Mask cooldown. Enable Persistent Bunny Hood, then press A on your owned Bunny Hood in the mask menu to toggle its boost.
+- **Combat:** adjust sword and Goron fist hitbox size without enlarging their models. Fast physical sword spins can use the unlocked great spin when magic is available.
+- **HUD:** choose Headset, Left hand, or Right hand under HUD attachment; Hand HUD size resizes it. Existing HUD opacity still applies; dialogue and menus keep their own settings.
+
+Private preview bottle repair: improved hot-spring and bug scooping with world scale, plus an Elder ice-state crash guard. Not publicly released.
+
+Frame rate options: Uncapped, 120, 90, 80 or 72 FPS. Uncapped removes the game limiter; the headset/runtime still controls display refresh.
+
+Large texture packs are verified in the background before save states are available. If the menu says verification is still running, retry Save/Load shortly; keep the same build and packs when loading a state.

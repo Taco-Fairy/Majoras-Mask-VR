@@ -5,7 +5,7 @@
  */
 
 #include "overlays/actors/ovl_Obj_Bean/z_obj_bean.h"
-#include "z_en_mushi2.h"
+#include "../../../2ship2harkinian/mm/src/overlays/actors/ovl_En_Mushi2/z_en_mushi2.h"
 #ifdef MMVR_ENABLE
 #include "2s2h/VR/Bottle.h"
 #endif

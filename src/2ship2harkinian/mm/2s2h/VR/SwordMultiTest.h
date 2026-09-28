@@ -35,17 +35,19 @@ static void NativeSwordMultiTest(PlayState* play) {
     for(int h=0;h<2;++h){frame.hands[h].orientation.w=frame.aims[h].orientation.w=1;frame.handValid[h]=frame.handTracked[h]=frame.aimValid[h]=true;}
     const auto view=mmvr::YawPose(0,0,2045,0),head=mmvr::YawPose(0);
     const ItemId weapons[]={ITEM_SWORD_KOKIRI,ITEM_SWORD_RAZOR,ITEM_SWORD_GILDED,ITEM_SWORD_GREAT_FAIRY};
-    for(int weapon=0;weapon<4;++weapon) {
+    for(int size:{100,200}) for(int weapon=0;weapon<4;++weapon) {
+        mmvr::GetSettings().Set(mmvr::Setting::SwordHitboxScale,float(size));
         mmvrgame::ClearTracking();mmvrgame::ClearCombat();MMVR_PlayerEquipSword(play,p,weapons[weapon]);
-        EnDekubaba enemies[2]{};int contacts[2]{};
-        for(int i=0;i<2;++i) {
+        EnDekubaba enemies[3]{};int contacts[3]{};
+        for(int i=0;i<3;++i) {
             auto& e=enemies[i];e.actor.id=ACTOR_EN_DEKUBABA;e.actor.update=EnDekubaba_Update;
             e.actor.world.pos={0,2000,0};e.actor.home.pos=e.actor.world.pos;
             EnDekubaba_Init(&e.actor,play);e.actor.colChkInfo.health=32;
             e.collider.base.colMaterial=COL_MATERIAL_HIT0;e.collider.base.acFlags&=~AC_HARD;
             for(auto& element:e.colliderElements) {
                 element.dim.worldSphere.center={(s16)(MMVR_NativeSwordLength(p)*.01f-3),2024,(s16)(i?8:-8)};
-                element.dim.worldSphere.radius=5;element.base.acElemFlags|=ACELEM_ON;
+                if(i==2)element.dim.worldSphere.center.x=static_cast<s16>(3.5f+(MMVR_NativeSwordLength(p)*.01f-3.5f)*1.65f);
+                element.dim.worldSphere.radius=i==2?2:5;element.base.acElemFlags|=ACELEM_ON;
             }
         }
         for(int sample=0;sample<105;++sample) {
@@ -63,13 +65,14 @@ static void NativeSwordMultiTest(PlayState* play) {
                 }
                 mmvrgame::ProcessCombatInput(play);MMVR_FilterAttackCollisions(play);
                 CollisionCheck_AT(play,&play->colChkCtx);MMVR_AfterAttackCollision(play);CollisionCheck_Damage(play,&play->colChkCtx);
-                for(int i=0;i<2;++i) if(enemies[i].collider.base.acFlags&AC_HIT) ++contacts[i];
+                for(int i=0;i<3;++i) if(enemies[i].collider.base.acFlags&AC_HIT) ++contacts[i];
             }
         }
-        log<<"weapon="<<weapon<<" first="<<contacts[0]<<" second="<<contacts[1]<<"\n";
-        failures+=(contacts[0]!=1 || contacts[1]!=1);
+        log<<"size="<<size<<" extended="<<contacts[2]<<" weapon="<<weapon<<" first="<<contacts[0]<<" second="<<contacts[1]<<"\n";
+        failures+=(contacts[0]!=1 || contacts[1]!=1 || contacts[2]!=(size==200?1:0));
         for(auto& e:enemies) EnDekubaba_Destroy(&e.actor,play);
     }
+    mmvr::GetSettings().Set(mmvr::Setting::SwordHitboxScale,100);
     // Actual monkey collider and native rope-response action; the grip remains
     // stationary while wrist rotation moves the blade through its hurtbox.
     for (int hand=0; hand<2; ++hand) for (int weapon=0; weapon<4; ++weapon) {

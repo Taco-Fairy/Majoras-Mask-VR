@@ -18960,7 +18960,13 @@ int MMVR_CatchBottleActor(PlayState* play,Player* this,Actor* actor) {
     for(i=0;i<ARRAY_COUNT(D_8085D798);++i,++entry){
         if(actor->id==entry->actorId&&(entry->actorParams<=BOTTLE_CATCH_PARAMS_ANY||actor->params==entry->actorParams))break;
     }
-    if(i==ARRAY_COUNT(D_8085D798)||!GameInteractor_Should(VB_PLAY_BOTTLE_CATCH_TEXT,true,this,actor,entry->itemId,entry->itemAction))return false;
+    if (i == ARRAY_COUNT(D_8085D798)) return false;
+    if (!GameInteractor_Should(VB_PLAY_BOTTLE_CATCH_TEXT, true, this, actor, entry->itemId, entry->itemAction)) {
+        // A dialogue-skip hook may already have completed the native capture.
+        // Do not replay it, or mistake a hook that merely rejects the offer for success.
+        return actor->parent == &this->actor &&
+               Player_GetItemOnButton(play, this, this->heldItemButton) == entry->itemId;
+    }
     Player_SetAction(play,this,Player_Action_68,0);
     this->av1.actionVar1=i+1;this->av2.actionVar2=0;
     this->stateFlags1|=PLAYER_STATE1_10000000|PLAYER_STATE1_20000000;
@@ -19026,7 +19032,8 @@ void Player_Action_68(Player* this, PlayState* play) {
                             entry++;
                         }
 
-                        if (GameInteractor_Should(VB_PLAY_BOTTLE_CATCH_TEXT, i < ARRAY_COUNT(D_8085D798), this,
+                        if ((i < ARRAY_COUNT(D_8085D798)) &&
+                            GameInteractor_Should(VB_PLAY_BOTTLE_CATCH_TEXT, true, this,
                                                   interactRangeActor, entry->itemId, entry->itemAction)) {
                             this->av1.actionVar1 = i + 1;
                             this->av2.actionVar2 = 0;
@@ -19056,7 +19063,8 @@ void Player_Action_68(Player* this, PlayState* play) {
                                 entry++;
                             }
 
-                            if (GameInteractor_Should(VB_PLAY_BOTTLE_CATCH_TEXT, i < ARRAY_COUNT(D_8085D798), this,
+                            if ((i < ARRAY_COUNT(D_8085D798)) &&
+                            GameInteractor_Should(VB_PLAY_BOTTLE_CATCH_TEXT, true, this,
                                                       interactRangeActor, entry->itemId, entry->itemAction)) {
                                 this->av1.actionVar1 = i + 1;
                                 this->av2.actionVar2 = 0;
@@ -19107,15 +19115,15 @@ void Player_Action_69(Player* this, PlayState* play) {
     }
 }
 
-static Vec3f mmvr_local_4422feb802252d81 = { 10.0f, 268 * 0.1f, 30.0f };
-static s8 mmvr_local_c164678f71317e3f[PLAYER_FORM_MAX] = {
+static Vec3f mmvr_local_62680c0be5dcb22c = { 10.0f, 268 * 0.1f, 30.0f };
+static s8 mmvr_local_39808f103875b60a[PLAYER_FORM_MAX] = {
         0x2D, // PLAYER_FORM_FIERCE_DEITY
         0x4B, // PLAYER_FORM_GORON
         0x37, // PLAYER_FORM_ZORA
         0x23, // PLAYER_FORM_DEKU
         0x28, // PLAYER_FORM_HUMAN
     };
-static struct_8085D80C mmvr_local_da09ea4b89013bd4[] = {
+static struct_8085D80C mmvr_local_b45c37fa158b71f1[] = {
         { ACTOR_EN_FISH, FISH_PARAMS(ENFISH_0) },                   // PLAYER_BOTTLE_FISH
         { ACTOR_OBJ_AQUA, AQUA_PARAMS(AQUA_TYPE_COLD) },            // PLAYER_BOTTLE_SPRING_WATER
         { ACTOR_OBJ_AQUA, AQUA_PARAMS(AQUA_TYPE_HOT) },             // PLAYER_BOTTLE_HOT_SPRING_WATER
@@ -19128,7 +19136,7 @@ static struct_8085D80C mmvr_local_da09ea4b89013bd4[] = {
         { ACTOR_EN_MUSHI2, ENMUSHI2_PARAMS(ENMUSHI2_0) },                                // PLAYER_BOTTLE_HYLIAN_LOACH
         { ACTOR_EN_MUSHI2, ENMUSHI2_PARAMS(ENMUSHI2_0) },                                // PLAYER_BOTTLE_BUG
     };
-static AnimSfxEntry mmvr_local_1f7fa3a5aa1a00e6[] = {
+static AnimSfxEntry mmvr_local_5eb489862c5d1574[] = {
         ANIMSFX(ANIMSFX_TYPE_VOICE, 38, NA_SE_VO_LI_AUTO_JUMP, CONTINUE),
         ANIMSFX(ANIMSFX_TYPE_GENERAL, 40, NA_SE_EV_BOTTLE_CAP_OPEN, STOP),
     };
@@ -19146,8 +19154,8 @@ void Player_Action_70(Player* this, PlayState* play) {
     f32 temp_fv1;
     struct_8085D80C* sp4C;
 
-    mmvr_local_4422feb802252d81.z = mmvr_local_c164678f71317e3f[this->transformation];
-    if (Player_PosVsWallLineTest(play, this, &mmvr_local_4422feb802252d81, &sp6C, &sp68, &sp5C)) {
+    mmvr_local_62680c0be5dcb22c.z = mmvr_local_39808f103875b60a[this->transformation];
+    if (Player_PosVsWallLineTest(play, this, &mmvr_local_62680c0be5dcb22c, &sp6C, &sp68, &sp5C)) {
         temp_fv1 = this->actor.world.pos.x - sp5C.x;
         temp_fa0 = this->actor.world.pos.z - sp5C.z;
         temp_fv0 = sqrtf(SQ(temp_fv1) + SQ(temp_fa0));
@@ -19171,7 +19179,7 @@ void Player_Action_70(Player* this, PlayState* play) {
                 func_80839E74(this, play);
             }
         } else if (PlayerAnimation_OnFrame(&this->skelAnime, 76.0f)) {
-            sp4C = &mmvr_local_da09ea4b89013bd4[GET_BOTTLE_FROM_IA(this->itemAction) - 1];
+            sp4C = &mmvr_local_b45c37fa158b71f1[GET_BOTTLE_FROM_IA(this->itemAction) - 1];
 
             Vec3f releasePoint={
                 (Math_SinS(this->actor.shape.rot.y)*5.0f)+this->leftHandWorld.pos.x,
@@ -19185,7 +19193,7 @@ void Player_Action_70(Player* this, PlayState* play) {
                         this->actor.shape.rot.y, 0, sp4C->params);
             Player_UpdateBottleHeld(play, this, ITEM_BOTTLE, PLAYER_IA_BOTTLE_EMPTY);
         } else {
-            Player_PlayAnimSfx(this, mmvr_local_1f7fa3a5aa1a00e6);
+            Player_PlayAnimSfx(this, mmvr_local_5eb489862c5d1574);
         }
     }
 }
@@ -20146,10 +20154,10 @@ void func_80856074(PlayState* play, Player* this) {
     }
 }
 
-static Vec3f mmvr_local_91df89fec5d1f51c = { 0.0f, 0.5f, 0.0f };
-static Vec3f mmvr_local_f5a5495f34044883 = { 0.0f, 0.5f, 0.0f };
-static Color_RGBA8 mmvr_local_0182b207a7bef2ce = { 255, 255, 55, 255 };
-static Color_RGBA8 mmvr_local_0ec61218a490cbfc = { 100, 50, 0, 0 };
+static Vec3f mmvr_local_e4932252d23616d3 = { 0.0f, 0.5f, 0.0f };
+static Vec3f mmvr_local_4fc5adeb4cc6bf66 = { 0.0f, 0.5f, 0.0f };
+static Color_RGBA8 mmvr_local_2250b728ea274b79 = { 255, 255, 55, 255 };
+static Color_RGBA8 mmvr_local_1df350077400330a = { 100, 50, 0, 0 };
 void func_80856110(PlayState* play, Player* this, f32 arg2, f32 arg3, f32 arg4, s16 scale, s16 scaleStep, s16 life) {
     /* persistent local storage is declared above */        // velocity
     /* persistent local storage is declared above */        // accel
@@ -20161,10 +20169,10 @@ void func_80856110(PlayState* play, Player* this, f32 arg2, f32 arg3, f32 arg4, 
     pos.y = this->actor.world.pos.y + arg2;
     pos.z = this->actor.world.pos.z;
 
-    mmvr_local_91df89fec5d1f51c.y = arg3;
-    mmvr_local_f5a5495f34044883.y = arg4;
+    mmvr_local_e4932252d23616d3.y = arg3;
+    mmvr_local_4fc5adeb4cc6bf66.y = arg4;
 
-    func_800B0EB0(play, &pos, &mmvr_local_91df89fec5d1f51c, &mmvr_local_f5a5495f34044883, &mmvr_local_0182b207a7bef2ce, &mmvr_local_0ec61218a490cbfc, scale, scaleStep, life);
+    func_800B0EB0(play, &pos, &mmvr_local_e4932252d23616d3, &mmvr_local_4fc5adeb4cc6bf66, &mmvr_local_2250b728ea274b79, &mmvr_local_1df350077400330a, scale, scaleStep, life);
 }
 
 // Deku Flower related
@@ -20290,8 +20298,8 @@ void Player_Action_93(Player* this, PlayState* play) {
     }
 }
 
-static Vec3f mmvr_local_40a2c8041ef92880 = { 0.0f, 0.3f, 0.0f };
-static Vec3f mmvr_local_c41b5eac5b49e3d0 = { 0.0f, -0.025f, 0.0f };
+static Vec3f mmvr_local_1499466baed0fb2b = { 0.0f, 0.3f, 0.0f };
+static Vec3f mmvr_local_dbdbc7c69358cf95 = { 0.0f, -0.025f, 0.0f };
 void func_808566C0(PlayState* play, Player* this, PlayerBodyPart bodyPartIndex, f32 arg3, f32 arg4, f32 arg5,
                    s32 life) {
     Color_RGBA8 primColor = { 255, 200, 200, 0 };
@@ -20309,8 +20317,8 @@ void func_808566C0(PlayState* play, Player* this, PlayerBodyPart bodyPartIndex, 
         sp34 = 1.0f;
     }
 
-    mmvr_local_40a2c8041ef92880.x = (Rand_ZeroFloat(arg4) + arg3) * sp34;
-    mmvr_local_c41b5eac5b49e3d0.x = arg5 * sp34;
+    mmvr_local_1499466baed0fb2b.x = (Rand_ZeroFloat(arg4) + arg3) * sp34;
+    mmvr_local_dbdbc7c69358cf95.x = arg5 * sp34;
     if (Rand_ZeroOne() < 0.5f) {
         sp34 = -1.0f;
     } else {
@@ -20318,8 +20326,8 @@ void func_808566C0(PlayState* play, Player* this, PlayerBodyPart bodyPartIndex, 
     }
 
     temp_v0 = &this->bodyPartsPos[bodyPartIndex];
-    mmvr_local_40a2c8041ef92880.z = (Rand_ZeroFloat(arg4) + arg3) * sp34;
-    mmvr_local_c41b5eac5b49e3d0.z = arg5 * sp34;
+    mmvr_local_1499466baed0fb2b.z = (Rand_ZeroFloat(arg4) + arg3) * sp34;
+    mmvr_local_dbdbc7c69358cf95.z = arg5 * sp34;
     pos.x = temp_v0->x;
     pos.y = Rand_ZeroFloat(15.0f) + temp_v0->y;
     pos.z = temp_v0->z;
@@ -20329,7 +20337,7 @@ void func_808566C0(PlayState* play, Player* this, PlayerBodyPart bodyPartIndex, 
         scale = -150;
     }
 
-    EffectSsKirakira_SpawnDispersed(play, &pos, &mmvr_local_40a2c8041ef92880, &mmvr_local_c41b5eac5b49e3d0, &primColor, &envColor, scale, life);
+    EffectSsKirakira_SpawnDispersed(play, &pos, &mmvr_local_1499466baed0fb2b, &mmvr_local_dbdbc7c69358cf95, &primColor, &envColor, scale, life);
 }
 
 void func_8085687C(Player* this) {
@@ -20704,8 +20712,8 @@ void func_80857AEC(PlayState* play, Player* this) {
 }
 
 // Goron rolling related
-static Vec3f mmvr_local_14e9b89b1c0bb1dc = { -30.0f, 60.0f, 0.0f };
-static Vec3f mmvr_local_1703e85cfb4ea392 = { 30.0f, 60.0f, 0.0f };
+static Vec3f mmvr_local_bfbf9bea57f0dcfc = { -30.0f, 60.0f, 0.0f };
+static Vec3f mmvr_local_21ff4b526a4c7ec9 = { 30.0f, 60.0f, 0.0f };
 void Player_Action_96(Player* this, PlayState* play) {
     if (Player_TryActionHandlerList(play, this, sActionHandlerList12, false)) {
         return;
@@ -20916,9 +20924,9 @@ void Player_Action_96(Player* this, PlayState* play) {
                     sp7C = (s32)(BINANG_SUB(yawTarget, this->yaw) * -0.5f);
                     this->unk_B0C += (f32)(SQ(sp7C)) * 8e-9f;
                     Math_ScaledStepToS(&this->yaw, yawTarget, spC8);
-                    sp6C = func_80835D2C(play, this, &mmvr_local_14e9b89b1c0bb1dc, &sp70);
+                    sp6C = func_80835D2C(play, this, &mmvr_local_bfbf9bea57f0dcfc, &sp70);
 
-                    var_fa1 = func_80835D2C(play, this, &mmvr_local_1703e85cfb4ea392, &sp70) - sp6C;
+                    var_fa1 = func_80835D2C(play, this, &mmvr_local_21ff4b526a4c7ec9, &sp70) - sp6C;
                     if (fabsf(var_fa1) > 100.0f) {
                         var_fa1 = 0.0f;
                     }

@@ -18945,7 +18945,13 @@ int MMVR_CatchBottleActor(PlayState* play,Player* this,Actor* actor) {
     for(i=0;i<ARRAY_COUNT(D_8085D798);++i,++entry){
         if(actor->id==entry->actorId&&(entry->actorParams<=BOTTLE_CATCH_PARAMS_ANY||actor->params==entry->actorParams))break;
     }
-    if(i==ARRAY_COUNT(D_8085D798)||!GameInteractor_Should(VB_PLAY_BOTTLE_CATCH_TEXT,true,this,actor,entry->itemId,entry->itemAction))return false;
+    if (i == ARRAY_COUNT(D_8085D798)) return false;
+    if (!GameInteractor_Should(VB_PLAY_BOTTLE_CATCH_TEXT, true, this, actor, entry->itemId, entry->itemAction)) {
+        // A dialogue-skip hook may already have completed the native capture.
+        // Do not replay it, or mistake a hook that merely rejects the offer for success.
+        return actor->parent == &this->actor &&
+               Player_GetItemOnButton(play, this, this->heldItemButton) == entry->itemId;
+    }
     Player_SetAction(play,this,Player_Action_68,0);
     this->av1.actionVar1=i+1;this->av2.actionVar2=0;
     this->stateFlags1|=PLAYER_STATE1_10000000|PLAYER_STATE1_20000000;
@@ -19011,7 +19017,8 @@ void Player_Action_68(Player* this, PlayState* play) {
                             entry++;
                         }
 
-                        if (GameInteractor_Should(VB_PLAY_BOTTLE_CATCH_TEXT, i < ARRAY_COUNT(D_8085D798), this,
+                        if ((i < ARRAY_COUNT(D_8085D798)) &&
+                            GameInteractor_Should(VB_PLAY_BOTTLE_CATCH_TEXT, true, this,
                                                   interactRangeActor, entry->itemId, entry->itemAction)) {
                             this->av1.actionVar1 = i + 1;
                             this->av2.actionVar2 = 0;
@@ -19041,7 +19048,8 @@ void Player_Action_68(Player* this, PlayState* play) {
                                 entry++;
                             }
 
-                            if (GameInteractor_Should(VB_PLAY_BOTTLE_CATCH_TEXT, i < ARRAY_COUNT(D_8085D798), this,
+                            if ((i < ARRAY_COUNT(D_8085D798)) &&
+                            GameInteractor_Should(VB_PLAY_BOTTLE_CATCH_TEXT, true, this,
                                                       interactRangeActor, entry->itemId, entry->itemAction)) {
                                 this->av1.actionVar1 = i + 1;
                                 this->av2.actionVar2 = 0;

@@ -18,6 +18,9 @@ void Player_Action_Idle(Player*,PlayState*);
 static void NativeCarryablesReviewTest(PlayState* play,std::ostream& out) {
  auto* p=GET_PLAYER(play);const Player baseline=*p;const auto save=gSaveContext;
  const auto settings=mmvr::GetSettings();const auto input=*CONTROLLER1(&play->state);
+ // This fixture supplies unscaled synthetic poses (40 units/metre). Keep its
+ // baseline explicit; calibrated tracking is exercised by the scale fixtures.
+ mmvr::GetSettings().Set(mmvr::Setting::WorldScaleCalibration,0);
  mmvr::GetSettings().Set(mmvr::Setting::PhysicalCarry,1);
  mmvr::GetSettings().Set(mmvr::Setting::FormFirstPerson,1);
  mmvr::GetSettings().Set(mmvr::Setting::CarryGrabDistance,.25f);

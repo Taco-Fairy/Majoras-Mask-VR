@@ -1,5 +1,6 @@
 #include "Ownership.h"
 #include "Fingerprint.h"
+#include "AsyncFingerprint.h"
 #include "RestorePlan.h"
 #include "Archive.h"
 #include "LiveGraph.h"
@@ -44,6 +45,26 @@ int main(int argc,char** argv){
         Check(hash.Hex()=="cdc76e5c9914fb9281a1c7e284d73e67f1809a48a497200e046d39ccc7112cd0","SHA-256 streamed million-byte vector");
         Fingerprint framedA,framedB;framedA.Field("a");framedA.Field("bc");framedB.Field("ab");framedB.Field("c");
         Check(framedA.Hex()!=framedB.Hex(),"identity fields have unambiguous boundaries");
+    }
+    {
+        std::filesystem::create_directories(root);
+        const auto a=root/"fingerprint-a.bin", b=root/"fingerprint-b.bin";
+        {std::ofstream(a,std::ios::binary)<<"alpha";std::ofstream(b,std::ios::binary)<<"beta";}
+        std::atomic_bool cancelled{true};
+        Reject([&]{FingerprintFile(a,&cancelled);},"background verification supports shutdown cancellation");
+        AsyncFingerprintCache cache;
+        Check(!cache.Get({a,b}),"first content check is asynchronous");
+        const auto first=cache.Get({a,b},true);
+        Check(first && (*first)[0]==FingerprintFile(a) && (*first)[1]==FingerprintFile(b),"async digests match byte hashes");
+        const auto reordered=cache.Get({b,a});
+        Check(reordered && (*reordered)[0]==(*first)[1] && (*reordered)[1]==(*first)[0],"cached results preserve mount order");
+        {std::ofstream(a,std::ios::binary|std::ios::trunc)<<"changed content";}
+        Check(!cache.Get({a,b}),"changed content invalidates cached fingerprint");
+        const auto changed=cache.Get({a,b},true);
+        Check(changed && (*changed)[0]!=(*first)[0] && (*changed)[0]==FingerprintFile(a),"changed content is rehashed");
+        std::filesystem::remove(b);
+        Reject([&]{cache.Get({a,b});},"missing dependency rejected even after cache hit");
+        Check(cache.Get({a}).has_value(),"removed mod does not retain a dependency");
     }
     auto original=Sample();auto bytes=Encode(original);auto decoded=Decode(bytes,identity);
     Check(Encode(decoded)==bytes,"binary archive round trip");

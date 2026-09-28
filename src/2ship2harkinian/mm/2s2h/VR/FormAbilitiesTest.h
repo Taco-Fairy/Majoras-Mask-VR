@@ -14,6 +14,8 @@ void Player_Action_43(Player*,PlayState*);void Player_Action_Idle(Player*,PlaySt
 }
 static void NativeFormAbilitiesTest(PlayState* play,const Player& baseline,std::ostream& log){
  auto* p=GET_PLAYER(play);auto saved=*p;auto save=gSaveContext;auto settings=mmvr::GetSettings();auto input=*CONTROLLER1(&play->state);auto collision=play->colChkCtx;
+ // Native-scale matrices below must not inherit a saved floor calibration.
+ mmvr::GetSettings().Set(mmvr::Setting::WorldScaleCalibration,0);
  auto prepare=[&](){*p=baseline;p->actor.world.pos={0,2000,0};p->actor.velocity={};p->stateFlags1=p->stateFlags2=p->stateFlags3=0;p->currentMask=PLAYER_MASK_NONE;p->heldActor=p->actor.child=nullptr;p->itemAction=p->heldItemAction=PLAYER_IA_NONE;p->heldItemId=ITEM_NONE;*CONTROLLER1(&play->state)={};gSaveContext=save;mmvrgame::ClearTracking();mmvrgame::ClearFormTracking();mmvrgame::ClearItemSelection();};
  auto view=mmvr::YawPose(0,0,2045,0),head=mmvr::YawPose(0);
  mmvr::TrackingFrame f{};f.head.orientation.w=f.origin.orientation.w=1;f.epoch=16000;f.timeSeconds=16000;
@@ -70,7 +72,14 @@ static void NativeFormAbilitiesTest(PlayState* play,const Player& baseline,std::
  log<<"],\"formEndShot\":[";
  for(int form:{PLAYER_FORM_DEKU,PLAYER_FORM_ZORA}){
   prepare();p->transformation=form;p->actor.draw=[](Actor*,PlayState*){};p->actor.scale.y=.01f;
-  mmvrgame::ResetTestCamera();f.epoch++;auto camera=mmvrgame::TestCameraFrame(f);
+  mmvrgame::ResetTestCamera();
+  // Commit the changed form's draw epoch before exercising its native end-shot
+  // transition, just as the live renderer does after a transformation.
+  p->actor.init=nullptr;Matrix_Push();
+  Matrix_Translate(p->actor.world.pos.x,p->actor.world.pos.y,p->actor.world.pos.z,MTXMODE_NEW);
+  Matrix_Scale(.01f,.01f,.01f,MTXMODE_APPLY);
+  MMVR_PlayerDrawBegin(play,&p->actor);MMVR_PlayerDrawEnd(play,&p->actor);Matrix_Pop();
+  f.epoch++;auto camera=mmvrgame::TestCameraFrame(f);
   p->actionFunc=Player_Action_43;p->unk_AA5=PLAYER_UNKAA5_3;p->stateFlags1|=PLAYER_STATE1_100000;p->stateFlags3|=PLAYER_STATE3_40;
   p->upperActionFunc=form==PLAYER_FORM_DEKU?Player_UpperAction_8:Player_UpperAction_14;
   PlayerAnimation_PlayOnce(play,&p->skelAnimeUpper,(PlayerAnimationHeader*)(form==PLAYER_FORM_DEKU?gPlayerAnim_pn_tamahaki:gPlayerAnim_pz_cutterattack));

@@ -15,7 +15,7 @@ inline constexpr ControlTutorialEntry ControlTutorial[] = {
     { "Select an item", "Hold dominant grip; move that hand onto a wheel slot and release.", "Selection does not consume items. Use the item trigger afterward." },
     { "Wheel options", "Items supports 4-8 slots; extra slots occupy the four corners.", "Release away from a slot to clear selection when gameplay permits." },
     { "Sword and Deku stick", "Swing deliberately through targets; stationary touching cannot hit.", "Sticks retain burning/breaking. Native weapon damage still applies." },
-    { "Spin slash", "Hold sword trigger to charge; release with the blade held out.", "Full charge: 2 seconds by default. Magic requires available magic." },
+    { "Spin slash", "Hold sword trigger to charge (2 seconds); release with the blade held out.", "Fast physical turns use great spin when unlocked and magic is available; Combat has the toggle." },
     { "Physical spin and sword beam", "Turn physically with the sword extended for a regular spin.", "Fierce Deity: hold trigger and swing; beam follows headset aim." },
     { "Spin comfort and holster", "Combat can disable the triggered 360-degree camera turn.", "Empty hand/item slot: reach behind shoulder and trigger to holster." },
     { "Blocking", "Hold offhand grip; put your shield between you and the attack.", "Deku and Zora shields need physical placement too." },
@@ -51,6 +51,9 @@ inline constexpr ControlTutorialEntry ControlTutorial[] = {
     { "Recovery and diagnostics", "System has the setup guide and a private-safe diagnostic report export.", "Close the game to use Recover VR settings on PC or the Quest recovery app." },
     { "Updates and save states", "Launch checks only notify. Install needs confirmation and may invalidate states.", "Make an ordinary save before updating. Incompatible states are kept, not loaded." },
 
+    { "Hand-mounted HUD", "HUD attachment selects Headset, Left hand or Right hand; Hand HUD size resizes it.", "HUD opacity still applies. Dialogue, pause screens and settings stay separate." },
+    { "Finding native settings", "2Ship has a search field with the VR keyboard and an Items and masks group.", "Persistent Bunny Hood: enable, then press A on the owned hood in the mask menu." },
+    { "Combat assistance", "Combat has separate sword and Goron fist hitbox-size sliders.", "They enlarge collision reach, not models. Ordinary walls still block attacks." },
 };
 inline constexpr int ControlTutorialCount = sizeof(ControlTutorial) / sizeof(ControlTutorial[0]);
 }

@@ -4,7 +4,7 @@
  * Description: Goron Elder
  */
 
-#include "z_en_jg.h"
+#include "../../../2ship2harkinian/mm/src/overlays/actors/ovl_En_Jg/z_en_jg.h"
 #include "overlays/actors/ovl_En_S_Goro/z_en_s_goro.h"
 #include "overlays/actors/ovl_Obj_Ice_Poly/z_obj_ice_poly.h"
 #include "2s2h/GameInteractor/GameInteractor.h"

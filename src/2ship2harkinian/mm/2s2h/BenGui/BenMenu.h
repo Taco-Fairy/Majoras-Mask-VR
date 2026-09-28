@@ -27,7 +27,7 @@ class BenMenu : public Ship::Menu {
 
     // Draw one native settings page in the VR menu's current ImGui context.
     // Only the supported settings/enhancement/randomizer sections are exposed.
-    bool DrawVrSection(const char* main, const char* sidebar);
+    bool DrawVrSection(const char* main, const char* sidebar, const char* search = nullptr);
 
   private:
     bool mMenuElementsInitialized = false;

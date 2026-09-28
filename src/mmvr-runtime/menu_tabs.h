@@ -24,7 +24,7 @@ inline constexpr int AssignmentFirst = int(Setting::Count), ResetSettingsRow = A
                      DiagnosticExportRow = NativeOptionsRow + 1,
                      SetupGuideRow = NativeOptionsRow + 2,
                      ReleaseNotesFirstRow = NativeOptionsRow + 3,
-                     ReleaseNotesCount = 10,
+                     ReleaseNotesCount = 16,
                      MenuRows = ReleaseNotesFirstRow + ReleaseNotesCount;
 inline bool ReleaseNotesRow(int row) { return row >= ReleaseNotesFirstRow && row < MenuRows; }
 inline bool TutorialRow(int row) { return row >= TutorialFirstRow && row < NativeOptionsRow; }
@@ -79,6 +79,7 @@ inline constexpr MenuSection MenuSections[] = {
     { SystemTab, "v0.2 - World Scale and Hotfix Update", false },
     { SystemTab, "v0.21 - Potion crash hotfix", false },
     { SystemTab, "v0.22 - Web and mask hotfix", false },
+    { SystemTab, "v2.3 - Interaction and settings update", false },
 };
 inline constexpr int MenuSectionCount = sizeof(MenuSections) / sizeof(MenuSections[0]);
 struct MenuEntry {
@@ -86,6 +87,13 @@ struct MenuEntry {
 };
 // Explicit presentation order is independent of persistent setting IDs.
 inline constexpr MenuEntry OrderedMenu[] = {
+    { ReleaseNotesFirstRow + 10, 42 },
+    { ReleaseNotesFirstRow + 11, 42 },
+    { ReleaseNotesFirstRow + 12, 42 },
+    { ReleaseNotesFirstRow + 13, 42 },
+    { ReleaseNotesFirstRow + 14, 42 },
+    { ReleaseNotesFirstRow + 15, 42 },
+
     { ReleaseNotesFirstRow + 9, 41 },
     { ReleaseNotesFirstRow + 8, 40 },
     { ReleaseNotesFirstRow + 0, 39 },
@@ -158,16 +166,21 @@ inline constexpr MenuEntry OrderedMenu[] = {
     { int(Setting::SwingResetSpeed), 8 },
     { int(Setting::SwordWindow), 8 },
     { int(Setting::SpinChargeTime), 8 },
+    { int(Setting::PhysicalGreatSpin), 8 },
+    { int(Setting::SwordHitboxScale), 8 },
     { int(Setting::DeityBeamInterval), 8 },
     { int(Setting::WeaponWallOffset), 8 },
     { int(Setting::ShieldMargin), 9 },
     { int(Setting::PunchSpeed), 9 },
     { int(Setting::PunchDistance), 9 },
     { int(Setting::PunchRadius), 9 },
+    { int(Setting::FistHitboxScale), 9 },
     { int(Setting::PunchExtension), 9 },
     { int(Setting::HolsterReach), 9 },
     { int(Setting::HudFps), 10 },
     { int(Setting::HudOpacity), 10 },
+    { int(Setting::HudAnchor), 10 },
+    { int(Setting::HandHudSize), 10 },
     { int(Setting::HudMap), 10 },
     { int(Setting::MaskStatus), 10 },
     { int(Setting::HudSize), 10 },
@@ -349,6 +362,9 @@ inline constexpr MenuEntry OrderedMenu[] = {
     { TutorialFirstRow + 44, 36 },
     { TutorialFirstRow + 45, 36 },
     { TutorialFirstRow + 46, 36 },
+    { TutorialFirstRow + 47, 36 },
+    { TutorialFirstRow + 48, 36 },
+    { TutorialFirstRow + 49, 36 },
     { NativeOptionsRow, 37 },
 
 };

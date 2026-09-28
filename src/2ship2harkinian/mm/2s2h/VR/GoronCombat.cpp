@@ -174,7 +174,7 @@ void UpdateGoronCombat(const mmvr::TrackingFrame& frame, const mmvr::Matrix& vie
                     << "goron-punch hand=" << h << " speed=" << forward << " t=" << now << "\n";
         }
         auto worldAim = mmvr::Multiply(aim, view);
-        float extension = s.Get(mmvr::Setting::PunchExtension) * 40;
+        float extension = s.Get(mmvr::Setting::PunchExtension) * 40 * s.Get(mmvr::Setting::FistHitboxScale)/100.f;
         Vec3f tip{ current.x - worldAim.m[2][0] * extension, current.y - worldAim.m[2][1] * extension,
                    current.z - worldAim.m[2][2] * extension };
         if (Wall(play, p, current, tip))
@@ -200,7 +200,7 @@ void UpdateGoronCombat(const mmvr::TrackingFrame& frame, const mmvr::Matrix& vie
         f.quad.elem.atDmgInfo.effect = 0;
         f.quad.elem.atElemFlags = ATELEM_ON | ATELEM_SFX_NORMAL;
         // Longitudinal debug outline includes the added forward reach.
-        float r = s.Get(mmvr::Setting::PunchRadius) * 40 * frame.trackingScale;
+        float r = s.Get(mmvr::Setting::PunchRadius) * 40 * frame.trackingScale * s.Get(mmvr::Setting::FistHitboxScale)/100.f;
         Vec3f a{}, b{}, c{}, d{};
         for (int k = 0; k < 3; ++k) {
             float side = worldAim.m[0][k] * r, back = worldAim.m[2][k] * r;
@@ -239,6 +239,7 @@ void ResolveGoronCombat(PlayState* play) {
         }
         bool hit = false;
         float radius = mmvr::GetSettings().Get(mmvr::Setting::PunchRadius) * 40 *
+            mmvr::GetSettings().Get(mmvr::Setting::FistHitboxScale)/100.f *
             mmvr::WorldTrackingScale(mmvr::GetSettings(),p->transformation,StandingFormEyeHeight(p));
         // Sweep the fist volume between tracked samples, with native enemy damage tables.
         for (size_t segment = 1; segment < f.pathCount && !hit; ++segment) {

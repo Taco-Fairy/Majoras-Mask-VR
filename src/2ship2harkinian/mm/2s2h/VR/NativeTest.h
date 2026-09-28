@@ -27,6 +27,8 @@ void CollisionCheck_AC_CylVsQuad(PlayState*,CollisionCheckContext*,Collider*,Col
 #include "PuzzleRevealTest.h"
 #include "TowerMoonTest.h"
 #include "NativeTriggerTest.h"
+#include "DebugLocations.h"
+#include "ElderLessonTest.h"
 #include "CrossPosts.h"
 #ifndef __ANDROID__
 extern "C" void MMVR_DebugTingleCutsceneTest(PlayState*, int);
@@ -63,6 +65,10 @@ static void NativeCombatFixture(PlayState* play){
 #include "FlameHotfixTest.h"
 #include "ThirdPersonLifecycleTest.h"
 #include "BottleReleaseLifecycleTest.h"
+#include "BottleContentsTest.h"
+#include "RewardReceiptTest.h"
+#include "ChestReceiptTest.h"
+#include "SongStaffLifecycleTest.h"
 #include "FlowerLifecycleTest.h"
 #include "ClimbLifecycleTest.h"
 #include "RepairLifecycleTest.h"
@@ -247,6 +253,14 @@ static mmvr::Pad NativeTestInput(){
    MMVR_DebugTingleCutsceneTest(gPlayState,playTicks);return pad;
   }
 #endif
+  if(std::getenv("MMVR_HOT_SPRING_SCOOP_TEST"))return NativeHotSpringScoopTest(gPlayState,playTicks);
+  if(std::getenv("MMVR_SONG_STAFF"))return NativeSongStaffLifecycle(gPlayState,playTicks);
+  if(std::getenv("MMVR_CHEST_RECEIPT"))return NativeChestReceipt(gPlayState,playTicks);
+  if(std::getenv("MMVR_REWARD_RECEIPT"))return NativeRewardReceipt(gPlayState,playTicks);
+  if(std::getenv("MMVR_BOTTLE_CONTENTS_TEST")){if(playTicks==80)NativeBottleContentsTest(gPlayState);return pad;}
+  if(std::getenv("MMVR_ELDER_LESSON_TEST"))return NativeElderLessonTest(gPlayState,playTicks);
+  if(std::getenv("MMVR_HOT_SPRING_LANDING_TEST"))return NativeHotSpringLandingTest(gPlayState,playTicks);
+  if(std::getenv("MMVR_WOODFALL_WEB_LANDING_TEST"))return NativeWoodfallWebLandingTest(gPlayState,playTicks);
   if(std::getenv("MMVR_WOODFALL_CRYSTAL_TEST"))return NativeWoodfallCrystalTest(gPlayState,playTicks);
   if(std::getenv("MMVR_SWORD_MULTI_TEST")){if(playTicks==60)NativeSwordMultiTest(gPlayState);return pad;}
   if(std::getenv("MMVR_SETTINGS_REPAIR_TEST")){if(playTicks==60)MMVR_VerifySettingsRepair(gPlayState);return pad;}

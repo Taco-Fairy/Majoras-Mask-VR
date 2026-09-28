@@ -19,7 +19,7 @@
 
 namespace mmvrgame {
 namespace {
-constexpr const char* Categories[] = { "Audio", "Gameplay", "Cheats", "Difficulty", "Randomizer" };
+constexpr const char* Categories[] = { "Audio", "Gameplay", "Cheats", "Difficulty", "Randomizer", "Items and masks" };
 struct Panel {
     ImGuiContext* context = nullptr;
     ImFontAtlas* fonts = nullptr;
@@ -27,6 +27,7 @@ struct Panel {
     int category = -1;
     bool pointerMode = false, previousConfirm = false, previousBack = false, previousCollapse = false;
     bool upperCase = false, keyboard = false, inputReady = false;
+    char search[128]{};
     int keyboardRow = 0, keyboardColumn = 0, navX = 0, navY = 0;
     float keyboardRepeat = 0;
     ImGuiKey queuedKey = ImGuiKey_None, heldKey = ImGuiKey_None;
@@ -99,7 +100,8 @@ void FeedInput(const mmvr::NativeMenuInput& input) {
     const float pointerMagnitude = std::hypot(input.pointerX, input.pointerY);
     const float navMagnitude = std::hypot(input.navigateX, input.navigateY);
     if (navMagnitude > .45f) panel.pointerMode = false;
-    if (pointerMagnitude > .20f) {
+    // Deliberate navigation wins over incidental movement of the pointer stick.
+    else if (pointerMagnitude > .20f) {
         panel.pointerMode = true;
         panel.pointer.x = std::clamp(panel.pointer.x + input.pointerX * 750.f * dt, 42.f, 982.f);
         panel.pointer.y = std::clamp(panel.pointer.y - input.pointerY * 750.f * dt, 184.f, panel.keyboard ? 1026.f : 674.f);
@@ -161,9 +163,25 @@ void DrawKeyboard(const mmvr::NativeMenuInput& input) {
 void Contents(Fast::Fast3dGui& gui) {
     auto native = std::dynamic_pointer_cast<BenGui::BenMenu>(gui.GetMenu());
     if (!native) { ImGui::TextWrapped("2Ship options are still initializing."); return; }
+    ImGui::SetNextItemWidth(-90.f);
+    ImGui::InputTextWithHint("##SettingSearch", "Search 2Ship settings (e.g. Bunny or Blast)", panel.search, sizeof(panel.search));
+    ImGui::SameLine();
+    if(ImGui::Button("Clear")) panel.search[0]=0;
+    if(panel.search[0]) {
+        bool any=false;
+        const char* sections[][2]={{"Settings","Audio"},{"Enhancements","Gameplay"},
+            {"Enhancements","Items/Songs"},{"Enhancements","Cheats"},{"Enhancements","Difficulty Options"},
+            {"Rando","General"},{"Rando","Logic/Conditions"},{"Rando","Check Pool"},
+            {"Rando","Check Exclusions"},{"Rando","Item Pool"},{"Rando","Starting Items"},{"Rando","Hints"}};
+        ImGui::BeginChild("Search results",{0,0},false,ImGuiWindowFlags_AlwaysVerticalScrollbar);
+        for(const auto& section:sections) any=native->DrawVrSection(section[0],section[1],panel.search)||any;
+        if(!any)ImGui::TextWrapped("No matching settings. Try a shorter name.");
+        ImGui::EndChild();
+        return;
+    }
     if (panel.category < 0) {
         ImGui::TextWrapped("Choose a group. These are the native 2Ship settings.");
-        for (int i=0;i<5;++i) {
+        for (int i=0;i<int(std::size(Categories));++i) {
             if (ImGui::Button(Categories[i], {-1,52})) { panel.category=i; ImGui::SetScrollY(0); }
         }
         ImGui::TextWrapped("Use the left stick to navigate. Use the right stick as a pointer for lists, dragging and the keyboard.");
@@ -186,6 +204,7 @@ void Contents(Fast::Fast3dGui& gui) {
         case 2: native->DrawVrSection("Enhancements","Cheats"); break;
         case 3: native->DrawVrSection("Enhancements","Difficulty Options"); break;
         case 4: Rando::DrawVrRandomizerMenu(); break;
+        case 5: native->DrawVrSection("Enhancements","Items/Songs"); break;
     }
 }
 } // namespace
@@ -212,7 +231,8 @@ static void BuildNativeOptions(const mmvr::UiDrawFrame& frame, Fast::Fast3dGui& 
             ImGui::ClearActiveID();
             if (!panel.context->OpenPopupStack.empty()) ImGui::ClosePopupToLevel(0, true);
             panel.keyboard = false;
-            if (panel.category >= 0) { panel.category=-1; Rando::ResetVrRandomizerMenu(); }
+            if (panel.search[0]) panel.search[0]=0;
+            else if (panel.category >= 0) { panel.category=-1; Rando::ResetVrRandomizerMenu(); }
             else if (back) menu.nativeCloseRequested=true;
         }
         FeedInput(input);

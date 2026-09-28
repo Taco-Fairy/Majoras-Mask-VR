@@ -7,6 +7,8 @@ Actor* Actor_Delete(ActorContext*,Actor*,PlayState*);
 }
 static void NativeItemUseTest(PlayState* play,const Player& baseline,std::ostream& log){
  auto* p=GET_PLAYER(play);auto savedPlayer=*p;auto savedSave=gSaveContext;auto savedInput=*CONTROLLER1(&play->state);auto settings=mmvr::GetSettings();
+ // These hand trajectories and expected offsets are native-scale coordinates.
+ mmvr::GetSettings().Set(mmvr::Setting::WorldScaleCalibration,0);
  auto frame=mmvr::TrackingFrame{};frame.head.orientation.w=frame.origin.orientation.w=1;
  for(int h=0;h<2;++h){frame.hands[h].orientation.w=frame.aims[h].orientation.w=1;frame.hands[h].position={0,-.4f,-.3f};frame.handValid[h]=frame.handTracked[h]=frame.aimValid[h]=true;}
  auto view=mmvr::YawPose(0,0,2045,0),head=mmvr::YawPose(0);

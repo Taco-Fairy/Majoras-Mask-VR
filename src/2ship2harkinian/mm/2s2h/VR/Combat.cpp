@@ -505,7 +505,8 @@ void UpdateSwordDiagnostics(const mmvr::TrackingFrame& frame, mmvr::Matrix& left
                                 frame.hands[controller].position.z - frame.head.position.z) / frame.trackingScale;
     spin.Update(frame.timeSeconds, frame.epoch, !stick && !deity && !d.blocked && !mmvr::MaskTriggerClaimed(),
                 frame.triggers[controller], mmvr::PoseYaw(mmvr::PoseMatrix(frame.head)), rawReach,
-                settings.Get(mmvr::Setting::TriggerSpinTurn) > .5f, settings.Get(mmvr::Setting::SpinChargeTime));
+                settings.Get(mmvr::Setting::TriggerSpinTurn) > .5f, settings.Get(mmvr::Setting::SpinChargeTime),
+                settings.Get(mmvr::Setting::PhysicalGreatSpin) > .5f);
     if (spinAngularSpeed > 0 && rawReach >= .25f)
         bladeStepSpeed = std::max(bladeStepSpeed, spinAngularSpeed * rawReach);
     bool swung = swordGate.Update({frame.timeSeconds,rawTip.x/40,rawTip.y/40,rawTip.z/40},
@@ -529,11 +530,21 @@ void UpdateSwordDiagnostics(const mmvr::TrackingFrame& frame, mmvr::Matrix& left
         bladeSamples.clear();
     } else {
         float width = deity ? 500.f : weapon == PLAYER_MELEEWEAPON_SWORD_TWO_HANDED ? 340.f : 200.f;
+        // Collision assistance never enlarges the rendered sword or flame tip.
+        const float hitScale = stick ? 1.f : settings.Get(mmvr::Setting::SwordHitboxScale) / 100.f;
+        Vec3f collisionTip{base.x+(tip.x-base.x)*hitScale, base.y+(tip.y-base.y)*hitScale,
+                           base.z+(tip.z-base.z)*hitScale};
+        if(hitScale>1.f){
+            Vec3f hit;CollisionPoly* poly=nullptr;int bg=BGCHECK_SCENE;
+            if(BgCheck_EntityLineTest2(&play->colCtx,&base,&collisionTip,&hit,&poly,true,true,true,true,&bg,&p->actor))
+                collisionTip=hit;
+        }
+        width *= hitScale;
         if (!bladeSamples.empty() && bladeSamples.back().time == frame.timeSeconds)
             bladeSamples.pop_back();
         bladeSamples.push_back({ frame.timeSeconds,
                                  base,
-                                 tip,
+                                 collisionTip,
                                  { leftHand.m[1][0] * width, leftHand.m[1][1] * width, leftHand.m[1][2] * width },
                                  bladeStepSpeed, magicExtended });
         while (bladeSamples.size() > 32 ||

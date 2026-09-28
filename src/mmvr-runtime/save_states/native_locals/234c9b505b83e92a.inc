@@ -7,7 +7,7 @@
  * Description: Single freestanding bug that doesn't burrow
  */
 
-#include "z_en_insect.h"
+#include "../../../2ship2harkinian/mm/src/overlays/actors/ovl_En_Insect/z_en_insect.h"
 
 #define FLAGS 0x00000000
 

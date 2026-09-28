@@ -10,6 +10,8 @@ static bool NativeIntroRepairChecks(PlayState* play) {
     auto settings=mmvr::GetSettings(); auto context=play->colChkCtx;
     auto list=play->actorCtx.actorLists[ACTORCAT_ITEMACTION];
     auto* camera=GET_ACTIVE_CAM(play); auto savedCamera=*camera;
+    // The crouch fixture below is defined in native 40-unit tracking coordinates.
+    mmvr::GetSettings().Set(mmvr::Setting::WorldScaleCalibration,0);
     mmvr::SetNativeTestTracking(true);
     mmvr::GetSettings().Set(mmvr::Setting::VrCameraCutscenes,1);
     EffStk effect{}; effect.actionFunc=func_80BF0DE0;

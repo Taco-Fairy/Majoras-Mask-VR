@@ -2363,7 +2363,7 @@ void BenMenu::DrawElement() {
     Ship::Menu::DrawElement();
 }
 
-bool BenMenu::DrawVrSection(const char* main, const char* sidebar) {
+bool BenMenu::DrawVrSection(const char* main, const char* sidebar, const char* search) {
     if (main == nullptr || sidebar == nullptr) {
         return false;
     }
@@ -2373,7 +2373,7 @@ bool BenMenu::DrawVrSection(const char* main, const char* sidebar) {
     const bool supportedSection =
         (mainName == "Settings" && sidebarName == "Audio") ||
         (mainName == "Enhancements" && (sidebarName == "Gameplay" || sidebarName == "Cheats" ||
-                                         sidebarName == "Difficulty Options")) ||
+                                         sidebarName == "Difficulty Options" || sidebarName == "Items/Songs")) ||
         (mainName == "Rando" && (sidebarName == "General" || sidebarName == "Logic/Conditions" ||
                                  sidebarName == "Check Pool" || sidebarName == "Check Exclusions" ||
                                  sidebarName == "Item Pool" || sidebarName == "Starting Items" ||
@@ -2429,8 +2429,12 @@ bool BenMenu::DrawVrSection(const char* main, const char* sidebar) {
     }
 
     const std::string childId = "##NativeVr_" + mainName + "_" + sidebarName;
-    if (ImGui::BeginChild(childId.c_str(), ImVec2(0.0f, 0.0f), false,
-                          ImGuiWindowFlags_AlwaysVerticalScrollbar)) {
+    const bool searching = search && *search;
+    ImGuiTextFilter filter(searching ? search : "");
+    bool matched = false;
+    ImGui::PushID(childId.c_str());
+    if (searching || ImGui::BeginChild(childId.c_str(), ImVec2(0.0f, 0.0f), false,
+                                      ImGuiWindowFlags_AlwaysVerticalScrollbar)) {
         const auto widgetWidth = static_cast<uint32_t>(std::max(1.0f, ImGui::GetContentRegionAvail().x));
         // Flatten native columns into one scroll area, preserving the native
         // same-line groupings within each column. A column's first control must
@@ -2438,8 +2442,11 @@ bool BenMenu::DrawVrSection(const char* main, const char* sidebar) {
         for (auto& column : sidebarIt->second.columnWidgets) {
             bool firstInColumn = true;
             for (auto& widget : column) {
+                if (searching && (widget.type == WIDGET_SEPARATOR_TEXT || !filter.PassFilter((widget.name + (widget.name.find("Blast Mask") != std::string::npos ? " Bomb Mask" : "")).c_str()))) continue;
+                if(searching && !matched) ImGui::SeparatorText((mainName + " / " + sidebarName).c_str());
+                matched = true;
                 const bool originalSameLine = widget.sameLine;
-                if (firstInColumn) {
+                if (firstInColumn || searching) {
                     widget.sameLine = false;
                 }
                 firstInColumn = false;
@@ -2504,7 +2511,8 @@ bool BenMenu::DrawVrSection(const char* main, const char* sidebar) {
             }
         }
     }
-    ImGui::EndChild();
-    return true;
+    if (!searching) ImGui::EndChild();
+    ImGui::PopID();
+    return searching ? matched : true;
 }
 } // namespace BenGui

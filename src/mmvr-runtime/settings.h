@@ -190,6 +190,11 @@ enum class Setting {
     ZoraWorldSize,
     DeityWorldSize,
     CheckUpdatesOnLaunch,
+    PhysicalGreatSpin,
+    SwordHitboxScale,
+    FistHitboxScale,
+    HudAnchor,
+    HandHudSize,
     Count
 };
 struct SettingDefinition {
@@ -326,9 +331,9 @@ inline constexpr SettingDefinition SettingDefinitions[] = {
     { "gVR.GoronSpeedStreaks", "Goron speed streak opacity", .2f, 0, .25f, .025f, "" },
     { "gVR.MovementSpeed", "Movement speed", 1, .5f, 2, .05f, "x" },
 #ifdef __ANDROID__
-    { "gVR.FrameRateCap", "Frame rate cap", 1, 0, 3, 1, "" },
+    { "gVR.FrameRateCap", "Frame rate cap", 1, 0, 4, 1, "" },
 #else
-    { "gVR.FrameRateCap", "Frame rate cap", 0, 0, 3, 1, "" },
+    { "gVR.FrameRateCap", "Frame rate cap", 0, 0, 4, 1, "" },
 #endif
     { "gVR.AlwaysSwordTrails", "Always show sword trails", 0, 0, 1, 1, "off/on" },
     { "gVR.ItemSlotCount", "Item wheel slots", 4, 4, 8, 1, "slots" },
@@ -383,6 +388,11 @@ inline constexpr SettingDefinition SettingDefinitions[] = {
     { "gVR.ZoraWorldSize", "Zora world size", 100, 50, 200, 1, "%" },
     { "gVR.DeityWorldSize", "Fierce Deity world size", 100, 50, 200, 1, "%" },
     { "gVR.CheckUpdatesOnLaunch", "Check for updates on launch", 1, 0, 1, 1, "off/on" },
+    { "gVR.PhysicalGreatSpin", "Physical magic great spin", 1, 0, 1, 1, "off/on" },
+    { "gVR.SwordHitboxScale", "Sword hitbox size", 100, 100, 200, 5, "%" },
+    { "gVR.FistHitboxScale", "Goron fist hitbox size", 100, 100, 200, 5, "%" },
+    { "gVR.HudAnchor", "HUD attachment", 0, 0, 2, 1, "" },
+    { "gVR.HandHudSize", "Hand HUD size", 100, 40, 200, 5, "%" },
 };
 static_assert(sizeof(SettingDefinitions) / sizeof(SettingDefinitions[0]) == size_t(Setting::Count));
 inline float BoundSetting(Setting id, float value) {

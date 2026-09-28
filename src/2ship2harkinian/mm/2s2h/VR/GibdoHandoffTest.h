@@ -49,7 +49,7 @@ static mmvr::Pad NativeGibdoHandoff(PlayState* play,unsigned tick) {
     if(phase==2) {
         static int settle=0;if(++settle<45)return pad;
         if(!npc){if(++age>60)finish(false,"actor-absent");return pad;}
-        p->actor.world.pos=npc->actor.world.pos;p->actor.world.pos.x+=70*Math_SinS(npc->actor.shape.rot.y);p->actor.world.pos.z+=70*Math_CosS(npc->actor.shape.rot.y);p->actor.prevPos=p->actor.world.pos;
+        p->actor.world.pos=npc->actor.world.pos;p->actor.world.pos.x+=70*Math_SinS(npc->actor.shape.rot.y);p->actor.world.pos.z+=70*Math_CosS(npc->actor.shape.rot.y);p->actor.prevPos=p->actor.home.pos=p->actor.world.pos;
         p->actor.shape.rot.y=p->actor.world.rot.y=static_cast<s16>(npc->actor.shape.rot.y+0x8000);p->actor.velocity={};p->actor.speed=0;
         p->currentMask=PLAYER_MASK_GIBDO;mmvrgame::SelectItem(play,c.slot,c.item);phase=3;age=0;
     }

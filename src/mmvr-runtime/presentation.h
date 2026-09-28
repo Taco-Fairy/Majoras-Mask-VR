@@ -201,8 +201,15 @@ inline void Draw(ImDrawList& list, const UiDrawFrame& frame, ImTextureID frameTe
                     { "Gameplay hotfixes", "Corrected default form height and potion/message crashes.", "Existing height adjustments remain available." },
                     { "Beta reminder", "Cutscenes, performance and mod compatibility can vary.", "Old save states may require their original build and mods." },
                     { "Potion crash hotfix", "Fixed the crash when giving Koume the red potion.", "Available on Quest and PCVR." },
-                    { "Web and mask hotfix", "Fixed burning-stick web/torch contact and premature breakage.", "Fixed a stale screen fade that could stall transformations." }
+                    { "Web and mask hotfix", "Fixed burning-stick web/torch contact and premature breakage.", "Fixed a stale screen fade that could stall transformations." },
+                    { "Bottle and Elder repairs", "Improved hot-spring water and bug bottle pickup.", "Added bottle bounds checks and Elder/drum safeguards." },
+                    { "Save states with texture packs", "Background content checks avoid repeated large-pack stalls.", "Wait for verification, then retry; old state limits still apply." },
+                    { "2Ship menu improvements", "Search settings; improved navigation and Back behavior.", "Items and masks includes Bunny Hood and Blast Mask options." },
+                    { "Physical combat options", "Adjust sword and Goron fist hitbox sizes.", "Physical magic great spin uses the normal magic requirements." },
+                    { "Hand-attached HUD", "Attach the gameplay HUD to either hand and resize it.", "Existing HUD opacity settings still apply." },
+                    { "Frame-rate choices", "Choose 72, 80, 90, 120 FPS or Uncapped.", "Uncapped follows runtime pacing without a 120 Hz ceiling." }
                 };
+                static_assert(std::size(notes) == ReleaseNotesCount);
                 const auto& note = notes[i - ReleaseNotesFirstRow];
                 Text(list, 64, y - 3, note[0], 22);
                 Text(list, 64, y + 23, note[1], 17);
@@ -245,6 +252,8 @@ inline void Draw(ImDrawList& list, const UiDrawFrame& frame, ImTextureID frameTe
                     std::snprintf(buffer, sizeof(buffer), "%+.0f units", value - d.initial);
                 else if (i == int(Setting::FrameRateCap))
                     std::snprintf(buffer, sizeof(buffer), "%s", FrameRateLimitLabel(settings));
+                else if (i == int(Setting::HudAnchor))
+                    std::snprintf(buffer, sizeof(buffer), "%s", value < .5f ? "Headset" : value < 1.5f ? "Left hand" : "Right hand");
                 else if (i == int(Setting::ViewMode))
                     std::snprintf(buffer, sizeof(buffer), "%s",
                                   value < .5f    ? "Theater"

@@ -25,7 +25,7 @@ struct SpinAttack {
         if(!held&&!turning&&pendingTier<0)charge=0;
     }
     void Update(double now, uint64_t generation, bool valid, float trigger, float yaw, float reach, bool autoTurn,
-                float fullCharge) {
+                float fullCharge, bool physicalGreatSpin = false) {
         float dt = float(now - time);
         if (!valid || generation != epoch || dt < 0 || dt > .15f) {
             Reset();
@@ -71,7 +71,7 @@ struct SpinAttack {
             arc += std::abs(delta);
             arcTime += dt;
             if (arc >= 5.23598775598f && now - lastPhysical > .8) {
-                pendingTier = arc / std::max(.01f, arcTime) > 4.7f ? 1 : 0;
+                pendingTier = arc / std::max(.01f, arcTime) > 4.7f ? (physicalGreatSpin ? 2 : 1) : 0;
                 chargeUntil = now + 1.1;
                 lastPhysical = now;
                 arc = arcTime = 0;

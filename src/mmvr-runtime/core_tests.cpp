@@ -116,6 +116,10 @@ int main(){
   // Controller turns are absent from the gesture input; a stationary HMD cannot trigger IRL spins.
   check(spin.TakeTier()==-1);spin.Reset();t+=1;spin.Update(t,2,true,0,0,.5f,false,1.2f);
   int physical=-1;for(int i=1;i<=hz;++i){t+=dt;spin.Update(t,2,true,0,i*dt*6.2831853f,.5f,false,1.2f);physical=std::max(physical,spin.TakeTier());}check(physical==1);
+  spin.Reset();t+=1;spin.Update(t,3,true,0,0,.5f,false,1.2f,true);
+  int great=-1;for(int i=1;i<=hz;++i){t+=dt;spin.Update(t,3,true,0,i*dt*6.2831853f,.5f,false,1.2f,true);great=std::max(great,spin.TakeTier());}check(great==2);
+  spin.Reset();t+=1;spin.Update(t,4,true,0,0,.1f,false,1.2f,true);
+  for(int i=1;i<=hz;++i){t+=dt;spin.Update(t,4,true,0,i*dt*6.2831853f,.1f,false,1.2f,true);check(spin.TakeTier()==-1);}
   // Loss of tracking cancels charge and needs a fresh release/press, never an automatic launch.
   spin.Update(t+1,2,true,1,0,.5f,true,1.2f);check(!spin.held&&spin.TakeTier()==-1);
   spin.turning=true;check(spin.Turn(dt,false)==0&&!spin.turning);
@@ -990,11 +994,11 @@ int main(){
 #else
         check(mmvr::FrameRateLimit(settings)==0);
 #endif
-        unsigned expected[]{0,90,80,72};
-        for(int choice=0;choice<4;++choice){settings.Set(mmvr::Setting::FrameRateCap,float(choice));check(mmvr::FrameRateLimit(settings)==expected[choice]);}
+        unsigned expected[]{0,90,80,72,120};
+        for(int choice=0;choice<5;++choice){settings.Set(mmvr::Setting::FrameRateCap,float(choice));check(mmvr::FrameRateLimit(settings)==expected[choice]);}
         settings.Set(mmvr::Setting::FrameRateCap,1.6f);check(mmvr::FrameRateLimit(settings)==80);
         mmvr::RenderFrameLimit limit;
-        for(unsigned cap:{72u,80u,90u}) {
+        for(unsigned cap:{72u,80u,90u,120u}) {
             limit.Reset();double now=10;
             for(int frame=0;frame<1000;++frame){
                 const double delay=limit.Delay(now,cap);check(delay>=0 && delay<=1.0/cap+.000001);

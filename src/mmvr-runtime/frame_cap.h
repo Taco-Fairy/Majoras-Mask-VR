@@ -2,11 +2,12 @@
 #include "settings.h"
 namespace mmvr {
 inline unsigned FrameRateLimit(const Settings& settings) {
-    constexpr unsigned limits[]{ 0, 90, 80, 72 };
+    // Indices 0..3 are already persisted in player profiles.
+    constexpr unsigned limits[]{ 0, 90, 80, 72, 120 };
     return limits[int(settings.Get(Setting::FrameRateCap))];
 }
 inline const char* FrameRateLimitLabel(const Settings& settings) {
-    constexpr const char* labels[]{ "Uncapped", "90 FPS", "80 FPS", "72 FPS" };
+    constexpr const char* labels[]{ "Uncapped", "90 FPS", "80 FPS", "72 FPS", "120 FPS" };
     return labels[int(settings.Get(Setting::FrameRateCap))];
 }
 // A fallback for runtimes that cannot switch the display to the requested rate.

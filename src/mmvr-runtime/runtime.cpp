@@ -1105,6 +1105,7 @@ class TheaterRuntime {
                     const int slot=(confirmed-SaveStateFirstRow)/2;
                     const bool load=(confirmed-SaveStateFirstRow)%2;
                     if(load&&!menu.stateSlotsPresent[slot]) menu.stateStatus="That save-state slot is empty.";
+                    else if(stateReady && !stateReady()) { menu.confirmStateRow=-1; }
                     else if(load && statePreflight && !statePreflight(slot+1)) {
                         menu.confirmStateRow=-1;
                     }
@@ -1628,6 +1629,25 @@ class TheaterRuntime {
         }
         auto dialogue = quad; // Exact HUD/pause plane; independent of HUD opacity.
         dialogue.subImage.swapchain = dialogueChain;
+        // Move only the gameplay HUD. Dialogue, menus, instruments and theater
+        // keep their established planes and independent opacity/composition.
+        const int hudHand = int(settings.Get(Setting::HudAnchor)) - 1;
+        if (stereoFrame && !nativePause && !revealFrame && !ocarina && hudHand >= 0 && hudHand < 2) {
+            XrActionStateGetInfo get{XR_TYPE_ACTION_STATE_GET_INFO};get.action=handPoseActions[hudHand];
+            XrActionStatePose active{XR_TYPE_ACTION_STATE_POSE};
+            XrSpaceLocation hand{XR_TYPE_SPACE_LOCATION};
+            const auto valid=XR_SPACE_LOCATION_POSITION_VALID_BIT|XR_SPACE_LOCATION_ORIENTATION_VALID_BIT;
+            if(XR_SUCCEEDED(xrGetActionStatePose(session,&get,&active)) && active.isActive &&
+               XR_SUCCEEDED(xrLocateSpace(handSpaces[hudHand],localSpace,displayTime,&hand)) &&
+               (hand.locationFlags&valid)==valid){
+                quad.space=localSpace;quad.pose=hand.pose;quad.pose.position.y+=.15f;
+                // Hand-anchored billboard: readable as the wrist turns, using
+                // the same predicted display time as both rendered eyes.
+                quad.pose.orientation=StereoHeadPose(views[0].pose,views[1].pose).orientation;
+                const float hudWidth=.6f*settings.Get(Setting::HandHudSize)/100.f;
+                quad.size={hudWidth,hudWidth*.75f};
+            }
+        }
         const XrCompositionLayerBaseHeader* layers[4]{};
         uint32_t layerCount = 0;
         if (stereoFrame)

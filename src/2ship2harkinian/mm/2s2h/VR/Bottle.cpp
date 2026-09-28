@@ -12,6 +12,7 @@ extern "C" {
 #include "global.h"
 #include "overlays/actors/ovl_En_Dnp/z_en_dnp.h"
 #include "overlays/actors/ovl_En_Test5/z_en_test5.h"
+#include "overlays/actors/ovl_Bg_Goron_Oyu/z_bg_goron_oyu.h"
 extern u8 gPlayerFormItemRestrictions[PLAYER_FORM_MAX][114];
 extern Vec3f D_801C0CE8[PLAYER_FORM_MAX];
 }
@@ -90,12 +91,12 @@ void UpdateBottle(const mmvr::TrackingFrame& frame, const mmvr::Matrix& model) {
     CollisionPoly* poly = nullptr;
     int bg = BGCHECK_SCENE;
     const auto& s = mmvr::GetSettings();
-    valid = SegmentDistance(mouth, head, head) <= s.Get(mmvr::Setting::AimReach) * 40 &&
+    valid = SegmentDistance(mouth, head, head) <= s.Get(mmvr::Setting::AimReach) * 40 * frame.trackingScale &&
             !BgCheck_EntityLineTest2(&play->colCtx, &head, &mouth, &hit, &poly, true, true, true, true, &bg, &p->actor);
     auto raw =
         mmvr::Multiply(mmvr::PoseMatrix(frame.hands[controller]), mmvr::InversePose(mmvr::PoseMatrix(frame.origin)));
     for (int k = 0; k < 3; ++k)
-        raw.m[3][k] *= 40;
+        raw.m[3][k] *= 40 / frame.trackingScale;
     auto point =
         Point(mmvr::Multiply(mmvr::ModelHandCalibration(0, controller, s), raw), opening.x, opening.y, opening.z);
     bottleTime = frame.timeSeconds;
@@ -131,17 +132,31 @@ extern "C" int MMVR_TryBottleCatch(PlayState* play, Player* p, Actor* actor) {
     if (samples.size() < 2 || !valid || !window.Active(bottleTime) || !mmvrgame::InteractionsEligible(play, p) ||
         !mmvr::PhysicalActionsAllowed() || !actor || actor->parent || !actor->update)
         return false;
-    if (actor->id == ACTOR_EN_TEST5) {
-        auto* source = reinterpret_cast<EnTest5*>(actor);
+    if (actor->id == ACTOR_EN_TEST5 || actor->id == ACTOR_BG_GORON_OYU) {
+        Vec3f surface;
+        float width, depth;
+        if (actor->id == ACTOR_EN_TEST5) {
+            const auto* source = reinterpret_cast<const EnTest5*>(actor);
+            surface = source->minPos;
+            width = source->xLength;
+            depth = source->zLength;
+        } else {
+            const auto* source = reinterpret_cast<const BgGoronOyu*>(actor);
+            surface = source->waterBoxPos;
+            width = source->waterBoxXLength;
+            depth = source->waterBoxZLength;
+        }
+        if (width <= 0 || depth <= 0)
+            return false;
         for (size_t i = 1; i < samples.size(); ++i) {
             // Small surface tolerance, independent of the generous creature-catch radius.
             const auto a = samples[i - 1].mouth, b = samples[i].mouth;
             for (int j = 0; j <= 8; ++j) {
                 float t = j / 8.f;
                 Vec3f mouth{ a.x + (b.x - a.x) * t, a.y + (b.y - a.y) * t, a.z + (b.z - a.z) * t };
-                if (mouth.x < source->minPos.x || mouth.x > source->minPos.x + source->xLength ||
-                    mouth.z < source->minPos.z || mouth.z > source->minPos.z + source->zLength ||
-                    mouth.y > source->minPos.y + 6 || mouth.y < source->minPos.y - 24)
+                if (mouth.x < surface.x || mouth.x > surface.x + width ||
+                    mouth.z < surface.z || mouth.z > surface.z + depth ||
+                    mouth.y > surface.y + 6 || mouth.y < surface.y - 24)
                     continue;
                 if (MMVR_CatchBottleActor(play, p, actor)) {
                     window.Contact();

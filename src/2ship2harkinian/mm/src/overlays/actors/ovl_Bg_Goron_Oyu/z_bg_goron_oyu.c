@@ -5,6 +5,9 @@
  */
 
 #include "z_bg_goron_oyu.h"
+#ifdef MMVR_ENABLE
+#include "2s2h/VR/Bottle.h"
+#endif
 #include "objects/object_oyu/object_oyu.h"
 
 #define FLAGS (ACTOR_FLAG_UPDATE_CULLING_DISABLED | ACTOR_FLAG_DRAW_CULLING_DISABLED)
@@ -85,6 +88,12 @@ void func_80B401F8(BgGoronOyu* this, PlayState* play) {
     }
 
     player = GET_PLAYER(play);
+#ifdef MMVR_ENABLE
+    // Physical scooping depends on the bottle entering the water, not Link's feet.
+    if (MMVR_TryBottleCatch(play, player, &this->dyna.actor)) {
+        return;
+    }
+#endif
     Math_Vec3f_DistXYZAndStoreDiff(&this->waterBoxPos, &player->actor.world.pos, &dist);
 
     if ((dist.x >= 0.0f) && (dist.x <= this->waterBoxXLength) && (dist.z >= 0.0f) &&

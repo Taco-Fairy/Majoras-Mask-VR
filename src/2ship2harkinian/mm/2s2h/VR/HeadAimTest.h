@@ -3,6 +3,8 @@
 static void NativeHeadAimTest(PlayState* play) {
  auto* p=GET_PLAYER(play); const Player saved=*p; const auto save=gSaveContext;
  auto settings=mmvr::GetSettings(); auto input=*CONTROLLER1(&play->state); auto* oldInput=sPlayerControlInput;
+ // Explicit native-scale synthetic hand positions; calibrated-world poses use a separate fixture.
+ mmvr::GetSettings().Set(mmvr::Setting::WorldScaleCalibration,0);
  sPlayerControlInput=CONTROLLER1(&play->state); mmvr::ApplyViewMode(2); mmvr::SetNativeTestTracking(true);
  p->actor.world.pos={0,2000,0};p->actor.shape.rot={};p->stateFlags1=p->stateFlags2=p->stateFlags3=0;
  p->csAction=PLAYER_CSACTION_NONE;p->transformation=PLAYER_FORM_HUMAN;p->heldActor=nullptr;

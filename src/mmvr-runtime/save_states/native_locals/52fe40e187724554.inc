@@ -5,6 +5,9 @@
  */
 
 #include "../../../2ship2harkinian/mm/src/overlays/actors/ovl_Bg_Goron_Oyu/z_bg_goron_oyu.h"
+#ifdef MMVR_ENABLE
+#include "2s2h/VR/Bottle.h"
+#endif
 #include "objects/object_oyu/object_oyu.h"
 
 #define FLAGS (ACTOR_FLAG_UPDATE_CULLING_DISABLED | ACTOR_FLAG_DRAW_CULLING_DISABLED)
@@ -59,7 +62,7 @@ void func_80B40100(BgGoronOyu* this, PlayState* play) {
     }
 }
 
-static Vec3f mmvr_local_e31f240741005f43 = { 0, 0, 0 };
+static Vec3f mmvr_local_e0611bf9cef68ca6 = { 0, 0, 0 };
 void func_80B40160(BgGoronOyu* this, PlayState* play) {
     /* persistent local storage is declared above */
 
@@ -73,7 +76,7 @@ void func_80B40160(BgGoronOyu* this, PlayState* play) {
         func_80B40080(this);
     }
 
-    Audio_PlaySfx_AtPos(&mmvr_local_e31f240741005f43, NA_SE_EV_WATER_LEVEL_DOWN - SFX_FLAG);
+    Audio_PlaySfx_AtPos(&mmvr_local_e0611bf9cef68ca6, NA_SE_EV_WATER_LEVEL_DOWN - SFX_FLAG);
 }
 
 void func_80B401F8(BgGoronOyu* this, PlayState* play) {
@@ -86,6 +89,12 @@ void func_80B401F8(BgGoronOyu* this, PlayState* play) {
     }
 
     player = GET_PLAYER(play);
+#ifdef MMVR_ENABLE
+    // Physical scooping depends on the bottle entering the water, not Link's feet.
+    if (MMVR_TryBottleCatch(play, player, &this->dyna.actor)) {
+        return;
+    }
+#endif
     Math_Vec3f_DistXYZAndStoreDiff(&this->waterBoxPos, &player->actor.world.pos, &dist);
 
     if ((dist.x >= 0.0f) && (dist.x <= this->waterBoxXLength) && (dist.z >= 0.0f) &&

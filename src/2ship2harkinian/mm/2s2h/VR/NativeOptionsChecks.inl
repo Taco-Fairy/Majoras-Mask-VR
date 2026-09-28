@@ -23,8 +23,13 @@ extern "C" void MMVR_VerifyNativeOptions() {
           "Native menu changed host navigation flags");
     check((panel.context->IO.ConfigFlags & ImGuiConfigFlags_NavEnableGamepad) &&
           (panel.context->IO.BackendFlags & ImGuiBackendFlags_HasGamepad),"Native gamepad navigation not enabled");
+    { ContextScope scope;ImGui::SetCurrentContext(panel.context);
+      auto* root=ImGui::FindWindowByName("##VR2Ship");
+      ImGui::FocusWindow(root);ImGui::SetFocusID(root->GetID("Audio"),root);
+    }
+    menu.nativeInput.pointerX=.25f; // Opposite-stick drift must not steal navigation.
     const auto firstFocus=panel.context->NavId;
-    step(-1);step();step();
+    step(-1);menu.nativeInput.pointerX=0;step();step();
     check(firstFocus && panel.context->NavId && panel.context->NavId!=firstFocus,"Stick did not move actual category focus");
     step(0,true);step();step();
     check(panel.category==1,"A did not enter focused Gameplay category");
@@ -34,8 +39,12 @@ extern "C" void MMVR_VerifyNativeOptions() {
     check(!menu.nativeCloseRequested,"Collapse closed root menu");
     step(0,false,true);step();
     check(menu.nativeCloseRequested,"B did not request a safe root close");
+    menu.nativeCloseRequested=false;
+    std::strcpy(panel.search,"bunny");
+    step();step(0,false,true);step();
+    check(!panel.search[0] && !menu.nativeCloseRequested,"B must clear search before closing the menu");
     menu.CollapseAll();
-    for(int category=-1;category<5;++category) {
+    for(int category=-1;category<int(std::size(Categories));++category) {
         for(int tick=0;tick<3;++tick) {
             menu.nativeInput.frame++;
             BuildNativeOptions(frame,*gui,true);
@@ -54,6 +63,13 @@ extern "C" void MMVR_VerifyNativeOptions() {
             check(native->DrawVrSection("Rando",page),"Missing randomizer page");
             ImGui::End(); ImGui::Render();
             check(ImGui::GetDrawData()->TotalVtxCount>0,"Empty randomizer draw");
+        }
+        for(const char* query:{"bunny","blast","bomb mask","no-such-option-zzzz"}){
+            FeedInput({});ImGui::NewFrame();
+            ImGui::SetNextWindowSize({928,480});ImGui::Begin("Search fixture");
+            bool found=native->DrawVrSection("Enhancements","Items/Songs",query);
+            check(found==(std::string(query)!="no-such-option-zzzz"),"Mask search result incorrect");
+            ImGui::End();ImGui::Render();
         }
         FeedInput({});ImGui::NewFrame();
         ImGui::SetNextWindowSize({928,480});ImGui::Begin("Audio editor fixture");

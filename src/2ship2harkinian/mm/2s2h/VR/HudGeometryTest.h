@@ -4,7 +4,10 @@
 #include "PauseWheel.h"
 extern "C" void Interface_SetPerspectiveView(PlayState*,s32,s32,s32,s32);
 static void NativeHudGeometry(PlayState* play){
- auto settings=mmvr::GetSettings();std::ofstream log("native-hud-geometry.json");log<<"[";bool first=true;
+ auto settings=mmvr::GetSettings();
+ // Explicitly select the tracked VR layout; no-controller/gamepad mode uses the native HUD.
+ mmvr::SetNativeTestTracking(true);mmvr::ApplyViewMode(2);
+ std::ofstream log("native-hud-geometry.json");log<<"[";bool first=true;
  for(float size:{.5f,1.f,1.5f})for(float width:{.6f,1.6f,3.f})for(float spread:{0.f,100.f,300.f})for(float vertical:{0.f,100.f,300.f}){
   mmvr::GetSettings().Set(mmvr::Setting::HudSize,size);mmvr::GetSettings().Set(mmvr::Setting::HudHorizontalSpread,spread);
   mmvr::GetSettings().Set(mmvr::Setting::HudVerticalSpread,vertical);mmvr::GetSettings().Set(mmvr::Setting::HudWidth,width);

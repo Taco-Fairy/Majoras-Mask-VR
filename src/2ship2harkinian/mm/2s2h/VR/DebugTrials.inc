@@ -11,6 +11,7 @@ constexpr Trial trials[]={
 int trial=-1;bool trialSnapshot=false,trialReturning=false;
 int townPanoramaPending=-1;
 int koumeRoomPending=0;
+int woodfallWebPending=0,woodfallWebSettle=0;
 Save trialSave{};u8 trialEvents[8]{};CycleSceneFlags trialCycles[120]{};
 u16 trialSkyboxTime=0;s16 trialTimeSpeed=0;
 bool IsTownArrival(DebugNativeTriggerKind kind){
@@ -100,7 +101,7 @@ extern "C" int MMVR_DebugLocationBegin(PlayState* play,int index){
  trialSnapshot=true;trialReturning=false;trial=-1;
  PrepareKafeiCheckpoint(debugLocations[index].kafeiPreset);
  const int interaction=debugLocations[index].interactionPreset;
- koumeRoomPending=0;
+ koumeRoomPending=0;woodfallWebPending=0;woodfallWebSettle=0;
  if(interaction>=0) {
   // This is inside the existing reversible trial snapshot, not the player's save.
   gSaveContext.save.day=1;gSaveContext.save.eventDayCount=1;
@@ -121,6 +122,24 @@ extern "C" int MMVR_DebugLocationBegin(PlayState* play,int index){
    C_SLOT_EQUIP(0,EQUIP_SLOT_C_DOWN)=SLOT_BOTTLE_1;
    gSaveContext.buttonStatus[EQUIP_SLOT_C_DOWN]=BTN_ENABLED;
    koumeRoomPending=1;
+  } else if(interaction==4) {
+   // Recreate the authored room's unburned web, within the trial snapshot.
+   gSaveContext.save.saveInfo.permanentSceneFlags[SCENE_MITURIN]={};
+   gSaveContext.cycleSceneFlags[SCENE_MITURIN]={};
+   gSaveContext.save.saveInfo.inventory.items[SLOT_DEKU_STICK]=ITEM_DEKU_STICK;
+   AMMO(ITEM_DEKU_STICK)=30;
+   BUTTON_ITEM_EQUIP(0,EQUIP_SLOT_C_DOWN)=ITEM_DEKU_STICK;
+   C_SLOT_EQUIP(0,EQUIP_SLOT_C_DOWN)=SLOT_DEKU_STICK;
+   gSaveContext.buttonStatus[EQUIP_SLOT_C_DOWN]=BTN_ENABLED;
+   woodfallWebPending=1;
+  } else if(interaction==5) {
+   SET_WEEKEVENTREG(WEEKEVENTREG_20_20); // Open native gravestone/water before arrival.
+   gSaveContext.save.saveInfo.inventory.items[SLOT_BOTTLE_1]=ITEM_BOTTLE;
+   BUTTON_ITEM_EQUIP(0,EQUIP_SLOT_C_DOWN)=ITEM_BOTTLE;
+   C_SLOT_EQUIP(0,EQUIP_SLOT_C_DOWN)=SLOT_BOTTLE_1;
+   gSaveContext.buttonStatus[EQUIP_SLOT_C_DOWN]=BTN_ENABLED;
+   gSaveContext.save.playerForm=PLAYER_FORM_HUMAN;
+   gSaveContext.save.equippedMask=PLAYER_MASK_NONE;
   } else if(interaction==1) {
    CLEAR_WEEKEVENTREG(WEEKEVENTREG_09_80);
    CLEAR_WEEKEVENTREG(WEEKEVENTREG_23_20);
@@ -182,6 +201,43 @@ extern "C" int MMVR_DebugNativeTriggerBegin(PlayState* play,int index){
  townPanoramaPending=IsTownArrival(entry.kind)?index:-1;
  return true;
 }
+void MaybePlaceWoodfallWebCheckpoint(PlayState* play){
+ if(!woodfallWebPending||!play||!trialSnapshot||trialReturning)return;
+ if(play->sceneId!=SCENE_MITURIN||play->transitionTrigger!=TRANS_TRIGGER_OFF||
+    play->transitionMode!=TRANS_MODE_OFF||!GET_PLAYER(play)||play->roomCtx.status)return;
+ if(woodfallWebPending==1){
+  if(++woodfallWebSettle<45)return;
+  if(play->roomCtx.curRoom.num!=3){
+   if(Room_RequestNewRoom(play,&play->roomCtx,3))woodfallWebPending=2;
+   return;
+  }
+ }
+ if(woodfallWebPending==2)Room_FinishRoomChange(play,&play->roomCtx);
+ auto* player=GET_PLAYER(play);
+ // Resolve the actual upper walkway rather than starting below its surface.
+ Vec3f landing{-1110.f,-1100.f,-750.f};
+ CollisionPoly* floor=nullptr;int floorBg=BGCHECK_SCENE;
+ const float floorY=BgCheck_EntityRaycastFloor5(&play->colCtx,&floor,&floorBg,&player->actor,&landing);
+ Vec3f clearance{landing.x,floorY+30.f,landing.z};
+ if(!floor||floorY < -1200.f||floorY > -1170.f||
+    BgCheck_SphVsFirstWall(&play->colCtx,&clearance,20.f)){
+  woodfallWebPending=0;
+  Log()<<"woodfall-web-checkpoint rejected unsafe floor\n"<<std::flush;
+  MMVR_DebugTrialReturn(play);return;
+ }
+ landing.y=floorY;
+ player->actor.world.pos=landing;
+ // Player_UpdateCommon reconstructs prevPos from home.pos. Both must move,
+ // otherwise its next wall sweep starts back at the old entrance.
+ player->actor.prevPos=player->actor.home.pos=landing;
+ player->actor.floorHeight=floorY;player->actor.floorPoly=floor;player->actor.floorBgId=floorBg;
+ player->actor.shape.rot.y=player->actor.world.rot.y=player->yaw=0;
+ player->actor.velocity={};player->actor.speed=player->speedXZ=0;
+ player->fallStartHeight=static_cast<s16>(floorY);player->fallDistance=0;
+ MMVR_CameraCoordinateBoundary(play);mmvr::Recenter();
+ woodfallWebPending=0;
+ Log()<<"woodfall-web-checkpoint room=3 ready\n"<<std::flush;
+}
 void MaybePlaceKoumeCheckpoint(PlayState* play){
  if(!koumeRoomPending||!play||!trialSnapshot||trialReturning)return;
  if(play->sceneId!=SCENE_26SARUNOMORI||play->transitionTrigger!=TRANS_TRIGGER_OFF||
@@ -241,7 +297,7 @@ extern "C" int MMVR_DebugTrialReturn(PlayState* play){
  // Check the existing room identity before enabling a new hall request.
  if(MMVR_DebugRoomActive(play))return false;
  requested=true; audioProbe=true;
- townPanoramaPending=-1;koumeRoomPending=0;
+ townPanoramaPending=-1;koumeRoomPending=0;woodfallWebPending=0;woodfallWebSettle=0;
  RestoreTrial();trialReturning=true;TrialTransition(play,ENTRANCE(CUTSCENE,0),true);return true;
 }
 

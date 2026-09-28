@@ -104,5 +104,7 @@ constexpr DebugLocation debugLocations[]={
  {"Potion handoff - rescue Koume",ENTRANCE(MAGIC_HAGS_POTION_SHOP,0),SCENE_WITCH_SHOP,-1,0},
  {"Monkey - sword rope interaction",ENTRANCE(DEKU_KINGS_CHAMBER,1),SCENE_DEKU_KING,-1,1},
  {"Give red potion to Koume - Woods",ENTRANCE(WOODS_OF_MYSTERY,0),SCENE_26SARUNOMORI,-1,3},
+ {"Woodfall Temple - Skulltula web and torch",ENTRANCE(WOODFALL_TEMPLE,0),SCENE_MITURIN,-1,4},
  {"Sword Dojo - lessons and challenge",ENTRANCE(SWORDMANS_SCHOOL,0),SCENE_DOUJOU,-1,2},
+ {"Hot spring - bottle scoop",ENTRANCE(GORON_GRAVERYARD,0),SCENE_GORON_HAKA,-1,5},
 };

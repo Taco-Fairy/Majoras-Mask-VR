@@ -36,6 +36,9 @@ static bool NativeLessonBackgroundTest() { return true; }
 static void NativeRenderCadenceTest(PlayState* play) {
     auto* p=GET_PLAYER(play);const Player saved=*p;const auto savedFrames=play->gameplayFrames;
     auto settings=mmvr::GetSettings();
+    // Synthetic matrices below are authored at native scale, independent of the
+    // saved calibration. This case isolates interpolation, not world sizing.
+    mmvr::GetSettings().Set(mmvr::Setting::WorldScaleCalibration,0);
     mmvr::SetNativeTestTracking(true);mmvr::SetNativeTestEye(0);
     bool fairyCamera=NativeFairyCameraChecks(play);
     bool lessonBackground=NativeLessonBackgroundTest();

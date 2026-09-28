@@ -6,6 +6,10 @@ static void NativeGoronRayReview(PlayState* play, const Player& baseline, std::o
  auto prepare=[&](int form){*p=baseline;p->actor.world.pos={0,2000,0};p->actor.velocity={};p->heldActor=p->actor.child=nullptr;p->transformation=PLAYER_FORM_HUMAN;mmvrgame::ProcessGoronInput(play);p->transformation=form;p->currentMask=PLAYER_MASK_NONE;p->csAction=PLAYER_CSACTION_NONE;p->stateFlags1=p->stateFlags2=p->stateFlags3=0;p->actionFunc=Player_Action_Idle;p->itemAction=p->heldItemAction=PLAYER_IA_NONE;p->heldItemId=ITEM_NONE;p->getItemDrawIdPlusOne=0;p->meleeWeaponState=PLAYER_MELEE_WEAPON_STATE_0;*CONTROLLER1(&play->state)={};mmvrgame::ClearTracking();mmvrgame::ClearItemSelection();};
  auto view=mmvr::YawPose(0,0,2045,0),head=mmvr::YawPose(0);mmvr::TrackingFrame f{};f.head.orientation.w=f.origin.orientation.w=1;
  for(int h=0;h<2;++h){f.hands[h].orientation.w=f.aims[h].orientation.w=1;f.handTracked[h]=f.handValid[h]=f.aimValid[h]=true;}
+ const char* requestedSize=std::getenv("MMVR_GORON_HITBOX_SCALE");
+ const int size=requestedSize?std::atoi(requestedSize):100;
+ mmvr::GetSettings().Set(mmvr::Setting::FistHitboxScale,float(size));
+ bool sizePassed=true;
  log<<"{\"cases\":[";
  for(int pass=0;pass<2;++pass){
  for(int hand=0;hand<2;++hand)for(int mode=0;mode<6;++mode){
@@ -23,10 +27,12 @@ static void NativeGoronRayReview(PlayState* play, const Player& baseline, std::o
     mmvrgame::ResolveGoronCombat(play);CollisionCheck_Damage(play,&play->colChkCtx);if(enemy.collider.base.acFlags&AC_HIT){++contacts;EnDekubaba_UpdateDamage(&enemy,play);}}
   }
   mmvr::SetNativePause(true);mmvrgame::UpdateGoronCombat(f,view,head);bool pauseSafe=!mmvrgame::GoronDebugCollider(hand);mmvr::SetNativePause(false);
+  const bool expectedHit=mode==2 || mode==4 || (mode==5 && size==200);
+  sizePassed &= toggles && pauseSafe && (expectedHit ? contacts>0 : contacts==0);
   if(pass||hand||mode)log<<",";log<<"{\"legacy\":"<<pass<<",\"rays\":"<<mmvrgame::GoronRayReviewCount()<<",\"hand\":"<<hand<<",\"mode\":"<<mode<<",\"contacts\":"<<contacts<<",\"health\":"<<int(enemy.actor.colChkInfo.health)<<",\"fire\":"<<fire<<",\"toggles\":"<<toggles<<",\"pauseSafe\":"<<pauseSafe<<"}";EnDekubaba_Destroy(&enemy.actor,play);
  }
  }
- log<<"]}";
+ log<<"],\"passed\":"<<(sizePassed?"true":"false")<<"}";
  mmvrgame::SetGoronRayReview(false);
  *p=saved;gSaveContext=save;mmvr::GetSettings()=settings;*CONTROLLER1(&play->state)=input;play->colChkCtx=col;play->csCtx=cs;play->msgCtx.msgMode=msg;
 }

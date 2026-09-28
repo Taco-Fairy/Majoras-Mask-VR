@@ -822,7 +822,17 @@ bool PreflightStateSlot(int slot) {
         return false;
     }
 }
+bool PrepareStateMenuContent() {
+    try {
+        if(PrepareNativeStateIdentity())return true;
+        mmvr::GetMenu().stateStatus="Checking texture packs in background. Try Save/Load again shortly.";
+    } catch(const std::exception& error) {
+        mmvr::GetMenu().stateStatus=std::string("Cannot prepare save states: ")+error.what();
+    }
+    return false;
+}
 void RefreshStateSlots() {
+    mmvr::stateReady=PrepareStateMenuContent;
     mmvr::statePreflight=PreflightStateSlot;
     mmvr::states::Store store(ExactStateDirectory());
     for(int slot=1;slot<=3;++slot)mmvr::GetMenu().stateSlotsPresent[slot-1]=store.Exists(slot);
@@ -852,7 +862,7 @@ void InitializeExactStateMenu() {
     if(initialized)return;
     initialized=true;
     mmvr::GetMenu().exactStatesAvailable=true;
-    try {RefreshStateSlots();}
+    try {RefreshStateSlots();PrepareNativeStateIdentity();}
     catch(const std::exception& error){mmvr::GetMenu().stateStatus=error.what();}
 }
 }
@@ -862,8 +872,11 @@ extern "C" bool MMVR_ExactStateWorkPending() {
 }
 extern "C" void MMVR_VerifyNativeStateCatalog(PlayState* play) {
     mmvr::states::Identity identity;
+    const auto identityStart=std::chrono::steady_clock::now();
+    double identityMs=0;
     try {
         identity=mmvrgame::NativeStateIdentity();
+        identityMs=std::chrono::duration<double,std::milli>(std::chrono::steady_clock::now()-identityStart).count();
         if(const auto* reload=std::getenv("MMVR_NATIVE_STATE_RELOAD");reload&&std::string(reload)=="1") {
             const auto* directory=std::getenv("MMVR_NATIVE_STATE_ARCHIVE_DIRECTORY");
             if(!directory||!*directory)throw mmvr::states::Error("Missing reload directory");
@@ -876,6 +889,10 @@ extern "C" void MMVR_VerifyNativeStateCatalog(PlayState* play) {
     }
     nlohmann::json result;
     auto census=CollectNativeState(play,identity,result);
+    result["timings"]["identityMs"]=identityMs;
+    const auto cachedStart=std::chrono::steady_clock::now();
+    result["identityCacheMatches"]=mmvrgame::NativeStateIdentity()==identity;
+    result["timings"]["cachedIdentityMs"]=std::chrono::duration<double,std::milli>(std::chrono::steady_clock::now()-cachedStart).count();
     {std::ofstream progress("native-state-catalog.json");progress<<result.dump(2);}
     if(result["unownedFields"].empty()&&result["unresolvedData"].empty()&&result["unresolvedFunctions"].empty()&&census.missingVariants.empty())try {
         const bool liveProbe=result["archiveReload"].get<bool>()&&std::getenv("MMVR_NATIVE_STATE_LIVE_PROBE")&&

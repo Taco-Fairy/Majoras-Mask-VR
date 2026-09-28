@@ -148,7 +148,7 @@ void ReadRefresh(bool requestStandalone = false) {
                 float selected = 0;
                 for (float rate : rates) {
                     Log("Supported display Hz: " + std::to_string(rate));
-                    if (std::isfinite(rate) && rate > 0 && rate <= 120.1f)
+                    if (std::isfinite(rate) && rate > 0)
                         selected = std::max(selected, rate);
                 }
                 bool requestRate = requestStandalone;

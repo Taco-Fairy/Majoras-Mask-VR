@@ -1,4 +1,5 @@
 #pragma once
+#include <atomic>
 #include "Archive.h"
 #include <array>
 #include <bit>
@@ -63,12 +64,14 @@ public:
         return out;
     }
 };
-inline std::string FingerprintFile(const std::filesystem::path& path) {
+inline std::string FingerprintFile(const std::filesystem::path& path, const std::atomic_bool* stop = nullptr) {
+    if(stop && stop->load(std::memory_order_relaxed))throw Error("Content verification cancelled");
     const auto size=std::filesystem::file_size(path);
     const auto time=std::filesystem::last_write_time(path);
     std::ifstream file(path,std::ios::binary);if(!file)throw Error("Cannot open state dependency");
     Fingerprint hash;std::array<uint8_t,65536> buffer;uint64_t read=0;
     while(file.read(reinterpret_cast<char*>(buffer.data()),buffer.size())||file.gcount()) {
+        if(stop && stop->load(std::memory_order_relaxed))throw Error("Content verification cancelled");
         auto n=size_t(file.gcount());hash.Add({buffer.data(),n});read+=n;
     }
     if(!file.eof()||read!=size||std::filesystem::file_size(path)!=size||std::filesystem::last_write_time(path)!=time)

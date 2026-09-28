@@ -3,6 +3,7 @@
 #include "NativeModuleRanges.h"
 #include "NativeStateCompatibility.h"
 #include "save_states/Fingerprint.h"
+#include "save_states/AsyncFingerprint.h"
 #include <ship/Context.h>
 #include <ship/resource/ResourceManager.h>
 #include <ship/resource/Resource.h>
@@ -11,6 +12,7 @@
 #include <nlohmann/json.hpp>
 #include <algorithm>
 #include <charconv>
+#include <cstdlib>
 #include <fstream>
 #include <set>
 #ifndef _WIN32
@@ -34,29 +36,42 @@ inline std::filesystem::path NativeStateModulePath() {
     return info.dli_fname;
 #endif
 }
-inline mmvr::states::Identity NativeStateIdentity() {
+inline std::optional<mmvr::states::Identity> PrepareNativeStateIdentity(bool wait=false) {
     using namespace mmvr::states;
-    Fingerprint assets;
-    auto manager=Ship::Context::GetRawInstance()->GetResourceManager()->GetArchiveManager();
-    auto archives=manager->GetArchives();
+    struct Content { std::string name; std::vector<std::string> members; size_t first, count; };
+    std::vector<std::filesystem::path> files{NativeStateModulePath()};
+    std::vector<Content> contents;
+    auto archives=Ship::Context::GetRawInstance()->GetResourceManager()->GetArchiveManager()->GetArchives();
     if(!archives||archives->empty())throw Error("No mounted state content");
-    // Priority order is part of identity. Changing mod order changes resolution.
+    // Preserve archive priority and the existing byte-based identity format.
+    // Only the indexed files of folder archives are considered.
     for(const auto& archive:*archives) {
         if(!archive)throw Error("Missing mounted state archive");
         const std::filesystem::path path=archive->GetPath();
-        assets.Field(path.generic_string());
-        if(std::filesystem::is_regular_file(path))assets.Field(FingerprintFile(path));
+        Content item{path.generic_string(),{},files.size(),0};
+        if(std::filesystem::is_regular_file(path))files.push_back(path);
         else {
-            // Use the archive's existing index, not an unrestricted filesystem scan.
-            std::vector<std::string> names;
-            for(const auto& [hash,name]:*archive->ListFiles())names.push_back(name);
-            std::sort(names.begin(),names.end());
-            for(const auto& name:names) {
-                auto file=archive->LoadFile(name);
-                if(!file||!file->IsLoaded||!file->Buffer)throw Error("Unreadable mounted state asset: "+name);
-                Fingerprint bytes;bytes.Add({reinterpret_cast<const uint8_t*>(file->Buffer->data()),file->Buffer->size()});
-                assets.Field(name);assets.Field(bytes.Hex());
+            if(!std::filesystem::is_directory(path))throw Error("State archive is unavailable");
+            for(const auto& [hash,name]:*archive->ListFiles())item.members.push_back(name);
+            std::sort(item.members.begin(),item.members.end());
+            for(const auto& name:item.members) {
+                const std::filesystem::path relative=name;
+                if(relative.is_absolute()||relative.empty())throw Error("Invalid indexed state asset");
+                for(const auto& part:relative)if(part=="..")throw Error("Invalid indexed state asset");
+                files.push_back(path/relative);
             }
+        }
+        item.count=files.size()-item.first;contents.push_back(std::move(item));
+    }
+    static AsyncFingerprintCache cache;
+    auto digests=cache.Get(files,wait);
+    if(!digests)return std::nullopt;
+    Fingerprint assets;
+    for(const auto& item:contents) {
+        assets.Field(item.name);
+        if(item.members.empty()&&item.count==1)assets.Field((*digests)[item.first]);
+        else for(size_t i=0;i<item.members.size();++i) {
+            assets.Field(item.members[i]);assets.Field((*digests)[item.first+i]);
         }
     }
 #ifdef _WIN32
@@ -68,9 +83,16 @@ inline mmvr::states::Identity NativeStateIdentity() {
 #endif
     if(std::endian::native!=std::endian::little||sizeof(uintptr_t)!=8||std::string_view(platform)=="unsupported")
         throw Error("Unsupported native save-state ABI");
-    // Cross-update restoration is not validated. Fail closed on a different binary.
-    static const std::string moduleDigest=FingerprintFile(NativeStateModulePath());
-    return {"native-development-v3/"+moduleDigest,assets.Hex(),std::string(platform)+"/64-le"};
+    return Identity{"native-development-v3/"+(*digests)[0],assets.Hex(),std::string(platform)+"/64-le"};
+}
+inline mmvr::states::Identity NativeStateIdentity() {
+    bool wait=false;
+#ifdef MMVR_LOCAL_TEST_TOOLS
+    wait=std::getenv("MMVR_NATIVE_STATE_TEST")!=nullptr;
+#endif
+    auto identity=PrepareNativeStateIdentity(wait);
+    if(!identity)throw mmvr::states::Error("Content verification is preparing; retry the state operation shortly.");
+    return *identity;
 }
 inline constexpr const char* StateResourcesId="engine/resource-manifest";
 inline nlohmann::json ResourceEntry(const Ship::ResourceManager::CachedResourceView& entry) {

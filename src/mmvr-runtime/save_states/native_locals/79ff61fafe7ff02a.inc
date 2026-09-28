@@ -4,7 +4,7 @@
  * Description: Goron Elder's Drum
  */
 
-#include "z_obj_jg_gakki.h"
+#include "../../../2ship2harkinian/mm/src/overlays/actors/ovl_Obj_Jg_Gakki/z_obj_jg_gakki.h"
 #include "objects/object_jg/object_jg.h"
 
 #define FLAGS (ACTOR_FLAG_DRAW_CULLING_DISABLED)

@@ -34,7 +34,7 @@ static mmvr::Pad NativeShiroHandoff(PlayState* play,unsigned tick) {
     if(phase==1) {
         static int settle=0;if(++settle<45)return pad;
         p->actor.world.pos=npc->actor.world.pos;p->actor.world.pos.z+=45;
-        p->actor.prevPos=p->actor.world.pos;p->actor.velocity={};p->actor.speed=0;
+        p->actor.prevPos=p->actor.home.pos=p->actor.world.pos;p->actor.velocity={};p->actor.speed=0;
         npc->actor.world.rot.y=npc->actor.shape.rot.y=0;
         p->actor.shape.rot.y=p->actor.world.rot.y=static_cast<s16>(0x8000);
         mmvrgame::SelectItem(play,SLOT_BOTTLE_1,item);phase=2;

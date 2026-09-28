@@ -10,6 +10,7 @@ inline void RequestSharedFiles() {
 }
 inline void (*exportDiagnostics)() = nullptr;
 inline bool (*statePreflight)(int) = nullptr;
+inline bool (*stateReady)() = nullptr;
 inline bool setupGuideVisible = false;
 inline bool setupGuideRendered = false;
 inline bool setupGuideCompleted = false;

@@ -1,8 +1,38 @@
 #pragma once
 #include "DebugCutscenes.h"
+#include "2s2h/resource/type/Cutscene.h"
 #include "2s2h/ShipInit.hpp"
 extern "C" int MMVR_DebugCutsceneBegin(PlayState*,int);
 extern "C" s16 sSceneCutsceneCount;
+// The native ending deliberately holds forever at CS_MISC_FINALE. Discover
+// that boundary from the actual loaded resource, not a timeout or guessed frame.
+static int NativeFinaleBoundary(const void* active,std::ostream& log){
+ auto manager=Ship::Context::GetRawInstance()->GetResourceManager();
+ for(const char* suffix:{"000194","001104","005F48","00A778","00AEF8"}){
+  std::string path="scenes/nonmq/Z2_LOST_WOODS/Z2_LOST_WOODSCutsceneData_";path+=suffix;
+  auto resource=std::dynamic_pointer_cast<SOH::Cutscene>(manager->LoadResource(path));
+  if(!resource||resource->GetPointer()!=active)continue;
+  const auto& words=resource->commands;size_t pos=2;
+  if(words.size()<2)return -1;
+  for(unsigned list=0;list<words[0];++list){
+   if(pos+2>words.size())return -1;
+   const auto type=words[pos++],count=words[pos++];
+   const bool cue=type==CS_CMD_PLAYER_CUE||type==CS_CMD_ACTOR_CUE_201||
+    (type>=CS_CMD_ACTOR_CUE_100&&type<=CS_CMD_ACTOR_CUE_149)||
+    (type>=CS_CMD_ACTOR_CUE_450&&type<=CS_CMD_ACTOR_CUE_599);
+   const size_t stride=cue?12:(type==CS_CMD_TEXT||type==CS_CMD_TIME||type==CS_CMD_RUMBLE||
+    type==CS_CMD_TRANSITION_GENERAL||type==CS_CMD_FADE_OUT_SEQ)?3:2;
+   const size_t length=type==CS_CMD_CAMERA_SPLINE?count/4:size_t(count)*stride;
+   if((type==CS_CMD_CAMERA_SPLINE&&count%4)||length>words.size()-pos)return -1;
+   if(type==CS_CMD_MISC)for(unsigned j=0;j<count;++j){
+    CsCmdMisc cmd{};std::memcpy(&cmd,&words[pos+j*stride],sizeof(cmd));
+    if(cmd.type==CS_MISC_FINALE){log<<"authored-finale resource="<<path<<" frame="<<cmd.startFrame<<'\n'<<std::flush;return cmd.startFrame;}
+   }
+   pos+=length;
+  }
+ }
+ return -1;
+}
 static bool nativeScriptLaunched=false;
 static unsigned nativeScriptProgress=0;
 static bool NativeScriptTerminalBoundary() {
@@ -22,9 +52,10 @@ static bool NativeScriptTerminalBoundary() {
 // branch or visual composition. Interactive lessons use dedicated fixtures.
 static mmvr::Pad NativeScriptLifecycle(PlayState* play,unsigned tick) {
     static const int index=[] {const char* v=std::getenv("MMVR_SCRIPT_CASE");return v?std::atoi(v):-1;}();
-    static bool launched=false,started=false;
+    static bool launched=false,started=false,explicitStart=false;
+    static unsigned noteTick=0;
     static unsigned progressed=0,settled=0,lastFrame=0;
-    static bool described=false;
+    static bool described=false;static int finale=-2;static unsigned finaleHeld=0;
     static unsigned budget=5000;
     static std::ofstream log("native-script-lifecycle.log");
     mmvr::Pad pad;pad.active=true;
@@ -54,6 +85,15 @@ static mmvr::Pad NativeScriptLifecycle(PlayState* play,unsigned tick) {
             break;
         }
     }
+    // Some alternate headers contain actor-triggered scripts, not an entrance
+    // auto-start flag or a manager entry. This scoped script-lifecycle check uses
+    // the native script API; actor-trigger coverage remains a separate recipe.
+    if(!started&&!explicitStart&&tick>150&&play->sceneId==entry.scene&&
+       play->transitionMode==TRANS_MODE_OFF&&play->csCtx.state==CS_STATE_IDLE&&
+       play->csCtx.scriptListCount>0&&!Player_InCsMode(play)){
+        Cutscene_StartScripted(play,0);explicitStart=true;
+        log<<"native-script-api-start index=0 actor-trigger-not-certified\n"<<std::flush;
+    }
     if (!described && play->sceneId == entry.scene && play->transitionMode == TRANS_MODE_OFF) {
         described = true;
         log << "script-metadata count=" << unsigned(play->csCtx.scriptListCount)
@@ -66,6 +106,7 @@ static mmvr::Pad NativeScriptLifecycle(PlayState* play,unsigned tick) {
         log << std::flush;
     }
     if (play->csCtx.script && play->csCtx.state != CS_STATE_IDLE) {
+        if(index==58&&finale==-2)finale=NativeFinaleBoundary(play->csCtx.script,log);
         const auto* commands = (const s32*)play->csCtx.script;
         const unsigned endFrame = unsigned(commands[1]);
         if (endFrame < 60000) budget = std::max(budget, endFrame + 1000);
@@ -78,7 +119,19 @@ static mmvr::Pad NativeScriptLifecycle(PlayState* play,unsigned tick) {
     auto* p=GET_PLAYER(play);
     if(!std::isfinite(p->actor.world.pos.x)||!std::isfinite(p->actor.world.pos.y)||!std::isfinite(p->actor.world.pos.z)){finish("FAIL","nonfinite-player-position");return pad;}
     if(play->msgCtx.msgLength && tick%24==0)pad.buttons=BTN_A;
-    if(tick%60==0)log<<"tick="<<tick<<" scene="<<play->sceneId<<" state="<<int(play->csCtx.state)<<" frame="<<play->csCtx.curFrame<<" message="<<int(play->msgCtx.msgMode)<<" textId="<<play->msgCtx.currentTextId<<" textState="<<int(Message_GetState(&play->msgCtx))<<" choice="<<int(play->msgCtx.choiceIndex)<<" endType="<<int(play->msgCtx.textboxEndType)<<" csIndex="<<gSaveContext.save.cutsceneIndex<<'\n'<<std::flush;
+    if(play->msgCtx.msgMode==MSGMODE_SONG_PROMPT){
+        const int song=play->msgCtx.ocarinaAction-OCARINA_ACTION_PROMPT_SONATA;
+        if(song>=0&&song<=OCARINA_SONG_GORON_LULLABY_INTRO){
+            static const u16 keys[]={BTN_A,BTN_CDOWN,BTN_CRIGHT,BTN_CLEFT,BTN_CUP};
+            const auto& notes=gOcarinaSongButtons[song];unsigned n=noteTick/20;
+            pad.buttons=0;
+            if(n<notes.numButtons&&notes.buttonIndex[n]<5&&noteTick%20<8)pad.buttons=keys[notes.buttonIndex[n]];
+            ++noteTick;
+        }
+    }else if(play->msgCtx.msgMode==MSGMODE_SONG_PROMPT_FAIL)noteTick=0;
+    if(tick%60==0)log<<"tick="<<tick<<" scene="<<play->sceneId<<" state="<<int(play->csCtx.state)<<" frame="<<play->csCtx.curFrame<<" message="<<int(play->msgCtx.msgMode)<<" textId="<<play->msgCtx.currentTextId<<" textState="<<int(Message_GetState(&play->msgCtx))<<" choice="<<int(play->msgCtx.choiceIndex)<<" endType="<<int(play->msgCtx.textboxEndType)<<" ocarina="<<play->msgCtx.ocarinaAction<<" csIndex="<<gSaveContext.save.cutsceneIndex<<'\n'<<std::flush;
+    if(finale>0&&play->csCtx.state!=CS_STATE_IDLE&&play->csCtx.curFrame==finale-1&&progressed>=unsigned(finale-2))++finaleHeld;else finaleHeld=0;
+    if(finaleHeld>=60){log<<"terminal-finale-held ticks="<<finaleHeld<<'\n';finish("PASS","native-script-completed");return pad;}
     if(settled>=30 && progressed>=2)finish("PASS","native-script-completed");
     else if(tick>=budget || (!started&&tick>=600))finish("BLOCKED","needs-authored-prerequisite-or-input");
     return pad;
