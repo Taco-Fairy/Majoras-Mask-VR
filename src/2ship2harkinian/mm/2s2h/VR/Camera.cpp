@@ -1,5 +1,6 @@
 #ifdef MMVR_ENABLE
 #include "Bow.h"
+#include "VehicleCollision.h"
 #include "ArmRun.h"
 #include "Swimming.h"
 #include "FinCombat.h"
@@ -429,6 +430,7 @@ mmvr::CameraFrame Update(const mmvr::TrackingFrame& rawTracking) {
     auto climbView =
         mmvr::YawPose(bodyBase + Pi, p->actor.world.pos.x, p->actor.world.pos.y + height, p->actor.world.pos.z);
     mmvrgame::UpdateClimbing(tracking, climbView, relative);
+    const bool onEscortCart = mmvrgame::ActiveEscortCart(play, p) != nullptr;
     const auto& pos = p->actor.world.pos;
     Vec3f visual{ pos.x + tracking.visualOffset[0], pos.y + tracking.visualOffset[1],
                   pos.z + tracking.visualOffset[2] };
@@ -448,7 +450,7 @@ mmvr::CameraFrame Update(const mmvr::TrackingFrame& rawTracking) {
     // scene-transition animation frames from leaving the headset at a stale
     // low height. Preserve native root motion on moving platforms and in every
     // pose where the player is not standing on static scene geometry.
-    const bool stableSceneGround = !cinematic && !facts.transition && !flowerStage && !p->rideActor &&
+    const bool stableSceneGround = !cinematic && !facts.transition && !flowerStage && !p->rideActor && !onEscortCart &&
         !mmvrgame::ClimbingContext(play) && !MMVR_HookshotInFlight(p) &&
         !directClimb && (p->actor.bgCheckFlags & BGCHECKFLAG_GROUND) &&
         p->actor.floorBgId == BGCHECK_SCENE && p->actor.floorHeight != BGCHECK_Y_MIN;
@@ -481,7 +483,7 @@ mmvr::CameraFrame Update(const mmvr::TrackingFrame& rawTracking) {
             support->normal.y/32767.f, support->normal.z/32767.f);
     }
     // Roll animation stays suppressed, but its ground travel shares stair/ramp smoothing.
-    const bool ordinaryWalk = !cinematic && !facts.transition && !flowerStage && !p->rideActor &&
+    const bool ordinaryWalk = !cinematic && !facts.transition && !flowerStage && !p->rideActor && !onEscortCart &&
         !mmvrgame::ClimbingContext(play) && !MMVR_HookshotInFlight(p) &&
         (p->actor.bgCheckFlags & BGCHECKFLAG_GROUND) && p->actor.floorBgId == BGCHECK_SCENE &&
         !(p->stateFlags1 & (PLAYER_STATE1_8000000 | PLAYER_STATE1_400000)) &&
@@ -571,7 +573,9 @@ mmvr::CameraFrame Update(const mmvr::TrackingFrame& rawTracking) {
     }
     // Smooth only game-authored mount/rider height. Raw physical headset motion
     // is added later by stereo replay, so leaning and recentering remain immediate.
-    const bool riding = p->rideActor && (p->stateFlags1 & PLAYER_STATE1_800000);
+    // Cart travel shares Epona's authored-height smoothing. It must never use
+    // the road's floor height or stair correction while the native cart moves it.
+    const bool riding = (p->rideActor && (p->stateFlags1 & PLAYER_STATE1_800000)) || onEscortCart;
     if (riding || rideSmoothing) {
         if (!rideSmoothing) rideCameraY = sameOwner && lastViewPose.m[3][3] ? lastViewPose.m[3][1] : viewPose.m[3][1];
         const float targetY = viewPose.m[3][1];
@@ -1037,6 +1041,9 @@ static bool HideCurrentPlayer(PlayState* play) {
            (mmvrgame::FirstPersonFormAllowed(player) || mmvrgame::InWorldCinematic(play));
 }
 extern "C" int MMVR_HideNativeBodyRender(void) { return HideCurrentPlayer(gPlayState); }
+extern "C" int MMVR_HideBunnyHood(void) {
+    return HideCurrentPlayer(gPlayState) && mmvr::GetSettings().Get(mmvr::Setting::HideBunnyHood) > .5f;
+}
 namespace mmvrgame {
 bool TestBodyRenderWithoutPose() {
     const char* test=std::getenv("MMVR_NATIVE_TEST");

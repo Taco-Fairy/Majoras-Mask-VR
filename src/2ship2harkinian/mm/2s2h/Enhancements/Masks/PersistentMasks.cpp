@@ -2,6 +2,9 @@
 #include "2s2h/GameInteractor/GameInteractor.h"
 #include "2s2h/Enhancements/FrameInterpolation/FrameInterpolation.h"
 #include "2s2h/ShipInit.hpp"
+#ifdef MMVR_ENABLE
+#include "2s2h/VR/Camera.h"
+#endif
 
 extern "C" {
 #include "variables.h"
@@ -50,7 +53,11 @@ void UpdatePersistentMasksState() {
     // This hook draws the mask on the players head when it's active and they aren't in first person
     onPlayerPostLimbDrawHook = GameInteractor::Instance->RegisterGameHookForID<GameInteractor::OnPlayerPostLimbDraw>(
         PLAYER_LIMB_HEAD, [](Player* player, s32 limbIndex) {
-            if (!STATE_CVAR) {
+            if (!STATE_CVAR
+#ifdef MMVR_ENABLE
+                || MMVR_HideBunnyHood()
+#endif
+            ) {
                 return;
             }
 

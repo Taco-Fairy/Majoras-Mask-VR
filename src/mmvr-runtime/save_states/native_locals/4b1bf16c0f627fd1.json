@@ -3,26 +3,26 @@
   "include": "4b1bf16c0f627fd1.inc",
   "variables": [
     {
-      "name": "mmvr_local_cf858365aeb4bed7",
+      "name": "mmvr_local_5f559a229112c887",
       "original": "D_809EE1F8",
       "function": "Boss04_Init",
-      "line": 143,
-      "at": 4649
+      "line": 146,
+      "at": 4712
     },
     {
-      "name": "mmvr_local_f25165f0db701410",
+      "name": "mmvr_local_7695a1c96b31c8e2",
       "original": "D_809EE228",
       "function": "Boss04_PostLimbDraw",
-      "line": 804,
-      "at": 28940
+      "line": 815,
+      "at": 29164
     },
     {
-      "name": "mmvr_local_3920753cc5d7abc4",
+      "name": "mmvr_local_c4dcb1d74f484551",
       "original": "D_809EE234",
       "function": "Boss04_PostLimbDraw",
-      "line": 805,
-      "at": 28996
+      "line": 816,
+      "at": 29220
     }
   ],
-  "sourceSha256": "b282ffe45e42a6731f1ea811c07e97c897c95db2af743a0e09c2c6a52634e3fa"
+  "sourceSha256": "82b8dbfe056e6e067549d9d30acf074dbb70b6661956ab2e4a7f4a12e852498e"
 }

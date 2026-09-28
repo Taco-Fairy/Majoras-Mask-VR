@@ -4908,8 +4908,24 @@ void MMVR_PlayerEquipBow(PlayState* play,Player* this,int item) {
     Player_SetUpperAction(play,this,Player_UpperAction_6);
     sPlayerUseHeldItem=false;sPlayerHeldItemButtonIsHeldDown=false;
 }
+int MMVR_BowHasNockedArrow(Player* this) {
+    Actor* arrow = this ? this->heldActor : NULL;
+    return MMVR_IndependentBow(this) && arrow && arrow->update && !arrow->init &&
+           arrow->id == ACTOR_EN_ARROW && arrow->parent == &this->actor && ARROW_IS_ARROW(arrow->params);
+}
 int MMVR_FireBow(PlayState* play,Player* this,const float* position,const short* rotation,float power) {
     ItemId item;ArrowType type;ArrowMagic magic;Actor* arrow;
+    // Scripted archery can arrive with an arrow already nocked. Reuse it:
+    // native draw already paid any magic cost, and release owns ammo accounting.
+    if (MMVR_BowHasNockedArrow(this)) {
+        arrow = this->heldActor;
+        arrow->world.pos = (Vec3f){ position[0], position[1], position[2] };
+        arrow->prevPos = arrow->world.pos;
+        arrow->world.rot = (Vec3s){ rotation[0], rotation[1], rotation[2] };
+        arrow->shape.rot = arrow->world.rot;
+        ((EnArrow*)arrow)->vrReleasePower = CLAMP(power,.25f,1.f);
+        return func_80831194(play,this);
+    }
     if (!MMVR_IndependentBow(this) || this->heldActor || func_808305BC(play,this,&item,&type)<=0) {
         Audio_PlaySfx(NA_SE_SY_ERROR);return false;
     }
@@ -14836,6 +14852,11 @@ s32 Player_UpperAction_7(Player* this, PlayState* play) {
         this->unk_ACC--;
     }
 
+#ifdef MMVR_ENABLE
+    // Physical trigger release owns an independently drawn bow. Do not let
+    // the native button-up path fire a scripted, preloaded arrow first.
+    if (MMVR_IndependentBow(this)) return true;
+#endif
     func_80831010(this, play);
     if ((this->unk_ACE > 0) && ((this->unk_B28 < 0) || (!sPlayerHeldItemButtonIsHeldDown && !func_80830FD4(play)))) {
         Player_SetUpperAction(play, this, Player_UpperAction_8);
@@ -19489,6 +19510,19 @@ void Player_Action_80(Player* this, PlayState* play) {
 }
 
 void Player_Action_81(Player* this, PlayState* play) {
+#ifdef MMVR_ENABLE
+    // The escort can stop its camera after entering this shooting action,
+    // leaving END latched. Unlike the mounted action, this action never
+    // consumed END, so every physical-bow eligibility check rejected input.
+    // Clear only a completed handoff during live shooting; retain all real
+    // dialogue, script and transition locks and the native third-person path.
+    if (MMVR_IndependentBow(this) && this->csAction == PLAYER_CSACTION_END &&
+        play->bButtonAmmoPlusOne > 0 && play->csCtx.state == CS_STATE_IDLE &&
+        play->msgCtx.msgMode == MSGMODE_NONE && play->transitionTrigger == TRANS_TRIGGER_OFF &&
+        play->transitionMode == TRANS_MODE_OFF) {
+        this->csAction = PLAYER_CSACTION_NONE;
+    }
+#endif
     this->unk_AA5 = PLAYER_UNKAA5_3;
     func_8083868C(play, this);
     PlayerAnimation_Update(play, &this->skelAnime);

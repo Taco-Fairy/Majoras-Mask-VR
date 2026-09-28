@@ -360,7 +360,8 @@ extern "C" void MMVR_RegisterMenu(void) {
     mmvr::SetInputContext((allowed && !(player->stateFlags1 & PLAYER_STATE1_CARRYING_ACTOR)) ||
                               mmvrgame::ExchangePromptActive(play),
                           MMVR_InstrumentOverlay());
-    mmvr::SetDialogueChoice(play && Message_GetState(&play->msgCtx) == TEXT_STATE_CHOICE);
+    mmvr::SetDialogueChoice(play && (Message_GetState(&play->msgCtx) == TEXT_STATE_CHOICE ||
+                                   MMVR_SongTimeSelectionActive()));
     mmvrgame::UpdateMaskContext(play);
     int maskItem = mmvr::WornMaskItem();
     if (maskItem >= 0) {

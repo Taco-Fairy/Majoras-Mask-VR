@@ -195,6 +195,7 @@ enum class Setting {
     FistHitboxScale,
     HudAnchor,
     HandHudSize,
+    HideBunnyHood,
     Count
 };
 struct SettingDefinition {
@@ -393,6 +394,7 @@ inline constexpr SettingDefinition SettingDefinitions[] = {
     { "gVR.FistHitboxScale", "Goron fist hitbox size", 100, 100, 200, 5, "%" },
     { "gVR.HudAnchor", "HUD attachment", 0, 0, 2, 1, "" },
     { "gVR.HandHudSize", "Hand HUD size", 100, 40, 200, 5, "%" },
+    { "gVR.HideBunnyHood", "Hide worn Bunny Hood in first person", 1, 0, 1, 1, "off/on" },
 };
 static_assert(sizeof(SettingDefinitions) / sizeof(SettingDefinitions[0]) == size_t(Setting::Count));
 inline float BoundSetting(Setting id, float value) {

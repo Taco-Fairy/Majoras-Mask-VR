@@ -24,7 +24,7 @@ inline constexpr int AssignmentFirst = int(Setting::Count), ResetSettingsRow = A
                      DiagnosticExportRow = NativeOptionsRow + 1,
                      SetupGuideRow = NativeOptionsRow + 2,
                      ReleaseNotesFirstRow = NativeOptionsRow + 3,
-                     ReleaseNotesCount = 16,
+                     ReleaseNotesCount = 19,
                      MenuRows = ReleaseNotesFirstRow + ReleaseNotesCount;
 inline bool ReleaseNotesRow(int row) { return row >= ReleaseNotesFirstRow && row < MenuRows; }
 inline bool TutorialRow(int row) { return row >= TutorialFirstRow && row < NativeOptionsRow; }
@@ -80,6 +80,7 @@ inline constexpr MenuSection MenuSections[] = {
     { SystemTab, "v0.21 - Potion crash hotfix", false },
     { SystemTab, "v0.22 - Web and mask hotfix", false },
     { SystemTab, "v2.3 - Interaction and settings update", false },
+    { SystemTab, "v2.4 - Bow and gameplay hotfixes", false },
 };
 inline constexpr int MenuSectionCount = sizeof(MenuSections) / sizeof(MenuSections[0]);
 struct MenuEntry {
@@ -87,6 +88,9 @@ struct MenuEntry {
 };
 // Explicit presentation order is independent of persistent setting IDs.
 inline constexpr MenuEntry OrderedMenu[] = {
+    { ReleaseNotesFirstRow + 16, 43 },
+    { ReleaseNotesFirstRow + 17, 43 },
+    { ReleaseNotesFirstRow + 18, 43 },
     { ReleaseNotesFirstRow + 10, 42 },
     { ReleaseNotesFirstRow + 11, 42 },
     { ReleaseNotesFirstRow + 12, 42 },
@@ -142,6 +146,7 @@ inline constexpr MenuEntry OrderedMenu[] = {
     { int(Setting::HideLegs), 2 },
     { int(Setting::HideSheath), 2 },
     { int(Setting::HideShield), 2 },
+    { int(Setting::HideBunnyHood), 2 },
     { int(Setting::SwordLeftHanded), 3 },
     { int(Setting::HandScale), 3 },
     { int(Setting::HandOffsetX), 4 },

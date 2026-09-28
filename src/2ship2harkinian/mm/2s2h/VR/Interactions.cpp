@@ -31,6 +31,25 @@ void MMVR_PlayerEquipSword(PlayState*,Player*,ItemId);
 #include "overlays/actors/ovl_Obj_Snowball2/z_obj_snowball2.h"
 #include "objects/object_link_child/object_link_child.h"
 }
+// Deliberate look triggers must use headset gaze, not the native C-up flag.
+// Keep native behavior outside live first-person presentation.
+extern "C" int MMVR_LookTrigger(PlayState* play,Actor* actor,int nativeResult) {
+    if (!mmvr::FirstPersonRequested()) return nativeResult;
+    if (!play || !actor || !mmvr::InputFocused() || mmvr::MenuPaused() ||
+        play->pauseCtx.state != PAUSE_STATE_OFF || !MMVR_PlayerPresentation(play) ||
+        !mmvrgame::FormTrackingReady(GET_PLAYER(play))) return false;
+    const auto head = mmvrgame::FormHeadPose();
+    if (!head.m[3][3]) return false;
+    const auto inverse = mmvr::InversePose(head);
+    float p[3]{};
+    for (int i=0;i<3;++i)
+        p[i] = actor->world.pos.x*inverse.m[0][i] + actor->world.pos.y*inverse.m[1][i] +
+               actor->world.pos.z*inverse.m[2][i] + inverse.m[3][i];
+    // Central 60-degree cone: seeing the encounter peripherally is not looking at it.
+    return std::isfinite(p[0]) && std::isfinite(p[1]) && std::isfinite(p[2]) && p[2] < 0 &&
+           std::hypot(p[0],p[1]) < -p[2]*.57735027f &&
+           mmvr::InteractionPointVisible(p[0]/40.f,p[1]/40.f,p[2]/40.f);
+}
 extern "C" int MMVR_ButtonInteractionVisible(PlayState* play,Actor* actor) {
     if (!actor || !play || !mmvr::FirstPersonRequested()) return true;
     auto* player=GET_PLAYER(play);

@@ -207,7 +207,10 @@ inline void Draw(ImDrawList& list, const UiDrawFrame& frame, ImTextureID frameTe
                     { "2Ship menu improvements", "Search settings; improved navigation and Back behavior.", "Items and masks includes Bunny Hood and Blast Mask options." },
                     { "Physical combat options", "Adjust sword and Goron fist hitbox sizes.", "Physical magic great spin uses the normal magic requirements." },
                     { "Hand-attached HUD", "Attach the gameplay HUD to either hand and resize it.", "Existing HUD opacity settings still apply." },
-                    { "Frame-rate choices", "Choose 72, 80, 90, 120 FPS or Uncapped.", "Uncapped follows runtime pacing without a 120 Hz ceiling." }
+                    { "Frame-rate choices", "Choose 72, 80, 90, 120 FPS or Uncapped.", "Uncapped follows runtime pacing without a 120 Hz ceiling." },
+                    { "Bow and carriage repairs", "Fixed physical bow drawing after scripted handoffs.", "Restored bowstrings and improved vehicle hand/camera stability." },
+                    { "Wart and spin attacks", "Look up with your headset to activate Wart.", "Fixed distant targets receiving unintended spin hits." },
+                    { "Mask and song controls", "Added an option to hide the Bunny Hood.", "Fixed time selection in Better Song of Double Time." }
                 };
                 static_assert(std::size(notes) == ReleaseNotesCount);
                 const auto& note = notes[i - ReleaseNotesFirstRow];

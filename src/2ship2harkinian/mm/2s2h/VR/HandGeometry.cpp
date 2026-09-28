@@ -1,4 +1,5 @@
 #ifdef MMVR_ENABLE
+#include "VehicleCollision.h"
 #include "HandGeometry.h"
 #include "Carry.h"
 #include "hand_collision.h"
@@ -61,6 +62,7 @@ bool WorldContact(CollisionContext& context, Player* player, mmvr::HandPoint poi
         auto flags=dyna.bgActorFlags[i];auto& actor=dyna.bgActors[i];
         if(!(flags&BGACTOR_IN_USE)||(flags&(BGACTOR_1|BGACTOR_COLLISION_DISABLED))||
            actor.actor==&player->actor||actor.actor==player->rideActor||
+           mmvrgame::VehicleCollisionExcluded(gPlayState,player,actor.actor)||
            (player->heldActor&&actor.actor==player->heldActor))continue;
         mmvr::HandPoint center{float(actor.boundingSphere.center.x),float(actor.boundingSphere.center.y),float(actor.boundingSphere.center.z)};
         if(mmvr::HandLength(mmvr::HandSub(point,center))>radius+actor.boundingSphere.radius)continue;

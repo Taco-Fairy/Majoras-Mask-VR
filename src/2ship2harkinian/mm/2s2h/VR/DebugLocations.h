@@ -107,4 +107,6 @@ constexpr DebugLocation debugLocations[]={
  {"Woodfall Temple - Skulltula web and torch",ENTRANCE(WOODFALL_TEMPLE,0),SCENE_MITURIN,-1,4},
  {"Sword Dojo - lessons and challenge",ENTRANCE(SWORDMANS_SCHOOL,0),SCENE_DOUJOU,-1,2},
  {"Hot spring - bottle scoop",ENTRANCE(GORON_GRAVERYARD,0),SCENE_GORON_HAKA,-1,5},
+ {"Cremia milk escort - Gorman attack",ENTRANCE(GORMAN_TRACK,4),SCENE_KOEPONARACE,-1,6},
+ {"Wart - look up to activate",ENTRANCE(GREAT_BAY_TEMPLE,0),SCENE_SEA,-1,7},
 };

@@ -1146,6 +1146,68 @@ extern "C" int MMVR_ScriptedMeleeAnimation(Player* player) {
     if (SpinContactActive()) return spinTier == 2 ? PLAYER_MWA_BIG_SPIN_1H : PLAYER_MWA_SPIN_ATTACK_1H;
     return physicalSwordAnimation;
 }
+namespace {
+// Native narrow-phase tests tolerate nearly degenerate triangles. Tracked
+// stationary/edge-on sweeps can produce those triangles, so require finite
+// spatial overlap before accepting a hit. Use collider bounds, not actor
+// origins: large bosses and independently positioned hurtboxes remain valid.
+struct SwordContactBounds {
+    Vec3f low{}, high{};
+    bool valid = false;
+    void Add(Vec3f p) {
+        if (!std::isfinite(p.x) || !std::isfinite(p.y) || !std::isfinite(p.z)) return;
+        if (!valid) { low = high = p; valid = true; return; }
+        for (int i = 0; i < 3; ++i) {
+            (&low.x)[i] = std::min((&low.x)[i], (&p.x)[i]);
+            (&high.x)[i] = std::max((&high.x)[i], (&p.x)[i]);
+        }
+    }
+    void Sphere(const Sphere16& s) {
+        const float r = std::max(0.f, float(s.radius));
+        Add({s.center.x-r, s.center.y-r, s.center.z-r});
+        Add({s.center.x+r, s.center.y+r, s.center.z+r});
+    }
+    bool Overlaps(const SwordContactBounds& other) const {
+        if (!valid || !other.valid) return false;
+        for (int i = 0; i < 3; ++i)
+            if ((&high.x)[i] + 1.f < (&other.low.x)[i] ||
+                (&other.high.x)[i] + 1.f < (&low.x)[i]) return false;
+        return true;
+    }
+};
+SwordContactBounds ContactBounds(const Collider* collider) {
+    SwordContactBounds b;
+    if (!collider) return b;
+    switch (collider->shape) {
+        case COLSHAPE_JNTSPH: {
+            const auto* c = reinterpret_cast<const ColliderJntSph*>(collider);
+            if (c->elements) for (int i=0; i<c->count; ++i) b.Sphere(c->elements[i].dim.worldSphere);
+            break;
+        }
+        case COLSHAPE_CYLINDER: {
+            const auto& d = reinterpret_cast<const ColliderCylinder*>(collider)->dim;
+            const float r = std::max(0.f, float(d.radius));
+            const float y = float(d.pos.y) + d.yShift;
+            b.Add({d.pos.x-r, y, d.pos.z-r});
+            b.Add({d.pos.x+r, y+std::max(0.f, float(d.height)), d.pos.z+r});
+            break;
+        }
+        case COLSHAPE_TRIS: {
+            const auto* c = reinterpret_cast<const ColliderTris*>(collider);
+            if (c->elements) for (int i=0; i<c->count; ++i)
+                for (const auto& p : c->elements[i].dim.vtx) b.Add(p);
+            break;
+        }
+        case COLSHAPE_QUAD:
+            for (const auto& p : reinterpret_cast<const ColliderQuad*>(collider)->dim.quad) b.Add(p);
+            break;
+        case COLSHAPE_SPHERE:
+            b.Sphere(reinterpret_cast<const ColliderSphere*>(collider)->dim.worldSphere);
+            break;
+    }
+    return b;
+}
+} // namespace
 // Called only after native damage eligibility succeeded, before committing a hit.
 // Multiple hurtboxes of one enemy share a target; grass patches share an actor
 // but represent independent blades, so their world contact centers identify them.
@@ -1159,6 +1221,7 @@ extern "C" int MMVR_AcceptSwordTarget(PlayState* play, Collider* attack, Collide
     // The native magic disk and tracked blade belong to one attack. An enemy
     // cannot be damaged twice because both overlap it on the same release.
     if (!blade && !magic && !physicalArea) return 1;
+    if (!target || !ContactBounds(attack).Overlaps(ContactBounds(target))) return 0;
     // Torch contact must light an unlit stick as well as accept a burning one.
     // A damaging hit would preempt native flame proximity or break the stick.
     const auto* player = GET_PLAYER(play);
@@ -1338,6 +1401,14 @@ extern "C" int MMVR_PhysicalSwordCollider(PlayState* play, Player* p) {
     // damage element for all recipients, and aggregate its contact flags.
     unsigned contactFlags = 0;
     auto resolve = [&](Vec3f a, Vec3f b, Vec3f c, Vec3f d) {
+        auto areaSquared = [](Vec3f a, Vec3f b, Vec3f c) {
+            const Vec3f u{b.x-a.x,b.y-a.y,b.z-a.z}, v{c.x-a.x,c.y-a.y,c.z-a.z};
+            return SQ(u.y*v.z-u.z*v.y)+SQ(u.z*v.x-u.x*v.z)+SQ(u.x*v.y-u.y*v.x);
+        };
+        // These are the two triangles consumed by the native quad routines.
+        // Width/depth faces below retain genuine contact for axial movement.
+        const float area1=areaSquared(c,d,b), area2=areaSquared(c,b,a);
+        if (!std::isfinite(area1) || !std::isfinite(area2) || (area1 < .0001f && area2 < .0001f)) return;
         Collider_ResetQuadAT(play, &quad->base);
         quad->elem.atElemFlags &= ~ATELEM_NEAREST;
         Collider_SetQuadVertices(quad, &a, &b, &c, &d);

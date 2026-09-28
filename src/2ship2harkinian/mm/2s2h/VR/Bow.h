@@ -17,6 +17,7 @@ extern "C" {
 #endif
 struct PlayState;struct Player;
 int MMVR_IndependentBow(struct Player*);
+int MMVR_BowHasNockedArrow(struct Player*);
 void MMVR_PlayerEmptyHands(struct PlayState*,struct Player*);
 void MMVR_PlayerEquipBow(struct PlayState*,struct Player*,int item);
 int MMVR_FireBow(struct PlayState*,struct Player*,const float* position,const short* rotation,float power);

@@ -32,6 +32,11 @@ typedef enum AdjustDirection {
 } AdjustDirection;
 
 static bool sActivelyChangingTime = false;
+#ifdef MMVR_ENABLE
+extern "C" int MMVR_SongTimeSelectionActive(void) {
+    return CVAR && sActivelyChangingTime;
+}
+#endif
 static u16 sOriginalTime = CLOCK_TIME(0, 0);
 static s32 sOriginalDay = 0;
 static u16 sSelectedTime = CLOCK_TIME(0, 0);

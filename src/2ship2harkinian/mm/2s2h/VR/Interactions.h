@@ -21,6 +21,7 @@ extern "C" {
 #endif
 struct PlayState;struct Player;struct Actor;
 int MMVR_ButtonInteractionVisible(struct PlayState*,struct Actor*);
+int MMVR_LookTrigger(struct PlayState*,struct Actor*,int nativeResult);
 void MMVR_TrackedActorBegin(struct PlayState*,struct Actor*);
 void MMVR_TrackedActorEnd(struct PlayState*,struct Actor*);
 int MMVR_ItemPresentationActive(struct Player*);

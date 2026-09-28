@@ -5,6 +5,9 @@
  */
 
 #include "z_boss_04.h"
+#ifdef MMVR_ENABLE
+#include "2s2h/VR/Interactions.h"
+#endif
 #include "z64shrink_window.h"
 #include "overlays/actors/ovl_En_Clear_Tag/z_en_clear_tag.h"
 
@@ -255,8 +258,16 @@ void func_809EC568(Boss04* this, PlayState* play) {
         case 0:
             this->unk_2C8 = 50;
             this->unk_2D0 = 2000.0f;
-            if ((player->stateFlags1 & PLAYER_STATE1_100000) && (this->actor.projectedPos.z > 0.0f) &&
-                (fabsf(this->actor.projectedPos.x) < 300.0f) && (fabsf(this->actor.projectedPos.y) < 300.0f)) {
+            if (
+#ifdef MMVR_ENABLE
+                MMVR_LookTrigger(play, &this->actor,
+#endif
+                (player->stateFlags1 & PLAYER_STATE1_100000) && (this->actor.projectedPos.z > 0.0f) &&
+                (fabsf(this->actor.projectedPos.x) < 300.0f) && (fabsf(this->actor.projectedPos.y) < 300.0f)
+#ifdef MMVR_ENABLE
+                )
+#endif
+            ) {
                 if ((this->unk_704 >= 15) && (CutsceneManager_GetCurrentCsId() == CS_ID_NONE)) {
                     Actor* boss;
 

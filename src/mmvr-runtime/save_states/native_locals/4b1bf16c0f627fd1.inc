@@ -5,6 +5,9 @@
  */
 
 #include "../../../2ship2harkinian/mm/src/overlays/actors/ovl_Boss_04/z_boss_04.h"
+#ifdef MMVR_ENABLE
+#include "2s2h/VR/Interactions.h"
+#endif
 #include "z64shrink_window.h"
 #include "overlays/actors/ovl_En_Clear_Tag/z_en_clear_tag.h"
 
@@ -139,7 +142,7 @@ void func_809EC040(s32 index, ColliderJntSph* collider, Vec3f* arg2) {
         collider->elements[index].dim.modelSphere.radius * collider->elements[index].dim.scale;
 }
 
-static Vec3f mmvr_local_cf858365aeb4bed7[] = {
+static Vec3f mmvr_local_5f559a229112c887[] = {
         { -1000.0f, 0.0f, 0.0f },
         { 1000.0f, 0.0f, 0.0f },
         { 0.0f, 0.0f, -1000.0f },
@@ -180,9 +183,9 @@ void Boss04_Init(Actor* thisx, PlayState* play2) {
                        WART_LIMB_MAX);
     spA8.y = this->actor.world.pos.y + 200.0f;
 
-    for (i = 0; i < ARRAY_COUNT(mmvr_local_cf858365aeb4bed7); i++) {
-        spA8.x = mmvr_local_cf858365aeb4bed7[i].x + this->actor.world.pos.x;
-        spA8.z = mmvr_local_cf858365aeb4bed7[i].z + this->actor.world.pos.z;
+    for (i = 0; i < ARRAY_COUNT(mmvr_local_5f559a229112c887); i++) {
+        spA8.x = mmvr_local_5f559a229112c887[i].x + this->actor.world.pos.x;
+        spA8.z = mmvr_local_5f559a229112c887[i].z + this->actor.world.pos.z;
         if (BgCheck_EntityLineTest1(&play->colCtx, &this->actor.world.pos, &spA8, &spB4, &spC0, true, false, false,
                                     true, &bgId)) {
             if (i == 0) {
@@ -256,8 +259,16 @@ void func_809EC568(Boss04* this, PlayState* play) {
         case 0:
             this->unk_2C8 = 50;
             this->unk_2D0 = 2000.0f;
-            if ((player->stateFlags1 & PLAYER_STATE1_100000) && (this->actor.projectedPos.z > 0.0f) &&
-                (fabsf(this->actor.projectedPos.x) < 300.0f) && (fabsf(this->actor.projectedPos.y) < 300.0f)) {
+            if (
+#ifdef MMVR_ENABLE
+                MMVR_LookTrigger(play, &this->actor,
+#endif
+                (player->stateFlags1 & PLAYER_STATE1_100000) && (this->actor.projectedPos.z > 0.0f) &&
+                (fabsf(this->actor.projectedPos.x) < 300.0f) && (fabsf(this->actor.projectedPos.y) < 300.0f)
+#ifdef MMVR_ENABLE
+                )
+#endif
+            ) {
                 if ((this->unk_704 >= 15) && (CutsceneManager_GetCurrentCsId() == CS_ID_NONE)) {
                     Actor* boss;
 
@@ -801,8 +812,8 @@ s32 Boss04_OverrideLimbDraw(PlayState* play, s32 limbIndex, Gfx** dList, Vec3f* 
     return false;
 }
 
-static Vec3f mmvr_local_f25165f0db701410 = { 0.0f, -200.0f, 0.0f };
-static Vec3f mmvr_local_3920753cc5d7abc4 = { 0.0f, 720.0f, 0.0f };
+static Vec3f mmvr_local_7695a1c96b31c8e2 = { 0.0f, -200.0f, 0.0f };
+static Vec3f mmvr_local_c4dcb1d74f484551 = { 0.0f, 720.0f, 0.0f };
 void Boss04_PostLimbDraw(PlayState* play, s32 limbIndex, Gfx** dList, Vec3s* rot, Actor* thisx) {
     /* persistent local storage is declared above */
     /* persistent local storage is declared above */
@@ -811,9 +822,9 @@ void Boss04_PostLimbDraw(PlayState* play, s32 limbIndex, Gfx** dList, Vec3s* rot
 
     if (limbIndex == WART_LIMB_ROOT) {
         Matrix_MultVecY(-500.0f, &this->actor.focus.pos);
-        Matrix_MultVec3f(&mmvr_local_f25165f0db701410, &sp18);
+        Matrix_MultVec3f(&mmvr_local_7695a1c96b31c8e2, &sp18);
         func_809EC040(0, &this->collider1, &sp18);
-        Matrix_MultVec3f(&mmvr_local_3920753cc5d7abc4, &sp18);
+        Matrix_MultVec3f(&mmvr_local_c4dcb1d74f484551, &sp18);
         func_809EC040(0, &this->collider2, &sp18);
     }
 }

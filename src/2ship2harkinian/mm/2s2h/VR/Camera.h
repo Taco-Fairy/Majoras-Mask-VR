@@ -40,6 +40,8 @@ int MMVR_TheaterPresentation(struct PlayState*);
 // 0: native theater, 1: world anchor, -1: no live effect source.
 int MMVR_SkullKidEffectAnchor(struct PlayState*, float* position);
 int MMVR_HideNativeBodyRender(void);
+int MMVR_HideBunnyHood(void);
+int MMVR_SongTimeSelectionActive(void);
 int MMVR_InstrumentOverlay(void);
 int MMVR_ScriptedInstrumentVisible(void);
 int MMVR_ClearLessonBackground(void);

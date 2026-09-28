@@ -1,5 +1,6 @@
 #ifdef MMVR_ENABLE
 #include "Bow.h"
+#include "VehicleCollision.h"
 #include "Bombchu.h"
 #include "Carry.h"
 #include "FormPresentation.h"
@@ -47,6 +48,26 @@ Vec3f Point(const mmvr::Matrix& m, float x, float y, float z) {
         p[c] = x * m.m[0][c] + y * m.m[1][c] + z * m.m[2][c] + m.m[3][c];
     return out;
 }
+// Private, bounded samples: a visible string does not prove input eligibility.
+void LogBowGate(PlayState* play, Player* p, const mmvr::TrackingFrame& frame,
+                unsigned gate, float distance=-1, float reach=-1, int bg=-1) {
+#ifdef MMVR_LOCAL_TEST_TOOLS
+    static double next=0;
+    static unsigned samples=0;
+    if (!p || samples>=600 || frame.timeSeconds<next ||
+        p->heldItemAction<PLAYER_IA_BOW || p->heldItemAction>PLAYER_IA_BOW_LIGHT) return;
+    next=frame.timeSeconds+.5; ++samples;
+    std::ofstream("mmvr-bow-gates.log",std::ios::app)
+        << "scene="<<play->sceneId<<" frame="<<play->gameplayFrames<<" gate="<<gate
+        <<" physical="<<mmvr::PhysicalActionsAllowed()<<" eligible="<<mmvrgame::InteractionsEligible(play,p)
+        <<" msg="<<int(play->msgCtx.msgMode)<<" cs="<<int(p->csAction)<<" script="<<int(play->csCtx.state)
+        <<" flags="<<p->stateFlags1<<" ammo="<<int(play->bButtonAmmoPlusOne)
+        <<" held="<<(p->heldActor?p->heldActor->id:-1)<<" initialized="<<(p->heldActor?!p->heldActor->init:0)
+        <<" trigger="<<frame.triggers[mmvr::SwordController(mmvr::GetSettings())]
+        <<" distance="<<distance<<" reach="<<reach<<" bg="<<bg
+        <<" scale="<<frame.trackingScale<<" drawing="<<draw.drawing<<" epoch="<<frame.epoch<<"\n";
+#endif
+}
 } // namespace
 extern "C" int MMVR_IndependentBow(Player* p) {
     return p && mmvr::FirstPersonRequested() && p->transformation == PLAYER_FORM_HUMAN &&
@@ -79,9 +100,19 @@ void UpdateBow(const mmvr::TrackingFrame& frame, const mmvr::Matrix& view, const
         action = p ? p->heldItemAction : -1;
         controller = dominant;
     }
-    if (!BowHeld() || !mmvr::PhysicalActionsAllowed() || !InteractionsEligible(play, p) || !frame.handTracked[off] ||
-        !frame.handTracked[dominant] || !frame.aimValid[off] || (p->heldActor && !CarriedObject(p)) || play->msgCtx.msgMode != MSGMODE_NONE) {
+    // A blocked shot must not remove the bow's string. Keep a relaxed pose
+    // whenever the bow hand is tracked, including scripted vehicle sequences.
+    bowModel = model;
+    bowPoseValid = BowHeld() && frame.handTracked[off];
+    const unsigned gate = (!BowHeld()?1u:0u) | (!mmvr::PhysicalActionsAllowed()?2u:0u) |
+        (!InteractionsEligible(play,p)?4u:0u) | (!frame.handTracked[off]?8u:0u) |
+        (!frame.handTracked[dominant]?16u:0u) | (!frame.aimValid[off]?32u:0u) |
+        (p && p->heldActor && !CarriedObject(p) && !MMVR_BowHasNockedArrow(p)?64u:0u) |
+        (play && play->msgCtx.msgMode!=MSGMODE_NONE?128u:0u);
+    if (gate) {
+        LogBowGate(play,p,frame,gate);
         ClearBow();
+        bowPoseValid = BowHeld() && frame.handTracked[off];
         return;
     }
     auto worldPose = [&](const XrPosef& pose) {
@@ -105,20 +136,40 @@ void UpdateBow(const mmvr::TrackingFrame& frame, const mmvr::Matrix& view, const
     float reach = std::sqrt((anchor.x - head.x) * (anchor.x - head.x) + (anchor.y - head.y) * (anchor.y - head.y) +
                             (anchor.z - head.z) * (anchor.z - head.z)) /
                   40;
+    // During Cremia's escort the cart surrounds the player. Ignore only the
+    // supporting cart, not scene walls or other dynamic scenery.
+    Actor* obstructionOwner = &p->actor;
+    if (p->actor.floorBgId != BGCHECK_SCENE) {
+        auto* support = DynaPoly_GetActor(&play->colCtx, p->actor.floorBgId);
+        if (support && VehicleCollisionExcluded(play, p, &support->actor))
+            obstructionOwner = &support->actor;
+    }
+    // The escort writes Link's position directly, so floorBgId can still refer
+    // to the road below. The active native cart is authoritative in that case.
+    if (play->bButtonAmmoPlusOne > 0 && obstructionOwner == &p->actor) {
+        for (auto* actor=play->actorCtx.actorLists[ACTORCAT_NPC].first; actor; actor=actor->next) {
+            if (actor->id != ACTOR_OBJ_UM || actor->init || !actor->update) continue;
+            if (VehicleCollisionExcluded(play, p, actor)) {
+                obstructionOwner=actor;
+                break;
+            }
+        }
+    }
     bool valid =
         reach < settings.Get(mmvr::Setting::AimReach)*frame.trackingScale &&
-        !BgCheck_EntityLineTest2(&play->colCtx, &from, &anchor, &hit, &poly, true, true, true, true, &bg, &p->actor);
+        !BgCheck_EntityLineTest2(&play->colCtx, &from, &anchor, &hit, &poly, true, true, true, true, &bg, obstructionOwner);
     ItemId ammoItem; ArrowType ammoType;
-    const bool hasArrow = func_808305BC(play, p, &ammoItem, &ammoType) > 0;
+    const bool hasArrow = MMVR_BowHasNockedArrow(p) || func_808305BC(play, p, &ammoItem, &ammoType) > 0;
     const bool freeDrawHand = !CarriedObject(p);
     if (!freeDrawHand) { draw.Cancel(); pending=false; }
     bool fire = draw.Update(frame.timeSeconds, frame.epoch, valid && freeDrawHand && hasArrow, frame.triggers[dominant], distance,
                             std::min(backwards, mmvr::LimitedArrowDraw(100) / 40 * frame.trackingScale),
                             settings.Get(mmvr::Setting::BowGrabDistance)*frame.trackingScale, settings.Get(mmvr::Setting::BowMinDraw)*frame.trackingScale,
                             std::min(settings.Get(mmvr::Setting::BowFullDraw), mmvr::LimitedArrowDraw(100) / 40)*frame.trackingScale);
+    LogBowGate(play,p,frame,(!valid?256u:0u)|(!freeDrawHand?512u:0u)|(!hasArrow?1024u:0u),distance,reach,bg);
     bowModel = model;
     stringHand = pullHand;
-    bowPoseValid = valid;
+    bowPoseValid = true;
     stringPull = draw.drawing ? draw.pull : 0;
     auto direction = mmvr::CalibrateBowAim(
         (draw.drawing || fire) && distance > .01f ? XrVector3f{ delta.x, delta.y, delta.z }
@@ -226,7 +277,9 @@ void DrawTrackedItems(PlayState* play) {
     mmvr::SetBowArrowMatrix(nullptr);
     mmvr::SetBowStringMatrix(nullptr);
     mmvr::SetItemReticleMatrix(nullptr);
-    const bool bow = BowHeld() && bowPoseValid;
+    // Emit the display-list references even if the previous tracking sample
+    // could not fire. Their matrices are filled from the current XR sample.
+    const bool bow = BowHeld();
     if (!bow && !MMVR_IndependentHookshot(GET_PLAYER(play)) && !FormReticleVisible(GET_PLAYER(play)) &&
         !BombchuReticleVisible(GET_PLAYER(play)))
         return;
