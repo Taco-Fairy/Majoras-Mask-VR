@@ -1,5 +1,6 @@
 #ifdef MMVR_ENABLE
 #include "Bow.h"
+#include <libultraship/bridge/consolevariablebridge.h>
 #include "VehicleCollision.h"
 #include "Bombchu.h"
 #include "Carry.h"
@@ -14,15 +15,25 @@
 #include "ui.h"
 #include <fstream>
 #include <cstring>
+#include <fast/lus_gbi.h>
+#include <fast/resource/type/DisplayList.h>
+#include "2s2h/resource/type/Array.h"
+#include <libultraship/libultraship.h>
+bool IsBombArrowButton(int slot, bool isDpad);
 extern "C" {
 #include "global.h"
 #include "objects/object_link_child/object_link_child.h"
 #include "objects/gameplay_keep/gameplay_keep.h"
+#include "assets/objects/object_gi_bomb_1/object_gi_bomb_1.h"
 #include "overlays/actors/ovl_En_Arrow/z_en_arrow.h"
+#include "overlays/ovl_Arrow_Fire/ovl_Arrow_Fire.h"
+#include "overlays/ovl_Arrow_Ice/ovl_Arrow_Ice.h"
+#include "overlays/ovl_Arrow_Light/ovl_Arrow_Light.h"
 s32 func_808305BC(PlayState*, Player*, ItemId*, ArrowType*);
 }
 namespace {
 mmvr::BowDraw draw;
+bool fullDrawFeedback = false;
 bool pending = false;
 Vec3f shotPosition{};
 Vec3s shotRotation{};
@@ -80,10 +91,19 @@ bool BowHeld() {
 }
 void ClearBow() {
     draw.Cancel();
+    fullDrawFeedback = false;
     pending = false;
     bowPoseValid = false;
     stringPull = 0;
     arrowPose = reticlePose = {};
+}
+mmvr::Matrix AlignBowHand(const mmvr::TrackingFrame& frame, const mmvr::Matrix& view, const mmvr::Matrix& relativeHead, mmvr::Matrix model) {
+    const auto& settings=mmvr::GetSettings();
+    const int off=1-mmvr::SwordController(settings);
+    if (!BowHeld() || !frame.handValid[off]) return model;
+    auto grip=mmvr::Multiply(mmvr::PoseMatrix(frame.hands[off]),mmvr::InversePose(mmvr::PoseMatrix(frame.origin)));
+    grip=mmvr::Multiply(grip,view);
+    return mmvr::RigidBowModel(model,grip,settings.Get(mmvr::Setting::BowAimYaw),settings.Get(mmvr::Setting::BowAimPitch));
 }
 void UpdateBow(const mmvr::TrackingFrame& frame, const mmvr::Matrix& view, const mmvr::Matrix& relativeHead,
                const mmvr::Matrix& model) {
@@ -108,7 +128,8 @@ void UpdateBow(const mmvr::TrackingFrame& frame, const mmvr::Matrix& view, const
         (!InteractionsEligible(play,p)?4u:0u) | (!frame.handTracked[off]?8u:0u) |
         (!frame.handTracked[dominant]?16u:0u) | (!frame.aimValid[off]?32u:0u) |
         (p && p->heldActor && !CarriedObject(p) && !MMVR_BowHasNockedArrow(p)?64u:0u) |
-        (play && play->msgCtx.msgMode!=MSGMODE_NONE?128u:0u);
+        (play && play->msgCtx.msgMode!=MSGMODE_NONE?128u:0u) |
+        (p && (p->stateFlags1 & PLAYER_STATE1_4000000)?2048u:0u);
     if (gate) {
         LogBowGate(play,p,frame,gate);
         ClearBow();
@@ -122,13 +143,15 @@ void UpdateBow(const mmvr::TrackingFrame& frame, const mmvr::Matrix& view, const
         m.m[3][2] = (m.m[3][2] - relativeHead.m[3][2]) * 40;
         return mmvr::Multiply(m, view);
     };
-    auto aim = worldPose(frame.aims[off]);
     auto hand = worldPose(frame.hands[dominant]);
     // Native bow string attaches just behind the authored right-hand grip.
     auto anchor = Point(model, -35, -395, 0), pullHand = Point(hand, 0, 0, 0);
     Vec3f delta{ anchor.x - pullHand.x, anchor.y - pullHand.y, anchor.z - pullHand.z };
     float distance = std::sqrt(delta.x * delta.x + delta.y * delta.y + delta.z * delta.z) / 40;
-    float backwards = (-aim.m[2][0] * delta.x - aim.m[2][1] * delta.y - aim.m[2][2] * delta.z) / 40;
+    const float modelScale=std::sqrt(model.m[1][0]*model.m[1][0]+model.m[1][1]*model.m[1][1]+model.m[1][2]*model.m[1][2]);
+    if(modelScale<.000001f) {ClearBow();return;}
+    XrVector3f bowDirection{model.m[1][0]/modelScale,model.m[1][1]/modelScale,model.m[1][2]/modelScale};
+    float backwards = (bowDirection.x*delta.x+bowDirection.y*delta.y+bowDirection.z*delta.z)/40;
     auto head = InteractionHead();
     Vec3f from{ head.x, head.y, head.z }, hit;
     CollisionPoly* poly = nullptr;
@@ -162,25 +185,29 @@ void UpdateBow(const mmvr::TrackingFrame& frame, const mmvr::Matrix& view, const
     const bool hasArrow = MMVR_BowHasNockedArrow(p) || func_808305BC(play, p, &ammoItem, &ammoType) > 0;
     const bool freeDrawHand = !CarriedObject(p);
     if (!freeDrawHand) { draw.Cancel(); pending=false; }
+    const bool wasDrawing = draw.drawing;
     bool fire = draw.Update(frame.timeSeconds, frame.epoch, valid && freeDrawHand && hasArrow, frame.triggers[dominant], distance,
-                            std::min(backwards, mmvr::LimitedArrowDraw(100) / 40 * frame.trackingScale),
+                            backwards,
                             settings.Get(mmvr::Setting::BowGrabDistance)*frame.trackingScale, settings.Get(mmvr::Setting::BowMinDraw)*frame.trackingScale,
-                            std::min(settings.Get(mmvr::Setting::BowFullDraw), mmvr::LimitedArrowDraw(100) / 40)*frame.trackingScale);
+                            std::min(settings.Get(mmvr::Setting::BowFullDraw), std::min(mmvr::LimitedArrowDraw(100), mmvr::HeldArrowDrawLimit(100,settings.Get(mmvr::Setting::HandScale))) / 40)*frame.trackingScale);
+    if (!wasDrawing && draw.drawing) mmvr::HapticPulse(dominant, .18f);
+    if (!draw.drawing) fullDrawFeedback = false;
+    else if (draw.pull >= .98f && !fullDrawFeedback) {
+        mmvr::HapticPulse(dominant, .35f);
+        fullDrawFeedback = true;
+    }
     LogBowGate(play,p,frame,(!valid?256u:0u)|(!freeDrawHand?512u:0u)|(!hasArrow?1024u:0u),distance,reach,bg);
     bowModel = model;
     stringHand = pullHand;
     bowPoseValid = true;
     stringPull = draw.drawing ? draw.pull : 0;
-    auto direction = mmvr::CalibrateBowAim(
-        (draw.drawing || fire) && distance > .01f ? XrVector3f{ delta.x, delta.y, delta.z }
-                                                  : XrVector3f{ -aim.m[2][0], -aim.m[2][1], -aim.m[2][2] },
-        settings.Get(mmvr::Setting::BowAimYaw), settings.Get(mmvr::Setting::BowAimPitch));
+    auto direction = bowDirection; // The visible bow, arrow and shot share one axis.
     const auto stringDirection = direction;
     if (settings.Get(mmvr::Setting::HeadItemAim) > .5f) {
         const auto headAim = worldPose(frame.head);
         direction = { -headAim.m[2][0], -headAim.m[2][1], -headAim.m[2][2] };
     }
-    const float visualDraw = mmvr::LimitedArrowDraw(distance * 40 / frame.trackingScale) * frame.trackingScale;
+    const float visualDraw = std::min(mmvr::LimitedArrowDraw(std::max(0.f, backwards) * 40 / frame.trackingScale),mmvr::HeldArrowDrawLimit(100,settings.Get(mmvr::Setting::HandScale))) * frame.trackingScale;
     if (draw.drawing)
         stringHand = { anchor.x - stringDirection.x * visualDraw, anchor.y - stringDirection.y * visualDraw,
                        anchor.z - stringDirection.z * visualDraw };
@@ -204,7 +231,7 @@ void ProcessBowInput(PlayState* play) {
                    mmvr::GetSettings().Get(mmvr::Setting::PhysicalBow) > .5f &&
                    p->transformation == PLAYER_FORM_HUMAN && play->pauseCtx.state == PAUSE_STATE_OFF &&
                    play->msgCtx.msgMode == MSGMODE_NONE && p->csAction == PLAYER_CSACTION_NONE &&
-                   play->csCtx.state == CS_STATE_IDLE;
+                   play->csCtx.state == CS_STATE_IDLE && !(p->stateFlags1 & PLAYER_STATE1_4000000);
     if (!enabled) {
         ClearBow();
         return;
@@ -272,6 +299,38 @@ void UpdateHookshotReticle() {
 mmvr::Matrix ItemReticlePose() {
     return reticlePose;
 }
+Gfx* HeldArrowDisplayList(GraphicsContext* gfx, float& tip) {
+    tip=mmvr::ArrowTipX;
+    auto manager=Ship::Context::GetRawInstance()->GetResourceManager();
+    auto list=std::dynamic_pointer_cast<Fast::DisplayList>(manager->LoadResource("objects/gameplay_keep/gameplay_keep_DL_013FF0"));
+    auto source=std::dynamic_pointer_cast<SOH::Array>(manager->LoadResource("objects/gameplay_keep/gameplay_keepVtx_013CD0"));
+    if(!list || !source || list->GetInitData()->IsCustom || source->GetInitData()->IsCustom || source->Vertices.size()!=50)
+        return (Gfx*)gameplay_keep_DL_013FF0;
+    auto* vertices=(Vtx*)GRAPH_ALLOC(gfx,sizeof(Vtx)*50);
+    for(size_t i=0;i<50;++i) {
+        const auto& v=source->Vertices[i].v;
+        for(int k=0;k<3;++k) vertices[i].v.ob[k]=v.ob[k];
+        vertices[i].v.flag=v.flag;
+        for(int k=0;k<2;++k) vertices[i].v.tc[k]=v.tc[k];
+        for(int k=0;k<4;++k) vertices[i].v.cn[k]=v.cn[k];
+        vertices[i].v.ob[0]=s16(mmvr::HeldArrowVertexX(vertices[i].v.ob[0]));
+    }
+    auto* commands=(Gfx*)GRAPH_ALLOC(gfx,sizeof(Gfx)*list->Instructions.size());
+    std::memcpy(commands,list->Instructions.data(),sizeof(Gfx)*list->Instructions.size());
+    for(size_t i=0;i+1<list->Instructions.size();++i) {
+        const auto opcode=commands[i].words.w0>>24;
+        if(opcode==G_VTX_OTR_HASH) {
+            const auto count=(commands[i].words.w0>>12)&255;
+            const auto first=((commands[i].words.w0>>1)&127)-count;
+            const auto offset=commands[i].words.w1/16;
+            if(offset+count>50) return (Gfx*)gameplay_keep_DL_013FF0;
+            gSPVertex(&commands[i],uintptr_t(vertices+offset),count,first);
+            gSPNoOp(&commands[++i]);
+        } else if(opcode==G_MARKER || opcode==G_SETTIMG_OTR_HASH || opcode==G_DL_OTR_HASH) ++i;
+    }
+    tip=mmvr::HeldArrowTipX;
+    return commands;
+}
 void DrawTrackedItems(PlayState* play) {
     // Addresses belong to this display-list frame, never the previously held item.
     mmvr::SetBowArrowMatrix(nullptr);
@@ -308,7 +367,62 @@ void DrawTrackedItems(PlayState* play) {
         mmvr::SetBowArrowMatrix(arrow);
         Gfx_SetupDL25_Opa(__gfxCtx);
         gSPMatrix(POLY_OPA_DISP++, arrow, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-        gSPDisplayList(POLY_OPA_DISP++, (Gfx*)gameplay_keep_DL_013FF0);
+        float arrowTip;
+        auto* heldArrow=HeldArrowDisplayList(__gfxCtx,arrowTip);
+        gSPDisplayList(POLY_OPA_DISP++, heldArrow);
+        auto* player = GET_PLAYER(play);
+        const int button = player->heldItemButton;
+        const bool bombSlot = button >= 0 && (IS_HELD_DPAD(button)
+            ? IsBombArrowButton(HELD_ITEM_TO_DPAD(button), true)
+            : button != EQUIP_SLOT_B && IsBombArrowButton(button, false));
+        if (CVarGetInteger("gEnhancements.Equipment.BombArrows", 0) &&
+            CVarGetInteger("gEnhancements.FullDiveGames.BombArrowDrawPreview", 1) &&
+            bombSlot && AMMO(ITEM_BOMB) > 0) {
+            Matrix_Push();
+            Matrix_Translate(arrowTip, 0, 0, MTXMODE_NEW);
+            // Half the native fired attachment's scale, under the tracked arrow matrix.
+            Matrix_RotateXS(-0x8000, MTXMODE_APPLY);
+            Matrix_Scale(5.f, 5.f, 5.f, MTXMODE_APPLY);
+            auto* bomb = Matrix_Finalize(__gfxCtx);
+            Matrix_Pop();
+            gSPMatrix(POLY_OPA_DISP++, arrow, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+            gSPMatrix(POLY_OPA_DISP++, bomb, G_MTX_NOPUSH | G_MTX_MUL | G_MTX_MODELVIEW);
+            gSPDisplayList(POLY_OPA_DISP++, (Gfx*)gGiBombDL);
+        }
+        // Preview native elemental materials without creating gameplay actors or consuming magic.
+        // Multiplying under the late-updated arrow matrix keeps the effect attached at XR rate.
+        int element = GET_PLAYER(play)->heldItemAction - PLAYER_IA_BOW_FIRE;
+        if (MMVR_BowHasNockedArrow(GET_PLAYER(play)))
+            element = ARROW_GET_MAGIC_FROM_TYPE(GET_PLAYER(play)->heldActor->params);
+        const int costs[] = {4, 4, 8};
+        if (CVarGetInteger("gEnhancements.FullDiveGames.MagicArrowDrawEffects", 1) && element >= 0 && element < 3 &&
+            (MMVR_BowHasNockedArrow(GET_PLAYER(play)) ||
+             (gSaveContext.magicState == MAGIC_STATE_IDLE && gSaveContext.save.saveInfo.playerData.magic >= costs[element]))) {
+            const void* materials[] = {gFireArrowMaterialDL, gIceArrowMaterialDL, gLightArrowMaterialDL};
+            const void* models[] = {gFireArrowModelDL, gIceArrowModelDL, gLightArrowModelDL};
+            const u8 prim[3][3] = {{255,200,0},{170,255,255},{255,255,170}};
+            const u8 env[3][3] = {{255,0,0},{0,0,255},{255,255,0}};
+            Matrix_Push();
+            Matrix_Translate(arrowTip, 0, 0, MTXMODE_NEW);
+            Matrix_RotateZS(0x4000, MTXMODE_APPLY);
+            Matrix_Scale(.6f, 1.f, .6f, MTXMODE_APPLY);
+            // Native elemental models use this local pivot offset around the arrow.
+            Matrix_Translate(0, -700.f, 0, MTXMODE_APPLY);
+            auto* effect = Matrix_Finalize(__gfxCtx);
+            Matrix_Pop();
+            Gfx_SetupDL25_Xlu(__gfxCtx);
+            gSPMatrix(POLY_XLU_DISP++, arrow, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+            gSPMatrix(POLY_XLU_DISP++, effect, G_MTX_NOPUSH | G_MTX_MUL | G_MTX_MODELVIEW);
+            gDPSetPrimColor(POLY_XLU_DISP++, 0x80, 0x80, prim[element][0], prim[element][1], prim[element][2], element==1?100:180);
+            gDPSetEnvColor(POLY_XLU_DISP++, env[element][0], env[element][1], env[element][2], 128);
+            gSPDisplayList(POLY_XLU_DISP++, (Gfx*)materials[element]);
+            const u32 f = play->state.frames;
+            Gfx* scroll = element==0 ? Gfx_TwoTexScroll(__gfxCtx,0,255-(f*2)%256,0,64,32,1,255-f%256,511-(f*10)%512,64,64)
+                         : element==1 ? Gfx_TwoTexScroll(__gfxCtx,0,511-(f*5)%512,0,128,32,1,511-(f*10)%512,511-(f*10)%512,4,16)
+                                      : Gfx_TwoTexScroll(__gfxCtx,0,511-(f*5)%512,0,4,32,1,511-(f*10)%512,511-(f*30)%512,8,16);
+            gSPDisplayList(POLY_XLU_DISP++, scroll);
+            gSPDisplayList(POLY_XLU_DISP++, (Gfx*)models[element]);
+        }
     }
     ::FrameInterpolation_RecordCloseChild();
     Graph_CloseDisps(refs, values, __gfxCtx, __FILE__, __LINE__);
@@ -402,6 +516,7 @@ extern "C" void MMVR_VisitVrBowState(MMVR_StateSink* sink) {
 namespace mmvrgame {
 void RebaseBowTracking(const mmvr::TrackingFrame& f) {
     const int dominant=mmvr::SwordController(mmvr::GetSettings());
+    fullDrawFeedback = false;
     draw.Rebase(draw.SampleTime(),f.timeSeconds,f.epoch,
                 f.handTracked[dominant]&&f.triggers[dominant]>=.25f);
     auto* play=gPlayState;auto* p=play?GET_PLAYER(play):nullptr;

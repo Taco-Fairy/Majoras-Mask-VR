@@ -17,7 +17,7 @@ inline constexpr ControlTutorialEntry ControlTutorial[] = {
     { "Sword and Deku stick", "Swing deliberately through targets; stationary touching cannot hit.", "Sticks retain burning/breaking. Native weapon damage still applies." },
     { "Spin slash", "Hold sword trigger to charge (2 seconds); release with the blade held out.", "Fast physical turns use great spin when unlocked and magic is available; Combat has the toggle." },
     { "Physical spin and sword beam", "Turn physically with the sword extended for a regular spin.", "Fierce Deity: hold trigger and swing; beam follows headset aim." },
-    { "Spin comfort and holster", "Combat can disable the triggered 360-degree camera turn.", "Empty hand/item slot: reach behind shoulder and trigger to holster." },
+    { "Spin comfort and holster", "Combat can disable the triggered 360-degree camera turn.", "Empty hand/item slot: grip behind your shoulder to equip the sword; release freely." },
     { "Blocking", "Hold offhand grip; put your shield between you and the attack.", "Deku and Zora shields need physical placement too." },
     { "Bow and elemental arrows", "Select the bow or arrow type; the bow is held in your offhand.", "Hold dominant trigger near the string, pull back, release to shoot." },
     { "Hookshot", "Point the equipped hookshot and press the dominant trigger.", "Items offers optional head aim for bow/hookshot; controller aim is the default." },

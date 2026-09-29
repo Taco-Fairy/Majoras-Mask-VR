@@ -196,6 +196,8 @@ enum class Setting {
     HudAnchor,
     HandHudSize,
     HideBunnyHood,
+    ShieldVisualSize,
+    BowHandSmoothing,
     Count
 };
 struct SettingDefinition {
@@ -244,9 +246,9 @@ inline constexpr SettingDefinition SettingDefinitions[] = {
     { "gVR.SwingDistance", "Minimum blade swing travel", .28f, .20f, .6f, .01f, "m" },
     { "gVR.SwingResetSpeed", "Swing resting threshold", .25f, .05f, .5f, .05f, "m/s" },
     { "gVR.SwingCooldown", "Swing cooldown", .25f, .15f, 1, .05f, "s" },
-    { "gVR.PhysicalSword", "Physical sword (beta)", 1, 0, 1, 1, "off/on" },
+    { "gVR.PhysicalSword", "Physical sword", 1, 0, 1, 1, "off/on" },
     { "gVR.SwordWindow", "Swing hit window", .45f, .1f, .6f, .05f, "s" },
-    { "gVR.PhysicalShield", "Tracked shield (beta)", 1, 0, 1, 1, "off/on" },
+    { "gVR.PhysicalShield", "Tracked shield", 1, 0, 1, 1, "off/on" },
     { "gVR.SwordWallBlocking", "Sword wall blocking", 1, 0, 1, 1, "off/on" },
     { "gVR.WeaponWallOffset", "Weapon contact offset", .2f, .05f, .5f, .025f, "m" },
     { "gVR.FormFirstPerson", "Form first person", 1, 0, 1, 1, "off/on" },
@@ -269,12 +271,12 @@ inline constexpr SettingDefinition SettingDefinitions[] = {
     { "gVR.HudHorizontalSpread", "HUD horizontal spread", 100, 0, 300, 5, "%" },
     { "gVR.HudSize", "HUD element size", 1, .5f, 1.5f, .05f, "x" },
     { "gVR.PhysicalBow", "Physical bow", 1, 0, 1, 1, "off/on" },
-    { "gVR.BowGrabDistance", "Bow string grab radius", .35f, .30f, .6f, .01f, "m" },
+    { "gVR.BowGrabDistance", "Bow string grab radius", .18f, .08f, .6f, .01f, "m" },
     { "gVR.BowMinDraw", "Minimum bow draw", .10f, .05f, .25f, .01f, "m" },
     { "gVR.BowFullDraw", "Full bow draw", .45f, .25f, .7f, .025f, "m" },
     { "gVR.DebugRoomSpawn", "Slot 3 starts in test room", PrivateDebugTools?1.f:0.f, 0, 1, 1, "off/on" },
-    { "gVR.BowAimYaw", "Bow aim horizontal", 0, -45, 45, 1, "deg" },
-    { "gVR.BowAimPitch", "Bow aim vertical", 0, -45, 45, 1, "deg" },
+    { "gVR.BowAimYaw", "Bow hand angle horizontal", -8, -270, 270, 1, "deg" },
+    { "gVR.BowAimPitch", "Bow hand angle vertical", -90, -270, 270, 1, "deg" },
     { "gVR.BowReticle", "Bow aim reticle", 1, 0, 1, 1, "off/on" },
     { "gVR.PhysicalBottle", "Physical bottle catch", 1, 0, 1, 1, "off/on" },
     { "gVR.BottleSpeed", "Bottle scoop speed", .4f, .25f, 2, .05f, "m/s" },
@@ -395,12 +397,16 @@ inline constexpr SettingDefinition SettingDefinitions[] = {
     { "gVR.HudAnchor", "HUD attachment", 0, 0, 2, 1, "" },
     { "gVR.HandHudSize", "Hand HUD size", 100, 40, 200, 5, "%" },
     { "gVR.HideBunnyHood", "Hide worn Bunny Hood in first person", 1, 0, 1, 1, "off/on" },
+    { "gVR.ShieldVisualSize", "Shield visual size", 100, 50, 200, 5, "%" },
+    { "gVR.BowHandSmoothing", "Bow holding hand smoothing", 12, 0, 40, 1, "ms" },
 };
 static_assert(sizeof(SettingDefinitions) / sizeof(SettingDefinitions[0]) == size_t(Setting::Count));
 inline float BoundSetting(Setting id, float value) {
     // Model matching is always enabled; its legacy switch is no longer exposed.
     // Old profiles must not silently select the taller nominal fallback.
     if (id == Setting::ModelFormHeight) return 1.f;
+    // Core first-person controls remain enabled, including in older saved profiles.
+    if (id == Setting::PhysicalSword || id == Setting::PhysicalShield || id == Setting::PhysicalBow || id == Setting::PhysicalBottle || id == Setting::PhysicalCarry || id == Setting::PhysicalMasks || id == Setting::PhysicalFists || id == Setting::PhysicalFins || id == Setting::TrackedAim) return 1.f;
     if(!PrivateDebugTools && (id==Setting::DebugRoomSpawn || id==Setting::DebugSkipCutscenes ||
         id==Setting::DebugHitboxes || id==Setting::SwordDiagnostics))return 0;
     const auto& d = SettingDefinitions[size_t(id)];

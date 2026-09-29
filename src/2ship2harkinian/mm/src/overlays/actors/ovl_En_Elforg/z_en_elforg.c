@@ -5,6 +5,9 @@
  */
 
 #include "z_en_elforg.h"
+#ifdef MMVR_ENABLE
+#include "visibility.h"
+#endif
 #include "2s2h/GameInteractor/GameInteractor.h"
 
 #define FLAGS (ACTOR_FLAG_UPDATE_CULLING_DISABLED)
@@ -668,10 +671,17 @@ void EnElforg_Draw(Actor* thisx, PlayState* play) {
     }
 
     Matrix_Mult(&play->billboardMtxF, MTXMODE_APPLY);
+#ifdef MMVR_ENABLE
+    MtxF* root = Matrix_GetCurrent();
+    MMVR_BeginBillboardGroup(root->mf[3][0], root->mf[3][1], root->mf[3][2]);
+#endif
 
     POLY_XLU_DISP =
         SkelAnime_DrawFlex(play, this->skelAnime.skeleton, this->skelAnime.jointTable, this->skelAnime.dListCount,
                            EnElforg_OverrideLimbDraw, NULL, &this->actor, POLY_XLU_DISP);
+#ifdef MMVR_ENABLE
+    MMVR_EndBillboardGroup();
+#endif
 
     CLOSE_DISPS(play->state.gfxCtx);
 }

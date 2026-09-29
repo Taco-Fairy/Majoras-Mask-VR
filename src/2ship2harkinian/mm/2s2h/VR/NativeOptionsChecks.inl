@@ -31,8 +31,15 @@ extern "C" void MMVR_VerifyNativeOptions() {
     const auto firstFocus=panel.context->NavId;
     step(-1);menu.nativeInput.pointerX=0;step();step();
     check(firstFocus && panel.context->NavId && panel.context->NavId!=firstFocus,"Stick did not move actual category focus");
+    int expectedCategory=-1;
+    { ContextScope scope;ImGui::SetCurrentContext(panel.context);
+      auto* root=ImGui::FindWindowByName("##VR2Ship");
+      for(int i=0;i<int(std::size(Categories));++i)
+          if(panel.context->NavId==root->GetID(Categories[i]))expectedCategory=i;
+    }
+    check(expectedCategory>=0,"Navigation did not highlight a category");
     step(0,true);step();step();
-    check(panel.category==1,"A did not enter focused Gameplay category");
+    check(panel.category==expectedCategory,"A did not enter the highlighted category");
     step(0,false,true);step();step();
     check(panel.category==-1 && !menu.nativeCloseRequested,"B did not return from category");
     step(0,false,false,true);step();
@@ -69,6 +76,19 @@ extern "C" void MMVR_VerifyNativeOptions() {
             ImGui::SetNextWindowSize({928,480});ImGui::Begin("Search fixture");
             bool found=native->DrawVrSection("Enhancements","Items/Songs",query);
             check(found==(std::string(query)!="no-such-option-zzzz"),"Mask search result incorrect");
+            ImGui::End();ImGui::Render();
+        }
+        for(const char* query:{"Magic arrow", "draw effects", "Bomb arrow", "no-such-edition-zzzz"}) {
+            ImGui::NewFrame();
+            ImGui::SetNextWindowSize({928,480});ImGui::Begin("Editions fixture");
+            check(native->DrawVrSection("FullDiveGames Editions","Visuals",query)==(std::string(query)!="no-such-edition-zzzz"),"Editions search mismatch");
+            ImGui::End();ImGui::Render();
+        }
+        for(const char* query:{"Clock", "24 Hours", "no-such-clock-zzzz"}) {
+            FeedInput({});ImGui::NewFrame();
+            ImGui::SetNextWindowSize({928,480});ImGui::Begin("Clock fixture");
+            check(native->DrawVrSection("Enhancements","Graphics",query)==(std::string(query)!="no-such-clock-zzzz"),
+                  "Native clock controls missing or unrelated Graphics exposed");
             ImGui::End();ImGui::Render();
         }
         FeedInput({});ImGui::NewFrame();

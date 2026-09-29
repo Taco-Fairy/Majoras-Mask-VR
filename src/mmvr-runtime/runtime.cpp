@@ -1,4 +1,5 @@
 #include "interaction_view.h"
+#include "shoulder_gesture.h"
 #include "command_preparation_bench.h"
 #include "lighting_address_bench.h"
 #include "cache_pool.h"
@@ -193,6 +194,7 @@ TriggerHold lockOn;
 PauseTriggers pauseTriggers;
 bool throwable = false, throwArmed = false, throwRequested = false;
 bool canSelect = false, ocarina = false, selectedItemMode = false;
+bool holsterAvailable = false, holsterGripClaimed = false;
 bool dialogueChoice = false;
 bool (*maskGrabBlocker)(int hand) = nullptr;
 std::array<int, MaxItemSlots> assignments{ 0, 1, 6, 29, -1, -1, -1, -1 };
@@ -244,7 +246,10 @@ EyeFacingCache eyeFacingCache;
 struct BillboardBinding {
     Matrix basis;
     bool yawOnly = false;
+    bool grouped = false;
 };
+bool billboardGroupActive = false;
+float billboardGroupPivot[3]{};
 CachePool billboardPool;
 std::pmr::unordered_map<const void*, BillboardBinding> billboards{ billboardPool.Resource() };
 struct ReticleBinding {
@@ -1268,7 +1273,7 @@ class TheaterRuntime {
             pad.buttons = (Bool(buttons[0]) || Bool(buttons[2]) ? 0x8000 : 0) |
                           (Bool(buttons[1]) ? 0x4000 : 0);
         }
-        pad = ItemWheelInput(pad, SelectorGrip() > .25f && canSelect && !originalThirdPerson && !ocarina && !climbing && !dialogueChoice);
+        pad = ItemWheelInput(pad, SelectorGrip() > .25f && canSelect && !holsterGripClaimed && !originalThirdPerson && !ocarina && !climbing && !dialogueChoice);
         bool changed = false;
         if (Bool(buttons[5], &changed) && changed)
             centerPending = true;
@@ -1711,7 +1716,7 @@ class TheaterRuntime {
         ClearPad();
     }
     bool PhysicalInputReady() const {
-        return !inputRelease && SelectorGrip() < .25f;
+        return !inputRelease && (SelectorGrip() < .25f || holsterGripClaimed);
     }
     ~TheaterRuntime() {
         menu.Close();
@@ -2256,8 +2261,16 @@ class TheaterRuntime {
                         ClearPad();
                     }
 
+                    const int holsterHand = DominantController(settings);
+                    if (tracking.grips[holsterHand] < .25f || !holsterAvailable || !firstPersonRequested ||
+                        menu.open || nativePause || resumingState || inputRelease || !tracking.handTracked[holsterHand])
+                        holsterGripClaimed = false;
+                    else if (settings.Get(Setting::ShoulderHolster) > .5f &&
+                             InShoulderSlot(tracking, holsterHand, settings.Get(Setting::HolsterReach)) &&
+                             tracking.grips[holsterHand] > .25f)
+                        holsterGripClaimed = true;
                     int previousHover = selector.hover;
-                    int chosen = selector.UpdateHands(!resumingState && canSelect &&
+                    int chosen = selector.UpdateHands(!resumingState && canSelect && !holsterGripClaimed &&
                                                       (firstPersonRequested || settings.Get(Setting::ThirdPersonOriginalControls) <= .5f) && !climbing && !ocarina && !menu.open && !inputRelease,
                                                       tracking, settings);
                     if (selector.hover >= 0 && selector.hover != previousHover)
@@ -3326,6 +3339,10 @@ const AssignmentState& GetAssignment() noexcept {
 int DisplaySlotAssignment(int index) noexcept {
     return index >= 0 && index < MaxItemSlots ? (assignment.open ? assignment.preview[index] : assignments[index]) : -1;
 }
+void SetHolsterContext(bool available) noexcept {
+    holsterAvailable = available;
+    if (!available) holsterGripClaimed = false;
+}
 void SetInputContext(bool allowed, bool instrument) noexcept {
     canSelect = allowed;
     ocarina = instrument;
@@ -3826,7 +3843,8 @@ bool OverrideBillboardMatrix(const void* address, float matrix[4][4], const floa
             auto facing = eyeFacingCache.Get(worldView, currentEye, currentOrigin);
             if (it->second.yawOnly)
                 facing = YawPose(PoseYaw(facing));
-            auto corrected = FaceBillboard(native, it->second.basis, facing);
+            auto corrected = it->second.grouped ? FaceBillboardGroup(native, it->second.basis, facing)
+                                                : FaceBillboard(native, it->second.basis, facing);
             if (held)
                 corrected = Multiply(corrected, cameraFrame.heldActorCorrection);
             std::memcpy(matrix, &corrected, sizeof(corrected));
@@ -4048,6 +4066,7 @@ void SetSkyboxMatrix(const void* p) noexcept {
 }
 void ResetReticles() noexcept {
     billboards.clear();
+    billboardGroupActive = false;
     for (auto& binding : reticles)
         binding = {};
 }
@@ -4126,13 +4145,20 @@ extern "C" void MMVR_SetSkyboxMatrix(const void* p) {
     mmvr::SetSkyboxMatrix(p);
 }
 
+extern "C" void MMVR_BeginBillboardGroup(float x, float y, float z) {
+    mmvr::billboardGroupActive = true;
+    mmvr::billboardGroupPivot[0]=x; mmvr::billboardGroupPivot[1]=y; mmvr::billboardGroupPivot[2]=z;
+}
+extern "C" void MMVR_EndBillboardGroup(void) { mmvr::billboardGroupActive = false; }
 extern "C" void MMVR_SetBillboardMatrix(const void* address, const float* rotation, float x, float y, float z) {
     mmvr::Matrix basis;
     std::memcpy(&basis, rotation, sizeof(basis));
     basis.m[3][0] = x;
     basis.m[3][1] = y;
     basis.m[3][2] = z;
-    mmvr::billboards[address] = { basis, false };
+    if (mmvr::billboardGroupActive)
+        for (int i=0;i<3;++i) basis.m[3][i]=mmvr::billboardGroupPivot[i];
+    mmvr::billboards[address] = { basis, false, mmvr::billboardGroupActive };
 }
 extern "C" void MMVR_SetYawBillboardMatrix(const void* address, float yaw, float x, float y, float z) {
     if (!address)

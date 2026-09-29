@@ -42,14 +42,18 @@ void MMVR_PlayerEquipSword(PlayState*, Player*, ItemId);
 #include "NativeTest.h"
 #include "DebugMenu.h"
 #include "NativeOptions.h"
+extern void SetBombArrowButton(s32 slot, bool state, bool isDpad);
 namespace {
 std::atomic<unsigned> instrumentPad{ 0 };
+std::atomic<unsigned> gamePadButtons{ 0 };
 constexpr const char* FrameName = "MMVR/ClockTowerFrame";
 const char* SlotKeys[] = { "gVR.Slot.Up", "gVR.Slot.Right", "gVR.Slot.Down", "gVR.Slot.Left", "gVR.Slot.TopLeft", "gVR.Slot.TopRight", "gVR.Slot.BottomLeft", "gVR.Slot.BottomRight" };
 const char* SlotNames[] = { "Top item", "Right item", "Bottom item", "Left item", "Top left", "Top right", "Bottom left", "Bottom right" };
 std::array<std::shared_ptr<Fast::Texture>, mmvr::MaxItemSlots> iconResources;
 std::array<ImTextureID, mmvr::MaxItemSlots> icons{};
-std::shared_ptr<Fast::Texture> maskResource;
+std::shared_ptr<Fast::Texture> maskResource, bombIconResource;
+std::array<ImTextureID, mmvr::MaxItemSlots> bombIcons{};
+std::array<std::string, mmvr::MaxItemSlots> itemCounts{};
 int SlotItem(PlayState* play, int slot) {
     return mmvrgame::WheelSlotItem(play, slot);
 }
@@ -118,7 +122,7 @@ void Render(const mmvr::UiDrawFrame& frame) {
     list._ResetForNewFrame();
     list.PushTextureID(ImGui::GetIO().Fonts->TexID);
     list.PushClipRect({ 0, 0 }, { float(frame.width), float(frame.height) });
-    mmvr::presentation::Draw(list, frame, gui->GetTextureByName(FrameName), icons);
+    mmvr::presentation::Draw(list, frame, gui->GetTextureByName(FrameName), icons, bombIcons, itemCounts);
     list.PopClipRect();
     list.PopTextureID();
     ImDrawData data;
@@ -197,6 +201,9 @@ extern "C" int MMVR_TextBoxAlpha(int alpha) {
         mmvr::GetSettings().Get(mmvr::Setting::TextBoxOpacity) : 1.f;
     return int(std::lround(std::clamp(alpha, 0, 255) * opacity));
 }
+extern "C" unsigned short MMVR_GameButtons(void) {
+    return static_cast<unsigned short>(gamePadButtons.load());
+}
 extern "C" int MMVR_InstrumentButtons(unsigned short* buttons) {
     auto value = instrumentPad.load();
     if (!(value & 0x10000) || (gPlayState && Message_GetState(&gPlayState->msgCtx) == TEXT_STATE_CHOICE))
@@ -250,8 +257,10 @@ extern "C" void MMVR_ApplyGameInput(void* data) {
         ((!nativeTest || interactive) && Ship::Context::GetRawInstance()->GetWindow()->GetGui()->GetMenuOrMenubarVisible())) {
         previous = 0;
         instrumentPad.store(0);
+        gamePadButtons.store(0);
         return;
     }
+    gamePadButtons.store(pad.buttons);
     instrumentPad.store(MMVR_InstrumentOverlay() ? 0x10000 | pad.buttons : 0);
     input->prev.button |= previous;
     input->cur.button |= pad.buttons;
@@ -353,6 +362,15 @@ extern "C" void MMVR_RegisterMenu(void) {
         }
     }
     mmvr::SetAssignmentContext(assignSlot);
+    const int holsterSword = player ? Inventory_GetBtnBItem(play) : ITEM_NONE;
+    const int holsterSelected = player ? mmvrgame::SelectedItem(play) : ITEM_NONE;
+    const bool holsterWorn = player && holsterSelected >= ITEM_MASK_DEKU && holsterSelected <= ITEM_MASK_GIANT &&
+                            Player_GetCurMaskItemId(play) == holsterSelected;
+    mmvr::SetHolsterContext(allowed && !player->heldActor && !(player->stateFlags1 & PLAYER_STATE1_4000000) && mmvr::HeldMaskItem() < 0 &&
+        (player->transformation == PLAYER_FORM_HUMAN || player->transformation == PLAYER_FORM_FIERCE_DEITY) &&
+        ((holsterSword >= ITEM_SWORD_KOKIRI && holsterSword <= ITEM_SWORD_GILDED) || holsterSword == ITEM_SWORD_DEITY) &&
+        ((player->heldItemAction == PLAYER_IA_NONE && (holsterSelected == ITEM_NONE || holsterWorn)) || MMVR_IndependentSword(player)));
+
     mmvr::SetClimbingContext(MMVR_ClimbingInputContext(play));
     mmvr::SetThrowableContext(allowed && player->transformation == PLAYER_FORM_HUMAN && player->heldActor &&
                               player->heldActor->id == ACTOR_EN_BOM && player->heldActor->parent == &player->actor &&
@@ -388,6 +406,30 @@ extern "C" void MMVR_RegisterMenu(void) {
         mmvr::SetSlotAssignment(i, saved);
         int slot = mmvr::DisplaySlotAssignment(i);
         int item = SlotItem(play, slot);
+        itemCounts[i].clear();
+        if (play) {
+            int counted = item;
+            if ((counted >= ITEM_ARROW_FIRE && counted <= ITEM_ARROW_LIGHT) ||
+                (counted >= ITEM_BOW_FIRE && counted <= ITEM_BOW_LIGHT)) counted = ITEM_BOW;
+            if (counted == ITEM_DEKU_STICK || counted == ITEM_DEKU_NUT || counted == ITEM_BOMB ||
+                counted == ITEM_BOMBCHU || counted == ITEM_BOW || counted == ITEM_POWDER_KEG ||
+                counted == ITEM_MAGIC_BEANS) {
+                itemCounts[i] = std::to_string(std::max(0, int(AMMO(counted))));
+                if (slot == SLOT_BOMB && item == ITEM_BOW)
+                    itemCounts[i] = std::to_string(std::max(0, std::min(int(AMMO(ITEM_BOMB)), int(AMMO(ITEM_BOW)))));
+            } else if (counted == ITEM_PICTOGRAPH_BOX)
+                itemCounts[i] = CHECK_QUEST_ITEM(QUEST_PICTOGRAPH) ? "1" : "0";
+        }
+        bombIcons[i]=0;
+        if(slot==SLOT_BOMB && item==ITEM_BOW) {
+            auto resource=std::dynamic_pointer_cast<Fast::Texture>(Ship::Context::GetRawInstance()->GetResourceManager()->LoadResource((const char*)gItemIcons[ITEM_BOMB],false));
+            if(resource!=bombIconResource) {
+                Gui()->UnloadTexture("MMVR/BombArrowOverlay");
+                if(resource) Gui()->LoadGuiTexture("MMVR/BombArrowOverlay",*resource,"",{1,1,1,1});
+                bombIconResource=resource;
+            }
+            if(resource) bombIcons[i]=Gui()->GetTextureByName("MMVR/BombArrowOverlay");
+        }
         if (item == ITEM_NONE || item >= 131) {
             icons[i] = 0;
             iconResources[i].reset();
@@ -543,6 +585,9 @@ extern "C" void MMVR_BeforePlayUpdate(PlayState* play) {
     // Wheel selection assigns and readies equipment; consumables wait for the item trigger.
     BUTTON_ITEM_EQUIP(0, EQUIP_SLOT_C_DOWN) = item;
     C_SLOT_EQUIP(0, EQUIP_SLOT_C_DOWN) = slot;
+    // Preserve the native bomb-slot mode when the VR wheel maps it onto C-down.
+    // Clear the marker on ordinary items so a later normal bow is not explosive.
+    SetBombArrowButton(EQUIP_SLOT_C_DOWN, slot == SLOT_BOMB && item == ITEM_BOW, false);
     Interface_LoadItemIcon(play, EQUIP_SLOT_C_DOWN);
     mmvr::ConfirmSelectedItem();
     if (!mmvr::FirstPersonSelected())

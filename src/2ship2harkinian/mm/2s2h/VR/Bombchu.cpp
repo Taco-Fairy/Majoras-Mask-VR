@@ -51,7 +51,7 @@ bool HeldBombchu(Player* p) {
     return p && p->heldActor && p->heldActor->id == ACTOR_EN_BOM_CHU && p->heldActor->parent == &p->actor;
 }
 bool BombchuReticleVisible(Player* p) {
-    return p && SelectedItem(gPlayState) == ITEM_BOMBCHU && ItemAllowed(p, ITEM_BOMBCHU) &&
+    return p && (SelectedItem(gPlayState) == ITEM_BOMBCHU || MinigameExplosive(gPlayState) == ITEM_BOMBCHU || HeldBombchu(p)) && ItemAllowed(p, ITEM_BOMBCHU) &&
            (!p->heldActor || HeldBombchu(p)) && FormTrackingReady(p) &&
            mmvr::GetSettings().Get(mmvr::Setting::BombchuReticle) > .5f;
 }

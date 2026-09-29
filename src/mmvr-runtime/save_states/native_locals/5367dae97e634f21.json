@@ -3,33 +3,33 @@
   "include": "5367dae97e634f21.inc",
   "variables": [
     {
-      "name": "mmvr_local_79e9a5fc3d0bd6ac",
+      "name": "mmvr_local_253c9bc24240739e",
       "original": "sVelocity",
       "function": "EnElforg_SpawnSparkles",
-      "line": 165,
-      "at": 5361
+      "line": 168,
+      "at": 5414
     },
     {
-      "name": "mmvr_local_29de7b88a8149368",
+      "name": "mmvr_local_01adc1d120084b28",
       "original": "sAccel",
       "function": "EnElforg_SpawnSparkles",
-      "line": 166,
-      "at": 5415
+      "line": 169,
+      "at": 5468
     },
     {
-      "name": "mmvr_local_ebb8831be30f9841",
+      "name": "mmvr_local_784c46561c20660e",
       "original": "sPrimColors",
       "function": "EnElforg_SpawnSparkles",
-      "line": 167,
-      "at": 5473
+      "line": 170,
+      "at": 5526
     },
     {
-      "name": "mmvr_local_8362c828429616da",
+      "name": "mmvr_local_a44d4893a86f00ef",
       "original": "sEnvColors",
       "function": "EnElforg_SpawnSparkles",
-      "line": 171,
-      "at": 5661
+      "line": 174,
+      "at": 5714
     }
   ],
-  "sourceSha256": "e2041f5bc1a9bc01d1267422bca1a3f667e5f182503acfe5654d8bc52e0d958b"
+  "sourceSha256": "2919cbdd181b29b1dc43d21567406bd70aa01ea37dee4f771503ad5fc11ae586"
 }

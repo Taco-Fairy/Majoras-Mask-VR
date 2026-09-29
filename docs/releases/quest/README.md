@@ -215,3 +215,5 @@ Private preview bottle repair: improved hot-spring and bug scooping with world s
 Frame rate options: Uncapped, 120, 90, 80 or 72 FPS. Uncapped removes the game limiter; the headset/runtime still controls display refresh.
 
 Large texture packs are verified in the background before save states are available. If the menu says verification is still running, retry Save/Load shortly; keep the same build and packs when loading a state.
+
+Bow hand angles and holding-hand smoothing are under **Items → Bow and aiming**. The item wheel shows consumable counts. Release notes are under **System → Release notes**.

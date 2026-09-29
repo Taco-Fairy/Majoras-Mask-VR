@@ -64,6 +64,18 @@ inline Matrix FaceBillboard(Matrix native, Matrix basis, Matrix facing) {
         result.m[3][i] = position[i];
     return result;
 }
+// A billboard skeleton must rotate its joint origins around one shared root.
+// Rotating each limb in place separates the wings/head when the viewer turns.
+inline Matrix FaceBillboardGroup(Matrix native, Matrix basis, Matrix facing) {
+    float pivot[3] = {basis.m[3][0], basis.m[3][1], basis.m[3][2]};
+    for (int i=0;i<3;++i) {
+        native.m[3][i] -= pivot[i];
+        basis.m[3][i] = facing.m[3][i] = 0;
+    }
+    auto result = Multiply(Multiply(native, InversePose(basis)), facing);
+    for (int i=0;i<3;++i) result.m[3][i] += pivot[i];
+    return result;
+}
 struct PoseResetPolicy {
     bool anchor, history;
 };

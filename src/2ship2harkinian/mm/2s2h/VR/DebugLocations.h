@@ -109,4 +109,13 @@ constexpr DebugLocation debugLocations[]={
  {"Hot spring - bottle scoop",ENTRANCE(GORON_GRAVERYARD,0),SCENE_GORON_HAKA,-1,5},
  {"Cremia milk escort - Gorman attack",ENTRANCE(GORMAN_TRACK,4),SCENE_KOEPONARACE,-1,6},
  {"Wart - look up to activate",ENTRANCE(GREAT_BAY_TEMPLE,0),SCENE_SEA,-1,7},
+ {"Test - Spider House painting hookshot",ENTRANCE(OCEANSIDE_SPIDER_HOUSE,0),SCENE_KINDAN2,-1,8},
+ {"Test - Town Gallery bow re-equip",ENTRANCE(TOWN_SHOOTING_GALLERY,0),SCENE_SYATEKI_MIZU,-1,9},
+ {"Test - Swamp Gallery bow re-equip",ENTRANCE(SWAMP_SHOOTING_GALLERY,0),SCENE_SYATEKI_MORI,-1,9},
+ {"Test - Postman timer A button",ENTRANCE(POST_OFFICE,0),SCENE_POSTHOUSE,-1,10},
+ {"Test - damage during item use",ENTRANCE(TERMINA_FIELD,0),SCENE_00KEIKOKU,-1,11},
+ {"Test - Stone Tower fall recovery",ENTRANCE(STONE_TOWER,0),SCENE_F40,-1,12},
+ {"Test - bomb and magic arrows",ENTRANCE(TERMINA_FIELD,0),SCENE_00KEIKOKU,-1,13},
+ {"Test - stray fairy billboard",ENTRANCE(LAUNDRY_POOL,0),SCENE_ALLEY,-1,14},
+ {"Test - shield size and clock",ENTRANCE(TERMINA_FIELD,0),SCENE_00KEIKOKU,-1,15},
 };

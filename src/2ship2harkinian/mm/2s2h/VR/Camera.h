@@ -46,6 +46,7 @@ int MMVR_InstrumentOverlay(void);
 int MMVR_ScriptedInstrumentVisible(void);
 int MMVR_ClearLessonBackground(void);
 int MMVR_InstrumentButtons(unsigned short* buttons);
+unsigned short MMVR_GameButtons(void);
 int MMVR_InputYaw(int fallback);
 float MMVR_MovementScale(struct PlayState*,struct Player*);
 int MMVR_HidePlayerLimb(struct Actor*,int limb);

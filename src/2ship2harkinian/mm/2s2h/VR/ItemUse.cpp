@@ -21,6 +21,7 @@ extern u8 gPlayerFormItemRestrictions[PLAYER_FORM_MAX][114];
 void MMVR_PlayerEquipSword(PlayState*, Player*, ItemId);
 void Player_UseItem(PlayState*, Player*, ItemId);
 }
+extern bool sBombSlotIsBombArrowMode;
 namespace {
 mmvr::ItemTrigger triggers[2];
 int holdingHand = -1;
@@ -61,7 +62,8 @@ void Log(const char* event, int item) {
 }
 bool Eligible(PlayState* play, Player* p) {
     return mmvrgame::InteractionsEligible(play, p) && mmvr::PhysicalActionsAllowed() &&
-           play->msgCtx.msgMode == MSGMODE_NONE && !(p->stateFlags2 & PLAYER_STATE2_USING_OCARINA);
+           play->msgCtx.msgMode == MSGMODE_NONE && !(p->stateFlags1 & PLAYER_STATE1_4000000) &&
+           !(p->stateFlags2 & PLAYER_STATE2_USING_OCARINA);
 }
 void Equip(PlayState* play, Player* p, int item) {
     if (item == ITEM_HOOKSHOT)
@@ -102,6 +104,11 @@ bool ExchangeItemContextActive(PlayState* play) {
 int WheelSlotItem(PlayState* play, int slot) {
     if (!play || slot < 0 || slot > 48)
         return ITEM_NONE;
+    if (slot == SLOT_BOMB && sBombSlotIsBombArrowMode &&
+        CVarGetInteger("gEnhancements.Equipment.BombArrows", 0) &&
+        gSaveContext.save.saveInfo.inventory.items[SLOT_BOMB] == ITEM_BOMB &&
+        gSaveContext.save.saveInfo.inventory.items[SLOT_BOW] == ITEM_BOW)
+        return ITEM_BOW;
     if (slot != 48)
         return gSaveContext.save.saveInfo.inventory.items[slot];
     // The sword slot represents equipment, not Blast/Bremen/Kamaro's contextual B action.
@@ -150,6 +157,7 @@ bool HasItemInHand(PlayState* play) {
            !(action >= PLAYER_IA_EXPLOSIVE_MIN && action <= PLAYER_IA_DEKU_NUT);
 }
 void StowItem(PlayState* play) {
+    if (GET_PLAYER(play)->stateFlags1 & PLAYER_STATE1_4000000) return;
     if (MMVR_ItemPresentationActive(GET_PLAYER(play)) || NativeViewfinderActive(play) ||
         (!GET_PLAYER(play)->heldActor && GET_PLAYER(play)->itemAction != GET_PLAYER(play)->heldItemAction))
         return;
@@ -178,7 +186,16 @@ void StowItem(PlayState* play) {
 }
 void RestoreSelectedEquipment(PlayState* play) {
     auto* p=GET_PLAYER(play);
-    if(owner==p && scene==play->sceneId && ItemAllowed(p,selected) && !p->heldActor) Equip(play,p,selected);
+    if(owner==p && scene==play->sceneId && ItemAllowed(p,selected) && !p->heldActor) {
+        if (p->stateFlags1 & PLAYER_STATE1_4000000) equipPending=true;
+        else Equip(play,p,selected);
+    }
+}
+int MinigameExplosive(PlayState* play) {
+    if (!play || play->sceneId != SCENE_BOWLING || !CHECK_WEEKEVENTREG(WEEKEVENTREG_08_01))
+        return ITEM_NONE;
+    const int item = Player_GetItemOnButton(play, GET_PLAYER(play), EQUIP_SLOT_B);
+    return (item == ITEM_BOMB || item == ITEM_BOMBCHU) ? item : ITEM_NONE;
 }
 int SelectedItem(PlayState* play) {
     return play && owner == GET_PLAYER(play) && scene == play->sceneId ? selected : ITEM_NONE;
@@ -220,7 +237,7 @@ bool SelectItem(PlayState* play, int slot, int item) {
     }
     // A native upper-body transition can temporarily reject equipment changes.
     // Retain the requested selection and apply it after that action releases ownership.
-    equipPending = p->itemAction != p->heldItemAction;
+    equipPending = p->itemAction != p->heldItemAction || (p->stateFlags1 & PLAYER_STATE1_4000000);
     if (!equipPending) {
         MMVR_PlayerEmptyHands(play, p);
         p->heldItemButton = EQUIP_SLOT_C_DOWN;
@@ -293,7 +310,7 @@ void ProcessItemTrigger(PlayState* play) {
             if (exchangeSent || edge.kind != 1 || edge.hand != mmvr::SwordController(mmvr::GetSettings()))
                 continue;
             if (owner != p || scene != play->sceneId || inventorySlot < 0 || inventorySlot >= 48 ||
-                selected == ITEM_NONE || gSaveContext.save.saveInfo.inventory.items[inventorySlot] != selected ||
+                selected == ITEM_NONE || WheelSlotItem(play, inventorySlot) != selected ||
                 !ItemAllowed(p, selected) || Player_GetItemOnButton(play, p, EQUIP_SLOT_C_DOWN) != selected)
                 continue;
             // The NPC's func_80123810 consumes this native C-button offer, retaining its
@@ -311,7 +328,7 @@ void ProcessItemTrigger(PlayState* play) {
         ClearItemTrigger();
         return;
     }
-    if (!ItemAllowed(p, selected)) {
+    if (!ItemAllowed(p, selected) && MinigameExplosive(play) == ITEM_NONE) {
         ClearItemSelection();
         return;
     }
@@ -320,7 +337,7 @@ void ProcessItemTrigger(PlayState* play) {
         return;
     }
     if (equipPending && owner == p && scene == play->sceneId && !p->heldActor &&
-        p->itemAction == p->heldItemAction && !(p->stateFlags1 & PLAYER_STATE1_8000000)) {
+        p->itemAction == p->heldItemAction && !(p->stateFlags1 & (PLAYER_STATE1_8000000 | PLAYER_STATE1_4000000))) {
         MMVR_PlayerEmptyHands(play, p);
         p->heldItemButton = EQUIP_SLOT_C_DOWN;
         Equip(play, p, selected);
@@ -391,6 +408,17 @@ void ProcessItemTrigger(PlayState* play) {
             Log("hookshot", ITEM_HOOKSHOT);
             continue;
         }
+        // Honey & Darling supply the B-button explosive and disable C items.
+        // Keep the wheel selection intact; the native minigame owns this supply.
+        const int supplied = MinigameExplosive(play);
+        if (supplied != ITEM_NONE) {
+            holding = MMVR_ReadyThrowable(play, p, supplied) != 0;
+            if (holding) {
+                holdingHand = edge.hand;
+                MMVR_UpdateHeldItem(play, p);
+            }
+            continue;
+        }
         if (selected == ITEM_NONE || owner != p || scene != play->sceneId)
             continue;
         if (inventorySlot == 48) {
@@ -398,7 +426,7 @@ void ProcessItemTrigger(PlayState* play) {
             continue;
         }
         if (inventorySlot < 0 || inventorySlot >= 48 ||
-            gSaveContext.save.saveInfo.inventory.items[inventorySlot] != selected ||
+            WheelSlotItem(play, inventorySlot) != selected ||
             GET_CUR_FORM_BTN_ITEM(EQUIP_SLOT_C_DOWN) != selected)
             continue;
         // The requested instrument is the sole exception to the native form table.

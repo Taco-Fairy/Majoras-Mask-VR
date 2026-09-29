@@ -239,7 +239,11 @@ bool ShieldRaised() {
     return shieldValid;
 }
 mmvr::Matrix ShieldModelPose() {
-    return shieldValid ? shieldPose : mmvr::Matrix{};
+    auto pose = shieldValid ? shieldPose : mmvr::Matrix{};
+    const float scale = mmvr::GetSettings().Get(mmvr::Setting::ShieldVisualSize) * .01f;
+    for (int i = 0; i < 3; ++i)
+        for (int j = 0; j < 3; ++j) pose.m[i][j] *= scale;
+    return pose;
 }
 Collider* MeleeDebugCollider() {
     auto* play = gPlayState;
@@ -634,6 +638,16 @@ void ProcessSwordEquip(PlayState* play, bool enabled) {
         StowItem(play);
         equipInput.cur.button &= ~BTN_B;
         equipInput.press.button &= ~BTN_B;
+        equipTap.Reset();
+        return;
+    }
+    // Scripted archery owns B, including re-equipping its supplied bow after stowing.
+    // Do not consume it as the VR sword shortcut. Native code retains ammo/action gates.
+    if (MinigameExplosive(play) != ITEM_NONE ||
+        (play->sceneId == SCENE_BOWLING && CHECK_WEEKEVENTREG(WEEKEVENTREG_08_01) &&
+         Inventory_GetBtnBItem(play) == ITEM_BOW) || play->bButtonAmmoPlusOne != 0 ||
+        (gSaveContext.minigameStatus == MINIGAME_STATUS_ACTIVE &&
+         Inventory_GetBtnBItem(play) == ITEM_BOW)) {
         equipTap.Reset();
         return;
     }

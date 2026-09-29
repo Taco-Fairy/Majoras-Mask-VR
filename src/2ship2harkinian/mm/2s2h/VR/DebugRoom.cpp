@@ -354,7 +354,46 @@ void BuildGeometry() {
     Quad({850, -150, 150}, {450, -150, 150}, {450, 0, 150}, {850, 0, 150}, wallColor);
     // Inward-facing boundary walls.
     Quad({-1000, 0, -1100}, {1000, 0, -1100}, {1000, 260, -1100}, {-1000, 260, -1100}, wallColor);
-    Quad({1000, 0, 1100}, {-1000, 0, 1100}, {-1000, 260, 1100}, {1000, 260, 1100}, wallColor);
+    // Archery annex beside the enemy pads. Entrance stays clear of reset pads.
+    Quad({-850,0,1100},{-1000,0,1100},{-1000,260,1100},{-850,260,1100},wallColor);
+    Quad({1000,0,1100},{-550,0,1100},{-550,260,1100},{1000,260,1100},wallColor);
+    // Back faces protect the annex without duplicate coplanar render surfaces.
+    for(const auto span : {std::array<short,2>{-1000,-850},std::array<short,2>{-550,1000}}) {
+        Triangle({span[0],0,1100},{span[1],0,1100},{span[1],260,1100},0);
+        Triangle({span[0],0,1100},{span[1],260,1100},{span[0],260,1100},0);
+    }
+    tiledFloor(-1000,1100,1000,4500,0,floorA);
+    Quad({-1000,0,4500},{-1000,0,1100},{-1000,260,1100},{-1000,260,4500},wallColor);
+    Quad({1000,0,2100},{1000,0,4500},{1000,260,4500},{1000,260,2100},wallColor);
+    Quad({1000,0,4500},{-1000,0,4500},{-1000,260,4500},{1000,260,4500},wallColor);
+    Sign("TARGET RANGE",-700,210,1090,2);
+    // Stand at the north firing line by Keaton grass and shoot south in three separate lanes.
+    solid.Quad({-500,1,1300},{-500,1,1310},{500,1,1310},{500,1,1300},gold);
+    const short targetX[]={-220,0,220};
+    const short targetZ[]={2300,3100,3900};
+    const char* targetLabels[]={"NEAR","MEDIUM","FAR"};
+    for(int target=0;target<3;++target) {
+        const short x=targetX[target],z=targetZ[target];
+        // Solid boards use the same collision geometry as their mesh.
+        Box(short(x-65),z,short(x+65),short(z+12),150);
+        Sign(targetLabels[target],x,190,short(z-2),2);
+        // Non-overlapping rings in one plane avoid depth flicker. Board catches arrows.
+        for(short size=60;size>=20;size-=20) {
+            const short inner=size-20, y=85, face=z-1;
+            const Color color=size==60?Color{230,225,205,255}:size==40?Color{200,45,40,255}:gold;
+            auto panel=[&](short left,short bottom,short right,short top) {
+                solid.Quad({right,bottom,face},{left,bottom,face},{left,top,face},{right,top,face},color);
+            };
+            if(inner==0) panel(short(x-size),short(y-size),short(x+size),short(y+size));
+            else {
+                panel(short(x-size),short(y-size),short(x+size),short(y-inner));
+                panel(short(x-size),short(y+inner),short(x+size),short(y+size));
+                panel(short(x-size),short(y-inner),short(x-inner),short(y+inner));
+                panel(short(x+inner),short(y-inner),short(x+size),short(y+inner));
+            }
+        }
+    }
+
     // West passage avoids the existing room-scale wall test at z=0.
     Quad({-1000, 0, 600}, {-1000, 0, -1100}, {-1000, 260, -1100}, {-1000, 260, 600}, wallColor);
     Quad({-1000, 0, 1100}, {-1000, 0, 1000}, {-1000, 260, 1000}, {-1000, 260, 1100}, wallColor);
