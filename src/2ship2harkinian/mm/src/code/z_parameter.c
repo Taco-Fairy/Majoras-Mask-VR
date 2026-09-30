@@ -1,5 +1,6 @@
 #ifdef MMVR_ENABLE
 #include "2s2h/VR/ViewTools.h"
+#include "2s2h/VR/Camera.h"
 #endif
 #ifdef MMVR_ENABLE
 #include "2s2h/VR/DebugRoom.h"
@@ -1623,6 +1624,10 @@ void Interface_PostmanTimerCallback(void* arg) {
 
     PadMgr_GetInputNoLock(sPostmanTimerInput, false);
     btnAPressed = CHECK_BTN_ALL(sPostmanTimerInput[0].cur.button, BTN_A);
+#ifdef MMVR_ENABLE
+    // This timer bypasses gameplay input; include the VR snapshot without consuming its edges.
+    btnAPressed |= CHECK_BTN_ALL(MMVR_GameButtons(), BTN_A);
+#endif
     if ((btnAPressed != sPostmanTimerInputBtnAPressed) && btnAPressed) {
         gSaveContext.postmanTimerStopOsTime = osGetTime();
         gSaveContext.timerStates[TIMER_ID_POSTMAN] = TIMER_STATE_POSTMAN_STOP;

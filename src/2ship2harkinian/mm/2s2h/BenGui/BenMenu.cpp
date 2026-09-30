@@ -2222,6 +2222,21 @@ BenMenu::BenMenu(const std::string& consoleVariable, const std::string& name)
 
 void BenMenu::InitElement() {
     Ship::Menu::InitElement();
+#ifdef MMVR_ENABLE
+    AddMenuEntry("FullDiveGames Editions", "gSettings.Menu.FullDiveGamesSidebarSection");
+    AddSidebarEntry("FullDiveGames Editions", "Visuals", 1);
+    WidgetPath editionsPath = {"FullDiveGames Editions", "Visuals", SECTION_COLUMN_1};
+    AddWidget(editionsPath, "Magic arrow draw effects", WIDGET_CVAR_CHECKBOX)
+        .CVar("gEnhancements.FullDiveGames.MagicArrowDrawEffects")
+        .Options(CheckboxOptions().DefaultValue(true).Tooltip(
+            "Show fire, ice and light effects on an arrow while drawing the physical bow. Does not change arrow damage or magic cost."));
+#endif
+#ifdef MMVR_ENABLE
+    AddWidget(editionsPath, "Bomb arrow draw preview", WIDGET_CVAR_CHECKBOX)
+        .CVar("gEnhancements.FullDiveGames.BombArrowDrawPreview")
+        .Options(CheckboxOptions().DefaultValue(true).Tooltip(
+            "Show a small bomb on the drawn arrow when bomb-arrow mode is selected. Does not consume bombs before firing."));
+#endif
     AddSettings();
     AddEnhancements();
     AddDevTools();
@@ -2371,9 +2386,10 @@ bool BenMenu::DrawVrSection(const char* main, const char* sidebar, const char* s
     const std::string mainName(main);
     const std::string sidebarName(sidebar);
     const bool supportedSection =
+        (mainName == "FullDiveGames Editions" && sidebarName == "Visuals") ||
         (mainName == "Settings" && sidebarName == "Audio") ||
         (mainName == "Enhancements" && (sidebarName == "Gameplay" || sidebarName == "Cheats" ||
-                                         sidebarName == "Difficulty Options" || sidebarName == "Items/Songs")) ||
+                                         sidebarName == "Difficulty Options" || sidebarName == "Items/Songs" || sidebarName == "Graphics")) ||
         (mainName == "Rando" && (sidebarName == "General" || sidebarName == "Logic/Conditions" ||
                                  sidebarName == "Check Pool" || sidebarName == "Check Exclusions" ||
                                  sidebarName == "Item Pool" || sidebarName == "Starting Items" ||
@@ -2442,6 +2458,8 @@ bool BenMenu::DrawVrSection(const char* main, const char* sidebar, const char* s
         for (auto& column : sidebarIt->second.columnWidgets) {
             bool firstInColumn = true;
             for (auto& widget : column) {
+                // Expose only clock controls from native Graphics in the VR menu.
+                if (sidebarName == "Graphics" && widget.name != "Clock Type" && widget.name != "24 Hours Clock") continue;
                 if (searching && (widget.type == WIDGET_SEPARATOR_TEXT || !filter.PassFilter((widget.name + (widget.name.find("Blast Mask") != std::string::npos ? " Bomb Mask" : "")).c_str()))) continue;
                 if(searching && !matched) ImGui::SeparatorText((mainName + " / " + sidebarName).c_str());
                 matched = true;

@@ -1,13 +1,20 @@
 #pragma once
 #include "first_person.h"
 namespace mmvr {
+inline bool InShoulderSlot(const TrackingFrame& frame, int hand, float reach) {
+    if (!frame.handTracked[hand]) return false;
+    auto head = YawPose(PoseYaw(PoseMatrix(frame.head)), frame.head.position.x, frame.head.position.y, frame.head.position.z);
+    auto local = Multiply(PoseMatrix(frame.hands[hand]), InversePose(head));
+    float x=local.m[3][0]*(hand?1:-1), y=local.m[3][1], z=local.m[3][2];
+    return x>-.12f && x<reach && y>-.65f && y<.18f && z>.04f && z<reach;
+}
 struct ShoulderHolster {
-    bool armed = false, held = false, pulling = false;
+    bool armed = false, held = false, pulling = false, gripArmed = false;
     uint64_t epoch = 0;
     double time = -1;
     XrVector3f previous{};
     void Reset() {
-        armed = held = pulling = false;
+        armed = held = pulling = gripArmed = false;
         time = -1;
     }
     int Update(const TrackingFrame& frame, int hand, bool allowed, bool sword, float reach) {
@@ -33,6 +40,11 @@ struct ShoulderHolster {
         auto local = Multiply(PoseMatrix(frame.hands[hand]), InversePose(head));
         float x = local.m[3][0] * (hand ? 1 : -1), y = local.m[3][1], z = local.m[3][2];
         bool zone = x > -.12f && x < reach && y > -.65f && y < .18f && z > .04f && z < reach;
+        if (frame.grips[hand] < .25f) gripArmed = true;
+        if (frame.grips[hand] > .7f && gripArmed) {
+            gripArmed = false;
+            if (InShoulderSlot(frame, hand, reach)) return 1;
+        }
         float trigger = frame.triggers[hand];
         if (trigger < .25f) {
             armed = true;

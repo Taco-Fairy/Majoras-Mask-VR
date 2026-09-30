@@ -4807,6 +4807,8 @@ int MMVR_ItemPresentationActive(Player* p) {
         p->actionFunc==Player_Action_70 || p->actionFunc==Player_Action_ExchangeItem);
 }
 void MMVR_PlayerEquipSword(PlayState* play, Player* this, ItemId item) {
+    // Damage owns the upper-body action until native recovery completes.
+    if (this->stateFlags1 & PLAYER_STATE1_4000000) return;
     if (MMVR_ItemPresentationActive(this)) return;
     if ((this->transformation==PLAYER_FORM_FIERCE_DEITY ? item!=ITEM_SWORD_DEITY :
          this->transformation!=PLAYER_FORM_HUMAN || ((item < ITEM_SWORD_KOKIRI || item > ITEM_SWORD_GILDED) && item != ITEM_SWORD_GREAT_FAIRY)) ||
@@ -4821,6 +4823,8 @@ void MMVR_PlayerEquipSword(PlayState* play, Player* this, ItemId item) {
     sPlayerHeldItemButtonIsHeldDown = false;
 }
 void MMVR_PlayerEquipEmptyBottle(PlayState* play,Player* this) {
+    // Damage owns the upper-body action until native recovery completes.
+    if (this->stateFlags1 & PLAYER_STATE1_4000000) return;
     if (MMVR_ItemPresentationActive(this)) return;
     if (this->heldActor || this->itemAction!=this->heldItemAction || !MMVR_BottleFormAllowed(this)) return;
     Player_DestroyHookshot(this);this->heldItemId=ITEM_BOTTLE;
@@ -4830,6 +4834,8 @@ void MMVR_PlayerEquipEmptyBottle(PlayState* play,Player* this) {
     sPlayerUseHeldItem=false;sPlayerHeldItemButtonIsHeldDown=false;
 }
 void MMVR_PlayerEquipHookshot(PlayState* play,Player* this) {
+    // Damage owns the upper-body action until native recovery completes.
+    if (this->stateFlags1 & PLAYER_STATE1_4000000) return;
     if (this->heldActor || this->itemAction!=this->heldItemAction || this->transformation!=PLAYER_FORM_HUMAN) return;
     this->heldItemId=ITEM_HOOKSHOT;this->nextModelGroup=Player_ActionToModelGroup(this,PLAYER_IA_HOOKSHOT);
     this->stateFlags3 &= ~PLAYER_STATE3_START_CHANGING_HELD_ITEM;
@@ -4843,6 +4849,8 @@ int MMVR_UseHookshot(PlayState* play,Player* this) {
     return func_80831194(play,this);
 }
 void MMVR_PlayerEmptyHands(PlayState* play,Player* this) {
+    // Damage owns the upper-body action until native recovery completes.
+    if (this->stateFlags1 & PLAYER_STATE1_4000000) return;
     if (MMVR_ItemPresentationActive(this)) return;
     if (this->heldActor && !Player_IsHoldingHookshot(this)) return;
     if (this->itemAction!=this->heldItemAction || ((this->stateFlags1 & PLAYER_STATE1_8000000) && !(MMVR_BottleFormAllowed(this) && this->heldItemAction==PLAYER_IA_BOTTLE_EMPTY))) return;
@@ -4858,6 +4866,7 @@ void MMVR_PlayerEmptyHands(PlayState* play,Player* this) {
 // is -1. Restore that upper-body state before asking the native mask handler;
 // never clear unrelated dialogue, climbing, swimming, or cutscene locks.
 int MMVR_PreparePhysicalMask(PlayState* play, Player* this) {
+    if (this->stateFlags1 & PLAYER_STATE1_4000000) return false;
     if (this->actor.init || this->actionFunc == Player_Action_86 || this->actionFunc == Player_Action_87 ||
         this->actionFunc == Player_Action_89 || this->actionFunc == Player_Action_90 || MMVR_ItemPresentationActive(this) || this->heldActor)
         return false;
@@ -4872,15 +4881,19 @@ int MMVR_PreparePhysicalMask(PlayState* play, Player* this) {
     return this->itemAction == this->heldItemAction;
 }
 int MMVR_ReadyThrowable(PlayState* play,Player* this,int item) {
+    const int supplied = play->sceneId == SCENE_BOWLING && CHECK_WEEKEVENTREG(WEEKEVENTREG_08_01) &&
+        (item == ITEM_BOMB || item == ITEM_BOMBCHU) &&
+        Player_GetItemOnButton(play, this, EQUIP_SLOT_B) == item;
+    if (this->stateFlags1 & PLAYER_STATE1_4000000) return false;
     if (this->transformation>=PLAYER_FORM_MAX || item<0 || item>=114 || !gPlayerFormItemRestrictions[this->transformation][item] || this->heldActor || this->itemAction!=this->heldItemAction ||
         (this->stateFlags1 & (PLAYER_STATE1_8000000|PLAYER_STATE1_CARRYING_ACTOR)) ||
-        (item!=ITEM_BOMB && item!=ITEM_BOMBCHU && item!=ITEM_DEKU_NUT && item!=ITEM_POWDER_KEG) || Player_GetItemOnButton(play,this,EQUIP_SLOT_C_DOWN)!=item) return false;
+        (item!=ITEM_BOMB && item!=ITEM_BOMBCHU && item!=ITEM_DEKU_NUT && item!=ITEM_POWDER_KEG) || (!supplied && Player_GetItemOnButton(play,this,EQUIP_SLOT_C_DOWN)!=item)) return false;
     if ((item==ITEM_POWDER_KEG && (AMMO(ITEM_POWDER_KEG)<=0 || play->actorCtx.actorLists[ACTORCAT_EXPLOSIVES].length>=3)) || (item==ITEM_DEKU_NUT && AMMO(ITEM_DEKU_NUT)<=0) || ((item==ITEM_BOMB || item==ITEM_BOMBCHU) &&
         (((item==ITEM_BOMB?play->unk_1887E:play->unk_1887D)==0 && AMMO(item)<=0) || GameInteractor_Should(VB_LIMIT_EXPLOSIVES,
             play->actorCtx.actorLists[ACTORCAT_EXPLOSIVES].length >= ((play->unk_1887D||play->unk_1887E)?5:3))))) {
         Audio_PlaySfx(NA_SE_SY_ERROR);return false;
     }
-    MMVR_PlayerEmptyHands(play,this);this->heldItemButton=EQUIP_SLOT_C_DOWN;
+    MMVR_PlayerEmptyHands(play,this);this->heldItemButton=supplied?EQUIP_SLOT_B:EQUIP_SLOT_C_DOWN;
     if (item==ITEM_BOMB || item==ITEM_BOMBCHU || item==ITEM_POWDER_KEG) {
         PlayerItemAction explosive=item==ITEM_POWDER_KEG?PLAYER_IA_POWDER_KEG:item==ITEM_BOMB?PLAYER_IA_BOMB:PLAYER_IA_BOMBCHU;
         this->heldItemId=item;this->nextModelGroup=Player_ActionToModelGroup(this,explosive);
@@ -4897,6 +4910,7 @@ int MMVR_ReadyThrowable(PlayState* play,Player* this,int item) {
     return this->heldActor!=NULL;
 }
 void MMVR_PlayerEquipBow(PlayState* play,Player* this,int item) {
+    if (this->stateFlags1 & PLAYER_STATE1_4000000) return ;
     PlayerItemAction action=Player_ItemToItemAction(this,item);
     if (action<PLAYER_IA_BOW || action>PLAYER_IA_BOW_LIGHT || this->heldActor || this->itemAction!=this->heldItemAction ||
         (this->stateFlags1 & PLAYER_STATE1_8000000)) return;
@@ -14760,7 +14774,11 @@ s32 Player_UpperAction_6(Player* this, PlayState* play) {
     if (MMVR_IndependentHookshot(this)) {
         func_80831124(play,this);
         if (sPlayerUseHeldItem) MMVR_UseHookshot(play,this);
-        this->unk_AA5=PLAYER_UNKAA5_0;
+        // Physical aiming replaces only the native aiming states (0..3).
+        // State 4 requests a cutscene and 5 owns item/mask transitions; clearing
+        // either here prevents the body action from ever servicing that request.
+        if (this->unk_AA5 < PLAYER_UNKAA5_4)
+            this->unk_AA5=PLAYER_UNKAA5_0;
         return false;
     }
 #endif
@@ -14813,7 +14831,9 @@ int MMVR_DekuFlowerStage(Player* p) {
 int MMVR_DekuSpinning(Player* p) { return p && p->transformation==PLAYER_FORM_DEKU && p->actionFunc==Player_Action_95; }
 int MMVR_EndFormShot(PlayState* play,Player* p) {
     if (!MMVR_FirstPersonBody() || (p->transformation!=PLAYER_FORM_DEKU && p->transformation!=PLAYER_FORM_ZORA) ||
-        p->csAction!=PLAYER_CSACTION_NONE || play->csCtx.state!=CS_STATE_IDLE) return false;
+        p->csAction!=PLAYER_CSACTION_NONE || play->csCtx.state!=CS_STATE_IDLE ||
+        p->unk_AA5 >= PLAYER_UNKAA5_4 || (p->stateFlags1 & PLAYER_STATE1_4000000)) return false;
+    // Shot recovery must not consume a pending native item/cutscene action or damage recovery.
     p->unk_AA5=PLAYER_UNKAA5_0;p->stateFlags1&=~PLAYER_STATE1_100000;p->stateFlags3&=~PLAYER_STATE3_40;
     if(p->actionFunc==Player_Action_43)func_80839ED0(p,play);
     Player_StopHorizontalMovement(p);

@@ -19,7 +19,7 @@
 
 namespace mmvrgame {
 namespace {
-constexpr const char* Categories[] = { "Audio", "Gameplay", "Cheats", "Difficulty", "Randomizer", "Items and masks" };
+constexpr const char* Categories[] = { "Audio", "Gameplay", "Cheats", "Difficulty", "Randomizer", "Items and masks", "Clock", "FullDiveGames Editions" };
 struct Panel {
     ImGuiContext* context = nullptr;
     ImFontAtlas* fonts = nullptr;
@@ -169,8 +169,8 @@ void Contents(Fast::Fast3dGui& gui) {
     if(ImGui::Button("Clear")) panel.search[0]=0;
     if(panel.search[0]) {
         bool any=false;
-        const char* sections[][2]={{"Settings","Audio"},{"Enhancements","Gameplay"},
-            {"Enhancements","Items/Songs"},{"Enhancements","Cheats"},{"Enhancements","Difficulty Options"},
+        const char* sections[][2]={{"FullDiveGames Editions","Visuals"},{"Settings","Audio"},{"Enhancements","Gameplay"},
+            {"Enhancements","Graphics"},{"Enhancements","Items/Songs"},{"Enhancements","Cheats"},{"Enhancements","Difficulty Options"},
             {"Rando","General"},{"Rando","Logic/Conditions"},{"Rando","Check Pool"},
             {"Rando","Check Exclusions"},{"Rando","Item Pool"},{"Rando","Starting Items"},{"Rando","Hints"}};
         ImGui::BeginChild("Search results",{0,0},false,ImGuiWindowFlags_AlwaysVerticalScrollbar);
@@ -181,7 +181,8 @@ void Contents(Fast::Fast3dGui& gui) {
     }
     if (panel.category < 0) {
         ImGui::TextWrapped("Choose a group. These are the native 2Ship settings.");
-        for (int i=0;i<int(std::size(Categories));++i) {
+        for (int order=0;order<int(std::size(Categories));++order) {
+            const int i = order == 0 ? int(std::size(Categories))-1 : order-1;
             if (ImGui::Button(Categories[i], {-1,52})) { panel.category=i; ImGui::SetScrollY(0); }
         }
         ImGui::TextWrapped("Use the left stick to navigate. Use the right stick as a pointer for lists, dragging and the keyboard.");
@@ -205,6 +206,8 @@ void Contents(Fast::Fast3dGui& gui) {
         case 3: native->DrawVrSection("Enhancements","Difficulty Options"); break;
         case 4: Rando::DrawVrRandomizerMenu(); break;
         case 5: native->DrawVrSection("Enhancements","Items/Songs"); break;
+        case 6: native->DrawVrSection("Enhancements","Graphics","Clock"); break;
+        case 7: native->DrawVrSection("FullDiveGames Editions","Visuals"); break;
     }
 }
 } // namespace

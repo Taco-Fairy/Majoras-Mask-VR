@@ -109,7 +109,27 @@ extern "C" int MMVR_DebugLocationBegin(PlayState* play,int index){
   gSaveContext.save.day=1;gSaveContext.save.eventDayCount=1;
   gSaveContext.save.time=CLOCK_TIME(10,0);gSaveContext.skyboxTime=gSaveContext.save.time;
   gSaveContext.save.playerForm=PLAYER_FORM_HUMAN;gSaveContext.save.equippedMask=PLAYER_MASK_NONE;
-  if(interaction==0) {
+  if(interaction>=8 && interaction<=15) {
+   // Use authored entrances rather than unchecked room coordinates. All quest
+   // and inventory changes are restored by the existing visitor snapshot.
+   auto& info=gSaveContext.save.saveInfo;
+   info.inventory.items[SLOT_BOW]=ITEM_BOW;
+   info.inventory.items[SLOT_HOOKSHOT]=ITEM_HOOKSHOT;
+   info.inventory.items[SLOT_BOMB]=ITEM_BOMB;
+   info.inventory.items[SLOT_ARROW_FIRE]=ITEM_ARROW_FIRE;
+   info.inventory.items[SLOT_ARROW_ICE]=ITEM_ARROW_ICE;
+   info.inventory.items[SLOT_ARROW_LIGHT]=ITEM_ARROW_LIGHT;
+   Inventory_ChangeUpgrade(UPG_QUIVER, 1);
+   Inventory_ChangeUpgrade(UPG_BOMB_BAG, 1);
+   info.playerData.isMagicAcquired=true;
+   info.playerData.rupees=200;
+   Refill();
+   if(interaction==14) CLEAR_WEEKEVENTREG(WEEKEVENTREG_08_80);
+   if(interaction==10) {
+    gSaveContext.save.time=CLOCK_TIME(15,30);
+    gSaveContext.skyboxTime=gSaveContext.save.time;
+   }
+  } else if(interaction==0) {
    SET_WEEKEVENTREG(WEEKEVENTREG_TALKED_KOUME_INJURED);
    CLEAR_WEEKEVENTREG(WEEKEVENTREG_SAVED_KOUME);
    CLEAR_WEEKEVENTREG(WEEKEVENTREG_RECEIVED_RED_POTION_FOR_KOUME);

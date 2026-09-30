@@ -24,7 +24,7 @@ inline constexpr int AssignmentFirst = int(Setting::Count), ResetSettingsRow = A
                      DiagnosticExportRow = NativeOptionsRow + 1,
                      SetupGuideRow = NativeOptionsRow + 2,
                      ReleaseNotesFirstRow = NativeOptionsRow + 3,
-                     ReleaseNotesCount = 19,
+                     ReleaseNotesCount = 25,
                      MenuRows = ReleaseNotesFirstRow + ReleaseNotesCount;
 inline bool ReleaseNotesRow(int row) { return row >= ReleaseNotesFirstRow && row < MenuRows; }
 inline bool TutorialRow(int row) { return row >= TutorialFirstRow && row < NativeOptionsRow; }
@@ -76,7 +76,7 @@ inline constexpr MenuSection MenuSections[] = {
     { ControlsTab, "How to play tutorial (scroll to read)", false },
     { NativeTab, "2Ship options", false },
     { ViewTab, "World scale", false },
-    { SystemTab, "v0.2 - World Scale and Hotfix Update", false },
+    { SystemTab, "Release notes", false },
     { SystemTab, "v0.21 - Potion crash hotfix", false },
     { SystemTab, "v0.22 - Web and mask hotfix", false },
     { SystemTab, "v2.3 - Interaction and settings update", false },
@@ -88,18 +88,25 @@ struct MenuEntry {
 };
 // Explicit presentation order is independent of persistent setting IDs.
 inline constexpr MenuEntry OrderedMenu[] = {
-    { ReleaseNotesFirstRow + 16, 43 },
-    { ReleaseNotesFirstRow + 17, 43 },
-    { ReleaseNotesFirstRow + 18, 43 },
-    { ReleaseNotesFirstRow + 10, 42 },
-    { ReleaseNotesFirstRow + 11, 42 },
-    { ReleaseNotesFirstRow + 12, 42 },
-    { ReleaseNotesFirstRow + 13, 42 },
-    { ReleaseNotesFirstRow + 14, 42 },
-    { ReleaseNotesFirstRow + 15, 42 },
+    { ReleaseNotesFirstRow + 19, 39 },
+    { ReleaseNotesFirstRow + 20, 39 },
+    { ReleaseNotesFirstRow + 21, 39 },
+    { ReleaseNotesFirstRow + 22, 39 },
+    { ReleaseNotesFirstRow + 23, 39 },
+    { ReleaseNotesFirstRow + 24, 39 },
 
-    { ReleaseNotesFirstRow + 9, 41 },
-    { ReleaseNotesFirstRow + 8, 40 },
+    { ReleaseNotesFirstRow + 16, 39 },
+    { ReleaseNotesFirstRow + 17, 39 },
+    { ReleaseNotesFirstRow + 18, 39 },
+    { ReleaseNotesFirstRow + 10, 39 },
+    { ReleaseNotesFirstRow + 11, 39 },
+    { ReleaseNotesFirstRow + 12, 39 },
+    { ReleaseNotesFirstRow + 13, 39 },
+    { ReleaseNotesFirstRow + 14, 39 },
+    { ReleaseNotesFirstRow + 15, 39 },
+
+    { ReleaseNotesFirstRow + 9, 39 },
+    { ReleaseNotesFirstRow + 8, 39 },
     { ReleaseNotesFirstRow + 0, 39 },
     { ReleaseNotesFirstRow + 1, 39 },
     { ReleaseNotesFirstRow + 2, 39 },
@@ -177,6 +184,7 @@ inline constexpr MenuEntry OrderedMenu[] = {
     { int(Setting::WeaponWallOffset), 8 },
     { int(Setting::ShieldMargin), 9 },
     { int(Setting::AlwaysShield), 9 },
+    { int(Setting::ShieldVisualSize), 9 },
     { int(Setting::PunchSpeed), 9 },
     { int(Setting::PunchDistance), 9 },
     { int(Setting::PunchRadius), 9 },
@@ -210,15 +218,15 @@ inline constexpr MenuEntry OrderedMenu[] = {
     { int(Setting::PhysicalShield), 13 },
     { int(Setting::PhysicalBow), 13 },
     { int(Setting::PhysicalBottle), 13 },
-    { int(Setting::PhysicalThrow), 13 },
     { int(Setting::PhysicalCarry), 13 },
     { int(Setting::PhysicalMasks), 13 },
-    { int(Setting::PhysicalClimbing), 17 },
-    { int(Setting::StickClimbing), 17 },
     { int(Setting::PhysicalFists), 13 },
     { int(Setting::PhysicalFins), 13 },
-    { int(Setting::HandPickup), 13 },
     { int(Setting::TrackedAim), 13 },
+    { int(Setting::PhysicalThrow), 13 },
+    { int(Setting::PhysicalClimbing), 17 },
+    { int(Setting::StickClimbing), 17 },
+    { int(Setting::HandPickup), 13 },
     { int(Setting::ShoulderHolster), 13 },
     { int(Setting::AlwaysSwordTrails), 13 },
     { int(Setting::ItemSmoothing), 13 },
@@ -229,6 +237,7 @@ inline constexpr MenuEntry OrderedMenu[] = {
     { int(Setting::BombchuReticle), 14 },
     { int(Setting::BowAimYaw), 14 },
     { int(Setting::BowAimPitch), 14 },
+    { int(Setting::BowHandSmoothing), 14 },
     { int(Setting::BowGrabDistance), 14 },
     { int(Setting::BowMinDraw), 14 },
     { int(Setting::BowFullDraw), 14 },
@@ -376,6 +385,7 @@ inline constexpr MenuEntry OrderedMenu[] = {
 };
 static_assert(sizeof(OrderedMenu) / sizeof(OrderedMenu[0]) == MenuRows);
 inline bool MenuRowVisible(int row) {
+    if (row == int(Setting::PhysicalSword) || row == int(Setting::PhysicalShield) || row == int(Setting::PhysicalBow) || row == int(Setting::PhysicalBottle) || row == int(Setting::PhysicalCarry) || row == int(Setting::PhysicalMasks) || row == int(Setting::PhysicalFists) || row == int(Setting::PhysicalFins) || row == int(Setting::TrackedAim)) return false;
     if (row == int(Setting::AreaPanoramaScreens)) return false;
     if(!PrivateDebugTools && (row==DebugReturnRow || row==SkipDayRow || row==SkipTwoHoursRow || row==int(Setting::DebugRoomSpawn) ||
        row==int(Setting::DebugSkipCutscenes) || row==int(Setting::DebugHitboxes) || row==int(Setting::SwordDiagnostics)))return false;

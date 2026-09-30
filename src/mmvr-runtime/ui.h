@@ -159,6 +159,7 @@ void SetAssignmentContext(int inventorySlot) noexcept;
 const AssignmentState& GetAssignment() noexcept;
 int DisplaySlotAssignment(int index) noexcept;
 void SetInputContext(bool canSelect, bool ocarina) noexcept;
+void SetHolsterContext(bool available) noexcept;
 MenuState& GetMenu() noexcept;
 const SelectorState& GetSelector() noexcept;
 void SetSlotAssignment(int index, int inventorySlot) noexcept;

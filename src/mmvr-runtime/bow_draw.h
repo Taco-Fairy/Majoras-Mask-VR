@@ -38,6 +38,12 @@ class BowDraw {
             return false;
         }
         lastTime = now;
+        // Once pulled beyond the nocking zone, require a backward draw within
+        // 55 degrees of the bow axis. Returning forward can still cancel quietly.
+        if (drawing && distance > std::max(grab, minimum) && backwards < distance * .57357644f) {
+            Cancel();
+            return false;
+        }
         if (trigger < .25f) {
             bool fire = drawing && backwards >= minimum && now - lastShot >= .3;
             pull = std::clamp(backwards / std::max(full, minimum), 0.f, 1.f);

@@ -13,6 +13,7 @@ bool ExchangeItemContextActive(PlayState*);
 void ClearItemTrigger();
 void ClearItemSelection();
 int SelectedItem(PlayState*);
+int MinigameExplosive(PlayState*);
 int WheelSlotItem(PlayState*,int slot);
 bool HasItemInHand(PlayState*);
 void StowItem(PlayState*);

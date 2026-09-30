@@ -495,6 +495,16 @@ int main(){
       check(close(turned.m[3][0],123)&&close(turned.m[3][1],45)&&close(turned.m[3][2],-67));
       for(int axis=0;axis<3;++axis)for(int c=0;c<3;++c)check(close(turned.m[axis][c],facing.m[axis][c]*float(axis+1)));
     }
+    // A skeletal billboard rotates its limb origins around one actor pivot.
+    for(float yaw:{0.f,1.5707963f,3.1415926f}) {
+      auto basis=mmvr::YawPose(0), facing=mmvr::YawPose(yaw), limb=basis;
+      basis.m[3][0]=100; basis.m[3][1]=20; basis.m[3][2]=-50;
+      limb.m[3][0]=110; limb.m[3][1]=23; limb.m[3][2]=-50;
+      auto turned=mmvr::FaceBillboardGroup(limb,basis,facing);
+      check(close(turned.m[3][0],100+10*facing.m[0][0]));
+      check(close(turned.m[3][1],23));
+      check(close(turned.m[3][2],-50+10*facing.m[0][2]));
+    }
     // Bounded timing statistics retain a rare hitch even when P95 cannot show it.
     {
      mmvr::FrameTimingWindow timing;for(int i=1;i<=100;++i)timing.Add(i,90);
@@ -720,6 +730,26 @@ int main(){
       check(tick(.1,1,false)==0);tick(.11,0,true);f.hands[h].position.z=.08f;tick(.13,0,true);f.hands[h].position.z=.2f;check(tick(.15,1,true)==-1);
       check(tick(.16,1,true)==0);tick(.17,0,false);check(tick(.18,1,false,false)==0);
     }
+    for(int h=0;h<2;++h) {
+      mmvr::ShoulderHolster holster;mmvr::TrackingFrame f{};f.epoch=5;f.head.orientation.w=1;
+      f.hands[h].orientation.w=1;f.handTracked[h]=true;f.hands[h].position={h?.25f:-.25f,-.2f,.2f};
+      check(mmvr::InShoulderSlot(f,h,.6f));
+      f.timeSeconds=1;holster.Update(f,h,true,false,.6f);
+      f.timeSeconds=1.01;holster.Update(f,h,true,false,.6f);
+      f.grips[h]=1;f.timeSeconds=1.02;check(holster.Update(f,h,true,false,.6f)==1);
+      f.timeSeconds=1.03;check(holster.Update(f,h,true,true,.6f)==0);
+      f.grips[h]=0;f.timeSeconds=1.04;check(holster.Update(f,h,true,true,.6f)==0);
+      f.hands[h].position.z=-.2f;check(!mmvr::InShoulderSlot(f,h,.6f));
+    }
+    {
+      mmvr::Settings locked;
+      for(auto id:{mmvr::Setting::PhysicalSword,mmvr::Setting::PhysicalShield,mmvr::Setting::PhysicalBow,
+                   mmvr::Setting::PhysicalBottle,mmvr::Setting::PhysicalCarry,mmvr::Setting::PhysicalMasks,
+                   mmvr::Setting::PhysicalFists,mmvr::Setting::PhysicalFins,mmvr::Setting::TrackedAim}) {
+        locked.Set(id,0);check(locked.Get(id)==1);
+      }
+      check(locked.Get(mmvr::Setting::VrCameraCutscenes)==1&&locked.Get(mmvr::Setting::StableCutsceneHead)==1);
+    }
     mmvr::MaskGesture fastMask;auto maskGrip=origin,maskAim=origin;maskGrip.position={0,-.13f,-.35f};
     auto face=mmvr::MaskFacePose(maskGrip,maskAim,.26f);check(close(face.position.y,0));
     fastMask.Update(0,7,true,true,0,false,face,origin,.24f,.35f);fastMask.Update(.01,7,true,true,0,false,face,origin,.24f,.35f);
@@ -739,11 +769,61 @@ int main(){
       check(tipZ<=-2.f+.0001f); // Arrowhead always remains beyond the bow hand.
       check(close(arrow.m[3][2]+mmvr::ArrowNockX*arrow.m[0][2],limited));
     }
+    // Bow mesh, arrow, shot axis and draw limit agree for both hands/world scales.
+    for(int hand:{0,1}) for(float scale:{.5f,1.f,2.f}) for(float yaw:{-45.f,-5.f,45.f}) for(float pitch:{-45.f,0.f,45.f}) {
+      mmvr::Settings settings;auto model=mmvr::ModelHandCalibration(1,hand,settings);
+      for(int row=0;row<3;++row)for(int k=0;k<3;++k)model.m[row][k]*=scale;
+      model.m[3][0]=17;model.m[3][1]=23;model.m[3][2]=-9;
+      auto direction=mmvr::CalibrateBowAim({0,0,-1},yaw,pitch);
+      auto aligned=mmvr::AlignBowModel(model,direction);
+      for(int k=0;k<3;++k){check(close(aligned.m[1][k]/(.01f*scale),(&direction.x)[k]));check(close(aligned.m[3][k],model.m[3][k]));}
+      float dot=0;for(int k=0;k<3;++k)dot+=aligned.m[0][k]*aligned.m[1][k];check(std::abs(dot)<.000001f);
+      const float pull=mmvr::HeldArrowDrawLimit(100);
+      auto arrow=mmvr::ArrowPose(direction,{-direction.x*pull*scale,-direction.y*pull*scale,-direction.z*pull*scale},scale);
+      float tip=0;for(int k=0;k<3;++k)tip+=(arrow.m[3][k]+mmvr::HeldArrowTipX*arrow.m[0][k])*(&direction.x)[k];
+      check(close(tip,(3.95f+2.f)*scale));
+    }
+    check(mmvr::HeldArrowVertexX(2001)==2001 && mmvr::HeldArrowVertexX(1438)==1438);
+    check(mmvr::HeldArrowVertexX(-396)-mmvr::HeldArrowVertexX(68)==-464);
+    check(mmvr::HeldArrowVertexX(-5)==-805);
     for(float angle:{0.f,.7f,1.4f}){
       auto marker=mmvr::YawPose(0,0,0,0);XrVector3f normal{std::sin(angle),0,std::cos(angle)};mmvr::LiftReticle(marker,normal);
       for(float x:{-3.f,3.f})for(float y:{-3.f,3.f}){
        float px=marker.m[3][0]+x,py=marker.m[3][1]+y,pz=marker.m[3][2];
        check(px*normal.x+py*normal.y+pz*normal.z>.99f);}
+    }
+    // Fixed bow calibration commutes with controller motion, including rolls
+    // and shoulder-reaching orientations, with no projection singularities.
+    for(int hand:{0,1}) for(float yaw:{-90.f,-5.f,90.f}) for(float pitch:{-90.f,0.f,90.f}) {
+      mmvr::Settings settings;auto model=mmvr::ModelHandCalibration(1,hand,settings);
+      auto base=mmvr::RigidBowModel(model,mmvr::YawPose(0),yaw,pitch);
+      for(float angle:{0.f,1.5f,3.14159f,4.7f}) {
+        auto rotation=mmvr::PoseMatrix({{std::sin(angle*.5f),0,0,std::cos(angle*.5f)},{0,0,0}});
+        rotation=mmvr::Multiply(rotation,mmvr::YawPose(angle));
+        auto actual=mmvr::RigidBowModel(model,rotation,yaw,pitch);
+        auto expected=mmvr::Multiply(base,rotation);
+        for(int row=0;row<3;++row)for(int k=0;k<3;++k)check(close(actual.m[row][k],expected.m[row][k]));
+        for(int k=0;k<3;++k)check(close(actual.m[3][k],model.m[3][k]));
+      }
+    }
+    // Bow stabilization preserves direction and bypasses deliberate turns.
+    {
+      mmvr::BowAimFilter filter;
+      auto a=filter.Update({0,0,1},1,true);check(a.z==1);
+      auto target=mmvr::CalibrateBowAim({0,0,1},1,0);
+      auto b=filter.Update(target,1.01,true);check(b.x>0&&b.x<target.x);
+      auto turn=filter.Update({1,0,0},1.02,true);check(turn.x==1&&turn.z==0);
+      filter.Reset();auto reset=filter.Update(target,2,true);check(std::abs(reset.x-target.x)<.00001f);
+    }
+    // Sideways string motion must not become a valid draw; forward release cancels.
+    for(int hz:{72,90,120}) {
+      mmvr::BowDraw bow;double t=1;auto next=[&](float trigger,float distance,float back){t+=1./hz;return bow.Update(t,1,true,trigger,distance,back,.18f,.1f,.21f);};
+      next(0,0,0);next(0,0,0);next(1,.1f,.1f);check(bow.drawing);
+      next(1,.5f,.5f);check(bow.drawing&&bow.pull==1);check(next(0,.5f,.5f));
+      next(0,0,0);next(1,.1f,.1f);check(bow.drawing);
+      check(!next(1,.4f,.05f)&&!bow.drawing);check(!next(0,.4f,.05f));
+      next(1,.1f,.1f);check(bow.drawing);check(!next(0,.04f,.04f));
+      next(1,.25f,.25f);check(!bow.drawing);
     }
     mmvr::DoubleTap tap;
     check(!tap.Press(true,1)&&!tap.Press(false,1.1)&&tap.Press(true,1.2));

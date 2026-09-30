@@ -3,6 +3,7 @@ struct PlayState;struct Player;
 #ifdef __cplusplus
 #include "first_person.h"
 namespace mmvrgame {
+mmvr::Matrix AlignBowHand(const mmvr::TrackingFrame&,const mmvr::Matrix&,const mmvr::Matrix&,mmvr::Matrix);
 void UpdateBow(const mmvr::TrackingFrame&,const mmvr::Matrix& view,const mmvr::Matrix& head,const mmvr::Matrix& model);
 void ProcessBowInput(struct PlayState*);
 void ClearBow();

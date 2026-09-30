@@ -19,7 +19,9 @@ inline void Text(ImDrawList& list, float x, float y, const char* text, float siz
     list.AddText(ImGui::GetFont(), size, { x, y }, color, text);
 }
 inline void Draw(ImDrawList& list, const UiDrawFrame& frame, ImTextureID frameTexture,
-                 const std::array<ImTextureID, MaxItemSlots>& icons) {
+                 const std::array<ImTextureID, MaxItemSlots>& icons,
+                 const std::array<ImTextureID, MaxItemSlots>& bombIcons = {},
+                 const std::array<std::string, MaxItemSlots>& counts = {}) {
     const auto& settings = mmvr::GetSettings();
     if (frame.kind == UiKind::ScreenFade) {
         auto c = ScreenFade();
@@ -210,7 +212,13 @@ inline void Draw(ImDrawList& list, const UiDrawFrame& frame, ImTextureID frameTe
                     { "Frame-rate choices", "Choose 72, 80, 90, 120 FPS or Uncapped.", "Uncapped follows runtime pacing without a 120 Hz ceiling." },
                     { "Bow and carriage repairs", "Fixed physical bow drawing after scripted handoffs.", "Restored bowstrings and improved vehicle hand/camera stability." },
                     { "Wart and spin attacks", "Look up with your headset to activate Wart.", "Fixed distant targets receiving unintended spin hits." },
-                    { "Mask and song controls", "Added an option to hide the Bunny Hood.", "Fixed time selection in Better Song of Double Time." }
+                    { "Mask and song controls", "Added an option to hide the Bunny Hood.", "Fixed time selection in Better Song of Double Time." },
+                    { "v0.25 - Bow overhaul", "Bow-hand aiming, rigid rotation and longer held arrows.", "Adjust hand angles and bow-hand smoothing under Items." },
+                    { "Arrow previews", "Aligned elemental effects and upright bomb attachments.", "Bomb-arrow wheel icons match the inventory." },
+                    { "Minigame hotfixes", "Gallery re-equipping and Honey & Darling item controls.", "Postman input and Spider House hookshot recovery fixes." },
+                    { "Item wheel and combat", "Consumable counts on the item selector; bomb-arrow selection fixed.", "Shield visual size and stray-fairy billboard repairs." },
+                    { "Settings and visuals", "Searchable FullDiveGames Editions; elemental previews on by default.", "24-hour clock options and shoulder-grip sword drawing." },
+                    { "Core VR controls", "Core physical interactions stay enabled in first person.", "Release notes are grouped here; save before updating." }
                 };
                 static_assert(std::size(notes) == ReleaseNotesCount);
                 const auto& note = notes[i - ReleaseNotesFirstRow];
@@ -280,6 +288,8 @@ inline void Draw(ImDrawList& list, const UiDrawFrame& frame, ImTextureID frameTe
                 Text(list, 440, y, buffer, 24);
                 if (icons[slot])
                     list.AddImage(icons[slot], { 835, y - 4 }, { 883, y + 44 });
+                if (bombIcons[slot])
+                    list.AddImage(bombIcons[slot], {850.43f,y+4.57f}, {874.43f,y+28.57f});
             } else if (i == ResetControlsRow)
                 Text(list, 64, y, "Restore all control bindings to defaults", 25);
             else if (i == ResetSettingsRow)
@@ -417,6 +427,17 @@ inline void Draw(ImDrawList& list, const UiDrawFrame& frame, ImTextureID frameTe
                 list.AddImage(icons[i], { a.x + size * .15f, a.y + size * .15f },
                               { b.x - size * .15f, b.y - size * .15f }, { 0, 0 }, { 1, 1 },
                               IM_COL32(255, 255, 255, int(255 * opacity)));
+            if(bombIcons[i]) {
+                const float extent=size*.7f;
+                const ImVec2 center{(a.x+b.x)*.5f+extent*(2.f/28.f),(a.y+b.y)*.5f-extent*(2.f/28.f)};
+                list.AddImage(bombIcons[i],{center.x-extent*.25f,center.y-extent*.25f},{center.x+extent*.25f,center.y+extent*.25f},{0,0},{1,1},IM_COL32(255,255,255,int(255*opacity)));
+            }
+            if (!counts[i].empty()) {
+                Text(list, a.x+size*.57f+1, b.y-size*.3f+1, counts[i].c_str(), size*.25f,
+                     IM_COL32(0,0,0,int(255*opacity)));
+                Text(list, a.x+size*.57f, b.y-size*.3f, counts[i].c_str(), size*.25f,
+                     IM_COL32(255,255,255,int(255*opacity)));
+            }
             if ((mmvr::GetAssignment().open ? mmvr::GetAssignment().hover : mmvr::GetSelector().hover) == i)
                 list.AddRect(a, b, IM_COL32(248, 221, 152, int(255 * opacity)), 0, 0, 4);
         }

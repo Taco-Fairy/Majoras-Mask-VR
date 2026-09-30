@@ -5,6 +5,9 @@
  */
 
 #include "../../../2ship2harkinian/mm/src/overlays/actors/ovl_En_Elforg/z_en_elforg.h"
+#ifdef MMVR_ENABLE
+#include "visibility.h"
+#endif
 #include "2s2h/GameInteractor/GameInteractor.h"
 
 #define FLAGS (ACTOR_FLAG_UPDATE_CULLING_DISABLED)
@@ -161,13 +164,13 @@ void EnElforg_Destroy(Actor* thisx, PlayState* play) {
     }
 }
 
-static Vec3f mmvr_local_79e9a5fc3d0bd6ac = { 0.0f, -0.05f, 0.0f };
-static Vec3f mmvr_local_29de7b88a8149368 = { 0.0f, -0.025f, 0.0f };
-static Color_RGBA8 mmvr_local_ebb8831be30f9841[] = {
+static Vec3f mmvr_local_253c9bc24240739e = { 0.0f, -0.05f, 0.0f };
+static Vec3f mmvr_local_01adc1d120084b28 = { 0.0f, -0.025f, 0.0f };
+static Color_RGBA8 mmvr_local_784c46561c20660e[] = {
         { 255, 235, 220, 255 }, { 255, 220, 220, 255 }, { 220, 255, 220, 255 },
         { 220, 220, 255, 255 }, { 255, 255, 200, 255 },
     };
-static Color_RGBA8 mmvr_local_8362c828429616da[] = {
+static Color_RGBA8 mmvr_local_a44d4893a86f00ef[] = {
         { 255, 150, 0, 255 }, { 255, 0, 0, 255 }, { 0, 255, 0, 255 }, { 0, 0, 255, 255 }, { 255, 255, 0, 255 },
     };
 void EnElforg_SpawnSparkles(EnElforg* this, PlayState* play, s32 life) {
@@ -185,7 +188,7 @@ void EnElforg_SpawnSparkles(EnElforg* this, PlayState* play, s32 life) {
     index = (this->area < STRAY_FAIRY_AREA_CLOCK_TOWN || this->area >= STRAY_FAIRY_AREA_MAX)
                 ? STRAY_FAIRY_AREA_CLOCK_TOWN
                 : this->area;
-    EffectSsKirakira_SpawnDispersed(play, &pos, &mmvr_local_79e9a5fc3d0bd6ac, &mmvr_local_29de7b88a8149368, &mmvr_local_ebb8831be30f9841[index], &mmvr_local_8362c828429616da[index], 1000,
+    EffectSsKirakira_SpawnDispersed(play, &pos, &mmvr_local_253c9bc24240739e, &mmvr_local_01adc1d120084b28, &mmvr_local_784c46561c20660e[index], &mmvr_local_a44d4893a86f00ef[index], 1000,
                                     life);
 }
 
@@ -672,10 +675,17 @@ void EnElforg_Draw(Actor* thisx, PlayState* play) {
     }
 
     Matrix_Mult(&play->billboardMtxF, MTXMODE_APPLY);
+#ifdef MMVR_ENABLE
+    MtxF* root = Matrix_GetCurrent();
+    MMVR_BeginBillboardGroup(root->mf[3][0], root->mf[3][1], root->mf[3][2]);
+#endif
 
     POLY_XLU_DISP =
         SkelAnime_DrawFlex(play, this->skelAnime.skeleton, this->skelAnime.jointTable, this->skelAnime.dListCount,
                            EnElforg_OverrideLimbDraw, NULL, &this->actor, POLY_XLU_DISP);
+#ifdef MMVR_ENABLE
+    MMVR_EndBillboardGroup();
+#endif
 
     CLOSE_DISPS(play->state.gfxCtx);
 }

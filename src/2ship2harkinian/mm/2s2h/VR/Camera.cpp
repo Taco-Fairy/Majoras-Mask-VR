@@ -54,7 +54,7 @@ extern "C" {
 namespace {
 constexpr float Pi = 3.14159265358979323846f;
 constexpr float Units = 40.f;
-mmvr::ItemPoseSmoother itemSmoother;
+mmvr::ItemPoseSmoother itemSmoother, bowHandSmoother;
 mmvr::FlowerCameraMotion flowerCamera;
 mmvr::WalkStepCamera walkSteps;
 mmvr::RoomScaleInterpolation roomScaleInterpolation;
@@ -136,6 +136,7 @@ void ResetCameraHistory(bool releaseActions, bool preserveActions = false) {
     drawPosition = lastPosition = drawHeadOffset = cinematicBody = {};
     environmentSampled = {};
     itemSmoother.Reset();
+        bowHandSmoother.Reset();
     mmvrgame::ResetHandGeometry();
     walkSteps.Reset();
     roomScaleInterpolation.Reset();
@@ -297,6 +298,7 @@ mmvr::CameraFrame Update(const mmvr::TrackingFrame& rawTracking) {
         reset = true;
         mmvrgame::ResetHandGeometry();
         itemSmoother.Reset();
+        bowHandSmoother.Reset();
         walkSteps.Reset();
         previousTrackingScale = tracking.trackingScale;
     }
@@ -599,14 +601,26 @@ mmvr::CameraFrame Update(const mmvr::TrackingFrame& rawTracking) {
                       visual.x, visual.y, visual.z));
     if (reset) {
         itemSmoother.Reset();
+        bowHandSmoother.Reset();
         mmvrgame::ResetHandGeometry();
     }
     const uint64_t itemContext = (uint64_t(p->heldItemId) << 16) |
                                  (uint64_t(mmvr::SwordController(mmvr::GetSettings())) << 8) | p->currentShield;
-    const auto filteredTracking = itemSmoother.Update(tracking, mmvr::GetSettings().Get(mmvr::Setting::ItemSmoothing),
+    auto filteredTracking = itemSmoother.Update(tracking, mmvr::GetSettings().Get(mmvr::Setting::ItemSmoothing),
                                                   PairedItem(p) && mmvr::InputFocused() && !mmvr::MenuPaused() &&
                                                       play->pauseCtx.state == PAUSE_STATE_OFF,
                                                   itemContext);
+    // Filter the grip and aim together, once, before hand collision and bow geometry.
+    // The drawing hand retains its existing behavior; no Euler/world-up reconstruction.
+    const bool smoothBow = mmvrgame::BowHeld() && mmvr::InputFocused() &&
+        !mmvr::MenuPaused() && play->pauseCtx.state == PAUSE_STATE_OFF;
+    const auto bowTracking = bowHandSmoother.Update(tracking,
+        mmvr::GetSettings().Get(mmvr::Setting::BowHandSmoothing), smoothBow, itemContext);
+    if (smoothBow) {
+        const int bowHand = 1 - mmvr::SwordController(mmvr::GetSettings());
+        filteredTracking.hands[bowHand] = bowTracking.hands[bowHand];
+        filteredTracking.aims[bowHand] = bowTracking.aims[bowHand];
+    }
     const auto itemTracking = mmvrgame::ResolveHandGeometry(play, p, filteredTracking, tracking, viewPose, relative);
     for (int i = 0; i < 2; ++i) {
         int controller = ControllerFor(p, i);
@@ -621,6 +635,7 @@ mmvr::CameraFrame Update(const mmvr::TrackingFrame& rawTracking) {
     mmvrgame::RecordBodyTracking(itemTracking, viewPose, relative);
     mmvrgame::UpdateSwordDiagnostics(itemTracking, result.hands[0]);
     mmvrgame::UpdateBottle(itemTracking, result.hands[0]);
+    result.hands[1] = mmvrgame::AlignBowHand(itemTracking, viewPose, relative, result.hands[1]);
     mmvrgame::UpdateBow(itemTracking, viewPose, relative, result.hands[1]);
     mmvrgame::UpdateHookshotReticle();
     result.bowString = mmvrgame::BowStringPose();
@@ -709,6 +724,7 @@ mmvr::CameraFrame TestCameraFrame(const mmvr::TrackingFrame& frame) {
 }
 void ResetTestCamera() {
     itemSmoother.Reset();
+        bowHandSmoother.Reset();
     flowerCamera.Reset();
     flowerTime = 0;
     active = wasCinematic = false;
@@ -912,6 +928,14 @@ extern "C" void MMVR_RegisterCamera(void) {
         CVarSave();
     }
 #endif
+    // One-time v0.25 calibration migration requested for existing profiles.
+    // Persist the marker with the two values so later player adjustments survive.
+    if (!CVarGetInteger("gVR.BowAngles025Applied", 0)) {
+        CVarSetFloat("gVR.BowAimYaw", -8.f);
+        CVarSetFloat("gVR.BowAimPitch", -90.f);
+        CVarSetInteger("gVR.BowAngles025Applied", 1);
+        CVarSave();
+    }
     for (size_t i = 0; i < size_t(mmvr::Setting::Count); ++i) {
         const auto& d = mmvr::SettingDefinitions[i];
         auto saved = CVarGet(d.key);
@@ -1212,6 +1236,7 @@ extern "C" void MMVR_PlayerDrawBegin(PlayState* play, Actor* actor) {
     drawForm = ((Player*)actor)->transformation;
 }
 #include "KafeiDrawChecks.inl"
+#include "ShieldVisual.inl"
 extern "C" void MMVR_PlayerDrawEnd(PlayState* play, Actor* actor) {
     if (actor != (Actor*)GET_PLAYER(play)) {
         MMVR_TrackedActorEnd(play, actor);
@@ -1267,7 +1292,7 @@ extern "C" void MMVR_PlayerDrawEnd(PlayState* play, Actor* actor) {
                 if (!palette) continue; // Wait for a complete native hand pose.
                 gSPSegment(POLY_OPA_DISP++, 0x0D, (uintptr_t)palette);
             }
-            gSPDisplayList(POLY_OPA_DISP++, (Gfx*)mmvrgame::FormHandMesh((Player*)actor, i));
+            gSPDisplayList(POLY_OPA_DISP++, ShieldVisualList(play, mmvrgame::FormHandMesh((Player*)actor, i)));
             if (mirrored) {
                 gSPClearExtraGeometryMode(POLY_OPA_DISP++, G_EX_INVERT_CULLING);
             }
