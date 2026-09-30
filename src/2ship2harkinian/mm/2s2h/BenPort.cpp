@@ -1,3 +1,4 @@
+#include "2s2h/Enhancements/Saving/SavingEnhancements.h"
 #ifdef MMVR_ENABLE
 #include "renderer_metrics.h"
 #endif
@@ -1025,6 +1026,7 @@ extern "C" void InitOTR(int argc, char* argv[]) {
     AudioCollection::Instance = new AudioCollection();
     LoadGuiTextures();
     ModMenu_LoadArchives();
+    SavingEnhancements_SetVRDefaults();
     BenGui::SetupGuiElements();
     ShipInit::InitAll();
     Rando::Init();

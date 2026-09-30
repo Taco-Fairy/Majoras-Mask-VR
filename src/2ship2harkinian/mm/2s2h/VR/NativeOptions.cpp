@@ -2,6 +2,9 @@
 #include "NativeOptions.h"
 #include "NamedTab.h"
 #include "ui.h"
+#include "menu_search.h"
+#include "control_bindings.h"
+#include "runtime.h"
 #include "presentation.h"
 #include "2s2h/BenGui/BenMenu.h"
 #include "2s2h/Enhancements/Audio/AudioEditor.h"
@@ -18,6 +21,33 @@
 #include <stdexcept>
 
 namespace mmvrgame {
+unsigned DrawVRMenuSearch(const char* query, bool* opened) {
+    if (opened) *opened = false;
+    if (!query || !*query) return 0;
+    unsigned matches = 0;
+    const char* blocked = mmvr::setupGuideVisible ? "Finish the VR setup guide first." :
+        mmvr::GetBindingEditor().Active() ? "Finish or cancel the current control binding first." :
+        (!mmvr::GetMenu().open && !mmvr::PacingActive()) ? "Connect a VR headset to open its menu." : nullptr;
+    const bool canOpen = blocked == nullptr;
+    ImGui::PushID("VR menu search");
+    for (const auto& entry : mmvr::VrMenuSearchEntries(mmvr::GetMenu())) {
+        if (!mmvr::VrMenuSearchMatch(query, entry)) continue;
+        if (!matches++) ImGui::SeparatorText("VR menu");
+        ImGui::PushID(entry.row);
+        ImGui::BeginDisabled(!canOpen);
+        if (ImGui::Selectable(entry.label) && canOpen && mmvr::OpenVRMenuSearchResult(entry.row)) {
+            if (opened) *opened = true;
+        }
+        ImGui::EndDisabled();
+        if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled))
+            ImGui::SetTooltip("%s\n%s", entry.label, canOpen ? "Open this control in the VR menu." : blocked);
+        const auto& section = mmvr::MenuSections[entry.section];
+        ImGui::TextDisabled("VR / %s / %s", mmvr::TabNames[section.tab], section.label);
+        ImGui::PopID();
+    }
+    ImGui::PopID();
+    return matches;
+}
 namespace {
 constexpr const char* Categories[] = { "Audio", "Gameplay", "Cheats", "Difficulty", "Randomizer", "Items and masks", "Clock", "FullDiveGames Editions" };
 struct Panel {
@@ -164,7 +194,7 @@ void Contents(Fast::Fast3dGui& gui) {
     auto native = std::dynamic_pointer_cast<BenGui::BenMenu>(gui.GetMenu());
     if (!native) { ImGui::TextWrapped("2Ship options are still initializing."); return; }
     ImGui::SetNextItemWidth(-90.f);
-    ImGui::InputTextWithHint("##SettingSearch", "Search 2Ship settings (e.g. Bunny or Blast)", panel.search, sizeof(panel.search));
+    ImGui::InputTextWithHint("##SettingSearch", "Search 2Ship and VR settings", panel.search, sizeof(panel.search));
     ImGui::SameLine();
     if(ImGui::Button("Clear")) panel.search[0]=0;
     if(panel.search[0]) {
@@ -174,6 +204,7 @@ void Contents(Fast::Fast3dGui& gui) {
             {"Rando","General"},{"Rando","Logic/Conditions"},{"Rando","Check Pool"},
             {"Rando","Check Exclusions"},{"Rando","Item Pool"},{"Rando","Starting Items"},{"Rando","Hints"}};
         ImGui::BeginChild("Search results",{0,0},false,ImGuiWindowFlags_AlwaysVerticalScrollbar);
+        any = DrawVRMenuSearch(panel.search) > 0;
         for(const auto& section:sections) any=native->DrawVrSection(section[0],section[1],panel.search)||any;
         if(!any)ImGui::TextWrapped("No matching settings. Try a shorter name.");
         ImGui::EndChild();

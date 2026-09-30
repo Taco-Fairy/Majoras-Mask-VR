@@ -1,5 +1,13 @@
 // Focused private fixture: native pages and the real controller/text-input path.
 // It uses the harness's isolated configuration, never the installed player profile.
+// Expose the protected desktop renderer only to this fixture, without changing
+// the production menu API or creating a second native-menu instance.
+struct DesktopSearchChecks : Ship::Menu {
+    static unsigned Draw(Ship::Menu& menu, std::string query) {
+        const auto render = &DesktopSearchChecks::DrawSearchResults;
+        return (menu.*render)(query);
+    }
+};
 extern "C" void MMVR_VerifyNativeOptions() {
     if (!mmvr::PrivateDebugTools || !std::getenv("MMVR_NATIVE_OPTIONS_TEST")) return;
     auto gui = std::dynamic_pointer_cast<Fast::Fast3dGui>(Ship::Context::GetRawInstance()->GetWindow()->GetGui());
@@ -50,6 +58,95 @@ extern "C" void MMVR_VerifyNativeOptions() {
     std::strcpy(panel.search,"bunny");
     step();step(0,false,true);step();
     check(!panel.search[0] && !menu.nativeCloseRequested,"B must clear search before closing the menu");
+    // A real search result must navigate to the original VR slider. Holding the
+    // selecting button cannot reset it or toggle another destination control.
+    const auto settingsBeforeSearch=mmvr::GetSettings();
+    menu.CollapseAll(); menu.tab=mmvr::NativeTab;
+    step();step();
+    std::strcpy(panel.search,"Bow holding hand smoothing");
+    step();step();
+    {
+        ContextScope scope; ImGui::SetCurrentContext(panel.context);
+        ImGuiWindow* results=nullptr;
+        for(auto* window:panel.context->Windows)
+            if(window->Active && std::string(window->Name).find("Search results")!=std::string::npos) results=window;
+        check(results!=nullptr,"VR search results child missing");
+        ImGui::ClearActiveID(); ImGui::FocusWindow(results);
+        results->IDStack.push_back(ImHashStr("VR menu search",0,results->IDStack.back()));
+        const int target=int(mmvr::Setting::BowHandSmoothing);
+        results->IDStack.push_back(ImHashData(&target,sizeof(target),results->IDStack.back()));
+        const auto id=results->GetID(mmvr::SettingDefinitions[target].label);
+        results->IDStack.pop_back();results->IDStack.pop_back();
+        ImGui::SetFocusID(id,results); panel.context->NavCursorVisible=true;
+    }
+    step(0,true);step(0,true);
+    check(menu.tab==mmvr::ItemsTab && menu.Selected()==int(mmvr::Setting::BowHandSmoothing),
+          "A did not open the original VR search setting");
+    check(menu.open && menu.searchInputRelease && !menu.nativeCloseRequested,
+          "Search selection did not retain menu with input release guard");
+    for(int i=0;i<int(mmvr::Setting::Count);++i)
+        check(mmvr::GetSettings().values[i]==settingsBeforeSearch.values[i],"Search navigation changed a setting");
+    mmvr::NativeMenuInput held{};held.confirm=true;
+    check(menu.ConsumeSearchInput(held)&&menu.searchInputRelease,"Held search A leaked into destination");
+    check(menu.ConsumeSearchInput({})&&!menu.searchInputRelease,"Search release did not rearm editing");
+    check(!menu.ConsumeSearchInput({}),"Search release blocked later editing");
+    menu.CollapseAll();menu.tab=mmvr::NativeTab;step();step();
+    const bool desktopWasVisible=native->IsVisible();
+    native->Show();
+    {
+        ContextScope scope;ImGui::SetCurrentContext(panel.context);
+        panel.pointerMode=false;panel.keyboard=false;
+        for(int tick=0;tick<4;++tick) {
+            mmvr::NativeMenuInput input{};input.confirm=tick==1;
+            FeedInput(input);ImGui::NewFrame();
+            ImGui::SetNextWindowSize({928,480});ImGui::Begin("Desktop search fixture");
+            check(DesktopSearchChecks::Draw(*native,"Bowholdinghandsmoothing")==1,
+                  "Desktop search did not include the VR setting");
+            if(tick==0) {
+                auto* results=ImGui::GetCurrentWindow();
+                ImGui::ClearActiveID();ImGui::FocusWindow(results);
+                ImGui::PushID("VR menu search");ImGui::PushID(int(mmvr::Setting::BowHandSmoothing));
+                const auto id=results->GetID(mmvr::SettingDefinitions[int(mmvr::Setting::BowHandSmoothing)].label);
+                ImGui::PopID();ImGui::PopID();ImGui::SetFocusID(id,results);
+                panel.context->NavCursorVisible=true;
+            }
+            ImGui::EndChild();ImGui::End();ImGui::Render();
+        }
+        check(menu.tab==mmvr::ItemsTab && menu.Selected()==int(mmvr::Setting::BowHandSmoothing),
+              "Desktop search did not focus the original VR control");
+        check(!native->IsVisible(),"Desktop search did not hide the overlapping desktop menu");
+        // Desktop search must not bypass an exclusive setup/binding screen in
+        // the headset or allow its selection press to become a captured binding.
+        const auto savedBinding=mmvr::GetBindingEditor();
+        const bool savedGuide=mmvr::setupGuideVisible;
+        for(int mode=0;mode<2;++mode) {
+            menu.open=true;menu.CollapseAll();menu.tab=mmvr::NativeTab;
+            if(mode==0)mmvr::GetBindingEditor().Begin(0);else mmvr::setupGuideVisible=true;
+            for(int tick=0;tick<4;++tick) {
+                mmvr::NativeMenuInput input{};input.confirm=tick==1;
+                FeedInput(input);ImGui::NewFrame();ImGui::Begin("Desktop search fixture");
+                check(DesktopSearchChecks::Draw(*native,"Bowholdinghandsmoothing")==1,
+                      "Exclusive input screen hid the VR search reference");
+                ImGui::EndChild();ImGui::End();ImGui::Render();
+            }
+            check(menu.tab==mmvr::NativeTab,"Desktop search bypassed an exclusive VR input screen");
+            if(mode==0)check(mmvr::GetBindingEditor().Active(),"Search altered a pending control binding");
+            mmvr::GetBindingEditor()=savedBinding;mmvr::setupGuideVisible=savedGuide;
+        }
+        if(!mmvr::PacingActive()) {
+            menu.open=false;
+            for(int tick=0;tick<4;++tick) {
+                mmvr::NativeMenuInput input{};input.confirm=tick==1;
+                FeedInput(input);ImGui::NewFrame();ImGui::Begin("Desktop search fixture");
+                check(DesktopSearchChecks::Draw(*native,"Bowholdinghandsmoothing")==1,
+                      "Disconnected-headset search hid the VR reference");
+                ImGui::EndChild();ImGui::End();ImGui::Render();
+            }
+            check(!menu.open,"Disconnected-headset search opened an invisible blocking menu");
+        }
+    }
+    if(desktopWasVisible)native->Show();else native->Hide();
+    menu.open=true;menu.CollapseAll();menu.tab=mmvr::NativeTab;step();step();
     menu.CollapseAll();
     for(int category=-1;category<int(std::size(Categories));++category) {
         for(int tick=0;tick<3;++tick) {
@@ -63,6 +160,11 @@ extern "C" void MMVR_VerifyNativeOptions() {
     {
         ContextScope scope;
         ImGui::SetCurrentContext(panel.context);
+        for(const char* query:{"lock-on target camera orbit","world scale","Bowholdinghandsmoothing","VR menu","no-such-vr-option-zzzz"}) {
+            ImGui::NewFrame();ImGui::Begin("VR search fixture");
+            check((DrawVRMenuSearch(query)>0)==(std::string(query)!="no-such-vr-option-zzzz"),"VR menu search match incorrect");
+            ImGui::End();ImGui::Render();
+        }
         const char* pages[]={"General","Logic/Conditions","Check Pool","Check Exclusions","Item Pool","Starting Items","Hints"};
         for(const char* page:pages) {
             FeedInput({}); ImGui::NewFrame();

@@ -468,113 +468,113 @@ void MMVR_StateVisit_e819b48a39b39298(MMVR_StateSink* sink) {
     }
     sink->block(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_DrawPages::sCursorColorTargetIndex::local0", &mmvr_local_53de66521ec79676, sizeof(mmvr_local_53de66521ec79676));
     if(sink->layout) {
-    sink->layout(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_DrawInfoPanel::sPauseZRCursorColorTargets::local0", "array:2:array:4:scalar:short", 0, sizeof(mmvr_local_5c930d6f5ef7b98d), MMVR_STATE_SCALAR_ALIGN(mmvr_local_5c930d6f5ef7b98d[0][0]), 2);
-    sink->layout(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_DrawInfoPanel::sPauseZRCursorColorTargets::local0[]", "array:4:scalar:short", (size_t)((const unsigned char*)&(mmvr_local_5c930d6f5ef7b98d[0])-(const unsigned char*)&(mmvr_local_5c930d6f5ef7b98d)), sizeof(mmvr_local_5c930d6f5ef7b98d[0]), MMVR_STATE_SCALAR_ALIGN(mmvr_local_5c930d6f5ef7b98d[0][0]), 4);
-    sink->layout(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_DrawInfoPanel::sPauseZRCursorColorTargets::local0[][]", "scalar:short", (size_t)((const unsigned char*)&(mmvr_local_5c930d6f5ef7b98d[0][0])-(const unsigned char*)&(mmvr_local_5c930d6f5ef7b98d)), sizeof(mmvr_local_5c930d6f5ef7b98d[0][0]), MMVR_STATE_SCALAR_ALIGN(mmvr_local_5c930d6f5ef7b98d[0][0]), 1);
+    sink->layout(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_DrawInfoPanel::sPauseZRCursorColorTargets::local0", "array:2:array:4:scalar:short", 0, sizeof(mmvr_local_f00a3e37aac986cc), MMVR_STATE_SCALAR_ALIGN(mmvr_local_f00a3e37aac986cc[0][0]), 2);
+    sink->layout(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_DrawInfoPanel::sPauseZRCursorColorTargets::local0[]", "array:4:scalar:short", (size_t)((const unsigned char*)&(mmvr_local_f00a3e37aac986cc[0])-(const unsigned char*)&(mmvr_local_f00a3e37aac986cc)), sizeof(mmvr_local_f00a3e37aac986cc[0]), MMVR_STATE_SCALAR_ALIGN(mmvr_local_f00a3e37aac986cc[0][0]), 4);
+    sink->layout(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_DrawInfoPanel::sPauseZRCursorColorTargets::local0[][]", "scalar:short", (size_t)((const unsigned char*)&(mmvr_local_f00a3e37aac986cc[0][0])-(const unsigned char*)&(mmvr_local_f00a3e37aac986cc)), sizeof(mmvr_local_f00a3e37aac986cc[0][0]), MMVR_STATE_SCALAR_ALIGN(mmvr_local_f00a3e37aac986cc[0][0]), 1);
     }
-    sink->block(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_DrawInfoPanel::sPauseZRCursorColorTargets::local0", &mmvr_local_5c930d6f5ef7b98d, sizeof(mmvr_local_5c930d6f5ef7b98d));
+    sink->block(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_DrawInfoPanel::sPauseZRCursorColorTargets::local0", &mmvr_local_f00a3e37aac986cc, sizeof(mmvr_local_f00a3e37aac986cc));
     if(sink->layout) {
-    sink->layout(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_DrawInfoPanel::sPauseZRCursorColorTimer::local0", "scalar:short", 0, sizeof(mmvr_local_af79c669ab289c2a), MMVR_STATE_SCALAR_ALIGN(mmvr_local_af79c669ab289c2a), 1);
+    sink->layout(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_DrawInfoPanel::sPauseZRCursorColorTimer::local0", "scalar:short", 0, sizeof(mmvr_local_c3bdf75041c76759), MMVR_STATE_SCALAR_ALIGN(mmvr_local_c3bdf75041c76759), 1);
     }
-    sink->block(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_DrawInfoPanel::sPauseZRCursorColorTimer::local0", &mmvr_local_af79c669ab289c2a, sizeof(mmvr_local_af79c669ab289c2a));
+    sink->block(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_DrawInfoPanel::sPauseZRCursorColorTimer::local0", &mmvr_local_c3bdf75041c76759, sizeof(mmvr_local_c3bdf75041c76759));
     if(sink->layout) {
-    sink->layout(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_DrawInfoPanel::sPauseZRCursorColorIndex::local0", "scalar:short", 0, sizeof(mmvr_local_92cc1fc71ec1120f), MMVR_STATE_SCALAR_ALIGN(mmvr_local_92cc1fc71ec1120f), 1);
+    sink->layout(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_DrawInfoPanel::sPauseZRCursorColorIndex::local0", "scalar:short", 0, sizeof(mmvr_local_c2a89451473cab07), MMVR_STATE_SCALAR_ALIGN(mmvr_local_c2a89451473cab07), 1);
     }
-    sink->block(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_DrawInfoPanel::sPauseZRCursorColorIndex::local0", &mmvr_local_92cc1fc71ec1120f, sizeof(mmvr_local_92cc1fc71ec1120f));
+    sink->block(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_DrawInfoPanel::sPauseZRCursorColorIndex::local0", &mmvr_local_c2a89451473cab07, sizeof(mmvr_local_c2a89451473cab07));
     if(sink->layout) {
-    sink->layout(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_DrawInfoPanel::sPauseZRCursorRed::local0", "scalar:short", 0, sizeof(mmvr_local_8e358668581431f3), MMVR_STATE_SCALAR_ALIGN(mmvr_local_8e358668581431f3), 1);
+    sink->layout(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_DrawInfoPanel::sPauseZRCursorRed::local0", "scalar:short", 0, sizeof(mmvr_local_a145fcbd8972c611), MMVR_STATE_SCALAR_ALIGN(mmvr_local_a145fcbd8972c611), 1);
     }
-    sink->block(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_DrawInfoPanel::sPauseZRCursorRed::local0", &mmvr_local_8e358668581431f3, sizeof(mmvr_local_8e358668581431f3));
+    sink->block(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_DrawInfoPanel::sPauseZRCursorRed::local0", &mmvr_local_a145fcbd8972c611, sizeof(mmvr_local_a145fcbd8972c611));
     if(sink->layout) {
-    sink->layout(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_DrawInfoPanel::sPauseZRCursorGreen::local0", "scalar:short", 0, sizeof(mmvr_local_1817c08ff6f366cd), MMVR_STATE_SCALAR_ALIGN(mmvr_local_1817c08ff6f366cd), 1);
+    sink->layout(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_DrawInfoPanel::sPauseZRCursorGreen::local0", "scalar:short", 0, sizeof(mmvr_local_98635bceabc45497), MMVR_STATE_SCALAR_ALIGN(mmvr_local_98635bceabc45497), 1);
     }
-    sink->block(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_DrawInfoPanel::sPauseZRCursorGreen::local0", &mmvr_local_1817c08ff6f366cd, sizeof(mmvr_local_1817c08ff6f366cd));
+    sink->block(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_DrawInfoPanel::sPauseZRCursorGreen::local0", &mmvr_local_98635bceabc45497, sizeof(mmvr_local_98635bceabc45497));
     if(sink->layout) {
-    sink->layout(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_DrawInfoPanel::sPauseZRCursorBlue::local0", "scalar:short", 0, sizeof(mmvr_local_bcf7c5e48746fdd9), MMVR_STATE_SCALAR_ALIGN(mmvr_local_bcf7c5e48746fdd9), 1);
+    sink->layout(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_DrawInfoPanel::sPauseZRCursorBlue::local0", "scalar:short", 0, sizeof(mmvr_local_c14c26d2306846bb), MMVR_STATE_SCALAR_ALIGN(mmvr_local_c14c26d2306846bb), 1);
     }
-    sink->block(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_DrawInfoPanel::sPauseZRCursorBlue::local0", &mmvr_local_bcf7c5e48746fdd9, sizeof(mmvr_local_bcf7c5e48746fdd9));
+    sink->block(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_DrawInfoPanel::sPauseZRCursorBlue::local0", &mmvr_local_c14c26d2306846bb, sizeof(mmvr_local_c14c26d2306846bb));
     if(sink->layout) {
-    sink->layout(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_DrawInfoPanel::sPauseZRCursorAlpha::local0", "scalar:short", 0, sizeof(mmvr_local_0b972c4673a25832), MMVR_STATE_SCALAR_ALIGN(mmvr_local_0b972c4673a25832), 1);
+    sink->layout(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_DrawInfoPanel::sPauseZRCursorAlpha::local0", "scalar:short", 0, sizeof(mmvr_local_f73d59086e274a5a), MMVR_STATE_SCALAR_ALIGN(mmvr_local_f73d59086e274a5a), 1);
     }
-    sink->block(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_DrawInfoPanel::sPauseZRCursorAlpha::local0", &mmvr_local_0b972c4673a25832, sizeof(mmvr_local_0b972c4673a25832));
+    sink->block(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_DrawInfoPanel::sPauseZRCursorAlpha::local0", &mmvr_local_f73d59086e274a5a, sizeof(mmvr_local_f73d59086e274a5a));
     if(sink->layout) {
-    sink->layout(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_DrawOwlWarpInfoPanel::sPauseZRCursorColorTargets::local0", "array:2:array:4:scalar:short", 0, sizeof(mmvr_local_e9756c4e3ad4670e), MMVR_STATE_SCALAR_ALIGN(mmvr_local_e9756c4e3ad4670e[0][0]), 2);
-    sink->layout(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_DrawOwlWarpInfoPanel::sPauseZRCursorColorTargets::local0[]", "array:4:scalar:short", (size_t)((const unsigned char*)&(mmvr_local_e9756c4e3ad4670e[0])-(const unsigned char*)&(mmvr_local_e9756c4e3ad4670e)), sizeof(mmvr_local_e9756c4e3ad4670e[0]), MMVR_STATE_SCALAR_ALIGN(mmvr_local_e9756c4e3ad4670e[0][0]), 4);
-    sink->layout(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_DrawOwlWarpInfoPanel::sPauseZRCursorColorTargets::local0[][]", "scalar:short", (size_t)((const unsigned char*)&(mmvr_local_e9756c4e3ad4670e[0][0])-(const unsigned char*)&(mmvr_local_e9756c4e3ad4670e)), sizeof(mmvr_local_e9756c4e3ad4670e[0][0]), MMVR_STATE_SCALAR_ALIGN(mmvr_local_e9756c4e3ad4670e[0][0]), 1);
+    sink->layout(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_DrawOwlWarpInfoPanel::sPauseZRCursorColorTargets::local0", "array:2:array:4:scalar:short", 0, sizeof(mmvr_local_7f346167bc090752), MMVR_STATE_SCALAR_ALIGN(mmvr_local_7f346167bc090752[0][0]), 2);
+    sink->layout(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_DrawOwlWarpInfoPanel::sPauseZRCursorColorTargets::local0[]", "array:4:scalar:short", (size_t)((const unsigned char*)&(mmvr_local_7f346167bc090752[0])-(const unsigned char*)&(mmvr_local_7f346167bc090752)), sizeof(mmvr_local_7f346167bc090752[0]), MMVR_STATE_SCALAR_ALIGN(mmvr_local_7f346167bc090752[0][0]), 4);
+    sink->layout(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_DrawOwlWarpInfoPanel::sPauseZRCursorColorTargets::local0[][]", "scalar:short", (size_t)((const unsigned char*)&(mmvr_local_7f346167bc090752[0][0])-(const unsigned char*)&(mmvr_local_7f346167bc090752)), sizeof(mmvr_local_7f346167bc090752[0][0]), MMVR_STATE_SCALAR_ALIGN(mmvr_local_7f346167bc090752[0][0]), 1);
     }
-    sink->block(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_DrawOwlWarpInfoPanel::sPauseZRCursorColorTargets::local0", &mmvr_local_e9756c4e3ad4670e, sizeof(mmvr_local_e9756c4e3ad4670e));
+    sink->block(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_DrawOwlWarpInfoPanel::sPauseZRCursorColorTargets::local0", &mmvr_local_7f346167bc090752, sizeof(mmvr_local_7f346167bc090752));
     if(sink->layout) {
-    sink->layout(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_DrawOwlWarpInfoPanel::sPauseZRCursorColorTimer::local0", "scalar:short", 0, sizeof(mmvr_local_e71c9afd92f887e3), MMVR_STATE_SCALAR_ALIGN(mmvr_local_e71c9afd92f887e3), 1);
+    sink->layout(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_DrawOwlWarpInfoPanel::sPauseZRCursorColorTimer::local0", "scalar:short", 0, sizeof(mmvr_local_01fa87d869cf096b), MMVR_STATE_SCALAR_ALIGN(mmvr_local_01fa87d869cf096b), 1);
     }
-    sink->block(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_DrawOwlWarpInfoPanel::sPauseZRCursorColorTimer::local0", &mmvr_local_e71c9afd92f887e3, sizeof(mmvr_local_e71c9afd92f887e3));
+    sink->block(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_DrawOwlWarpInfoPanel::sPauseZRCursorColorTimer::local0", &mmvr_local_01fa87d869cf096b, sizeof(mmvr_local_01fa87d869cf096b));
     if(sink->layout) {
-    sink->layout(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_DrawOwlWarpInfoPanel::sPauseZRCursorColorIndex::local0", "scalar:short", 0, sizeof(mmvr_local_5abfb53476478075), MMVR_STATE_SCALAR_ALIGN(mmvr_local_5abfb53476478075), 1);
+    sink->layout(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_DrawOwlWarpInfoPanel::sPauseZRCursorColorIndex::local0", "scalar:short", 0, sizeof(mmvr_local_a285bcf78774fd51), MMVR_STATE_SCALAR_ALIGN(mmvr_local_a285bcf78774fd51), 1);
     }
-    sink->block(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_DrawOwlWarpInfoPanel::sPauseZRCursorColorIndex::local0", &mmvr_local_5abfb53476478075, sizeof(mmvr_local_5abfb53476478075));
+    sink->block(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_DrawOwlWarpInfoPanel::sPauseZRCursorColorIndex::local0", &mmvr_local_a285bcf78774fd51, sizeof(mmvr_local_a285bcf78774fd51));
     if(sink->layout) {
-    sink->layout(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_DrawOwlWarpInfoPanel::sPauseZRCursorRed::local0", "scalar:short", 0, sizeof(mmvr_local_b1e41e2e444ff136), MMVR_STATE_SCALAR_ALIGN(mmvr_local_b1e41e2e444ff136), 1);
+    sink->layout(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_DrawOwlWarpInfoPanel::sPauseZRCursorRed::local0", "scalar:short", 0, sizeof(mmvr_local_4db03d0946e90132), MMVR_STATE_SCALAR_ALIGN(mmvr_local_4db03d0946e90132), 1);
     }
-    sink->block(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_DrawOwlWarpInfoPanel::sPauseZRCursorRed::local0", &mmvr_local_b1e41e2e444ff136, sizeof(mmvr_local_b1e41e2e444ff136));
+    sink->block(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_DrawOwlWarpInfoPanel::sPauseZRCursorRed::local0", &mmvr_local_4db03d0946e90132, sizeof(mmvr_local_4db03d0946e90132));
     if(sink->layout) {
-    sink->layout(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_DrawOwlWarpInfoPanel::sPauseZRCursorGreen::local0", "scalar:short", 0, sizeof(mmvr_local_1079b915eead44e6), MMVR_STATE_SCALAR_ALIGN(mmvr_local_1079b915eead44e6), 1);
+    sink->layout(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_DrawOwlWarpInfoPanel::sPauseZRCursorGreen::local0", "scalar:short", 0, sizeof(mmvr_local_f7500c1c305c607f), MMVR_STATE_SCALAR_ALIGN(mmvr_local_f7500c1c305c607f), 1);
     }
-    sink->block(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_DrawOwlWarpInfoPanel::sPauseZRCursorGreen::local0", &mmvr_local_1079b915eead44e6, sizeof(mmvr_local_1079b915eead44e6));
+    sink->block(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_DrawOwlWarpInfoPanel::sPauseZRCursorGreen::local0", &mmvr_local_f7500c1c305c607f, sizeof(mmvr_local_f7500c1c305c607f));
     if(sink->layout) {
-    sink->layout(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_DrawOwlWarpInfoPanel::sPauseZRCursorBlue::local0", "scalar:short", 0, sizeof(mmvr_local_20d218dea0b9df48), MMVR_STATE_SCALAR_ALIGN(mmvr_local_20d218dea0b9df48), 1);
+    sink->layout(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_DrawOwlWarpInfoPanel::sPauseZRCursorBlue::local0", "scalar:short", 0, sizeof(mmvr_local_c71358a002b75ae8), MMVR_STATE_SCALAR_ALIGN(mmvr_local_c71358a002b75ae8), 1);
     }
-    sink->block(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_DrawOwlWarpInfoPanel::sPauseZRCursorBlue::local0", &mmvr_local_20d218dea0b9df48, sizeof(mmvr_local_20d218dea0b9df48));
+    sink->block(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_DrawOwlWarpInfoPanel::sPauseZRCursorBlue::local0", &mmvr_local_c71358a002b75ae8, sizeof(mmvr_local_c71358a002b75ae8));
     if(sink->layout) {
-    sink->layout(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_DrawOwlWarpInfoPanel::sPauseZRCursorAlpha::local0", "scalar:short", 0, sizeof(mmvr_local_38690d7cb8201703), MMVR_STATE_SCALAR_ALIGN(mmvr_local_38690d7cb8201703), 1);
+    sink->layout(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_DrawOwlWarpInfoPanel::sPauseZRCursorAlpha::local0", "scalar:short", 0, sizeof(mmvr_local_5ea37814c88eb10e), MMVR_STATE_SCALAR_ALIGN(mmvr_local_5ea37814c88eb10e), 1);
     }
-    sink->block(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_DrawOwlWarpInfoPanel::sPauseZRCursorAlpha::local0", &mmvr_local_38690d7cb8201703, sizeof(mmvr_local_38690d7cb8201703));
+    sink->block(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_DrawOwlWarpInfoPanel::sPauseZRCursorAlpha::local0", &mmvr_local_5ea37814c88eb10e, sizeof(mmvr_local_5ea37814c88eb10e));
     if(sink->layout) {
-    sink->layout(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_DrawCursor::prevX::local0", "scalar:float", 0, sizeof(mmvr_local_32780a07b16a0e4d), MMVR_STATE_SCALAR_ALIGN(mmvr_local_32780a07b16a0e4d), 1);
+    sink->layout(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_DrawCursor::prevX::local0", "scalar:float", 0, sizeof(mmvr_local_1bfc47f1a8f05da4), MMVR_STATE_SCALAR_ALIGN(mmvr_local_1bfc47f1a8f05da4), 1);
     }
-    sink->block(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_DrawCursor::prevX::local0", &mmvr_local_32780a07b16a0e4d, sizeof(mmvr_local_32780a07b16a0e4d));
+    sink->block(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_DrawCursor::prevX::local0", &mmvr_local_1bfc47f1a8f05da4, sizeof(mmvr_local_1bfc47f1a8f05da4));
     if(sink->layout) {
-    sink->layout(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_DrawCursor::prevY::local0", "scalar:float", 0, sizeof(mmvr_local_8ae202e1d6fd0f68), MMVR_STATE_SCALAR_ALIGN(mmvr_local_8ae202e1d6fd0f68), 1);
+    sink->layout(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_DrawCursor::prevY::local0", "scalar:float", 0, sizeof(mmvr_local_8b04de9235034c1a), MMVR_STATE_SCALAR_ALIGN(mmvr_local_8b04de9235034c1a), 1);
     }
-    sink->block(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_DrawCursor::prevY::local0", &mmvr_local_8ae202e1d6fd0f68, sizeof(mmvr_local_8ae202e1d6fd0f68));
+    sink->block(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_DrawCursor::prevY::local0", &mmvr_local_8b04de9235034c1a, sizeof(mmvr_local_8b04de9235034c1a));
     if(sink->layout) {
-    sink->layout(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_DrawCursor::cursorInterpState::local0", "scalar:unsigned char", 0, sizeof(mmvr_local_715ba38b26fc7369), MMVR_STATE_SCALAR_ALIGN(mmvr_local_715ba38b26fc7369), 1);
+    sink->layout(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_DrawCursor::cursorInterpState::local0", "scalar:unsigned char", 0, sizeof(mmvr_local_bd4b1764c4f34060), MMVR_STATE_SCALAR_ALIGN(mmvr_local_bd4b1764c4f34060), 1);
     }
-    sink->block(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_DrawCursor::cursorInterpState::local0", &mmvr_local_715ba38b26fc7369, sizeof(mmvr_local_715ba38b26fc7369));
+    sink->block(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_DrawCursor::cursorInterpState::local0", &mmvr_local_bd4b1764c4f34060, sizeof(mmvr_local_bd4b1764c4f34060));
     if(sink->layout) {
-    sink->layout(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_DrawGameOver::sGameOverUlt::local0", "scalar:short", 0, sizeof(mmvr_local_fb73ec93f826b8ea), MMVR_STATE_SCALAR_ALIGN(mmvr_local_fb73ec93f826b8ea), 1);
+    sink->layout(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_DrawGameOver::sGameOverUlt::local0", "scalar:short", 0, sizeof(mmvr_local_3a1b1ea42db2b7cd), MMVR_STATE_SCALAR_ALIGN(mmvr_local_3a1b1ea42db2b7cd), 1);
     }
-    sink->block(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_DrawGameOver::sGameOverUlt::local0", &mmvr_local_fb73ec93f826b8ea, sizeof(mmvr_local_fb73ec93f826b8ea));
+    sink->block(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_DrawGameOver::sGameOverUlt::local0", &mmvr_local_3a1b1ea42db2b7cd, sizeof(mmvr_local_3a1b1ea42db2b7cd));
     if(sink->layout) {
-    sink->layout(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_Update::sUnpausedHudVisibility::local0", "scalar:short", 0, sizeof(mmvr_local_490012403c0d7274), MMVR_STATE_SCALAR_ALIGN(mmvr_local_490012403c0d7274), 1);
+    sink->layout(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_Update::sUnpausedHudVisibility::local0", "scalar:short", 0, sizeof(mmvr_local_d17504ea51deab65), MMVR_STATE_SCALAR_ALIGN(mmvr_local_d17504ea51deab65), 1);
     }
-    sink->block(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_Update::sUnpausedHudVisibility::local0", &mmvr_local_490012403c0d7274, sizeof(mmvr_local_490012403c0d7274));
+    sink->block(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_Update::sUnpausedHudVisibility::local0", &mmvr_local_d17504ea51deab65, sizeof(mmvr_local_d17504ea51deab65));
     if(sink->layout) {
-    sink->layout(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_Update::sNextMainState::local0", "scalar:short", 0, sizeof(mmvr_local_695fde3cf8deee03), MMVR_STATE_SCALAR_ALIGN(mmvr_local_695fde3cf8deee03), 1);
+    sink->layout(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_Update::sNextMainState::local0", "scalar:short", 0, sizeof(mmvr_local_c0ffb8d84257838e), MMVR_STATE_SCALAR_ALIGN(mmvr_local_c0ffb8d84257838e), 1);
     }
-    sink->block(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_Update::sNextMainState::local0", &mmvr_local_695fde3cf8deee03, sizeof(mmvr_local_695fde3cf8deee03));
+    sink->block(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_Update::sNextMainState::local0", &mmvr_local_c0ffb8d84257838e, sizeof(mmvr_local_c0ffb8d84257838e));
     if(sink->layout) {
-    sink->layout(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_Update::sDelayTimer::local0", "scalar:short", 0, sizeof(mmvr_local_f4e59895d7610786), MMVR_STATE_SCALAR_ALIGN(mmvr_local_f4e59895d7610786), 1);
+    sink->layout(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_Update::sDelayTimer::local0", "scalar:short", 0, sizeof(mmvr_local_c91cef65d7ad40ae), MMVR_STATE_SCALAR_ALIGN(mmvr_local_c91cef65d7ad40ae), 1);
     }
-    sink->block(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_Update::sDelayTimer::local0", &mmvr_local_f4e59895d7610786, sizeof(mmvr_local_f4e59895d7610786));
+    sink->block(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_Update::sDelayTimer::local0", &mmvr_local_c91cef65d7ad40ae, sizeof(mmvr_local_c91cef65d7ad40ae));
     if(sink->layout) {
-    sink->layout(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_Update::sGameOverColorTimer::local0", "scalar:short", 0, sizeof(mmvr_local_3325dc0ee556fd9a), MMVR_STATE_SCALAR_ALIGN(mmvr_local_3325dc0ee556fd9a), 1);
+    sink->layout(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_Update::sGameOverColorTimer::local0", "scalar:short", 0, sizeof(mmvr_local_3be02ac4b89f2980), MMVR_STATE_SCALAR_ALIGN(mmvr_local_3be02ac4b89f2980), 1);
     }
-    sink->block(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_Update::sGameOverColorTimer::local0", &mmvr_local_3325dc0ee556fd9a, sizeof(mmvr_local_3325dc0ee556fd9a));
+    sink->block(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_Update::sGameOverColorTimer::local0", &mmvr_local_3be02ac4b89f2980, sizeof(mmvr_local_3be02ac4b89f2980));
     if(sink->layout) {
-    sink->layout(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_Update::sStickXRepeatTimer::local0", "scalar:short", 0, sizeof(mmvr_local_dd01a1ddd4d65773), MMVR_STATE_SCALAR_ALIGN(mmvr_local_dd01a1ddd4d65773), 1);
+    sink->layout(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_Update::sStickXRepeatTimer::local0", "scalar:short", 0, sizeof(mmvr_local_5e3218326fa44a34), MMVR_STATE_SCALAR_ALIGN(mmvr_local_5e3218326fa44a34), 1);
     }
-    sink->block(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_Update::sStickXRepeatTimer::local0", &mmvr_local_dd01a1ddd4d65773, sizeof(mmvr_local_dd01a1ddd4d65773));
+    sink->block(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_Update::sStickXRepeatTimer::local0", &mmvr_local_5e3218326fa44a34, sizeof(mmvr_local_5e3218326fa44a34));
     if(sink->layout) {
-    sink->layout(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_Update::sStickYRepeatTimer::local0", "scalar:short", 0, sizeof(mmvr_local_06fc1a427173e200), MMVR_STATE_SCALAR_ALIGN(mmvr_local_06fc1a427173e200), 1);
+    sink->layout(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_Update::sStickYRepeatTimer::local0", "scalar:short", 0, sizeof(mmvr_local_70f92541fa6616f3), MMVR_STATE_SCALAR_ALIGN(mmvr_local_70f92541fa6616f3), 1);
     }
-    sink->block(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_Update::sStickYRepeatTimer::local0", &mmvr_local_06fc1a427173e200, sizeof(mmvr_local_06fc1a427173e200));
+    sink->block(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_Update::sStickYRepeatTimer::local0", &mmvr_local_70f92541fa6616f3, sizeof(mmvr_local_70f92541fa6616f3));
     if(sink->layout) {
-    sink->layout(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_Update::sStickXRepeatState::local0", "scalar:short", 0, sizeof(mmvr_local_a56e1380cbc61c10), MMVR_STATE_SCALAR_ALIGN(mmvr_local_a56e1380cbc61c10), 1);
+    sink->layout(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_Update::sStickXRepeatState::local0", "scalar:short", 0, sizeof(mmvr_local_610c9793493c7143), MMVR_STATE_SCALAR_ALIGN(mmvr_local_610c9793493c7143), 1);
     }
-    sink->block(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_Update::sStickXRepeatState::local0", &mmvr_local_a56e1380cbc61c10, sizeof(mmvr_local_a56e1380cbc61c10));
+    sink->block(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_Update::sStickXRepeatState::local0", &mmvr_local_610c9793493c7143, sizeof(mmvr_local_610c9793493c7143));
     if(sink->layout) {
-    sink->layout(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_Update::sStickYRepeatState::local0", "scalar:short", 0, sizeof(mmvr_local_67cce1a34a977c57), MMVR_STATE_SCALAR_ALIGN(mmvr_local_67cce1a34a977c57), 1);
+    sink->layout(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_Update::sStickYRepeatState::local0", "scalar:short", 0, sizeof(mmvr_local_e4dc2e8713027882), MMVR_STATE_SCALAR_ALIGN(mmvr_local_e4dc2e8713027882), 1);
     }
-    sink->block(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_Update::sStickYRepeatState::local0", &mmvr_local_67cce1a34a977c57, sizeof(mmvr_local_67cce1a34a977c57));
+    sink->block(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::KaleidoScope_Update::sStickYRepeatState::local0", &mmvr_local_e4dc2e8713027882, sizeof(mmvr_local_e4dc2e8713027882));
     sink->function(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::Kaleido_LoadMapNameStatic", (void (*)(void))Kaleido_LoadMapNameStatic);
     sink->function(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::Kaleido_LoadMapNameStaticLarge", (void (*)(void))Kaleido_LoadMapNameStaticLarge);
     sink->function(sink->context, "overlays/kaleido_scope/ovl_kaleido_scope/z_kaleido_scope_NES.c::Kaleido_LoadItemNameStatic", (void (*)(void))Kaleido_LoadItemNameStatic);

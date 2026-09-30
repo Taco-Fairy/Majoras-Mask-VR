@@ -6,7 +6,7 @@ inline constexpr ControlTutorialEntry ControlTutorial[] = {
     { "Reading this guide", "Default Touch names below; Controls shows your current bindings.", "Scroll with the left stick. X collapses; B closes settings." },
     { "Your dominant hand", "Hands > Dominant hand swaps sword, items, wheel and shield.", "It does not swap menu sticks or physical buttons; Controls can rebind actions." },
     { "Walk, turn and run", "Left stick walks; right stick turns. Left stick click recenters.", "Alternate your arms while walking for a 20% ground-speed boost by default; adjust it in Forms." },
-    { "Buttons and targeting", "A interacts/confirms or performs the displayed native action.", "Y toggles targeting; Combat can change this to hold targeting." },
+    { "Buttons and targeting", "A interacts/confirms or performs the displayed native action.", "Y toggles targeting; Combat offers hold targeting and optional target camera orbit." },
     { "Third-person / theater controls", "Left trigger shields; hold left grip to lock on. Right trigger uses the selected item or mask.", "Combat offers separate third-person toggle targeting; transformations use the theater screen." },
     { "Original third-person controls", "Enable Original third-person VR controls to use right-stick C-buttons instead of the wheel.", "A regular gamepad keeps its native 2Ship controls and C-button HUD in third-person/theater." },
     { "Sword / form action / fairy", "B draws or stows equipment; hold B for supported form attacks.", "X answers the fairy. Controls offers optional double-tap sword draw." },
@@ -52,7 +52,7 @@ inline constexpr ControlTutorialEntry ControlTutorial[] = {
     { "Updates and save states", "Launch checks only notify. Install needs confirmation and may invalidate states.", "Make an ordinary save before updating. Incompatible states are kept, not loaded." },
 
     { "Hand-mounted HUD", "HUD attachment selects Headset, Left hand or Right hand; Hand HUD size resizes it.", "HUD opacity still applies. Dialogue, pause screens and settings stay separate." },
-    { "Finding native settings", "2Ship has a search field with the VR keyboard and an Items and masks group.", "Persistent Bunny Hood: enable, then press A on the owned hood in the mask menu." },
+    { "Finding native settings", "Search 2Ship or VR settings with the VR keyboard; select a VR result to open its control.", "Persistent Bunny Hood: enable, then press A on the owned hood in the mask menu." },
     { "Combat assistance", "Combat has separate sword and Goron fist hitbox-size sliders.", "They enlarge collision reach, not models. Ordinary walls still block attacks." },
 };
 inline constexpr int ControlTutorialCount = sizeof(ControlTutorial) / sizeof(ControlTutorial[0]);

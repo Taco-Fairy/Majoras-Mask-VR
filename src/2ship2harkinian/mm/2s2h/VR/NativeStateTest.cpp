@@ -5,6 +5,7 @@
 #include "NativeStateBackend.h"
 #include "updater.h"
 #include "ui.h"
+#include "runtime.h"
 #include "2s2h/BenPort.h"
 #include "NativeStateEnvironment.h"
 #include "NativeStateLiterals.h"
@@ -75,6 +76,10 @@ void MMVR_VisitVrBodyCollisionState(MMVR_StateSink*);
 void MMVR_VisitVrFinCollisionState(MMVR_StateSink*);
 void MMVR_VisitVrGoronCollisionState(MMVR_StateSink*);
 void MMVR_VisitVrCarryState(MMVR_StateSink*);
+void MMVR_VisitVrCollisionQueueState(MMVR_StateSink*);
+int MMVR_AddACOverflow(CollisionCheckContext*,Collider*);
+int MMVR_CollisionACCount(CollisionCheckContext*);
+Collider* MMVR_CollisionACAt(CollisionCheckContext*,int);
 void MMVR_VisitVrPresentationState(MMVR_StateSink*);
 void MMVR_VisitVrCosmeticState(MMVR_StateSink*);
 void MMVR_VisitVrMaskState(MMVR_StateSink*);
@@ -106,6 +111,7 @@ void RegisterManualNativeStateContract(MMVR_StateSink* sink) {
     MMVR_VisitVrFinCollisionState(sink);
     MMVR_VisitVrGoronCollisionState(sink);
     MMVR_VisitVrCarryState(sink);
+    MMVR_VisitVrCollisionQueueState(sink);
     MMVR_VisitVrPresentationState(sink);
     MMVR_VisitVrCosmeticState(sink);
     MMVR_VisitVrMaskState(sink);
@@ -592,6 +598,7 @@ Census CollectNativeState(PlayState* play,const mmvr::states::Identity& identity
     MMVR_VisitVrFinCollisionState(&sink);
     MMVR_VisitVrGoronCollisionState(&sink);
     MMVR_VisitVrCarryState(&sink);
+    MMVR_VisitVrCollisionQueueState(&sink);
     MMVR_VisitVrPresentationState(&sink);
     MMVR_VisitVrCosmeticState(&sink);
     MMVR_VisitVrMaskState(&sink);
@@ -888,6 +895,18 @@ extern "C" void MMVR_VerifyNativeStateCatalog(PlayState* play) {
         output<<nlohmann::json({{"nativeCandidateGraph",false},{"candidateError",error.what()}}).dump(2);output.close();std::_Exit(2);
     }
     nlohmann::json result;
+#ifdef MMVR_LOCAL_TEST_TOOLS
+    if(std::getenv("MMVR_NATIVE_STATE_AC_OVERFLOW")) {
+        // Isolated ownership/restore probe with a real, serialized collider.
+        // Live saturation and damage are covered by the authored grotto case.
+        mmvr::SetNativeTestTracking(true);
+        const int slot=MMVR_AddACOverflow(&play->colChkCtx,&GET_PLAYER(play)->cylinder.base);
+        mmvr::SetNativeTestTracking(false);
+        if(slot<play->colChkCtx.colACCount || MMVR_CollisionACAt(&play->colChkCtx,slot)!=&GET_PLAYER(play)->cylinder.base)
+            throw mmvr::states::Error("Overflow state fixture registration failed");
+        result["overflowCaptureCount"]=MMVR_CollisionACCount(&play->colChkCtx)-play->colChkCtx.colACCount;
+    }
+#endif
     auto census=CollectNativeState(play,identity,result);
     result["timings"]["identityMs"]=identityMs;
     const auto cachedStart=std::chrono::steady_clock::now();
@@ -948,6 +967,15 @@ extern "C" void MMVR_VerifyNativeStateCatalog(PlayState* play) {
                 mmvrgame::LoadExactNativeState(1,directory);
                 result["menuBackendLoadedSlots"]=3;
                 result["menuBackendLoad"]=true;
+#ifdef MMVR_LOCAL_TEST_TOOLS
+                if(std::getenv("MMVR_NATIVE_STATE_AC_OVERFLOW")) {
+                    const int count=MMVR_CollisionACCount(&gPlayState->colChkCtx);
+                    if(count<=gPlayState->colChkCtx.colACCount ||
+                       MMVR_CollisionACAt(&gPlayState->colChkCtx,count-1)!=&GET_PLAYER(gPlayState)->cylinder.base)
+                        throw mmvr::states::Error("Overflow state queue did not restore its collider owner");
+                    result["overflowQueueRestored"]=true;
+                }
+#endif
             } else {
                 resumePlan->Commit();componentPlan->Commit();
                 FrameInterpolation_ResetHistory();mmvrgame::BeginStateTrackingResume();

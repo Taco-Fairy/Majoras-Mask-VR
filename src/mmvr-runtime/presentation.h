@@ -218,7 +218,11 @@ inline void Draw(ImDrawList& list, const UiDrawFrame& frame, ImTextureID frameTe
                     { "Minigame hotfixes", "Gallery re-equipping and Honey & Darling item controls.", "Postman input and Spider House hookshot recovery fixes." },
                     { "Item wheel and combat", "Consumable counts on the item selector; bomb-arrow selection fixed.", "Shield visual size and stray-fairy billboard repairs." },
                     { "Settings and visuals", "Searchable FullDiveGames Editions; elemental previews on by default.", "24-hour clock options and shoulder-grip sword drawing." },
-                    { "Core VR controls", "Core physical interactions stay enabled in first person.", "Release notes are grouped here; save before updating." }
+                    { "Core VR controls", "Core physical interactions stay enabled in first person.", "Release notes are grouped here; save before updating." },
+                    { "v0.26 - Saving and gameplay hotfixes", "Save game in VR; persistent owl saves and remembered location.", "New settings default on; your existing choices stay unchanged." },
+                    { "Controllers and settings search", "OpenXR remapping in the desktop controller editor.", "2Ship search now opens matching VR settings." },
+                    { "Lock-on and stage songs", "Optional target-centered lock-on orbit under Combat.", "Fixed ocarina input in the Circus Leader mask rehearsal." },
+                    { "Rock collision and pickup", "Fixed rock blocking, bomb/punch damage and large-hand pickup.", "Native rock sizes and form restrictions stay unchanged." }
                 };
                 static_assert(std::size(notes) == ReleaseNotesCount);
                 const auto& note = notes[i - ReleaseNotesFirstRow];
@@ -310,6 +314,8 @@ inline void Draw(ImDrawList& list, const UiDrawFrame& frame, ImTextureID frameTe
                     !menu.stateSlotsPresent[slot]?" (empty)":"");
                 Text(list,64,y,label,25);
             }
+            else if (i == SaveGameRow)
+                Text(list, 64, y, "Save game (return to this entrance)", 25);
             else if (i == MainMenuRow)
                 Text(list, 64, y, menu.confirmMainMenu ? "Confirm return (unsaved progress is lost)" : "Return to main menu", 25);
             else if (i == SkipDayRow)

@@ -962,7 +962,7 @@ void KaleidoScope_DrawPages(PlayState* play, GraphicsContext* gfxCtx) {
         }
     }
 
-    if (CVarGetInteger("gEnhancements.Saving.PauseSave", 0) || CVarGetInteger("gEnhancements.Kaleido.GameOver", 0)) {
+    if (CVarGetInteger("gEnhancements.Saving.PauseSave", SAVING_ENHANCEMENTS_DEFAULT_ENABLED) || CVarGetInteger("gEnhancements.Kaleido.GameOver", 0)) {
         Gfx_SetupDL42_Opa(gfxCtx);
         if ((pauseCtx->state == PAUSE_STATE_SAVEPROMPT) || IS_PAUSE_STATE_GAMEOVER(pauseCtx)) {
             KaleidoScope_UpdatePrompt(play);
@@ -1087,16 +1087,16 @@ TexturePtr D_8082B9A8[] = {
     gPauseToMasksENGTex,
     gPauseToSelectItemENGTex,
 };
-static s16 mmvr_local_5c930d6f5ef7b98d[][4] = {
+static s16 mmvr_local_f00a3e37aac986cc[][4] = {
         { 180, 210, 255, 220 },
         { 100, 100, 150, 220 },
     };
-static s16 mmvr_local_af79c669ab289c2a = 20;
-static s16 mmvr_local_92cc1fc71ec1120f = 0;
-static s16 mmvr_local_8e358668581431f3;
-static s16 mmvr_local_1817c08ff6f366cd;
-static s16 mmvr_local_bcf7c5e48746fdd9;
-static s16 mmvr_local_0b972c4673a25832;
+static s16 mmvr_local_c3bdf75041c76759 = 20;
+static s16 mmvr_local_c2a89451473cab07 = 0;
+static s16 mmvr_local_a145fcbd8972c611;
+static s16 mmvr_local_98635bceabc45497;
+static s16 mmvr_local_c14c26d2306846bb;
+static s16 mmvr_local_f73d59086e274a5a;
 void KaleidoScope_DrawInfoPanel(PlayState* play) {
     /* persistent local storage is declared above */
     /* persistent local storage is declared above */
@@ -1117,46 +1117,46 @@ void KaleidoScope_DrawInfoPanel(PlayState* play) {
     OPEN_DISPS(play->state.gfxCtx);
 
     stepR =
-        ABS_ALT(mmvr_local_8e358668581431f3 - mmvr_local_5c930d6f5ef7b98d[mmvr_local_92cc1fc71ec1120f][0]) / mmvr_local_af79c669ab289c2a;
-    stepG = ABS_ALT(mmvr_local_1817c08ff6f366cd - mmvr_local_5c930d6f5ef7b98d[mmvr_local_92cc1fc71ec1120f][1]) /
-            mmvr_local_af79c669ab289c2a;
-    stepB = ABS_ALT(mmvr_local_bcf7c5e48746fdd9 - mmvr_local_5c930d6f5ef7b98d[mmvr_local_92cc1fc71ec1120f][2]) /
-            mmvr_local_af79c669ab289c2a;
-    stepA = ABS_ALT(mmvr_local_0b972c4673a25832 - mmvr_local_5c930d6f5ef7b98d[mmvr_local_92cc1fc71ec1120f][3]) /
-            mmvr_local_af79c669ab289c2a;
+        ABS_ALT(mmvr_local_a145fcbd8972c611 - mmvr_local_f00a3e37aac986cc[mmvr_local_c2a89451473cab07][0]) / mmvr_local_c3bdf75041c76759;
+    stepG = ABS_ALT(mmvr_local_98635bceabc45497 - mmvr_local_f00a3e37aac986cc[mmvr_local_c2a89451473cab07][1]) /
+            mmvr_local_c3bdf75041c76759;
+    stepB = ABS_ALT(mmvr_local_c14c26d2306846bb - mmvr_local_f00a3e37aac986cc[mmvr_local_c2a89451473cab07][2]) /
+            mmvr_local_c3bdf75041c76759;
+    stepA = ABS_ALT(mmvr_local_f73d59086e274a5a - mmvr_local_f00a3e37aac986cc[mmvr_local_c2a89451473cab07][3]) /
+            mmvr_local_c3bdf75041c76759;
 
-    if (mmvr_local_8e358668581431f3 >= mmvr_local_5c930d6f5ef7b98d[mmvr_local_92cc1fc71ec1120f][0]) {
-        mmvr_local_8e358668581431f3 -= stepR;
+    if (mmvr_local_a145fcbd8972c611 >= mmvr_local_f00a3e37aac986cc[mmvr_local_c2a89451473cab07][0]) {
+        mmvr_local_a145fcbd8972c611 -= stepR;
     } else {
-        mmvr_local_8e358668581431f3 += stepR;
+        mmvr_local_a145fcbd8972c611 += stepR;
     }
 
-    if (mmvr_local_1817c08ff6f366cd >= mmvr_local_5c930d6f5ef7b98d[mmvr_local_92cc1fc71ec1120f][1]) {
-        mmvr_local_1817c08ff6f366cd -= stepG;
+    if (mmvr_local_98635bceabc45497 >= mmvr_local_f00a3e37aac986cc[mmvr_local_c2a89451473cab07][1]) {
+        mmvr_local_98635bceabc45497 -= stepG;
     } else {
-        mmvr_local_1817c08ff6f366cd += stepG;
+        mmvr_local_98635bceabc45497 += stepG;
     }
 
-    if (mmvr_local_bcf7c5e48746fdd9 >= mmvr_local_5c930d6f5ef7b98d[mmvr_local_92cc1fc71ec1120f][2]) {
-        mmvr_local_bcf7c5e48746fdd9 -= stepB;
+    if (mmvr_local_c14c26d2306846bb >= mmvr_local_f00a3e37aac986cc[mmvr_local_c2a89451473cab07][2]) {
+        mmvr_local_c14c26d2306846bb -= stepB;
     } else {
-        mmvr_local_bcf7c5e48746fdd9 += stepB;
+        mmvr_local_c14c26d2306846bb += stepB;
     }
 
-    if (mmvr_local_0b972c4673a25832 >= mmvr_local_5c930d6f5ef7b98d[mmvr_local_92cc1fc71ec1120f][3]) {
-        mmvr_local_0b972c4673a25832 -= stepA;
+    if (mmvr_local_f73d59086e274a5a >= mmvr_local_f00a3e37aac986cc[mmvr_local_c2a89451473cab07][3]) {
+        mmvr_local_f73d59086e274a5a -= stepA;
     } else {
-        mmvr_local_0b972c4673a25832 += stepA;
+        mmvr_local_f73d59086e274a5a += stepA;
     }
 
-    mmvr_local_af79c669ab289c2a--;
-    if (mmvr_local_af79c669ab289c2a == 0) {
-        mmvr_local_8e358668581431f3 = mmvr_local_5c930d6f5ef7b98d[mmvr_local_92cc1fc71ec1120f][0];
-        mmvr_local_1817c08ff6f366cd = mmvr_local_5c930d6f5ef7b98d[mmvr_local_92cc1fc71ec1120f][1];
-        mmvr_local_bcf7c5e48746fdd9 = mmvr_local_5c930d6f5ef7b98d[mmvr_local_92cc1fc71ec1120f][2];
-        mmvr_local_0b972c4673a25832 = mmvr_local_5c930d6f5ef7b98d[mmvr_local_92cc1fc71ec1120f][3];
-        mmvr_local_af79c669ab289c2a = sPauseZRCursorColorTimerInits[0];
-        mmvr_local_92cc1fc71ec1120f ^= 1;
+    mmvr_local_c3bdf75041c76759--;
+    if (mmvr_local_c3bdf75041c76759 == 0) {
+        mmvr_local_a145fcbd8972c611 = mmvr_local_f00a3e37aac986cc[mmvr_local_c2a89451473cab07][0];
+        mmvr_local_98635bceabc45497 = mmvr_local_f00a3e37aac986cc[mmvr_local_c2a89451473cab07][1];
+        mmvr_local_c14c26d2306846bb = mmvr_local_f00a3e37aac986cc[mmvr_local_c2a89451473cab07][2];
+        mmvr_local_f73d59086e274a5a = mmvr_local_f00a3e37aac986cc[mmvr_local_c2a89451473cab07][3];
+        mmvr_local_c3bdf75041c76759 = sPauseZRCursorColorTimerInits[0];
+        mmvr_local_c2a89451473cab07 ^= 1;
     }
 
     y = pauseCtx->infoPanelOffsetY - 76;
@@ -1259,14 +1259,14 @@ void KaleidoScope_DrawInfoPanel(PlayState* play) {
 
     if ((pauseCtx->cursorSpecialPos == PAUSE_CURSOR_PAGE_LEFT) &&
         (!pauseCtx->mainState || (pauseCtx->mainState == PAUSE_MAIN_STATE_UNK))) {
-        gDPSetPrimColor(POLY_OPA_DISP++, 0, 0, 150, 140, 90, mmvr_local_0b972c4673a25832);
+        gDPSetPrimColor(POLY_OPA_DISP++, 0, 0, 150, 140, 90, mmvr_local_f73d59086e274a5a);
     }
 
     gSPDisplayList(POLY_OPA_DISP++, gZButtonIconDL);
 
     if ((pauseCtx->cursorSpecialPos == PAUSE_CURSOR_PAGE_RIGHT) &&
         (!pauseCtx->mainState || (pauseCtx->mainState == PAUSE_MAIN_STATE_UNK))) {
-        gDPSetPrimColor(POLY_OPA_DISP++, 0, 0, 150, 140, 90, mmvr_local_0b972c4673a25832);
+        gDPSetPrimColor(POLY_OPA_DISP++, 0, 0, 150, 140, 90, mmvr_local_f73d59086e274a5a);
     }
 
     gSPDisplayList(POLY_OPA_DISP++, gRButtonIconDL);
@@ -1550,16 +1550,16 @@ void KaleidoScope_DrawOwlWarpMapPage(PlayState* play) {
     CLOSE_DISPS(play->state.gfxCtx);
 }
 
-static s16 mmvr_local_e9756c4e3ad4670e[][4] = {
+static s16 mmvr_local_7f346167bc090752[][4] = {
         { 180, 210, 255, 220 },
         { 100, 100, 150, 220 },
     };
-static s16 mmvr_local_e71c9afd92f887e3 = 20;
-static s16 mmvr_local_5abfb53476478075 = 0;
-static s16 mmvr_local_b1e41e2e444ff136;
-static s16 mmvr_local_1079b915eead44e6;
-static s16 mmvr_local_20d218dea0b9df48;
-static s16 mmvr_local_38690d7cb8201703;
+static s16 mmvr_local_01fa87d869cf096b = 20;
+static s16 mmvr_local_a285bcf78774fd51 = 0;
+static s16 mmvr_local_4db03d0946e90132;
+static s16 mmvr_local_f7500c1c305c607f;
+static s16 mmvr_local_c71358a002b75ae8;
+static s16 mmvr_local_5ea37814c88eb10e;
 void KaleidoScope_DrawOwlWarpInfoPanel(PlayState* play) {
     /* persistent local storage is declared above */
     /* persistent local storage is declared above */
@@ -1580,46 +1580,46 @@ void KaleidoScope_DrawOwlWarpInfoPanel(PlayState* play) {
     OPEN_DISPS(play->state.gfxCtx);
 
     stepR =
-        ABS_ALT(mmvr_local_b1e41e2e444ff136 - mmvr_local_e9756c4e3ad4670e[mmvr_local_5abfb53476478075][0]) / mmvr_local_e71c9afd92f887e3;
-    stepG = ABS_ALT(mmvr_local_1079b915eead44e6 - mmvr_local_e9756c4e3ad4670e[mmvr_local_5abfb53476478075][1]) /
-            mmvr_local_e71c9afd92f887e3;
-    stepB = ABS_ALT(mmvr_local_20d218dea0b9df48 - mmvr_local_e9756c4e3ad4670e[mmvr_local_5abfb53476478075][2]) /
-            mmvr_local_e71c9afd92f887e3;
-    stepA = ABS_ALT(mmvr_local_38690d7cb8201703 - mmvr_local_e9756c4e3ad4670e[mmvr_local_5abfb53476478075][3]) /
-            mmvr_local_e71c9afd92f887e3;
+        ABS_ALT(mmvr_local_4db03d0946e90132 - mmvr_local_7f346167bc090752[mmvr_local_a285bcf78774fd51][0]) / mmvr_local_01fa87d869cf096b;
+    stepG = ABS_ALT(mmvr_local_f7500c1c305c607f - mmvr_local_7f346167bc090752[mmvr_local_a285bcf78774fd51][1]) /
+            mmvr_local_01fa87d869cf096b;
+    stepB = ABS_ALT(mmvr_local_c71358a002b75ae8 - mmvr_local_7f346167bc090752[mmvr_local_a285bcf78774fd51][2]) /
+            mmvr_local_01fa87d869cf096b;
+    stepA = ABS_ALT(mmvr_local_5ea37814c88eb10e - mmvr_local_7f346167bc090752[mmvr_local_a285bcf78774fd51][3]) /
+            mmvr_local_01fa87d869cf096b;
 
-    if (mmvr_local_b1e41e2e444ff136 >= mmvr_local_e9756c4e3ad4670e[mmvr_local_5abfb53476478075][0]) {
-        mmvr_local_b1e41e2e444ff136 -= stepR;
+    if (mmvr_local_4db03d0946e90132 >= mmvr_local_7f346167bc090752[mmvr_local_a285bcf78774fd51][0]) {
+        mmvr_local_4db03d0946e90132 -= stepR;
     } else {
-        mmvr_local_b1e41e2e444ff136 += stepR;
+        mmvr_local_4db03d0946e90132 += stepR;
     }
 
-    if (mmvr_local_1079b915eead44e6 >= mmvr_local_e9756c4e3ad4670e[mmvr_local_5abfb53476478075][1]) {
-        mmvr_local_1079b915eead44e6 -= stepG;
+    if (mmvr_local_f7500c1c305c607f >= mmvr_local_7f346167bc090752[mmvr_local_a285bcf78774fd51][1]) {
+        mmvr_local_f7500c1c305c607f -= stepG;
     } else {
-        mmvr_local_1079b915eead44e6 += stepG;
+        mmvr_local_f7500c1c305c607f += stepG;
     }
 
-    if (mmvr_local_20d218dea0b9df48 >= mmvr_local_e9756c4e3ad4670e[mmvr_local_5abfb53476478075][2]) {
-        mmvr_local_20d218dea0b9df48 -= stepB;
+    if (mmvr_local_c71358a002b75ae8 >= mmvr_local_7f346167bc090752[mmvr_local_a285bcf78774fd51][2]) {
+        mmvr_local_c71358a002b75ae8 -= stepB;
     } else {
-        mmvr_local_20d218dea0b9df48 += stepB;
+        mmvr_local_c71358a002b75ae8 += stepB;
     }
 
-    if (mmvr_local_38690d7cb8201703 >= mmvr_local_e9756c4e3ad4670e[mmvr_local_5abfb53476478075][3]) {
-        mmvr_local_38690d7cb8201703 -= stepA;
+    if (mmvr_local_5ea37814c88eb10e >= mmvr_local_7f346167bc090752[mmvr_local_a285bcf78774fd51][3]) {
+        mmvr_local_5ea37814c88eb10e -= stepA;
     } else {
-        mmvr_local_38690d7cb8201703 += stepA;
+        mmvr_local_5ea37814c88eb10e += stepA;
     }
 
-    mmvr_local_e71c9afd92f887e3--;
-    if (mmvr_local_e71c9afd92f887e3 == 0) {
-        mmvr_local_b1e41e2e444ff136 = mmvr_local_e9756c4e3ad4670e[mmvr_local_5abfb53476478075][0];
-        mmvr_local_1079b915eead44e6 = mmvr_local_e9756c4e3ad4670e[mmvr_local_5abfb53476478075][1];
-        mmvr_local_20d218dea0b9df48 = mmvr_local_e9756c4e3ad4670e[mmvr_local_5abfb53476478075][2];
-        mmvr_local_38690d7cb8201703 = mmvr_local_e9756c4e3ad4670e[mmvr_local_5abfb53476478075][3];
-        mmvr_local_e71c9afd92f887e3 = sPauseZRCursorColorTimerInits[0];
-        mmvr_local_5abfb53476478075 ^= 1;
+    mmvr_local_01fa87d869cf096b--;
+    if (mmvr_local_01fa87d869cf096b == 0) {
+        mmvr_local_4db03d0946e90132 = mmvr_local_7f346167bc090752[mmvr_local_a285bcf78774fd51][0];
+        mmvr_local_f7500c1c305c607f = mmvr_local_7f346167bc090752[mmvr_local_a285bcf78774fd51][1];
+        mmvr_local_c71358a002b75ae8 = mmvr_local_7f346167bc090752[mmvr_local_a285bcf78774fd51][2];
+        mmvr_local_5ea37814c88eb10e = mmvr_local_7f346167bc090752[mmvr_local_a285bcf78774fd51][3];
+        mmvr_local_01fa87d869cf096b = sPauseZRCursorColorTimerInits[0];
+        mmvr_local_a285bcf78774fd51 ^= 1;
     }
 
     y = pauseCtx->infoPanelOffsetY - 76;
@@ -3057,9 +3057,9 @@ void KaleidoScope_UpdateCursorSize(PlayState* play) {
     sCursorCirclesY[3] = Math_CosS(pauseCtx->cursorSpinPhase + 0xC000) * pauseCtx->cursorHeight;
 }
 
-static f32 mmvr_local_32780a07b16a0e4d = 0;
-static f32 mmvr_local_8ae202e1d6fd0f68 = 0;
-static u8 mmvr_local_715ba38b26fc7369 = 0;
+static f32 mmvr_local_1bfc47f1a8f05da4 = 0;
+static f32 mmvr_local_8b04de9235034c1a = 0;
+static u8 mmvr_local_bd4b1764c4f34060 = 0;
 void KaleidoScope_DrawCursor(PlayState* play) {
     PauseContext* pauseCtx = &play->pauseCtx;
     s16 i;
@@ -3069,11 +3069,11 @@ void KaleidoScope_DrawCursor(PlayState* play) {
     /* persistent local storage is declared above */
     /* persistent local storage is declared above */
 
-    if (mmvr_local_32780a07b16a0e4d != pauseCtx->cursorX || mmvr_local_8ae202e1d6fd0f68 != pauseCtx->cursorY) {
-        mmvr_local_715ba38b26fc7369 ^= 1; // Flip state
+    if (mmvr_local_1bfc47f1a8f05da4 != pauseCtx->cursorX || mmvr_local_8b04de9235034c1a != pauseCtx->cursorY) {
+        mmvr_local_bd4b1764c4f34060 ^= 1; // Flip state
     }
-    mmvr_local_32780a07b16a0e4d = pauseCtx->cursorX;
-    mmvr_local_8ae202e1d6fd0f68 = pauseCtx->cursorY;
+    mmvr_local_1bfc47f1a8f05da4 = pauseCtx->cursorX;
+    mmvr_local_8b04de9235034c1a = pauseCtx->cursorY;
     // #endregion
 
     OPEN_DISPS(play->state.gfxCtx);
@@ -3083,7 +3083,7 @@ void KaleidoScope_DrawCursor(PlayState* play) {
         ((pauseCtx->pageIndex == PAUSE_QUEST) && ((pauseCtx->mainState <= PAUSE_MAIN_STATE_SONG_PLAYBACK) ||
                                                   (pauseCtx->mainState == PAUSE_MAIN_STATE_SONG_PROMPT) ||
                                                   (pauseCtx->mainState == PAUSE_MAIN_STATE_IDLE_CURSOR_ON_SONG)))) {
-        FrameInterpolation_RecordOpenChild("Pause cursor", mmvr_local_715ba38b26fc7369 ? 1 : 0);
+        FrameInterpolation_RecordOpenChild("Pause cursor", mmvr_local_bd4b1764c4f34060 ? 1 : 0);
         gDPPipeSync(POLY_OPA_DISP++);
         gDPSetCombineLERP(POLY_OPA_DISP++, PRIMITIVE, ENVIRONMENT, TEXEL0, ENVIRONMENT, TEXEL0, 0, PRIMITIVE, 0,
                           PRIMITIVE, ENVIRONMENT, TEXEL0, ENVIRONMENT, TEXEL0, 0, PRIMITIVE, 0);
@@ -3114,7 +3114,7 @@ void KaleidoScope_DrawCursor(PlayState* play) {
     CLOSE_DISPS(play->state.gfxCtx);
 }
 
-static s16 mmvr_local_fb73ec93f826b8ea = 0;
+static s16 mmvr_local_3a1b1ea42db2b7cd = 0;
 void KaleidoScope_DrawGameOver(PlayState* play) {
     /* persistent local storage is declared above */
     GraphicsContext* gfxCtx = play->state.gfxCtx;
@@ -3131,7 +3131,7 @@ void KaleidoScope_DrawGameOver(PlayState* play) {
     gDPSetPrimColor(POLY_OPA_DISP++, 0, 80, sGameOverPrimR, sGameOverPrimG, sGameOverPrimB, sGameOverPrimAlpha);
     gDPSetEnvColor(POLY_OPA_DISP++, sGameOverEnvR, sGameOverEnvG, sGameOverEnvB, 255);
 
-    mmvr_local_fb73ec93f826b8ea -= 2;
+    mmvr_local_3a1b1ea42db2b7cd -= 2;
 
     gDPLoadTextureBlock(POLY_OPA_DISP++, gGameOverP1Tex, G_IM_FMT_IA, G_IM_SIZ_8b, 64, 32, 0, G_TX_NOMIRROR | G_TX_WRAP,
                         G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
@@ -3139,7 +3139,7 @@ void KaleidoScope_DrawGameOver(PlayState* play) {
     gDPLoadMultiBlock(POLY_OPA_DISP++, gGameOverMaskTex, 256, 1, G_IM_FMT_IA, G_IM_SIZ_8b, 64, 32, 0,
                       G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMASK, 5, G_TX_NOLOD, G_TX_NOLOD);
 
-    gDPSetTileSize(POLY_OPA_DISP++, 1, 0, mmvr_local_fb73ec93f826b8ea & 0x7F, 252, (mmvr_local_fb73ec93f826b8ea & 0x7F) + 124);
+    gDPSetTileSize(POLY_OPA_DISP++, 1, 0, mmvr_local_3a1b1ea42db2b7cd & 0x7F, 252, (mmvr_local_3a1b1ea42db2b7cd & 0x7F) + 124);
 
     gSPTextureRectangle(POLY_OPA_DISP++, 0x100, sGameOverRectPosY << 2, 0x200, (sGameOverRectPosY + 32) << 2,
                         G_TX_RENDERTILE, 0, 0, 1 << 10, 1 << 10);
@@ -3318,14 +3318,14 @@ u16 sCursorPointsToOcarinaModes[] = {
     OCARINA_MODE_WARP_TO_STONE_TOWER,
 };
 
-static s16 mmvr_local_490012403c0d7274 = HUD_VISIBILITY_IDLE;
-static s16 mmvr_local_695fde3cf8deee03 = PAUSE_MAIN_STATE_IDLE;
-static s16 mmvr_local_f4e59895d7610786 = 10;
-static s16 mmvr_local_3325dc0ee556fd9a = 0;
-static s16 mmvr_local_dd01a1ddd4d65773 = 0;
-static s16 mmvr_local_06fc1a427173e200 = 0;
-static s16 mmvr_local_a56e1380cbc61c10 = 0;
-static s16 mmvr_local_67cce1a34a977c57 = 0;
+static s16 mmvr_local_d17504ea51deab65 = HUD_VISIBILITY_IDLE;
+static s16 mmvr_local_c0ffb8d84257838e = PAUSE_MAIN_STATE_IDLE;
+static s16 mmvr_local_c91cef65d7ad40ae = 10;
+static s16 mmvr_local_3be02ac4b89f2980 = 0;
+static s16 mmvr_local_5e3218326fa44a34 = 0;
+static s16 mmvr_local_70f92541fa6616f3 = 0;
+static s16 mmvr_local_610c9793493c7143 = 0;
+static s16 mmvr_local_e4dc2e8713027882 = 0;
 void KaleidoScope_Update(PlayState* play) {
     /* persistent local storage is declared above */
     /* persistent local storage is declared above */
@@ -3360,7 +3360,7 @@ void KaleidoScope_Update(PlayState* play) {
 
     switch (pauseCtx->state) {
         case PAUSE_STATE_OPENING_2:
-            mmvr_local_490012403c0d7274 = gSaveContext.hudVisibility;
+            mmvr_local_d17504ea51deab65 = gSaveContext.hudVisibility;
             sPauseMenuVerticalOffset = -6240.0f;
 
             sUnpausedButtonStatus[EQUIP_SLOT_B] = gSaveContext.buttonStatus[EQUIP_SLOT_B];
@@ -3525,22 +3525,22 @@ void KaleidoScope_Update(PlayState* play) {
                     } else if (pauseCtx->ocarinaStaff->state == pauseCtx->ocarinaSongIndex) {
                         // The player successfully played the song
                         Audio_PlaySfx(NA_SE_SY_TRE_BOX_APPEAR);
-                        mmvr_local_695fde3cf8deee03 = PAUSE_MAIN_STATE_IDLE;
-                        mmvr_local_f4e59895d7610786 = 30;
+                        mmvr_local_c0ffb8d84257838e = PAUSE_MAIN_STATE_IDLE;
+                        mmvr_local_c91cef65d7ad40ae = 30;
                         pauseCtx->mainState = PAUSE_MAIN_STATE_SONG_PROMPT_DONE;
                     } else if (pauseCtx->ocarinaStaff->state == 0xFF) {
                         // The player failed to play the song
                         Audio_PlaySfx(NA_SE_SY_OCARINA_ERROR);
-                        mmvr_local_695fde3cf8deee03 = PAUSE_MAIN_STATE_SONG_PROMPT_INIT;
-                        mmvr_local_f4e59895d7610786 = 20;
+                        mmvr_local_c0ffb8d84257838e = PAUSE_MAIN_STATE_SONG_PROMPT_INIT;
+                        mmvr_local_c91cef65d7ad40ae = 20;
                         pauseCtx->mainState = PAUSE_MAIN_STATE_SONG_PROMPT_DONE;
                     }
                     break;
 
                 case PAUSE_MAIN_STATE_SONG_PROMPT_DONE:
-                    mmvr_local_f4e59895d7610786--;
-                    if (mmvr_local_f4e59895d7610786 == 0) {
-                        pauseCtx->mainState = mmvr_local_695fde3cf8deee03;
+                    mmvr_local_c91cef65d7ad40ae--;
+                    if (mmvr_local_c91cef65d7ad40ae == 0) {
+                        pauseCtx->mainState = mmvr_local_c0ffb8d84257838e;
                         if (pauseCtx->mainState == PAUSE_MAIN_STATE_IDLE) {
                             AudioOcarina_SetInstrument(OCARINA_INSTRUMENT_OFF);
                         }
@@ -3606,7 +3606,7 @@ void KaleidoScope_Update(PlayState* play) {
                             Audio_PlaySfx(NA_SE_SY_PIECE_OF_HEART);
                             // 2S2H [Enhancement] Persist this in case the user is 0th daying
                             bool currentOwlSaveState = gSaveContext.save.isOwlSave;
-                            if (CVarGetInteger("gEnhancements.Saving.PauseSave", 0)) {
+                            if (CVarGetInteger("gEnhancements.Saving.PauseSave", SAVING_ENHANCEMENTS_DEFAULT_ENABLED)) {
                                 gSaveContext.save.isOwlSave = true;
                                 SavingEnhancements_PersistSaveEntranceInfo();
                                 SavingEnhancements_AdvancePlaytime();
@@ -3619,7 +3619,7 @@ void KaleidoScope_Update(PlayState* play) {
                                     255) { // 2S2H [Enhancement] Don't let them save if they are in debug save
                                 pauseCtx->savePromptState = PAUSE_SAVEPROMPT_STATE_5;
                             } else {
-                                if (CVarGetInteger("gEnhancements.Saving.PauseSave", 0)) {
+                                if (CVarGetInteger("gEnhancements.Saving.PauseSave", SAVING_ENHANCEMENTS_DEFAULT_ENABLED)) {
                                     Sram_SetFlashPagesOwlSave(
                                         sramCtx,
                                         gFlashOwlSaveStartPages[gSaveContext.fileNum * FLASH_SAVE_MAIN_MULTIPLIER],
@@ -3634,7 +3634,7 @@ void KaleidoScope_Update(PlayState* play) {
                                 }
                                 pauseCtx->savePromptState = PAUSE_SAVEPROMPT_STATE_4;
                             }
-                            mmvr_local_f4e59895d7610786 = 90;
+                            mmvr_local_c91cef65d7ad40ae = 90;
                         }
                     } else if (CHECK_BTN_ALL(input->press.button, BTN_START)) {
                         Interface_SetAButtonDoAction(play, DO_ACTION_NONE);
@@ -3657,7 +3657,7 @@ void KaleidoScope_Update(PlayState* play) {
 
                 case PAUSE_SAVEPROMPT_STATE_5:
                     if (CHECK_BTN_ALL(input->press.button, BTN_B) || CHECK_BTN_ALL(input->press.button, BTN_A) ||
-                        CHECK_BTN_ALL(input->press.button, BTN_START) || (--mmvr_local_f4e59895d7610786 == 0)) {
+                        CHECK_BTN_ALL(input->press.button, BTN_START) || (--mmvr_local_c91cef65d7ad40ae == 0)) {
                         Interface_SetAButtonDoAction(play, DO_ACTION_NONE);
                         pauseCtx->savePromptState = PAUSE_SAVEPROMPT_STATE_3;
                         sPauseMenuVerticalOffset = -6240.0f;
@@ -3785,7 +3785,7 @@ void KaleidoScope_Update(PlayState* play) {
             sGameOverEnvG = 0;
             sGameOverEnvB = 0;
             sGameOverRectPosY = 98;
-            mmvr_local_3325dc0ee556fd9a = 30;
+            mmvr_local_3be02ac4b89f2980 = 30;
 
             pauseCtx->promptChoice = PAUSE_PROMPT_YES;
             pauseCtx->state++;
@@ -3795,10 +3795,10 @@ void KaleidoScope_Update(PlayState* play) {
             break;
 
         case PAUSE_STATE_GAMEOVER_3:
-            stepR = ABS_ALT(sGameOverPrimR - 30) / mmvr_local_3325dc0ee556fd9a;
-            stepG = ABS_ALT(sGameOverPrimG - 0) / mmvr_local_3325dc0ee556fd9a;
-            stepB = ABS_ALT(sGameOverPrimB - 0) / mmvr_local_3325dc0ee556fd9a;
-            stepA = ABS_ALT(sGameOverPrimAlpha - 255) / mmvr_local_3325dc0ee556fd9a;
+            stepR = ABS_ALT(sGameOverPrimR - 30) / mmvr_local_3be02ac4b89f2980;
+            stepG = ABS_ALT(sGameOverPrimG - 0) / mmvr_local_3be02ac4b89f2980;
+            stepB = ABS_ALT(sGameOverPrimB - 0) / mmvr_local_3be02ac4b89f2980;
+            stepA = ABS_ALT(sGameOverPrimAlpha - 255) / mmvr_local_3be02ac4b89f2980;
             if (sGameOverPrimR >= 30) {
                 sGameOverPrimR -= stepR;
             } else {
@@ -3820,9 +3820,9 @@ void KaleidoScope_Update(PlayState* play) {
                 sGameOverPrimAlpha += stepA;
             }
 
-            stepR = ABS_ALT(sGameOverEnvR - 255) / mmvr_local_3325dc0ee556fd9a;
-            stepG = ABS_ALT(sGameOverEnvG - 130) / mmvr_local_3325dc0ee556fd9a;
-            stepB = ABS_ALT(sGameOverEnvB - 0) / mmvr_local_3325dc0ee556fd9a;
+            stepR = ABS_ALT(sGameOverEnvR - 255) / mmvr_local_3be02ac4b89f2980;
+            stepG = ABS_ALT(sGameOverEnvG - 130) / mmvr_local_3be02ac4b89f2980;
+            stepB = ABS_ALT(sGameOverEnvB - 0) / mmvr_local_3be02ac4b89f2980;
             if (sGameOverEnvR >= 255) {
                 sGameOverEnvR -= stepR;
             } else {
@@ -3839,8 +3839,8 @@ void KaleidoScope_Update(PlayState* play) {
                 sGameOverEnvB += stepB;
             }
 
-            mmvr_local_3325dc0ee556fd9a--;
-            if (mmvr_local_3325dc0ee556fd9a == 0) {
+            mmvr_local_3be02ac4b89f2980--;
+            if (mmvr_local_3be02ac4b89f2980 == 0) {
                 sGameOverPrimR = 30;
                 sGameOverPrimG = 0;
                 sGameOverPrimB = 0;
@@ -3850,14 +3850,14 @@ void KaleidoScope_Update(PlayState* play) {
                 sGameOverEnvG = 130;
                 sGameOverEnvB = 0;
 
-                mmvr_local_3325dc0ee556fd9a = 40;
+                mmvr_local_3be02ac4b89f2980 = 40;
                 pauseCtx->state++;
             }
             break;
 
         case PAUSE_STATE_GAMEOVER_4:
-            mmvr_local_3325dc0ee556fd9a--;
-            if (mmvr_local_3325dc0ee556fd9a == 0) {
+            mmvr_local_3be02ac4b89f2980--;
+            if (mmvr_local_3be02ac4b89f2980 == 0) {
                 pauseCtx->state = PAUSE_STATE_GAMEOVER_5;
             }
             break;
@@ -3911,7 +3911,7 @@ void KaleidoScope_Update(PlayState* play) {
                         Sram_StartWriteToFlashDefault(sramCtx);
                         pauseCtx->state = PAUSE_STATE_GAMEOVER_7;
                     }
-                    mmvr_local_f4e59895d7610786 = 90;
+                    mmvr_local_c91cef65d7ad40ae = 90;
                 }
             } else if ((pauseCtx->promptChoice == PAUSE_PROMPT_YES) && (stickAdjX >= 30)) {
                 Audio_PlaySfx(NA_SE_SY_CURSOR);
@@ -3933,11 +3933,11 @@ void KaleidoScope_Update(PlayState* play) {
             break;
 
         case PAUSE_STATE_GAMEOVER_8:
-            mmvr_local_f4e59895d7610786--;
-            if (mmvr_local_f4e59895d7610786 == 0) {
+            mmvr_local_c91cef65d7ad40ae--;
+            if (mmvr_local_c91cef65d7ad40ae == 0) {
                 pauseCtx->state = PAUSE_STATE_GAMEOVER_CONTINUE_PROMPT;
                 gameOverCtx->state++;
-            } else if ((mmvr_local_f4e59895d7610786 <= 80) &&
+            } else if ((mmvr_local_c91cef65d7ad40ae <= 80) &&
                        (CHECK_BTN_ALL(input->press.button, BTN_A) || CHECK_BTN_ALL(input->press.button, BTN_START))) {
                 pauseCtx->state = PAUSE_STATE_GAMEOVER_CONTINUE_PROMPT;
                 gameOverCtx->state++;
@@ -4199,7 +4199,7 @@ void KaleidoScope_Update(PlayState* play) {
                 interfaceCtx->bButtonInterfaceDoActionActive = interfaceCtx->bButtonInterfaceDoAction = 0;
             }
             gSaveContext.hudVisibility = HUD_VISIBILITY_IDLE;
-            Interface_SetHudVisibility(mmvr_local_490012403c0d7274);
+            Interface_SetHudVisibility(mmvr_local_d17504ea51deab65);
             Audio_SetPauseState(false);
             break;
 
@@ -4211,71 +4211,71 @@ void KaleidoScope_Update(PlayState* play) {
     // The first delay is given a longer time than all subsequent delays.
     if (!IS_PAUSE_STATE_GAMEOVER(pauseCtx) && (pauseCtx->state != PAUSE_STATE_SAVEPROMPT)) {
         if (pauseCtx->stickAdjX < -30) {
-            if (mmvr_local_a56e1380cbc61c10 == -1) {
-                mmvr_local_dd01a1ddd4d65773--;
-                if (mmvr_local_dd01a1ddd4d65773 < 0) {
+            if (mmvr_local_610c9793493c7143 == -1) {
+                mmvr_local_5e3218326fa44a34--;
+                if (mmvr_local_5e3218326fa44a34 < 0) {
                     // Allow the input to register and apply the delay for all subsequent repeated inputs
-                    mmvr_local_dd01a1ddd4d65773 = 2;
+                    mmvr_local_5e3218326fa44a34 = 2;
                 } else {
                     // Cancel the current input
                     pauseCtx->stickAdjX = 0;
                 }
             } else {
                 // Allow the input to register and apply the delay for the first repeated input
-                mmvr_local_dd01a1ddd4d65773 = 10;
-                mmvr_local_a56e1380cbc61c10 = -1;
+                mmvr_local_5e3218326fa44a34 = 10;
+                mmvr_local_610c9793493c7143 = -1;
             }
         } else if (pauseCtx->stickAdjX > 30) {
-            if (mmvr_local_a56e1380cbc61c10 == 1) {
-                mmvr_local_dd01a1ddd4d65773--;
-                if (mmvr_local_dd01a1ddd4d65773 < 0) {
+            if (mmvr_local_610c9793493c7143 == 1) {
+                mmvr_local_5e3218326fa44a34--;
+                if (mmvr_local_5e3218326fa44a34 < 0) {
                     // Allow the input to register and apply the delay for all subsequent repeated inputs
-                    mmvr_local_dd01a1ddd4d65773 = 2;
+                    mmvr_local_5e3218326fa44a34 = 2;
                 } else {
                     // Cancel the current input
                     pauseCtx->stickAdjX = 0;
                 }
             } else {
                 // Allow the input to register and apply the delay for the first repeated input
-                mmvr_local_dd01a1ddd4d65773 = 10;
-                mmvr_local_a56e1380cbc61c10 = 1;
+                mmvr_local_5e3218326fa44a34 = 10;
+                mmvr_local_610c9793493c7143 = 1;
             }
         } else {
-            mmvr_local_a56e1380cbc61c10 = 0;
+            mmvr_local_610c9793493c7143 = 0;
         }
 
         if (pauseCtx->stickAdjY < -30) {
-            if (mmvr_local_67cce1a34a977c57 == -1) {
-                mmvr_local_06fc1a427173e200--;
-                if (mmvr_local_06fc1a427173e200 < 0) {
+            if (mmvr_local_e4dc2e8713027882 == -1) {
+                mmvr_local_70f92541fa6616f3--;
+                if (mmvr_local_70f92541fa6616f3 < 0) {
                     // Allow the input to register and apply the delay for all subsequent repeated inputs
-                    mmvr_local_06fc1a427173e200 = 2;
+                    mmvr_local_70f92541fa6616f3 = 2;
                 } else {
                     // Cancel the current input
                     pauseCtx->stickAdjY = 0;
                 }
             } else {
                 // Allow the input to register and apply the delay for the first repeated input
-                mmvr_local_06fc1a427173e200 = 10;
-                mmvr_local_67cce1a34a977c57 = -1;
+                mmvr_local_70f92541fa6616f3 = 10;
+                mmvr_local_e4dc2e8713027882 = -1;
             }
         } else if (pauseCtx->stickAdjY > 30) {
-            if (mmvr_local_67cce1a34a977c57 == 1) {
-                mmvr_local_06fc1a427173e200--;
-                if (mmvr_local_06fc1a427173e200 < 0) {
+            if (mmvr_local_e4dc2e8713027882 == 1) {
+                mmvr_local_70f92541fa6616f3--;
+                if (mmvr_local_70f92541fa6616f3 < 0) {
                     // Allow the input to register and apply the delay for all subsequent repeated inputs
-                    mmvr_local_06fc1a427173e200 = 2;
+                    mmvr_local_70f92541fa6616f3 = 2;
                 } else {
                     // Cancel the current input
                     pauseCtx->stickAdjY = 0;
                 }
             } else {
                 // Allow the input to register and apply the delay for the first repeated input
-                mmvr_local_06fc1a427173e200 = 10;
-                mmvr_local_67cce1a34a977c57 = 1;
+                mmvr_local_70f92541fa6616f3 = 10;
+                mmvr_local_e4dc2e8713027882 = 1;
             }
         } else {
-            mmvr_local_67cce1a34a977c57 = 0;
+            mmvr_local_e4dc2e8713027882 = 0;
         }
     }
 

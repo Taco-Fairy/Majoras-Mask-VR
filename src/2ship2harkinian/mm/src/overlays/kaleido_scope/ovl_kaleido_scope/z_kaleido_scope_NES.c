@@ -958,7 +958,7 @@ void KaleidoScope_DrawPages(PlayState* play, GraphicsContext* gfxCtx) {
         }
     }
 
-    if (CVarGetInteger("gEnhancements.Saving.PauseSave", 0) || CVarGetInteger("gEnhancements.Kaleido.GameOver", 0)) {
+    if (CVarGetInteger("gEnhancements.Saving.PauseSave", SAVING_ENHANCEMENTS_DEFAULT_ENABLED) || CVarGetInteger("gEnhancements.Kaleido.GameOver", 0)) {
         Gfx_SetupDL42_Opa(gfxCtx);
         if ((pauseCtx->state == PAUSE_STATE_SAVEPROMPT) || IS_PAUSE_STATE_GAMEOVER(pauseCtx)) {
             KaleidoScope_UpdatePrompt(play);
@@ -3576,7 +3576,7 @@ void KaleidoScope_Update(PlayState* play) {
                             Audio_PlaySfx(NA_SE_SY_PIECE_OF_HEART);
                             // 2S2H [Enhancement] Persist this in case the user is 0th daying
                             bool currentOwlSaveState = gSaveContext.save.isOwlSave;
-                            if (CVarGetInteger("gEnhancements.Saving.PauseSave", 0)) {
+                            if (CVarGetInteger("gEnhancements.Saving.PauseSave", SAVING_ENHANCEMENTS_DEFAULT_ENABLED)) {
                                 gSaveContext.save.isOwlSave = true;
                                 SavingEnhancements_PersistSaveEntranceInfo();
                                 SavingEnhancements_AdvancePlaytime();
@@ -3589,7 +3589,7 @@ void KaleidoScope_Update(PlayState* play) {
                                     255) { // 2S2H [Enhancement] Don't let them save if they are in debug save
                                 pauseCtx->savePromptState = PAUSE_SAVEPROMPT_STATE_5;
                             } else {
-                                if (CVarGetInteger("gEnhancements.Saving.PauseSave", 0)) {
+                                if (CVarGetInteger("gEnhancements.Saving.PauseSave", SAVING_ENHANCEMENTS_DEFAULT_ENABLED)) {
                                     Sram_SetFlashPagesOwlSave(
                                         sramCtx,
                                         gFlashOwlSaveStartPages[gSaveContext.fileNum * FLASH_SAVE_MAIN_MULTIPLIER],

@@ -198,6 +198,7 @@ enum class Setting {
     HideBunnyHood,
     ShieldVisualSize,
     BowHandSmoothing,
+    LockOnOrbit,
     Count
 };
 struct SettingDefinition {
@@ -399,6 +400,7 @@ inline constexpr SettingDefinition SettingDefinitions[] = {
     { "gVR.HideBunnyHood", "Hide worn Bunny Hood in first person", 1, 0, 1, 1, "off/on" },
     { "gVR.ShieldVisualSize", "Shield visual size", 100, 50, 200, 5, "%" },
     { "gVR.BowHandSmoothing", "Bow holding hand smoothing", 12, 0, 40, 1, "ms" },
+    { "gVR.LockOnOrbit", "Lock-on target camera orbit", 0, 0, 1, 1, "off/on" },
 };
 static_assert(sizeof(SettingDefinitions) / sizeof(SettingDefinitions[0]) == size_t(Setting::Count));
 inline float BoundSetting(Setting id, float value) {

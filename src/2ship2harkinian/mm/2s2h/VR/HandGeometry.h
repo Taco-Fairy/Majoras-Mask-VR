@@ -3,6 +3,7 @@
 struct PlayState; struct Player;
 namespace mmvrgame {
 void ResetHandGeometry();
+float HandContactRadius(const Player*, float trackingScale);
 mmvr::TrackingFrame ResolveHandGeometry(PlayState*, Player*, const mmvr::TrackingFrame& filtered,
     const mmvr::TrackingFrame& raw, const mmvr::Matrix& view, const mmvr::Matrix& relativeHead);
 }

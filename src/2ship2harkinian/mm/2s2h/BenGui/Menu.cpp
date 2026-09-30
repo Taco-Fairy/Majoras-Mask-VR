@@ -12,6 +12,9 @@
 #include <ship/config/Config.h>
 
 #include <fast/Fast3dWindow.h>
+#ifdef MMVR_ENABLE
+#include "2s2h/VR/NativeOptions.h"
+#endif
 
 extern "C" {
 #include "z64.h"
@@ -190,6 +193,11 @@ uint32_t Menu::DrawSearchResults(std::string& menuSearchText) {
     auto menuThemeIndex = static_cast<UIWidgets::Colors>(CVarGetInteger("gSettings.Menu.Theme", defaultThemeIndex));
     ImGui::BeginChild("Search Results");
     int searchCount = 0;
+#ifdef MMVR_ENABLE
+    bool vrOpened = false;
+    searchCount += mmvrgame::DrawVRMenuSearch(menuSearchText.c_str(), &vrOpened);
+    if (vrOpened) Hide();
+#endif
     for (auto& menuLabel : menuOrder) {
         auto& menuEntry = menuEntries.at(menuLabel);
         for (auto& sidebarLabel : menuEntry.sidebarOrder) {

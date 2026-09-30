@@ -31,187 +31,187 @@
       "at": 25967
     },
     {
-      "name": "mmvr_local_5c930d6f5ef7b98d",
+      "name": "mmvr_local_f00a3e37aac986cc",
       "original": "sPauseZRCursorColorTargets",
       "function": "KaleidoScope_DrawInfoPanel",
       "line": 1087,
-      "at": 47648
+      "at": 47682
     },
     {
-      "name": "mmvr_local_af79c669ab289c2a",
+      "name": "mmvr_local_c3bdf75041c76759",
       "original": "sPauseZRCursorColorTimer",
       "function": "KaleidoScope_DrawInfoPanel",
       "line": 1091,
-      "at": 47774
+      "at": 47808
     },
     {
-      "name": "mmvr_local_92cc1fc71ec1120f",
+      "name": "mmvr_local_c2a89451473cab07",
       "original": "sPauseZRCursorColorIndex",
       "function": "KaleidoScope_DrawInfoPanel",
       "line": 1092,
-      "at": 47821
+      "at": 47855
     },
     {
-      "name": "mmvr_local_8e358668581431f3",
+      "name": "mmvr_local_a145fcbd8972c611",
       "original": "sPauseZRCursorRed",
       "function": "KaleidoScope_DrawInfoPanel",
       "line": 1093,
-      "at": 47867
+      "at": 47901
     },
     {
-      "name": "mmvr_local_1817c08ff6f366cd",
+      "name": "mmvr_local_98635bceabc45497",
       "original": "sPauseZRCursorGreen",
       "function": "KaleidoScope_DrawInfoPanel",
       "line": 1094,
-      "at": 47902
+      "at": 47936
     },
     {
-      "name": "mmvr_local_bcf7c5e48746fdd9",
+      "name": "mmvr_local_c14c26d2306846bb",
       "original": "sPauseZRCursorBlue",
       "function": "KaleidoScope_DrawInfoPanel",
       "line": 1095,
-      "at": 47939
+      "at": 47973
     },
     {
-      "name": "mmvr_local_0b972c4673a25832",
+      "name": "mmvr_local_f73d59086e274a5a",
       "original": "sPauseZRCursorAlpha",
       "function": "KaleidoScope_DrawInfoPanel",
       "line": 1096,
-      "at": 47975
+      "at": 48009
     },
     {
-      "name": "mmvr_local_e9756c4e3ad4670e",
+      "name": "mmvr_local_7f346167bc090752",
       "original": "sPauseZRCursorColorTargets",
       "function": "KaleidoScope_DrawOwlWarpInfoPanel",
       "line": 1543,
-      "at": 69553
+      "at": 69587
     },
     {
-      "name": "mmvr_local_e71c9afd92f887e3",
+      "name": "mmvr_local_01fa87d869cf096b",
       "original": "sPauseZRCursorColorTimer",
       "function": "KaleidoScope_DrawOwlWarpInfoPanel",
       "line": 1547,
-      "at": 69679
+      "at": 69713
     },
     {
-      "name": "mmvr_local_5abfb53476478075",
+      "name": "mmvr_local_a285bcf78774fd51",
       "original": "sPauseZRCursorColorIndex",
       "function": "KaleidoScope_DrawOwlWarpInfoPanel",
       "line": 1548,
-      "at": 69726
+      "at": 69760
     },
     {
-      "name": "mmvr_local_b1e41e2e444ff136",
+      "name": "mmvr_local_4db03d0946e90132",
       "original": "sPauseZRCursorRed",
       "function": "KaleidoScope_DrawOwlWarpInfoPanel",
       "line": 1549,
-      "at": 69772
+      "at": 69806
     },
     {
-      "name": "mmvr_local_1079b915eead44e6",
+      "name": "mmvr_local_f7500c1c305c607f",
       "original": "sPauseZRCursorGreen",
       "function": "KaleidoScope_DrawOwlWarpInfoPanel",
       "line": 1550,
-      "at": 69807
+      "at": 69841
     },
     {
-      "name": "mmvr_local_20d218dea0b9df48",
+      "name": "mmvr_local_c71358a002b75ae8",
       "original": "sPauseZRCursorBlue",
       "function": "KaleidoScope_DrawOwlWarpInfoPanel",
       "line": 1551,
-      "at": 69844
+      "at": 69878
     },
     {
-      "name": "mmvr_local_38690d7cb8201703",
+      "name": "mmvr_local_5ea37814c88eb10e",
       "original": "sPauseZRCursorAlpha",
       "function": "KaleidoScope_DrawOwlWarpInfoPanel",
       "line": 1552,
-      "at": 69880
+      "at": 69914
     },
     {
-      "name": "mmvr_local_32780a07b16a0e4d",
+      "name": "mmvr_local_1bfc47f1a8f05da4",
       "original": "prevX",
       "function": "KaleidoScope_DrawCursor",
       "line": 3047,
-      "at": 141688
+      "at": 141722
     },
     {
-      "name": "mmvr_local_8ae202e1d6fd0f68",
+      "name": "mmvr_local_8b04de9235034c1a",
       "original": "prevY",
       "function": "KaleidoScope_DrawCursor",
       "line": 3048,
-      "at": 141715
+      "at": 141749
     },
     {
-      "name": "mmvr_local_715ba38b26fc7369",
+      "name": "mmvr_local_bd4b1764c4f34060",
       "original": "cursorInterpState",
       "function": "KaleidoScope_DrawCursor",
       "line": 3049,
-      "at": 141741
+      "at": 141775
     },
     {
-      "name": "mmvr_local_fb73ec93f826b8ea",
+      "name": "mmvr_local_3a1b1ea42db2b7cd",
       "original": "sGameOverUlt",
       "function": "KaleidoScope_DrawGameOver",
       "line": 3097,
-      "at": 144139
+      "at": 144173
     },
     {
-      "name": "mmvr_local_490012403c0d7274",
+      "name": "mmvr_local_d17504ea51deab65",
       "original": "sUnpausedHudVisibility",
       "function": "KaleidoScope_Update",
       "line": 3300,
-      "at": 153542
+      "at": 153576
     },
     {
-      "name": "mmvr_local_695fde3cf8deee03",
+      "name": "mmvr_local_c0ffb8d84257838e",
       "original": "sNextMainState",
       "function": "KaleidoScope_Update",
       "line": 3301,
-      "at": 153604
+      "at": 153638
     },
     {
-      "name": "mmvr_local_f4e59895d7610786",
+      "name": "mmvr_local_c91cef65d7ad40ae",
       "original": "sDelayTimer",
       "function": "KaleidoScope_Update",
       "line": 3302,
-      "at": 153660
-    },
-    {
-      "name": "mmvr_local_3325dc0ee556fd9a",
-      "original": "sGameOverColorTimer",
-      "function": "KaleidoScope_Update",
-      "line": 3303,
       "at": 153694
     },
     {
-      "name": "mmvr_local_dd01a1ddd4d65773",
+      "name": "mmvr_local_3be02ac4b89f2980",
+      "original": "sGameOverColorTimer",
+      "function": "KaleidoScope_Update",
+      "line": 3303,
+      "at": 153728
+    },
+    {
+      "name": "mmvr_local_5e3218326fa44a34",
       "original": "sStickXRepeatTimer",
       "function": "KaleidoScope_Update",
       "line": 3304,
-      "at": 153735
+      "at": 153769
     },
     {
-      "name": "mmvr_local_06fc1a427173e200",
+      "name": "mmvr_local_70f92541fa6616f3",
       "original": "sStickYRepeatTimer",
       "function": "KaleidoScope_Update",
       "line": 3305,
-      "at": 153775
+      "at": 153809
     },
     {
-      "name": "mmvr_local_a56e1380cbc61c10",
+      "name": "mmvr_local_610c9793493c7143",
       "original": "sStickXRepeatState",
       "function": "KaleidoScope_Update",
       "line": 3306,
-      "at": 153815
+      "at": 153849
     },
     {
-      "name": "mmvr_local_67cce1a34a977c57",
+      "name": "mmvr_local_e4dc2e8713027882",
       "original": "sStickYRepeatState",
       "function": "KaleidoScope_Update",
       "line": 3307,
-      "at": 153855
+      "at": 153889
     }
   ],
-  "sourceSha256": "da1b8b66c1b0d656cc27b254be23dc1a3d4b87b344b560c6ca9c084c15031ad7"
+  "sourceSha256": "5f4337af8856f9e1a2b7d9c7e63d475aa30e574109a33615130f8aa2cd518251"
 }

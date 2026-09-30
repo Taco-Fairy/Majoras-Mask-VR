@@ -126,3 +126,53 @@ static mmvr::Pad NativeHotSpringLandingTest(PlayState* play,unsigned tick){
  if(tick>1200){log<<"FAIL native-hot-spring-timeout"<<std::endl;Ship::Context::GetRawInstance()->GetWindow()->Close();}
  return pad;
 }
+
+
+// Private isolated test of the same portal used in the headset. This loads the
+// real field, checks its authored rock/hole pair and walks using native input.
+static mmvr::Pad NativeGrottoRockLandingTest(PlayState* play,unsigned tick){
+ static bool started=false,paired=false,ground=false,clear=false,moved=false;
+ static unsigned settled=0;static Vec3f origin{};
+ static std::ofstream log("native-grotto-rock-landing.log");
+ mmvr::Pad pad;pad.active=true;
+ if(!started&&tick>=60){
+  for(int i=0;i<ARRAY_COUNT(debugLocations);++i)if(debugLocations[i].interactionPreset==16){
+   started=MMVR_DebugLocationBegin(play,i)!=0;break;
+  }
+  log<<"portal="<<started<<std::endl;
+ }
+ if(started&&play->sceneId==SCENE_00KEIKOKU&&play->transitionTrigger==TRANS_TRIGGER_OFF&&
+    play->transitionMode==TRANS_MODE_OFF&&!play->roomCtx.status){
+  ++settled;auto* p=GET_PLAYER(play);
+  if(settled==45){
+   origin=p->actor.world.pos;
+   for(auto& list:play->actorCtx.actorLists)for(auto* rock=list.first;rock;rock=rock->next){
+    if(!rock->update||rock->init||!((rock->id==ACTOR_EN_ISHI&&(rock->params&1))||rock->id==ACTOR_OBJ_BOMBIWA))continue;
+    const float distance=std::hypot(origin.x-rock->world.pos.x,origin.z-rock->world.pos.z);
+    if(distance<100.f||distance>180.f||std::abs(origin.y-rock->world.pos.y)>45.f)continue;
+    for(auto* hole=play->actorCtx.actorLists[ACTORCAT_ITEMACTION].first;hole;hole=hole->next)
+     if(hole->id==ACTOR_DOOR_ANA&&hole->update&&!hole->init&&
+        std::hypot(hole->world.pos.x-rock->world.pos.x,hole->world.pos.z-rock->world.pos.z)<30.f&&
+        std::abs(hole->world.pos.y-rock->world.pos.y)<80.f){
+      paired=true;
+      log<<"rock="<<rock->id<<" rockPos="<<rock->world.pos.x<<","<<rock->world.pos.y<<","<<rock->world.pos.z
+         <<" distance="<<distance<<" hole="<<hole->params<<std::endl;
+     }
+   }
+   Vec3f probe=origin;probe.y+=80;CollisionPoly* floor=nullptr;int bg=0;
+   const float floorY=BgCheck_EntityRaycastFloor5(&play->colCtx,&floor,&bg,&p->actor,&probe);
+   ground=floor&&std::abs(floorY-origin.y)<2;
+   clear=true;
+   for(float h:{20.f,45.f,70.f}){Vec3f center{origin.x,origin.y+h,origin.z};clear&=!BgCheck_SphVsFirstWall(&play->colCtx,&center,22.f);}
+   log<<"landing="<<origin.x<<","<<origin.y<<","<<origin.z<<" paired="<<paired<<" ground="<<ground<<" clear="<<clear<<std::endl;
+  }
+  if(settled>=50&&settled<60)pad.x=60;
+  if(settled==70){moved=std::hypot(p->actor.world.pos.x-origin.x,p->actor.world.pos.z-origin.z)>5.f&&std::abs(p->actor.world.pos.y-origin.y)<25.f;}
+  if(settled>=80){
+   log<<(paired&&ground&&clear&&moved?"PASS":"FAIL")<<" rock-covered grotto and native movement moved="<<moved<<std::endl;
+   Ship::Context::GetRawInstance()->GetWindow()->Close();
+  }
+ }
+ if(tick>1200){log<<"FAIL grotto-rock timeout"<<std::endl;Ship::Context::GetRawInstance()->GetWindow()->Close();}
+ return pad;
+}

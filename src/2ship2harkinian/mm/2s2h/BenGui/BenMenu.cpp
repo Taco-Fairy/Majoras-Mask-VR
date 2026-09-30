@@ -1,3 +1,4 @@
+#include "2s2h/Enhancements/Saving/SavingEnhancements.h"
 #include "BenMenu.h"
 #include "BenGui.hpp"
 #include "UIWidgets.hpp"
@@ -1245,19 +1246,19 @@ void BenMenu::AddEnhancements() {
                      .DefaultValue(true));
     AddWidget(path, "Persistent Owl Saves", WIDGET_CVAR_CHECKBOX)
         .CVar("gEnhancements.Saving.PersistentOwlSaves")
-        .Options(CheckboxOptions().Tooltip("Continuing a save will not remove the owl save. Playing Song of "
+        .Options(CheckboxOptions().DefaultValue(SAVING_ENHANCEMENTS_DEFAULT_ENABLED).Tooltip("Continuing a save will not remove the owl save. Playing Song of "
                                            "Time, allowing the moon to crash or finishing the "
                                            "game will remove the owl save and become the new last save."));
     AddWidget(path, "Pause Menu Save", WIDGET_CVAR_CHECKBOX)
         .CVar("gEnhancements.Saving.PauseSave")
-        .Options(CheckboxOptions().Tooltip(
+        .Options(CheckboxOptions().DefaultValue(SAVING_ENHANCEMENTS_DEFAULT_ENABLED).Tooltip(
             "Re-introduce the pause menu save system. Pressing B in the pause menu will give you the "
             "option to create a persistent Owl Save from your current location.\n\nWhen loading back "
             "into the game, you will be placed either at the entrance of the dungeon you saved in, or "
             "in South Clock Town, unless Remember Save Location is enabled."));
     AddWidget(path, "Remember Save Location", WIDGET_CVAR_CHECKBOX)
         .CVar("gEnhancements.Saving.RememberSaveLocation")
-        .Options(CheckboxOptions().Tooltip("When loading a save, places Link at the last entrance he went through."));
+        .Options(CheckboxOptions().DefaultValue(SAVING_ENHANCEMENTS_DEFAULT_ENABLED).Tooltip("When loading a save, places Link at the last entrance he went through."));
     AddWidget(path, "Autosave", WIDGET_CVAR_CHECKBOX)
         .CVar("gEnhancements.Saving.Autosave")
         .Options(CheckboxOptions().Tooltip(

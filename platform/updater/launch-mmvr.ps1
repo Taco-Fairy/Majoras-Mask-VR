@@ -1,5 +1,5 @@
 param(
- [ValidateSet('Auto','SteamVR','VDXR')][string]$Runtime='Auto',
+ [ValidateSet('Auto','SteamVR','VDXR','Meta')][string]$Runtime='Auto',
  [string]$GameDirectory=$PSScriptRoot,
  [switch]$DetectOnly,
  [switch]$FunctionsOnly
@@ -28,6 +28,19 @@ function Select-MMVRRuntime {
   if($result.available){return [pscustomobject]@{manifest=$candidate.manifest;reason=($candidate.name+' fallback has a headset');available=$true;attempts=$attempts}}
  }
  return [pscustomobject]@{manifest=$null;reason='No available headset found; preserving OpenXR default';available=$false;attempts=$attempts}
+}
+# Discovery is scoped to registered installs, the running service and known install roots.
+# Never change the Windows ActiveRuntime registry value.
+function Find-MMVRMetaManifest {
+ param([array]$Roots=@(),[array]$ServerPaths=@(),[string]$DefaultManifest='')
+ $paths=@()
+ foreach($path in $ServerPaths){if($path){$paths+=@(Join-Path (Split-Path $path -Parent) 'oculus_openxr_64.json')}}
+ foreach($root in $Roots){if($root){$paths+=@(Join-Path $root 'Support/oculus-runtime/oculus_openxr_64.json')}}
+ if($DefaultManifest -and [IO.Path]::GetFileName($DefaultManifest) -eq 'oculus_openxr_64.json'){$paths+=@($DefaultManifest)}
+ foreach($path in ($paths|Select-Object -Unique)){
+  if(Test-Path -LiteralPath $path -PathType Leaf){return [IO.Path]::GetFullPath($path)}
+ }
+ return $null
 }
 function Invoke-MMVRProbe {
  param([string]$Manifest)
@@ -63,18 +76,22 @@ $vdManifest=$null
 $vdProcess=@(Get-Process -Name 'VirtualDesktop.Streamer' -ErrorAction SilentlyContinue)
 foreach($process in $vdProcess){if($process.Path){$candidate=Join-Path (Split-Path $process.Path -Parent) 'OpenXR/virtualdesktop-openxr.json';if(Test-Path -LiteralPath $candidate -PathType Leaf){$vdManifest=$candidate;break}}}
 if(!$vdManifest){$candidate=Join-Path $env:ProgramFiles 'Virtual Desktop Streamer/OpenXR/virtualdesktop-openxr.json';if(Test-Path -LiteralPath $candidate -PathType Leaf){$vdManifest=$candidate}}
+$metaServers=@(Get-Process -Name OVRServer_x64 -ErrorAction SilentlyContinue)
+$metaRoot=(Get-ItemProperty -LiteralPath 'HKLM:\SOFTWARE\Oculus VR, LLC\Oculus' -ErrorAction SilentlyContinue).Base
+$metaManifest=Find-MMVRMetaManifest -Roots @($metaRoot,(Join-Path $env:ProgramFiles 'Meta Horizon'),(Join-Path $env:ProgramFiles 'Oculus')) -ServerPaths @($metaServers|ForEach-Object {$_.Path}) -DefaultManifest $defaultManifest
 $candidates=@(
  [pscustomobject]@{name='SteamVR';running=[bool](Get-Process -Name vrserver -ErrorAction SilentlyContinue);manifest=$steamManifest},
+ [pscustomobject]@{name='Meta';running=($metaServers.Count -gt 0);manifest=$metaManifest},
  [pscustomobject]@{name='VDXR';running=($vdProcess.Count -gt 0);manifest=$vdManifest}
 )
 $explicit=$env:XR_RUNTIME_JSON
 if($Runtime -ne 'Auto'){
- $explicit=if($Runtime -eq 'SteamVR'){$steamManifest}else{$vdManifest}
+ $explicit=switch($Runtime){'SteamVR'{$steamManifest};'VDXR'{$vdManifest};'Meta'{$metaManifest}}
  if(!$explicit){throw "$Runtime runtime manifest could not be located"}
 }
 $selected=Select-MMVRRuntime -Explicit $explicit -DefaultManifest $defaultManifest -Candidates $candidates -Probe {param($m) Invoke-MMVRProbe $m}
 $logDir=Join-Path $GameDirectory 'logs';New-Item -ItemType Directory -Path $logDir -Force|Out-Null
-$record=[ordered]@{utc=[DateTime]::UtcNow.ToString('o');requested=$Runtime;defaultManifest=$defaultManifest;steamVrRunning=$candidates[0].running;virtualDesktopRunning=$candidates[1].running;selection=$selected}
+$record=[ordered]@{utc=[DateTime]::UtcNow.ToString('o');requested=$Runtime;defaultManifest=$defaultManifest;steamVrRunning=$candidates[0].running;metaLinkRunning=$candidates[1].running;virtualDesktopRunning=$candidates[2].running;selection=$selected}
 $record|ConvertTo-Json -Depth 8|Set-Content -LiteralPath (Join-Path $logDir ('runtime-launch-'+(Get-Date -Format 'yyyyMMdd-HHmmss-fff')+'.json')) -Encoding UTF8
 Write-Host $selected.reason
 foreach($attempt in $selected.attempts){if($attempt.output){Write-Host $attempt.output.Trim()}}

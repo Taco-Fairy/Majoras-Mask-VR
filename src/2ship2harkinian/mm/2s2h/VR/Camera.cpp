@@ -32,6 +32,7 @@
 #include "HandGeometry.h"
 #include "flower_camera.h"
 #include "walk_step_camera.h"
+#include "lock_on_orbit.h"
 #include "room_scale_interpolation.h"
 #include "world_scale.h"
 #include "ui.h"
@@ -46,6 +47,7 @@ extern "C" float MMVR_FormEyeHeight(Player* p) {
 }
 extern "C" {
 #include "global.h"
+bool Player_IsZTargeting(Player*);
 #include "objects/object_link_child/object_link_child.h"
 #include "objects/object_link_goron/object_link_goron.h"
 #include "objects/object_test3/object_test3.h"
@@ -57,6 +59,8 @@ constexpr float Units = 40.f;
 mmvr::ItemPoseSmoother itemSmoother, bowHandSmoother;
 mmvr::FlowerCameraMotion flowerCamera;
 mmvr::WalkStepCamera walkSteps;
+mmvr::LockOnOrbit lockOnOrbit;
+mmvr::OrbitFocusInterpolation lockOnFocus;
 mmvr::RoomScaleInterpolation roomScaleInterpolation;
 double flowerTime = 0, heightTime = 0;
 float flowerGroundY = 0, flowerFloorY = 0;
@@ -139,6 +143,8 @@ void ResetCameraHistory(bool releaseActions, bool preserveActions = false) {
         bowHandSmoother.Reset();
     mmvrgame::ResetHandGeometry();
     walkSteps.Reset();
+    lockOnOrbit.Reset();
+    lockOnFocus.Reset();
     roomScaleInterpolation.Reset();
     flowerCamera.Reset();
     flowerTime = heightTime = 0;
@@ -202,7 +208,11 @@ mmvr::CameraFrame Update(const mmvr::TrackingFrame& rawTracking) {
     mmvrgame::UpdateArmRun(tracking);
     const bool giantTransition = mmvrgame::GiantTransformationActive(p);
     if (!giantTransition && mmvrgame::ViewToolCamera(tracking, result))
+    {
+        lockOnOrbit.Reset();
+        lockOnFocus.Reset();
         return result;
+    }
     if (p && mmvr::FirstPersonRequested()) {
         result.trackingScale = mmvr::WorldTrackingScale(mmvr::GetSettings(), p->transformation,
                                                        mmvrgame::StandingFormEyeHeight(p));
@@ -241,6 +251,8 @@ mmvr::CameraFrame Update(const mmvr::TrackingFrame& rawTracking) {
                 pose.m[3][k] += (&p->actor.world.pos.x)[k] - (&lastPosition.x)[k];
         }
         active = false;
+        lockOnOrbit.Reset();
+        lockOnFocus.Reset();
         // Keep the prior invalid-draw input safety: only the camera is allowed
         // to survive this gap. Old weapon/hand contacts must not remain live.
         mmvrgame::ResetHandGeometry();
@@ -259,6 +271,8 @@ mmvr::CameraFrame Update(const mmvr::TrackingFrame& rawTracking) {
         (!mmvrgame::FirstPersonFormAllowed(p) && !cinematic) || mmvrgame::SceneView(play) != mmvr::SceneView::Player ||
         gSaveContext.save.saveInfo.playerData.health == 0 || !DrawReady(play, p)) {
         active = false;
+        lockOnOrbit.Reset();
+        lockOnFocus.Reset();
         mmvrgame::ResetHandGeometry();
         wasCinematic = false;
         owner = nullptr;
@@ -377,6 +391,31 @@ mmvr::CameraFrame Update(const mmvr::TrackingFrame& rawTracking) {
     else
         height += (targetHeight - height) * heightStep;
     baseYaw += mmvrgame::AdvanceSpinTurn(tracking);
+    // Native targeting owns the selected actor, including friendly targets.
+    // Center its interpolated focus at XR cadence, using the same basis as hands
+    // and eyes. Physical head movement remains independent of this yaw orbit.
+    const bool orbitAllowed = mmvr::GetSettings().Get(mmvr::Setting::LockOnOrbit) > .5f &&
+        !facts.transition && !facts.playerLocked && !cinematic && !MMVR_HookshotInFlight(p) &&
+        mmvr::PhysicalActionsAllowed() && play->pauseCtx.state == PAUSE_STATE_OFF &&
+        !mmvrgame::NativeAbilityOwnsFacing(p) && !p->rideActor &&
+        !mmvrgame::ActiveEscortCart(play, p) &&
+        Player_IsZTargeting(p) &&
+        mmvrgame::LiveSceneActor(play, p->focusActor);
+    Actor* orbitTarget = orbitAllowed ? p->focusActor : nullptr;
+    if (orbitTarget && (orbitTarget->flags & ACTOR_FLAG_ATTENTION_ENABLED) &&
+        !(orbitTarget->flags & ACTOR_FLAG_LOCK_ON_DISABLED)) {
+        const float x = p->actor.world.pos.x + (tracking.visualValid ? tracking.visualOffset[0] : 0.f);
+        const float z = p->actor.world.pos.z + (tracking.visualValid ? tracking.visualOffset[2] : 0.f);
+        const auto targetKey = reinterpret_cast<uintptr_t>(orbitTarget);
+        const auto focus = lockOnFocus.Sample(targetKey, play->gameplayFrames,
+            {orbitTarget->focus.pos.x, orbitTarget->focus.pos.z}, tracking.visualAlpha,
+            tracking.visualValid, reset || systemRecenter);
+        baseYaw += lockOnOrbit.Update(targetKey, x, z, focus.x, focus.z, tracking.timeSeconds,
+            baseYaw, mmvr::PoseYaw(relative) + tracking.snapYaw, reset || systemRecenter);
+    } else {
+        lockOnOrbit.Reset();
+        lockOnFocus.Reset();
+    }
     float bodyBase = baseYaw + tracking.snapYaw;
     float flowerYaw = mmvr::GetSettings().Get(mmvr::Setting::FlowerCameraSpin) > .5f ? flowerCamera.Yaw() : 0.f;
     heading = bodyBase + mmvr::PoseYaw(relative) + flowerYaw;
@@ -408,7 +447,8 @@ mmvr::CameraFrame Update(const mmvr::TrackingFrame& rawTracking) {
             Vec3f floorProbe{ resolved.x, before.y + 12.f, resolved.z };
             CollisionPoly* floor = nullptr;
             float floorY = BgCheck_EntityRaycastFloor5(&play->colCtx, &floor, &bgId, &p->actor, &floorProbe);
-            if (floor && floorY - before.y <= 8.f && floorY - before.y >= -18.f) {
+            if (floor && floorY - before.y <= 8.f && floorY - before.y >= -18.f &&
+                !mmvrgame::RoomScalePropBlocked(play, p, { resolved.x, floorY, resolved.z })) {
                 resolved.y = floorY;
                 roomScaleInterpolation.Moved(resolved.x-before.x, resolved.y-before.y, resolved.z-before.z);
                 mmvrgame::MovePlayerBody(play, p, { resolved.x, resolved.y, resolved.z });
@@ -726,6 +766,8 @@ void ResetTestCamera() {
     itemSmoother.Reset();
         bowHandSmoother.Reset();
     flowerCamera.Reset();
+    lockOnOrbit.Reset();
+    lockOnFocus.Reset();
     flowerTime = 0;
     active = wasCinematic = false;
     owner = nullptr;

@@ -1,9 +1,9 @@
-# Majora's Mask VR â€” standalone Quest player guide
+# Majora's Mask VR - standalone Quest player guide
 Full Motion Majora's Mask VR mod, made by Full Dive Games.
 
 Disclaimer: This is made using Vibe coding. I make no money from this mod, and I've put a lot of time and testing into making it polished, fun, and fully playable.
 
-**v0.2 - World Scale and Hotfix Update:** World scale and floor calibration, correct hand/item sizing, startup setup and update checks, recovery/diagnostics, save-state safeguards, and physical sword fixes. Release notes are also in the VR menu under System.
+**v0.26 - Saving and Gameplay Hotfixes:** VR saving, wired controller remapping, VR search, optional lock-on orbit, stage-song and rock fixes. See System > Release notes in VR.
 
 ## First installation
 
@@ -50,6 +50,8 @@ The default application cap is **90 FPS**; available caps are Uncapped, 90, 80 a
 
 Eye resolution scale defaults to 1.0 of the runtime-recommended eye size. Leave it at 1.0 initially. The system recenter function is supported; the in-game recenter action and System menu provide alternatives. Recenter from your intended neutral position.
 ## How to play: saving and resuming
+
+Use **System > Session and files > Save game** for a normal save. Pause Menu Save, Persistent Owl Saves and Remember Save Location are enabled by default. Continue your file to return to its saved entrance; finish dialogue or minigames before saving.
 
 **Save states are available on both PCVR and Quest.** During gameplay, click the right thumbstick to open the VR menu, then go to **System > Save states**. Choose **Save slot 1, 2 or 3** to capture your current game state, and the matching **Load slot** to resume it. Loading replaces your current progress with that state. Keep ordinary in-game saves too; exact states require compatible game data and state layouts. See [Exact save states and ordinary saves](#exact-save-states-and-ordinary-saves) below for compatibility and backup details.
 
@@ -111,7 +113,7 @@ The headset's system button stays reserved for its operating system. **Controls 
 
 **Goron:** with hands otherwise free, tap B to ready physical fists; tap again to stow. Deliberate punches produce attacks. Offhand grip invokes the native curl/defense action; use native action prompts for rolling and pounding. While rolling, B retains the native ball-jump role. Powder kegs and heavy lifting still require eligibility.
 
-**Zora:** physical fin strikes work with deliberate hand motion. Hold B to aim the fin boomerangs and release to throw; aiming follows headset direction. Targeting ends automatically when both fins return to your hands; press Y again to lock on. Offhand grip presents the shield. Swimming and the initial swim dash are headset-directed; use native swim/dive prompts and the movement stick. **Forms > Form effects and aiming** contains swimming pitch limit and swimming speed (50â€“200%). Attached fin size is visual and does not change strike reach.
+**Zora:** physical fin strikes work with deliberate hand motion. Hold B to aim the fin boomerangs and release to throw; aiming follows headset direction. Targeting ends automatically when both fins return to your hands; press Y again to lock on. Offhand grip presents the shield. Swimming and the initial swim dash are headset-directed; use native swim/dive prompts and the movement stick. **Forms > Form effects and aiming** contains swimming pitch limit and swimming speed (50-200%). Attached fin size is visual and does not change strike reach.
 
 **Kafei quest:** while you control Kafei, his hands follow your controllers and you cannot equip or use Link's items. The fairy is hidden while Kafei is active and returns when control switches back to Link.
 
@@ -134,7 +136,7 @@ The VR menu's **2Ship** tab also exposes native port options in five groups: **A
 - **View:** movement, camera comfort, lock-on dimming and fairy settings. **Experimental First-Person Motion** is under **View > Comfort** and is off by default; the regular camera remains the default. **Fairy > Near-head fairy comfort** defaults on: close to your face, the fairy trails are hidden and the fairy fades to half-transparent. Night title cards stay in headset view; dawn title cards play in theater mode. Cutscenes may still have framing or transition issues because the original game was not made for first-person VR.
 - **Graphics:** frame cap, resolution scale, headset culling and scene rendering. Scale 1.0 uses the runtime's recommended eye size; it is not necessarily the display panel's pixel count.
 - **Hands:** dominant hand, size, offsets and calibration.
-- **Combat:** targeting, spin, sword/shield/punch thresholds and hit-pause preference.
+- **Combat:** targeting, spin, sword/shield/punch thresholds and hit-pause preference. Optional **Lock-on target camera orbit** smoothly faces any locked target as you move around it; it is off by default.
 - **HUD:** HUD placement/opacity, FPS display, wheel appearance, menu and dialogue controls. Text-box size defaults to 60%; dialogue text size/opacity and box opacity have separate settings.
 - **Items:** four-to-eight wheel slots, physical interaction switches, aiming, throwing, bottles/masks and climbing.
 - **Forms:** relevant form effects/aiming and swimming tuning.
@@ -205,15 +207,17 @@ Update downloads are verified before installation. Windows keeps rollback files 
 With world scale enabled (the default for new settings), recenter while sitting or standing in your normal playing position. If your VR runtime supplies a calibrated floor, the game uses your eye-to-floor distance at recenter for every form. It does not change your boundary. If the runtime has no floor, set **Fallback floor-to-eye height** to your seated or standing eye height above the floor, then recenter. The default 100% form scales align the physical floor with the character’s floor; custom form world-size percentages intentionally change that relationship. Hands and held equipment retain their physical size.
 
 
-### Private preview additions (not published)
-- **2Ship:** search setting names with the VR keyboard. **Items and masks** includes Persistent Bunny Hood and Blast Mask cooldown. Enable Persistent Bunny Hood, then press A on your owned Bunny Hood in the mask menu to toggle its boost.
+### More settings
+- **2Ship:** search setting names with the VR keyboard. Search also finds VR settings; select a result to open its VR tab and control. **Items and masks** includes Persistent Bunny Hood and Blast Mask cooldown. Enable Persistent Bunny Hood, then press A on your owned Bunny Hood in the mask menu to toggle its boost.
 - **Combat:** adjust sword and Goron fist hitbox size without enlarging their models. Fast physical sword spins can use the unlocked great spin when magic is available.
 - **HUD:** choose Headset, Left hand, or Right hand under HUD attachment; Hand HUD size resizes it. Existing HUD opacity still applies; dialogue and menus keep their own settings.
 
-Private preview bottle repair: improved hot-spring and bug scooping with world scale, plus an Elder ice-state crash guard. Not publicly released.
+Bottle pickup includes hot-spring water and bugs, with world-scale support.
 
 Frame rate options: Uncapped, 120, 90, 80 or 72 FPS. Uncapped removes the game limiter; the headset/runtime still controls display refresh.
 
 Large texture packs are verified in the background before save states are available. If the menu says verification is still running, retry Save/Load shortly; keep the same build and packs when loading a state.
 
 Bow hand angles and holding-hand smoothing are under **Items → Bow and aiming**. The item wheel shows consumable counts. Release notes are under **System → Release notes**.
+
+**v0.26:** Save game is under System > Session and files. Persistent owl saves, pause-menu saving and remembered location default on for unconfigured settings. Combat has an optional target-centered lock-on orbit. 2Ship search also finds VR settings.

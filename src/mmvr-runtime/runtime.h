@@ -75,6 +75,9 @@ void ToggleStereo() noexcept;
 void ApplyViewMode(int mode) noexcept;
 void SetFirstPersonEligibility(bool allowed) noexcept;
 void SetDialogueChoice(bool active) noexcept;
+// Render-thread binding changes discard queued presses and require neutral release.
+// Tracking origin, camera height and saved non-control settings are unchanged.
+void ControlBindingsChanged() noexcept;
 void SetMaskGrabBlocker(bool (*callback)(int hand)) noexcept;
 // Invalidate native-coordinate history without recentering the headset.
 void ResetCoordinateTracking(bool releaseActions = true) noexcept;
