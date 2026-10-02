@@ -54,6 +54,7 @@ class Cutscene : public Ship::Resource<uint32_t> {
     static bool HasPlayerParticipation(const void* script);
     static bool HasOriginalMaskFall(const void* script);
     static bool IsAreaIntroduction(const void* script);
+    static bool IsHistoricalFlashback(const void* script);
     uint32_t* GetPointer();
     size_t GetPointerSize();
 

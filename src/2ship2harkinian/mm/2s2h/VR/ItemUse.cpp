@@ -8,6 +8,7 @@
 #include "Camera.h"
 #include "Bow.h"
 #include "Bottle.h"
+#include "Masks.h"
 #include "NativeCombat.h"
 #include "item_trigger.h"
 #include "runtime.h"
@@ -18,8 +19,10 @@ extern "C" {
 #include "global.h"
 int MMVR_ReadyThrowable(PlayState*, Player*, int);
 extern u8 gPlayerFormItemRestrictions[PLAYER_FORM_MAX][114];
+extern u16 sMasksGivenOnMoonBits[];
 void MMVR_PlayerEquipSword(PlayState*, Player*, ItemId);
 void Player_UseItem(PlayState*, Player*, ItemId);
+void Player_Action_63(Player*, PlayState*);
 }
 extern bool sBombSlotIsBombArrowMode;
 namespace {
@@ -48,6 +51,7 @@ std::deque<Edge> edges;
 Player* owner = nullptr;
 int scene = -1, selected = ITEM_NONE, inventorySlot = -1, hand = -1, selectedForm = -1;
 bool holding = false, equipPending = false;
+bool quickWheelPending = false, wheelInstrument = false;
 double frameTime = -1;
 mmvrgame::ThrowSample delayedRelease{};
 bool delayedRestoreEquipment=true;
@@ -64,6 +68,17 @@ bool Eligible(PlayState* play, Player* p) {
     return mmvrgame::InteractionsEligible(play, p) && mmvr::PhysicalActionsAllowed() &&
            play->msgCtx.msgMode == MSGMODE_NONE && !(p->stateFlags1 & PLAYER_STATE1_4000000) &&
            !(p->stateFlags2 & PLAYER_STATE2_USING_OCARINA);
+}
+bool WheelInstrumentActive(PlayState* play, Player* p) {
+    // Only the user's wheel-started free play may be dismissed. Lessons,
+    // song recognition/dialogue and actor-owned performances keep native input.
+    return wheelInstrument && mmvr::GetSettings().Get(mmvr::Setting::QuickWheelItems) > .5f &&
+           p && owner == p && scene == play->sceneId && selected == ITEM_OCARINA_OF_TIME &&
+           mmvr::StateResumeInputReady() && !mmvr::GetSelector().open && mmvrgame::InteractionsEligible(play,p) &&
+           p->actionFunc == Player_Action_63 && (p->stateFlags2 & PLAYER_STATE2_USING_OCARINA) &&
+           play->msgCtx.ocarinaAction == OCARINA_ACTION_FREE_PLAY &&
+           play->msgCtx.msgMode == MSGMODE_OCARINA_PLAYING &&
+           play->msgCtx.ocarinaMode == OCARINA_MODE_ACTIVE;
 }
 void Equip(PlayState* play, Player* p, int item) {
     if (item == ITEM_HOOKSHOT)
@@ -101,6 +116,35 @@ bool ExchangeItemContextActive(PlayState* play) {
            p->exchangeItemAction > PLAYER_IA_NONE && p->exchangeItemAction < PLAYER_IA_MASK_MIN &&
            !(p->stateFlags2 & PLAYER_STATE2_USING_OCARINA) && play->msgCtx.msgMode == MSGMODE_NONE;
 }
+int InventorySlotItem(int slot) {
+    if (slot < 0 || slot >= ITEM_NUM_SLOTS + MASK_NUM_SLOTS)
+        return ITEM_NONE;
+    if (slot >= ITEM_NUM_SLOTS) {
+        // Native pause-menu ordering differs from mask item/action ordering.
+        // Reuse its table: Moon children retain inventory but flag masks lent out.
+        const u16 bit = sMasksGivenOnMoonBits[slot - ITEM_NUM_SLOTS];
+        if (gSaveContext.masksGivenOnMoon[bit >> 8] & (u8)bit)
+            return ITEM_NONE;
+    }
+    return gSaveContext.save.saveInfo.inventory.items[slot];
+}
+bool MaskGivenOnMoon(int item) {
+    if (item < ITEM_MASK_DEKU || item > ITEM_MASK_GIANT)
+        return false;
+    const int slot = SLOT(item);
+    if (slot < ITEM_NUM_SLOTS || slot >= ITEM_NUM_SLOTS + MASK_NUM_SLOTS)
+        return false;
+    const u16 bit = sMasksGivenOnMoonBits[slot - ITEM_NUM_SLOTS];
+    return (gSaveContext.masksGivenOnMoon[bit >> 8] & (u8)bit) != 0;
+}
+bool MaskAvailable(int item) {
+    if (item < ITEM_MASK_DEKU || item > ITEM_MASK_GIANT || MaskGivenOnMoon(item))
+        return false;
+    for (int slot = 0; slot < ITEM_NUM_SLOTS + MASK_NUM_SLOTS; ++slot)
+        if (InventorySlotItem(slot) == item)
+            return true;
+    return false;
+}
 int WheelSlotItem(PlayState* play, int slot) {
     if (!play || slot < 0 || slot > 48)
         return ITEM_NONE;
@@ -110,7 +154,7 @@ int WheelSlotItem(PlayState* play, int slot) {
         gSaveContext.save.saveInfo.inventory.items[SLOT_BOW] == ITEM_BOW)
         return ITEM_BOW;
     if (slot != 48)
-        return gSaveContext.save.saveInfo.inventory.items[slot];
+        return InventorySlotItem(slot);
     // The sword slot represents equipment, not Blast/Bremen/Kamaro's contextual B action.
     // Keep native B-disable rules and reject synthetic action IDs before icon lookup.
     const int sword = Inventory_GetBtnBItem(play);
@@ -128,7 +172,7 @@ bool ItemAllowed(Player* p, int item) {
         return true;
     // Mask replacement is mediated by the native transformation/ceiling rules.
     if (item >= ITEM_MASK_DEKU && item <= ITEM_MASK_GIANT)
-        return true;
+        return MaskAvailable(item);
     if (item == ITEM_SWORD_DEITY)
         return p->transformation == PLAYER_FORM_FIERCE_DEITY;
     if (item >= ITEM_SWORD_KOKIRI && item <= ITEM_SWORD_GILDED)
@@ -165,6 +209,7 @@ void StowItem(PlayState* play) {
     ClearBow();
     ClearCombat();
     mmvr::CancelHeldMask();
+    quickWheelPending = wheelInstrument = false;
     auto* p = GET_PLAYER(play);
     if (HeldBombchu(p)) {
         if (!PlaceBombchu(play, p))
@@ -198,9 +243,11 @@ int MinigameExplosive(PlayState* play) {
     return (item == ITEM_BOMB || item == ITEM_BOMBCHU) ? item : ITEM_NONE;
 }
 int SelectedItem(PlayState* play) {
-    return play && owner == GET_PLAYER(play) && scene == play->sceneId ? selected : ITEM_NONE;
+    return play && owner == GET_PLAYER(play) && scene == play->sceneId && !MaskGivenOnMoon(selected)
+        ? selected : ITEM_NONE;
 }
 void ClearItemSelection() {
+    quickWheelPending = wheelInstrument = false;
     exchangeContext = exchangeSent = false;
     exchangeActor = nullptr;
     exchangeText = -1;
@@ -225,11 +272,15 @@ bool SelectItem(PlayState* play, int slot, int item) {
     if (!exchange && p->heldActor && !Player_IsHoldingHookshot(p))
         return true;
     ClearItemTrigger();
+    mmvr::CancelHeldMask();
+    quickWheelPending = wheelInstrument = false;
     owner = p;
     scene = play->sceneId;
     selectedForm = p->transformation;
     selected = item;
     inventorySlot = slot;
+    quickWheelPending = !exchange && mmvr::GetSettings().Get(mmvr::Setting::QuickWheelItems) > .5f &&
+        (item == ITEM_OCARINA_OF_TIME || (item >= ITEM_MASK_DEKU && item <= ITEM_MASK_GIANT));
     // Selecting an offer must not replace the NPC's talk action or draw/use it.
     if (exchange) {
         Log("offer-selected", item);
@@ -256,6 +307,7 @@ void UpdateItemTrigger(const mmvr::TrackingFrame& frame) {
         scene = play ? play->sceneId : -1;
     }
     if (p && selectedForm != p->transformation) {
+        quickWheelPending = wheelInstrument = false;
         ClearItemTrigger();
         mmvr::CancelHeldMask();
         selectedForm = p->transformation;
@@ -269,6 +321,10 @@ void UpdateItemTrigger(const mmvr::TrackingFrame& frame) {
         ClearItemTrigger();
         hand = dominant;
     }
+    // An NPC may take the selected mask while dialogue owns the player. Cancel
+    // stale VR edges/held presentation immediately, without changing that action.
+    if (p && MaskGivenOnMoon(selected))
+        ClearItemSelection();
     SyncExchangeContext(play);
     if (p && owner == p && inventorySlot >= SLOT_BOTTLE_1 && inventorySlot <= SLOT_BOTTLE_6 &&
         p->heldItemButton == EQUIP_SLOT_C_DOWN && C_SLOT_EQUIP(0, EQUIP_SLOT_C_DOWN) == inventorySlot) {
@@ -278,7 +334,8 @@ void UpdateItemTrigger(const mmvr::TrackingFrame& frame) {
             ClearItemTrigger(); // A catch/release never reuses the edge which started it.
         }
     }
-    if (!p || !(exchangeContext ? mmvr::PhysicalActionsAllowed() : Eligible(play, p))) {
+    if (!p || !(exchangeContext ? mmvr::PhysicalActionsAllowed() :
+                (Eligible(play, p) || WheelInstrumentActive(play,p)))) {
         ClearItemTrigger();
         return;
     }
@@ -298,6 +355,8 @@ void UpdateItemTrigger(const mmvr::TrackingFrame& frame) {
 }
 void ProcessItemTrigger(PlayState* play) {
     auto* p = GET_PLAYER(play);
+    if (MaskGivenOnMoon(selected))
+        ClearItemSelection();
     SyncExchangeContext(play);
     if (exchangeContext) {
         if (!mmvr::PhysicalActionsAllowed()) {
@@ -324,6 +383,23 @@ void ProcessItemTrigger(PlayState* play) {
         }
         return;
     }
+    if (WheelInstrumentActive(play,p)) {
+        while (!edges.empty()) {
+            const auto edge = edges.front();
+            edges.pop_front();
+            if (edge.kind != 1 || edge.hand != mmvr::SwordController(mmvr::GetSettings())) continue;
+            // Same native cancellation sequence as the message system. The
+            // player action still owns instrument/camera/animation cleanup.
+            AudioOcarina_SetInstrument(OCARINA_INSTRUMENT_OFF);
+            Message_CloseTextbox(play);
+            play->msgCtx.ocarinaMode = OCARINA_MODE_END;
+            wheelInstrument = false;
+            ClearItemTrigger();
+            Log("instrument-stowed", selected);
+            break;
+        }
+        return;
+    }
     if (!Eligible(play, p)) {
         ClearItemTrigger();
         return;
@@ -342,6 +418,28 @@ void ProcessItemTrigger(PlayState* play) {
         p->heldItemButton = EQUIP_SLOT_C_DOWN;
         Equip(play, p, selected);
         equipPending = false;
+    }
+    if (quickWheelPending) {
+        if (mmvr::GetSettings().Get(mmvr::Setting::QuickWheelItems) <= .5f ||
+            owner != p || scene != play->sceneId || inventorySlot < 0 || inventorySlot >= 48 ||
+            WheelSlotItem(play,inventorySlot) != selected ||
+            GET_CUR_FORM_BTN_ITEM(EQUIP_SLOT_C_DOWN) != selected) {
+            quickWheelPending = false;
+        } else if (!equipPending && !p->heldActor && p->itemAction == p->heldItemAction) {
+            // Native availability still decides whether an instrument can be
+            // played here. A denied request is not retried on every game tick.
+            quickWheelPending = false;
+            if (selected == ITEM_OCARINA_OF_TIME) {
+                Player_UseItem(play,p,ITEM_OCARINA_OF_TIME);
+                wheelInstrument = p->itemAction == PLAYER_IA_OCARINA;
+                ClearItemTrigger();
+                return;
+            }
+            UpdateMaskContext(play);
+            mmvr::HoldSelectedMask();
+            ClearItemTrigger();
+            return;
+        }
     }
     if (delayedBombchu) {
         if (p->heldActor != delayedBombchu || !HeldBombchu(p))
@@ -433,6 +531,8 @@ void ProcessItemTrigger(PlayState* play) {
         // Player_UseItem still owns grounded/underwater/dialogue eligibility and the song action.
         if (selected == ITEM_OCARINA_OF_TIME) {
             Player_UseItem(play, p, ITEM_OCARINA_OF_TIME);
+            wheelInstrument = mmvr::GetSettings().Get(mmvr::Setting::QuickWheelItems) > .5f &&
+                              p->itemAction == PLAYER_IA_OCARINA;
             Log("instrument", selected);
             continue;
         }
@@ -488,6 +588,8 @@ extern "C" void MMVR_VisitVrItemUseState(MMVR_StateSink* sink) {
     mmvrgame::NativeStateField(sink,"vr/item-use/selectedForm",selectedForm);
     mmvrgame::NativeStateField(sink,"vr/item-use/holding",holding);
     mmvrgame::NativeStateField(sink,"vr/item-use/equipPending",equipPending);
+    mmvrgame::NativeStateField(sink,"vr/item-use/quickWheelPending",quickWheelPending);
+    mmvrgame::NativeStateField(sink,"vr/item-use/wheelInstrument",wheelInstrument);
     mmvrgame::NativeStateField(sink,"vr/item-use/delayedRelease",delayedRelease);
     mmvrgame::NativeStateField(sink,"vr/item-use/delayedRestoreEquipment",delayedRestoreEquipment);
     mmvrgame::NativeStateField(sink,"vr/item-use/delayedActor",delayedActor);

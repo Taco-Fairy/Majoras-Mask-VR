@@ -81,15 +81,11 @@ static void NativeItemUseTest(PlayState* play,const Player& baseline,std::ostrea
   if(hook)Actor_Kill(hook);p->heldActor=p->actor.child=nullptr;
  }
  log<<",\"triggerHookshot\":"<<hooks;
- // With tracked aim disabled, the trigger must reach the native C-button hookshot action.
- mmvr::GetSettings().Set(mmvr::Setting::TrackedAim,0);prepare(ITEM_HOOKSHOT,SLOT_HOOKSHOT);
- frame.epoch=812;dominant=mmvr::SwordController(mmvr::GetSettings());
- for(int i=0;i<6;++i){frame.timeSeconds=527+i/90.;frame.triggers[0]=frame.triggers[1]=0;frame.triggers[dominant]=i>=3?1:0;
-  mmvrgame::RecordTracking(frame,view,head);if(i%3==0)MMVR_ProcessInteractions(play);}
- bool nativeHookshotTrigger=(CONTROLLER1(&play->state)->press.button&BTN_CDOWN)!=0;
- log<<",\"nativeHookshotTrigger\":"<<nativeHookshotTrigger;
- if(p->heldActor)Actor_Kill(p->heldActor);p->heldActor=p->actor.child=nullptr;
- mmvr::GetSettings().Set(mmvr::Setting::TrackedAim,1);
+ // The user removed this first-person switch. Old profile values must not
+ // disable tracked aiming; the actual hookshot firing is checked above.
+ mmvr::GetSettings().Set(mmvr::Setting::TrackedAim,0);
+ bool mandatoryTrackedAim=mmvr::GetSettings().Get(mmvr::Setting::TrackedAim)>.5f;
+ log<<",\"mandatoryTrackedAim\":"<<mandatoryTrackedAim;
  // B stows a bow. Its next B press draws the sword; one more B stows that sword.
  prepare(ITEM_BOW,SLOT_BOW);frame.epoch=820;frame.timeSeconds=530;frame.triggers[0]=frame.triggers[1]=0;mmvrgame::RecordTracking(frame,view,head);
  mmvrgame::ProcessSwordEquip(play,false);CONTROLLER1(&play->state)->press.button=BTN_B;mmvrgame::ProcessCombatInput(play);bool stow=p->heldItemAction==PLAYER_IA_NONE;

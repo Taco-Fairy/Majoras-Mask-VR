@@ -152,6 +152,8 @@ int HeldMaskItem() noexcept;
 int HeldMaskController() noexcept;
 bool UpdateMaskTracking(const TrackingFrame&, bool allowed) noexcept;
 void CancelHeldMask() noexcept;
+// Present an owned, unworn wheel selection without a held trigger.
+bool HoldSelectedMask() noexcept;
 void SetClimbingContext(bool) noexcept;
 void SetThrowableContext(bool) noexcept;
 bool TakeThrowRequest() noexcept;

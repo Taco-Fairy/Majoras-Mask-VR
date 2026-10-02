@@ -51,10 +51,14 @@ Pad ConsumePad() noexcept;
 bool PhysicalActionsAllowed() noexcept;
 // Explicit isolated native harness only; cannot enable without MMVR_NATIVE_TEST=1.
 void SetNativeTestTracking(bool enabled) noexcept;
+void SetNativeTestNotebook(const XrPosef& hand, float x, float y) noexcept;
 extern bool nativeTestTracking;
 void SetNativeTestEye(float yaw) noexcept;
 void SetNativeTestCamera(const CameraFrame& frame) noexcept;
 void SetPauseCommands(const void*) noexcept;
+void SetNotebook(bool active) noexcept;
+bool NotebookActive() noexcept;
+bool ConsumeNotebookTouch(float& x, float& y) noexcept;
 void SetDialogueCommands(const void* commands, const void* body) noexcept;
 void SetScreenScaleCommands(const void* overlay, const void* world) noexcept;
 const void* ScreenScaleWorldCommands() noexcept;

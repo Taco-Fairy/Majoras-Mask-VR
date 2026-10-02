@@ -32,12 +32,7 @@ Player* formOwner = nullptr;
 int formScene = -1, observedForm = -1, restoreSelection = ITEM_NONE;
 bool restoreEmptyHands = false;
 bool OwnsMask(int item) {
-    if (item < ITEM_MASK_DEKU || item > ITEM_MASK_GIANT)
-        return false;
-    for (int slot = 0; slot < 48; ++slot)
-        if (gSaveContext.save.saveInfo.inventory.items[slot] == item)
-            return true;
-    return false;
+    return mmvrgame::MaskAvailable(item);
 }
 bool MaskAllowed(PlayState* play) {
     if (!play)
@@ -130,6 +125,18 @@ void UpdateMaskContext(PlayState* play) {
 void ProcessMasks(PlayState* play) {
     UpdateRemovedMask(play);
     auto* current = play ? GET_PLAYER(play) : nullptr;
+    // Physical masks may remain worn without a C-button assignment. A mask
+    // surrendered on the Moon is the native exception: remove it through the
+    // ordinary toggle once dialogue/transformations release player ownership.
+    if (current && mmvr::FirstPersonRequested() && current->transformation == PLAYER_FORM_HUMAN &&
+        current->itemAction == current->heldItemAction && MaskAllowed(play)) {
+        const int worn = Player_GetCurMaskItemId(play);
+        if (mmvrgame::MaskGivenOnMoon(worn)) {
+            Player_UseItem(play, current, static_cast<ItemId>(worn));
+            UpdateMaskContext(play);
+            return;
+        }
+    }
     if (queuedRegularMask >= 0) {
         if (!current || queuedOwner != current || queuedScene != play->sceneId ||
             SelectedItem(play) != queuedRegularMask || !OwnsMask(queuedRegularMask) ||

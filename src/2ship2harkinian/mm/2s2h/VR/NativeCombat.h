@@ -2,6 +2,7 @@
 #include "first_person.h"
 #include "NativeClimbing.h"
 #include "FormPresentation.h"
+#include "sword_charge.h"
 struct PlayState;struct Player;
 extern "C" {
 #include "z64collision_check.h"
@@ -23,5 +24,7 @@ void QueuePhysicalCombat(PlayState*,Player*);
 void UpdateShield(const mmvr::TrackingFrame&,const mmvr::Matrix& rightHand);
 const void* TrackedShieldMesh(Player*);
 void UpdateSwordDiagnostics(const mmvr::TrackingFrame&,mmvr::Matrix& leftHand);
+mmvr::SwordChargeVisual TrackedSwordCharge(PlayState*);
+bool DrawTrackedSwordCharge(PlayState*, void* handMatrix, bool mirrored);
 }
 extern "C" int MMVR_TakeDekuPhysicalSpinRequest(PlayState*,Player*);

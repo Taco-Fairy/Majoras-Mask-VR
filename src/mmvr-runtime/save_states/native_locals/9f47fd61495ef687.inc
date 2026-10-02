@@ -8,6 +8,9 @@
 #include <string.h>
 
 #include "BenPort.h"
+#ifdef MMVR_ENABLE
+#include "2s2h/VR/Camera.h"
+#endif
 
 #define BOMBERS_NOTEBOOK_ENTRY_SIZE 3
 #define BOMBERS_NOTEBOOK_ENTRY_MAX 10
@@ -576,14 +579,14 @@ TexturePtr sBombersNotebookPhotoTextures[] = {
 #undef DEFINE_PERSON
 #undef DEFINE_EVENT
 
-static s16 mmvr_local_3bf871e3ca11ea68 = 0;
-static s16 mmvr_local_673148b9fc3855ce = 0;
-static s16 mmvr_local_152b0bafb0ac7684 = 0;
-static s16 mmvr_local_70a48dc843a1f783 = 10;
-static s16 mmvr_local_bc0c7cb0b1b3896e = 0;
-static s16 mmvr_local_6518db2c19fe7885[] = { 100, 0 };
-static s16 mmvr_local_ec86874484327751[] = { 80, 0 };
-static s16 mmvr_local_924ea665e13b7a58[] = { 255, 0 };
+static s16 mmvr_local_f9578e446a2aa865 = 0;
+static s16 mmvr_local_9b912428b697c792 = 0;
+static s16 mmvr_local_c0a09ce6e348e581 = 0;
+static s16 mmvr_local_4a10873b2ffb086a = 10;
+static s16 mmvr_local_6268ec63addcd5ec = 0;
+static s16 mmvr_local_dec4ba62eb81aa4d[] = { 100, 0 };
+static s16 mmvr_local_c306b9c44901e336[] = { 80, 0 };
+static s16 mmvr_local_acd27c0073740946[] = { 255, 0 };
 void BombersNotebook_DrawRows(BombersNotebook* this, Gfx** gfxP) {
     /* persistent local storage is declared above */
     /* persistent local storage is declared above */
@@ -604,34 +607,34 @@ void BombersNotebook_DrawRows(BombersNotebook* this, Gfx** gfxP) {
     u32 rectTop;
     s16 colorStep;
 
-    colorStep = ABS_ALT(mmvr_local_3bf871e3ca11ea68 - mmvr_local_6518db2c19fe7885[mmvr_local_bc0c7cb0b1b3896e]) / mmvr_local_70a48dc843a1f783;
-    if (mmvr_local_3bf871e3ca11ea68 >= mmvr_local_6518db2c19fe7885[mmvr_local_bc0c7cb0b1b3896e]) {
-        mmvr_local_3bf871e3ca11ea68 -= colorStep;
+    colorStep = ABS_ALT(mmvr_local_f9578e446a2aa865 - mmvr_local_dec4ba62eb81aa4d[mmvr_local_6268ec63addcd5ec]) / mmvr_local_4a10873b2ffb086a;
+    if (mmvr_local_f9578e446a2aa865 >= mmvr_local_dec4ba62eb81aa4d[mmvr_local_6268ec63addcd5ec]) {
+        mmvr_local_f9578e446a2aa865 -= colorStep;
     } else {
-        mmvr_local_3bf871e3ca11ea68 += colorStep;
+        mmvr_local_f9578e446a2aa865 += colorStep;
     }
 
-    colorStep = ABS_ALT(mmvr_local_673148b9fc3855ce - mmvr_local_ec86874484327751[mmvr_local_bc0c7cb0b1b3896e]) / mmvr_local_70a48dc843a1f783;
-    if (mmvr_local_673148b9fc3855ce >= mmvr_local_ec86874484327751[mmvr_local_bc0c7cb0b1b3896e]) {
-        mmvr_local_673148b9fc3855ce -= colorStep;
+    colorStep = ABS_ALT(mmvr_local_9b912428b697c792 - mmvr_local_c306b9c44901e336[mmvr_local_6268ec63addcd5ec]) / mmvr_local_4a10873b2ffb086a;
+    if (mmvr_local_9b912428b697c792 >= mmvr_local_c306b9c44901e336[mmvr_local_6268ec63addcd5ec]) {
+        mmvr_local_9b912428b697c792 -= colorStep;
     } else {
-        mmvr_local_673148b9fc3855ce += colorStep;
+        mmvr_local_9b912428b697c792 += colorStep;
     }
 
-    colorStep = ABS_ALT(mmvr_local_152b0bafb0ac7684 - mmvr_local_924ea665e13b7a58[mmvr_local_bc0c7cb0b1b3896e]) / mmvr_local_70a48dc843a1f783;
-    if (mmvr_local_152b0bafb0ac7684 >= mmvr_local_924ea665e13b7a58[mmvr_local_bc0c7cb0b1b3896e]) {
-        mmvr_local_152b0bafb0ac7684 -= colorStep;
+    colorStep = ABS_ALT(mmvr_local_c0a09ce6e348e581 - mmvr_local_acd27c0073740946[mmvr_local_6268ec63addcd5ec]) / mmvr_local_4a10873b2ffb086a;
+    if (mmvr_local_c0a09ce6e348e581 >= mmvr_local_acd27c0073740946[mmvr_local_6268ec63addcd5ec]) {
+        mmvr_local_c0a09ce6e348e581 -= colorStep;
     } else {
-        mmvr_local_152b0bafb0ac7684 += colorStep;
+        mmvr_local_c0a09ce6e348e581 += colorStep;
     }
 
-    mmvr_local_70a48dc843a1f783--;
-    if (mmvr_local_70a48dc843a1f783 == 0) {
-        mmvr_local_70a48dc843a1f783 = 10;
-        mmvr_local_3bf871e3ca11ea68 = mmvr_local_6518db2c19fe7885[mmvr_local_bc0c7cb0b1b3896e];
-        mmvr_local_673148b9fc3855ce = mmvr_local_ec86874484327751[mmvr_local_bc0c7cb0b1b3896e];
-        mmvr_local_152b0bafb0ac7684 = mmvr_local_924ea665e13b7a58[mmvr_local_bc0c7cb0b1b3896e];
-        mmvr_local_bc0c7cb0b1b3896e ^= 1;
+    mmvr_local_4a10873b2ffb086a--;
+    if (mmvr_local_4a10873b2ffb086a == 0) {
+        mmvr_local_4a10873b2ffb086a = 10;
+        mmvr_local_f9578e446a2aa865 = mmvr_local_dec4ba62eb81aa4d[mmvr_local_6268ec63addcd5ec];
+        mmvr_local_9b912428b697c792 = mmvr_local_c306b9c44901e336[mmvr_local_6268ec63addcd5ec];
+        mmvr_local_c0a09ce6e348e581 = mmvr_local_acd27c0073740946[mmvr_local_6268ec63addcd5ec];
+        mmvr_local_6268ec63addcd5ec ^= 1;
     }
 
     rectTop = this->scrollOffset + 107;
@@ -668,7 +671,7 @@ void BombersNotebook_DrawRows(BombersNotebook* this, Gfx** gfxP) {
                                         0, 0, 0, 1024.0f / (photoRectDs / 100.0f), 1024.0f / (photoRectDs / 100.0f));
 
         if ((i == (this->cursorPageRow + cursorPage)) && (this->scrollAmount == 0)) {
-            gDPSetPrimColor(gfx++, 0, 0, mmvr_local_3bf871e3ca11ea68, mmvr_local_673148b9fc3855ce, mmvr_local_152b0bafb0ac7684, 255);
+            gDPSetPrimColor(gfx++, 0, 0, mmvr_local_f9578e446a2aa865, mmvr_local_9b912428b697c792, mmvr_local_c0a09ce6e348e581, 255);
         } else {
             gDPSetPrimColor(gfx++, 0, 0, 0, 0, 0, 60);
         }
@@ -984,20 +987,20 @@ void BombersNotebook_DrawCursor(BombersNotebook* this, Gfx** gfxP) {
     *gfxP = gfx;
 }
 
-static s16 mmvr_local_3e90bff4abd06b97 = 0;
-static s16 mmvr_local_3aa12a911e200968 = 100;
-static s16 mmvr_local_ada80811db644105 = 255;
-static s16 mmvr_local_eb839de90d95aea6 = 0;
-static s16 mmvr_local_7c140f6ea0683eae = 100;
-static s16 mmvr_local_9be3186be4ea5b4b = 255;
-static s16 mmvr_local_9598258302019773 = 0;
-static s16 mmvr_local_a4afad6429d69309 = 0;
-static s16 mmvr_local_9a7bf3285996f04b = 6;
-static s16 mmvr_local_e782821e766f81d8 = 6;
-static s16 mmvr_local_e2f12dee7c9ad3d6 = 0;
-static s16 mmvr_local_a4373abb7a850aee = 0;
-static s16 mmvr_local_f6d50da4edbcacee[] = { 175, 100 };
-static s16 mmvr_local_dc21dab02761e083[] = { 205, 255 };
+static s16 mmvr_local_05e0c7315105f164 = 0;
+static s16 mmvr_local_11fb95d9600678ef = 100;
+static s16 mmvr_local_3556f33fc478c6a0 = 255;
+static s16 mmvr_local_18cd8bb48ab8fead = 0;
+static s16 mmvr_local_4d5b28d0cc55602f = 100;
+static s16 mmvr_local_f1632eabdb9893c1 = 255;
+static s16 mmvr_local_4598be032094aaf2 = 0;
+static s16 mmvr_local_b04b023b79e424f1 = 0;
+static s16 mmvr_local_51f3ef56a7b21097 = 6;
+static s16 mmvr_local_63b737f1ff449f1c = 6;
+static s16 mmvr_local_027f215248d06536 = 0;
+static s16 mmvr_local_5d6d3dc36dda72eb = 0;
+static s16 mmvr_local_95bccfc5483a32df[] = { 175, 100 };
+static s16 mmvr_local_cb1d108cb12a8aae[] = { 205, 255 };
 void BombersNotebook_DrawArrows(BombersNotebook* this, Gfx** gfxP) {
     /* persistent local storage is declared above */
     /* persistent local storage is declared above */
@@ -1021,69 +1024,69 @@ void BombersNotebook_DrawArrows(BombersNotebook* this, Gfx** gfxP) {
     gDPLoadTextureBlock(gfx++, gBombersNotebookArrowTex, G_IM_FMT_IA, G_IM_SIZ_8b, 24, 16, 0, G_TX_MIRROR | G_TX_WRAP,
                         G_TX_MIRROR | G_TX_WRAP, G_TX_NOMASK, 4, G_TX_NOLOD, G_TX_NOLOD);
 
-    colorStep = ABS_ALT(mmvr_local_3aa12a911e200968 - mmvr_local_f6d50da4edbcacee[mmvr_local_9598258302019773]) / mmvr_local_9a7bf3285996f04b;
-    if (mmvr_local_3aa12a911e200968 >= mmvr_local_f6d50da4edbcacee[mmvr_local_9598258302019773]) {
-        mmvr_local_3aa12a911e200968 -= colorStep;
+    colorStep = ABS_ALT(mmvr_local_11fb95d9600678ef - mmvr_local_95bccfc5483a32df[mmvr_local_4598be032094aaf2]) / mmvr_local_51f3ef56a7b21097;
+    if (mmvr_local_11fb95d9600678ef >= mmvr_local_95bccfc5483a32df[mmvr_local_4598be032094aaf2]) {
+        mmvr_local_11fb95d9600678ef -= colorStep;
     } else {
-        mmvr_local_3aa12a911e200968 += colorStep;
+        mmvr_local_11fb95d9600678ef += colorStep;
     }
 
-    colorStep = ABS_ALT(mmvr_local_ada80811db644105 - mmvr_local_dc21dab02761e083[mmvr_local_9598258302019773]) / mmvr_local_9a7bf3285996f04b;
-    if (mmvr_local_ada80811db644105 >= mmvr_local_dc21dab02761e083[mmvr_local_9598258302019773]) {
-        mmvr_local_ada80811db644105 -= colorStep;
+    colorStep = ABS_ALT(mmvr_local_3556f33fc478c6a0 - mmvr_local_cb1d108cb12a8aae[mmvr_local_4598be032094aaf2]) / mmvr_local_51f3ef56a7b21097;
+    if (mmvr_local_3556f33fc478c6a0 >= mmvr_local_cb1d108cb12a8aae[mmvr_local_4598be032094aaf2]) {
+        mmvr_local_3556f33fc478c6a0 -= colorStep;
     } else {
-        mmvr_local_ada80811db644105 += colorStep;
+        mmvr_local_3556f33fc478c6a0 += colorStep;
     }
 
-    mmvr_local_9a7bf3285996f04b--;
-    if (mmvr_local_9a7bf3285996f04b == 0) {
-        mmvr_local_e2f12dee7c9ad3d6 ^= 6;
-        mmvr_local_9a7bf3285996f04b = 6;
-        mmvr_local_3aa12a911e200968 = mmvr_local_f6d50da4edbcacee[mmvr_local_9598258302019773];
-        mmvr_local_ada80811db644105 = mmvr_local_dc21dab02761e083[mmvr_local_9598258302019773];
-        mmvr_local_9598258302019773 ^= 1;
+    mmvr_local_51f3ef56a7b21097--;
+    if (mmvr_local_51f3ef56a7b21097 == 0) {
+        mmvr_local_027f215248d06536 ^= 6;
+        mmvr_local_51f3ef56a7b21097 = 6;
+        mmvr_local_11fb95d9600678ef = mmvr_local_95bccfc5483a32df[mmvr_local_4598be032094aaf2];
+        mmvr_local_3556f33fc478c6a0 = mmvr_local_cb1d108cb12a8aae[mmvr_local_4598be032094aaf2];
+        mmvr_local_4598be032094aaf2 ^= 1;
     }
 
-    colorStep = ABS_ALT(mmvr_local_7c140f6ea0683eae - mmvr_local_f6d50da4edbcacee[mmvr_local_a4afad6429d69309]) / mmvr_local_e782821e766f81d8;
-    if (mmvr_local_7c140f6ea0683eae >= mmvr_local_f6d50da4edbcacee[mmvr_local_a4afad6429d69309]) {
-        mmvr_local_7c140f6ea0683eae -= colorStep;
+    colorStep = ABS_ALT(mmvr_local_4d5b28d0cc55602f - mmvr_local_95bccfc5483a32df[mmvr_local_b04b023b79e424f1]) / mmvr_local_63b737f1ff449f1c;
+    if (mmvr_local_4d5b28d0cc55602f >= mmvr_local_95bccfc5483a32df[mmvr_local_b04b023b79e424f1]) {
+        mmvr_local_4d5b28d0cc55602f -= colorStep;
     } else {
-        mmvr_local_7c140f6ea0683eae += colorStep;
+        mmvr_local_4d5b28d0cc55602f += colorStep;
     }
 
-    colorStep = ABS_ALT(mmvr_local_9be3186be4ea5b4b - mmvr_local_dc21dab02761e083[mmvr_local_a4afad6429d69309]) / mmvr_local_e782821e766f81d8;
-    if (mmvr_local_9be3186be4ea5b4b >= mmvr_local_dc21dab02761e083[mmvr_local_a4afad6429d69309]) {
-        mmvr_local_9be3186be4ea5b4b -= colorStep;
+    colorStep = ABS_ALT(mmvr_local_f1632eabdb9893c1 - mmvr_local_cb1d108cb12a8aae[mmvr_local_b04b023b79e424f1]) / mmvr_local_63b737f1ff449f1c;
+    if (mmvr_local_f1632eabdb9893c1 >= mmvr_local_cb1d108cb12a8aae[mmvr_local_b04b023b79e424f1]) {
+        mmvr_local_f1632eabdb9893c1 -= colorStep;
     } else {
-        mmvr_local_9be3186be4ea5b4b += colorStep;
+        mmvr_local_f1632eabdb9893c1 += colorStep;
     }
 
-    mmvr_local_e782821e766f81d8--;
-    if (mmvr_local_e782821e766f81d8 == 0) {
-        mmvr_local_a4373abb7a850aee ^= 6;
-        mmvr_local_e782821e766f81d8 = 6;
-        mmvr_local_7c140f6ea0683eae = mmvr_local_f6d50da4edbcacee[mmvr_local_a4afad6429d69309];
-        mmvr_local_9be3186be4ea5b4b = mmvr_local_dc21dab02761e083[mmvr_local_a4afad6429d69309];
-        mmvr_local_a4afad6429d69309 ^= 1;
+    mmvr_local_63b737f1ff449f1c--;
+    if (mmvr_local_63b737f1ff449f1c == 0) {
+        mmvr_local_5d6d3dc36dda72eb ^= 6;
+        mmvr_local_63b737f1ff449f1c = 6;
+        mmvr_local_4d5b28d0cc55602f = mmvr_local_95bccfc5483a32df[mmvr_local_b04b023b79e424f1];
+        mmvr_local_f1632eabdb9893c1 = mmvr_local_cb1d108cb12a8aae[mmvr_local_b04b023b79e424f1];
+        mmvr_local_b04b023b79e424f1 ^= 1;
     }
 
     if (this->cursorPage != 0) {
         gDPPipeSync(gfx++);
         gDPSetCombineLERP(gfx++, PRIMITIVE, ENVIRONMENT, TEXEL0, ENVIRONMENT, TEXEL0, 0, PRIMITIVE, 0, PRIMITIVE,
                           ENVIRONMENT, TEXEL0, ENVIRONMENT, TEXEL0, 0, PRIMITIVE, 0);
-        gDPSetPrimColor(gfx++, 0, 0, mmvr_local_3e90bff4abd06b97, mmvr_local_3aa12a911e200968, mmvr_local_ada80811db644105, 255);
-        gDPSetEnvColor(gfx++, mmvr_local_3e90bff4abd06b97, mmvr_local_3aa12a911e200968, mmvr_local_ada80811db644105, 255);
-        rectTop = (-mmvr_local_e2f12dee7c9ad3d6 + 83) * 4;
+        gDPSetPrimColor(gfx++, 0, 0, mmvr_local_05e0c7315105f164, mmvr_local_11fb95d9600678ef, mmvr_local_3556f33fc478c6a0, 255);
+        gDPSetEnvColor(gfx++, mmvr_local_05e0c7315105f164, mmvr_local_11fb95d9600678ef, mmvr_local_3556f33fc478c6a0, 255);
+        rectTop = (-mmvr_local_027f215248d06536 + 83) * 4;
         BombersNotebook_DrawScisTexRect(&gfx, 46 * 4, rectTop, 70 * 4, rectTop + (16 * 4), 0, 0, 0x200, 1 << 10,
                                         1 << 10);
     }
 
     if (this->cursorPage < 16) {
         gDPPipeSync(gfx++);
-        gDPSetPrimColor(gfx++, 0, 0, mmvr_local_eb839de90d95aea6, mmvr_local_7c140f6ea0683eae, mmvr_local_9be3186be4ea5b4b, 255);
-        gDPSetEnvColor(gfx++, mmvr_local_eb839de90d95aea6, mmvr_local_7c140f6ea0683eae, mmvr_local_9be3186be4ea5b4b, 255);
-        BombersNotebook_DrawScisTexRect(&gfx, 46 * 4, (mmvr_local_a4373abb7a850aee + 319) * 4, 70 * 4,
-                                        (mmvr_local_a4373abb7a850aee + 335) * 4, 0, 0, 0, 1 << 10, 1 << 10);
+        gDPSetPrimColor(gfx++, 0, 0, mmvr_local_18cd8bb48ab8fead, mmvr_local_4d5b28d0cc55602f, mmvr_local_f1632eabdb9893c1, 255);
+        gDPSetEnvColor(gfx++, mmvr_local_18cd8bb48ab8fead, mmvr_local_4d5b28d0cc55602f, mmvr_local_f1632eabdb9893c1, 255);
+        BombersNotebook_DrawScisTexRect(&gfx, 46 * 4, (mmvr_local_5d6d3dc36dda72eb + 319) * 4, 70 * 4,
+                                        (mmvr_local_5d6d3dc36dda72eb + 335) * 4, 0, 0, 0, 1 << 10, 1 << 10);
     }
     gDPPipeSync(gfx++);
     *gfxP = gfx;
@@ -1093,6 +1096,9 @@ void BombersNotebook_Draw(BombersNotebook* this, GraphicsContext* gfxCtx) {
     Gfx* gfx;
     s32 pad[2];
 
+#ifdef MMVR_ENABLE
+    if (!MMVR_NotebookBook())
+#endif
     func_8012CF0C(gfxCtx, this->loadState != BOMBERS_NOTEBOOK_LOAD_STATE_DONE, false, 0, 0, 0);
 
     OPEN_DISPS(gfxCtx);
@@ -1103,6 +1109,13 @@ void BombersNotebook_Draw(BombersNotebook* this, GraphicsContext* gfxCtx) {
         // gSPSegment(gfx++, 0x07, this->scheduleDmaSegment);
         // gSPSegment(gfx++, 0x08, this->scheduleSegment);
         gfx = Gfx_SetupDL39(gfx);
+#ifdef MMVR_ENABLE
+        if (MMVR_NotebookBook()) {
+            // The world draw leaves a low-resolution scissor. The held page
+            // owns its native high-resolution canvas, without clearing the world.
+            gDPSetScissor(gfx++, G_SC_NON_INTERLACE, 0, 0, HIRES_BUFFER_WIDTH, HIRES_BUFFER_HEIGHT);
+        }
+#endif
         gDPSetCombineLERP(gfx++, PRIMITIVE, ENVIRONMENT, TEXEL0, ENVIRONMENT, TEXEL0, 0, PRIMITIVE, 0, PRIMITIVE,
                           ENVIRONMENT, TEXEL0, ENVIRONMENT, TEXEL0, 0, PRIMITIVE, 0);
         gDPSetRenderMode(gfx++, G_RM_OPA_SURF, G_RM_OPA_SURF2);
@@ -1112,6 +1125,12 @@ void BombersNotebook_Draw(BombersNotebook* this, GraphicsContext* gfxCtx) {
                             G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMIRROR | G_TX_WRAP, 5, 5, G_TX_NOLOD, G_TX_NOLOD);
 
         // 2S2H [Cosmetic][Widescreen] Extend the background tiling for widescreens
+#ifdef MMVR_ENABLE
+        if (MMVR_NotebookBook()) {
+            gSPTextureRectangle(gfx++, 0, 0, SCREEN_WIDTH_HIRES * 4, SCREEN_HEIGHT_HIRES * 4,
+                                0, 0, 0, 0x200, 0x200);
+        } else
+#endif
         gSPWideTextureRectangle(gfx++, OTRGetRectDimensionFromLeftEdge(0) * 4, 0 * 4,
                                 OTRGetRectDimensionFromRightEdge(SCREEN_WIDTH_HIRES) * 4, SCREEN_HEIGHT_HIRES * 4, 0, 0,
                                 0, 0x200, 0x200);
@@ -1123,11 +1142,23 @@ void BombersNotebook_Draw(BombersNotebook* this, GraphicsContext* gfxCtx) {
         BombersNotebook_DrawHeaders(&gfx);
         BombersNotebook_DrawColumns(&gfx);
 
+#ifdef MMVR_ENABLE
+        if (MMVR_NotebookBook()) {
+            // Four selectable rows, with the same crop as their glyphs.
+            gDPSetScissor(gfx++, G_SC_NON_INTERLACE, 0, 104 - gCfbUpperAdjust,
+                         HIRES_BUFFER_WIDTH, 312 - gCfbUpperAdjust);
+        } else
+#endif
         gDPSetScissor(gfx++, G_SC_NON_INTERLACE, 0, 86, 600, 450);
         BombersNotebook_DrawRows(this, &gfx);
 
         gDPPipeSync(gfx++);
 
+#ifdef MMVR_ENABLE
+        if (MMVR_NotebookBook()) {
+            gDPSetScissor(gfx++, G_SC_NON_INTERLACE, 0, 0, HIRES_BUFFER_WIDTH, HIRES_BUFFER_HEIGHT);
+        } else
+#endif
         gSPDisplayList(gfx++, D_0E000000_TO_SEGMENTED(setScissor));
 
         BombersNotebook_DrawTimeOfDay(&gfx);
@@ -1179,10 +1210,10 @@ u16 sBombersNotebookTextIds[] = {
 #undef DEFINE_PERSON
 #undef DEFINE_EVENT
 
-static s16 mmvr_local_d4a23ba170926c1c = 0;
-static s16 mmvr_local_941dfe8edfc5ec6c = 0;
-static s16 mmvr_local_a368ff7fe0f0faab = 0;
-static s16 mmvr_local_e7e8febfcfb04627 = 0;
+static s16 mmvr_local_85044509d85e0438 = 0;
+static s16 mmvr_local_7ec96a50888f1a27 = 0;
+static s16 mmvr_local_28a8a25009d877b3 = 0;
+static s16 mmvr_local_18ac534729d56a2e = 0;
 void BombersNotebook_Update(PlayState* play, BombersNotebook* this, Input* input) {
     /* persistent local storage is declared above */
     /* persistent local storage is declared above */
@@ -1211,61 +1242,101 @@ void BombersNotebook_Update(PlayState* play, BombersNotebook* this, Input* input
 
     BombersNotebook_LoadFiles(this, OS_MESG_NOBLOCK);
 
+#ifdef MMVR_ENABLE
+    // Touch restores the native crop offset into authored page coordinates.
+    // No progress flags are changed; unknown people/events stay unavailable.
+    float touchX, touchY;
+    if (MMVR_NotebookBook() && this->scrollAmount == 0 && MMVR_NotebookTouch(&touchX, &touchY)) {
+        if (touchX < 78 && touchY < 103) {
+            if (this->cursorPage > 0) this->cursorPage = MAX(0, this->cursorPage - 4);
+            this->cursorEntry = 0;
+        } else if (touchX < 78 && touchY > 312 && touchY < 350) {
+            this->cursorPage = MIN(BOMBERS_NOTEBOOK_PERSON_MAX - 4, this->cursorPage + 4);
+            this->cursorEntry = 0;
+        } else if (touchY >= 107 && touchY < 315) {
+            this->cursorPageRow = (s32)((touchY - 107) / 52);
+            this->cursorEntry = 0;
+            s32 row = this->cursorPage + this->cursorPageRow;
+            if (touchX >= 115 && CHECK_WEEKEVENTREG(gBombersNotebookWeekEventFlags[row])) {
+                for (s32 j = 0; j < BOMBERS_NOTEBOOK_ENTRY_MAX * BOMBERS_NOTEBOOK_ENTRY_SIZE; j += BOMBERS_NOTEBOOK_ENTRY_SIZE) {
+                    if (sBombersNotebookEntries[row][j] == BOMBERS_NOTEBOOK_ENTRY_END) break;
+                    s32 day = BOMBERS_NOTEBOOK_ENTRY_GET_DAY(row, j);
+                    u16 start = BOMBERS_NOTEBOOK_ENTRY_GET_START_TIME(row, j) - CLOCK_TIME(6, 0);
+                    u16 end = BOMBERS_NOTEBOOK_ENTRY_GET_END_TIME(row, j) - CLOCK_TIME(6, 0);
+                    s32 left = sBombersNotebookDayRectRectLeft[day] + start / CLOCK_TIME(0, 10);
+                    s32 right = sBombersNotebookDayRectRectLeft[day] + end / CLOCK_TIME(0, 10);
+                    if (right - left < 8) { left = right - 8; right = left + 8; }
+                    s32 event = BOMBERS_NOTEBOOK_ENTRY_GET_EVENT(row, j);
+                    s32 offset = (sBombersNotebookEntries[row][j] & BOMBERS_NOTEBOOK_ENTRY_POS_ABOVE) ? 8 :
+                        ((sBombersNotebookEntries[row][j] & BOMBERS_NOTEBOOK_ENTRY_POS_BELOW) ? 24 : 16);
+                    s32 top = 107 + this->cursorPageRow * 52 + offset;
+                    if (touchX >= left && touchX <= right && touchY >= top && touchY <= top + 16 &&
+                        CHECK_WEEKEVENTREG(gBombersNotebookWeekEventFlags[event])) {
+                        this->cursorEntry = j + BOMBERS_NOTEBOOK_ENTRY_SIZE;
+                        break;
+                    }
+                }
+            }
+        }
+        Audio_PlaySfx(NA_SE_SY_CURSOR);
+    }
+#endif
+
     if (this->loadState == BOMBERS_NOTEBOOK_LOAD_STATE_DONE) {
         if (stickAdjX < -30) {
-            if (mmvr_local_a368ff7fe0f0faab == -1) {
-                mmvr_local_d4a23ba170926c1c--;
-                if (mmvr_local_d4a23ba170926c1c < 0) {
-                    mmvr_local_d4a23ba170926c1c = 2;
+            if (mmvr_local_28a8a25009d877b3 == -1) {
+                mmvr_local_85044509d85e0438--;
+                if (mmvr_local_85044509d85e0438 < 0) {
+                    mmvr_local_85044509d85e0438 = 2;
                 } else {
                     stickAdjX = 0;
                 }
             } else {
-                mmvr_local_d4a23ba170926c1c = 10;
-                mmvr_local_a368ff7fe0f0faab = -1;
+                mmvr_local_85044509d85e0438 = 10;
+                mmvr_local_28a8a25009d877b3 = -1;
             }
         } else if (stickAdjX > 30) {
-            if (mmvr_local_a368ff7fe0f0faab == 1) {
-                mmvr_local_d4a23ba170926c1c--;
-                if (mmvr_local_d4a23ba170926c1c < 0) {
-                    mmvr_local_d4a23ba170926c1c = 2;
+            if (mmvr_local_28a8a25009d877b3 == 1) {
+                mmvr_local_85044509d85e0438--;
+                if (mmvr_local_85044509d85e0438 < 0) {
+                    mmvr_local_85044509d85e0438 = 2;
                 } else {
                     stickAdjX = 0;
                 }
             } else {
-                mmvr_local_d4a23ba170926c1c = 10;
-                mmvr_local_a368ff7fe0f0faab = 1;
+                mmvr_local_85044509d85e0438 = 10;
+                mmvr_local_28a8a25009d877b3 = 1;
             }
         } else {
-            mmvr_local_a368ff7fe0f0faab = 0;
+            mmvr_local_28a8a25009d877b3 = 0;
         }
 
         if (stickAdjY < -30) {
-            if (mmvr_local_e7e8febfcfb04627 == -1) {
-                mmvr_local_941dfe8edfc5ec6c--;
-                if (mmvr_local_941dfe8edfc5ec6c < 0) {
-                    mmvr_local_941dfe8edfc5ec6c = 2;
+            if (mmvr_local_18ac534729d56a2e == -1) {
+                mmvr_local_7ec96a50888f1a27--;
+                if (mmvr_local_7ec96a50888f1a27 < 0) {
+                    mmvr_local_7ec96a50888f1a27 = 2;
                 } else {
                     stickAdjY = 0;
                 }
             } else {
-                mmvr_local_941dfe8edfc5ec6c = 10;
-                mmvr_local_e7e8febfcfb04627 = -1;
+                mmvr_local_7ec96a50888f1a27 = 10;
+                mmvr_local_18ac534729d56a2e = -1;
             }
         } else if (stickAdjY > 30) {
-            if (mmvr_local_e7e8febfcfb04627 == 1) {
-                mmvr_local_941dfe8edfc5ec6c--;
-                if (mmvr_local_941dfe8edfc5ec6c < 0) {
-                    mmvr_local_941dfe8edfc5ec6c = 2;
+            if (mmvr_local_18ac534729d56a2e == 1) {
+                mmvr_local_7ec96a50888f1a27--;
+                if (mmvr_local_7ec96a50888f1a27 < 0) {
+                    mmvr_local_7ec96a50888f1a27 = 2;
                 } else {
                     stickAdjY = 0;
                 }
             } else {
-                mmvr_local_941dfe8edfc5ec6c = 10;
-                mmvr_local_e7e8febfcfb04627 = 1;
+                mmvr_local_7ec96a50888f1a27 = 10;
+                mmvr_local_18ac534729d56a2e = 1;
             }
         } else {
-            mmvr_local_e7e8febfcfb04627 = 0;
+            mmvr_local_18ac534729d56a2e = 0;
         }
 
         if (this->scrollAmount == 0) {
@@ -1304,7 +1375,7 @@ void BombersNotebook_Update(PlayState* play, BombersNotebook* this, Input* input
                     if (cursorEntryScan != 0) {
                         do {
                             cursorEntryScan -= BOMBERS_NOTEBOOK_ENTRY_SIZE;
-                            if (CHECK_WEEKEVENTREG(gBombersNotebookWeekEventFlags[BOMBERS_NOTEBOOK_ENTRY_GET_EVENT(
+                            if (cursorEntryScan == 0 || CHECK_WEEKEVENTREG(gBombersNotebookWeekEventFlags[BOMBERS_NOTEBOOK_ENTRY_GET_EVENT(
                                     this->cursorPageRow + this->cursorPage,
                                     cursorEntryScan - BOMBERS_NOTEBOOK_ENTRY_SIZE)])) {
                                 Audio_PlaySfx(NA_SE_SY_CURSOR);
@@ -1337,7 +1408,7 @@ void BombersNotebook_Update(PlayState* play, BombersNotebook* this, Input* input
                     this->cursorEntry = 0;
                     this->cursorPageRow++;
                 } else if (this->cursorPage < (BOMBERS_NOTEBOOK_PERSON_MAX - 4)) {
-                    if (mmvr_local_e7e8febfcfb04627 == -1) {
+                    if (mmvr_local_18ac534729d56a2e == -1) {
                         this->scrollAmount = -24;
                     } else {
                         this->scrollAmount = -12;
@@ -1353,7 +1424,7 @@ void BombersNotebook_Update(PlayState* play, BombersNotebook* this, Input* input
                 } else if (this->cursorPage != 0) {
                     Audio_PlaySfx(NA_SE_SY_CURSOR);
                     this->cursorPage--;
-                    if (mmvr_local_e7e8febfcfb04627 == 1) {
+                    if (mmvr_local_18ac534729d56a2e == 1) {
                         this->scrollAmount = 24;
                     } else {
                         this->scrollAmount = 12;

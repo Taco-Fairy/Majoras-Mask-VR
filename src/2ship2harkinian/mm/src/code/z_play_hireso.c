@@ -8,6 +8,9 @@
 #include <string.h>
 
 #include "BenPort.h"
+#ifdef MMVR_ENABLE
+#include "2s2h/VR/Camera.h"
+#endif
 
 #define BOMBERS_NOTEBOOK_ENTRY_SIZE 3
 #define BOMBERS_NOTEBOOK_ENTRY_MAX 10
@@ -1071,6 +1074,9 @@ void BombersNotebook_Draw(BombersNotebook* this, GraphicsContext* gfxCtx) {
     Gfx* gfx;
     s32 pad[2];
 
+#ifdef MMVR_ENABLE
+    if (!MMVR_NotebookBook())
+#endif
     func_8012CF0C(gfxCtx, this->loadState != BOMBERS_NOTEBOOK_LOAD_STATE_DONE, false, 0, 0, 0);
 
     OPEN_DISPS(gfxCtx);
@@ -1081,6 +1087,13 @@ void BombersNotebook_Draw(BombersNotebook* this, GraphicsContext* gfxCtx) {
         // gSPSegment(gfx++, 0x07, this->scheduleDmaSegment);
         // gSPSegment(gfx++, 0x08, this->scheduleSegment);
         gfx = Gfx_SetupDL39(gfx);
+#ifdef MMVR_ENABLE
+        if (MMVR_NotebookBook()) {
+            // The world draw leaves a low-resolution scissor. The held page
+            // owns its native high-resolution canvas, without clearing the world.
+            gDPSetScissor(gfx++, G_SC_NON_INTERLACE, 0, 0, HIRES_BUFFER_WIDTH, HIRES_BUFFER_HEIGHT);
+        }
+#endif
         gDPSetCombineLERP(gfx++, PRIMITIVE, ENVIRONMENT, TEXEL0, ENVIRONMENT, TEXEL0, 0, PRIMITIVE, 0, PRIMITIVE,
                           ENVIRONMENT, TEXEL0, ENVIRONMENT, TEXEL0, 0, PRIMITIVE, 0);
         gDPSetRenderMode(gfx++, G_RM_OPA_SURF, G_RM_OPA_SURF2);
@@ -1090,6 +1103,12 @@ void BombersNotebook_Draw(BombersNotebook* this, GraphicsContext* gfxCtx) {
                             G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMIRROR | G_TX_WRAP, 5, 5, G_TX_NOLOD, G_TX_NOLOD);
 
         // 2S2H [Cosmetic][Widescreen] Extend the background tiling for widescreens
+#ifdef MMVR_ENABLE
+        if (MMVR_NotebookBook()) {
+            gSPTextureRectangle(gfx++, 0, 0, SCREEN_WIDTH_HIRES * 4, SCREEN_HEIGHT_HIRES * 4,
+                                0, 0, 0, 0x200, 0x200);
+        } else
+#endif
         gSPWideTextureRectangle(gfx++, OTRGetRectDimensionFromLeftEdge(0) * 4, 0 * 4,
                                 OTRGetRectDimensionFromRightEdge(SCREEN_WIDTH_HIRES) * 4, SCREEN_HEIGHT_HIRES * 4, 0, 0,
                                 0, 0x200, 0x200);
@@ -1101,11 +1120,23 @@ void BombersNotebook_Draw(BombersNotebook* this, GraphicsContext* gfxCtx) {
         BombersNotebook_DrawHeaders(&gfx);
         BombersNotebook_DrawColumns(&gfx);
 
+#ifdef MMVR_ENABLE
+        if (MMVR_NotebookBook()) {
+            // Four selectable rows, with the same crop as their glyphs.
+            gDPSetScissor(gfx++, G_SC_NON_INTERLACE, 0, 104 - gCfbUpperAdjust,
+                         HIRES_BUFFER_WIDTH, 312 - gCfbUpperAdjust);
+        } else
+#endif
         gDPSetScissor(gfx++, G_SC_NON_INTERLACE, 0, 86, 600, 450);
         BombersNotebook_DrawRows(this, &gfx);
 
         gDPPipeSync(gfx++);
 
+#ifdef MMVR_ENABLE
+        if (MMVR_NotebookBook()) {
+            gDPSetScissor(gfx++, G_SC_NON_INTERLACE, 0, 0, HIRES_BUFFER_WIDTH, HIRES_BUFFER_HEIGHT);
+        } else
+#endif
         gSPDisplayList(gfx++, D_0E000000_TO_SEGMENTED(setScissor));
 
         BombersNotebook_DrawTimeOfDay(&gfx);
@@ -1184,6 +1215,46 @@ void BombersNotebook_Update(PlayState* play, BombersNotebook* this, Input* input
 #endif
 
     BombersNotebook_LoadFiles(this, OS_MESG_NOBLOCK);
+
+#ifdef MMVR_ENABLE
+    // Touch restores the native crop offset into authored page coordinates.
+    // No progress flags are changed; unknown people/events stay unavailable.
+    float touchX, touchY;
+    if (MMVR_NotebookBook() && this->scrollAmount == 0 && MMVR_NotebookTouch(&touchX, &touchY)) {
+        if (touchX < 78 && touchY < 103) {
+            if (this->cursorPage > 0) this->cursorPage = MAX(0, this->cursorPage - 4);
+            this->cursorEntry = 0;
+        } else if (touchX < 78 && touchY > 312 && touchY < 350) {
+            this->cursorPage = MIN(BOMBERS_NOTEBOOK_PERSON_MAX - 4, this->cursorPage + 4);
+            this->cursorEntry = 0;
+        } else if (touchY >= 107 && touchY < 315) {
+            this->cursorPageRow = (s32)((touchY - 107) / 52);
+            this->cursorEntry = 0;
+            s32 row = this->cursorPage + this->cursorPageRow;
+            if (touchX >= 115 && CHECK_WEEKEVENTREG(gBombersNotebookWeekEventFlags[row])) {
+                for (s32 j = 0; j < BOMBERS_NOTEBOOK_ENTRY_MAX * BOMBERS_NOTEBOOK_ENTRY_SIZE; j += BOMBERS_NOTEBOOK_ENTRY_SIZE) {
+                    if (sBombersNotebookEntries[row][j] == BOMBERS_NOTEBOOK_ENTRY_END) break;
+                    s32 day = BOMBERS_NOTEBOOK_ENTRY_GET_DAY(row, j);
+                    u16 start = BOMBERS_NOTEBOOK_ENTRY_GET_START_TIME(row, j) - CLOCK_TIME(6, 0);
+                    u16 end = BOMBERS_NOTEBOOK_ENTRY_GET_END_TIME(row, j) - CLOCK_TIME(6, 0);
+                    s32 left = sBombersNotebookDayRectRectLeft[day] + start / CLOCK_TIME(0, 10);
+                    s32 right = sBombersNotebookDayRectRectLeft[day] + end / CLOCK_TIME(0, 10);
+                    if (right - left < 8) { left = right - 8; right = left + 8; }
+                    s32 event = BOMBERS_NOTEBOOK_ENTRY_GET_EVENT(row, j);
+                    s32 offset = (sBombersNotebookEntries[row][j] & BOMBERS_NOTEBOOK_ENTRY_POS_ABOVE) ? 8 :
+                        ((sBombersNotebookEntries[row][j] & BOMBERS_NOTEBOOK_ENTRY_POS_BELOW) ? 24 : 16);
+                    s32 top = 107 + this->cursorPageRow * 52 + offset;
+                    if (touchX >= left && touchX <= right && touchY >= top && touchY <= top + 16 &&
+                        CHECK_WEEKEVENTREG(gBombersNotebookWeekEventFlags[event])) {
+                        this->cursorEntry = j + BOMBERS_NOTEBOOK_ENTRY_SIZE;
+                        break;
+                    }
+                }
+            }
+        }
+        Audio_PlaySfx(NA_SE_SY_CURSOR);
+    }
+#endif
 
     if (this->loadState == BOMBERS_NOTEBOOK_LOAD_STATE_DONE) {
         if (stickAdjX < -30) {
@@ -1278,7 +1349,7 @@ void BombersNotebook_Update(PlayState* play, BombersNotebook* this, Input* input
                     if (cursorEntryScan != 0) {
                         do {
                             cursorEntryScan -= BOMBERS_NOTEBOOK_ENTRY_SIZE;
-                            if (CHECK_WEEKEVENTREG(gBombersNotebookWeekEventFlags[BOMBERS_NOTEBOOK_ENTRY_GET_EVENT(
+                            if (cursorEntryScan == 0 || CHECK_WEEKEVENTREG(gBombersNotebookWeekEventFlags[BOMBERS_NOTEBOOK_ENTRY_GET_EVENT(
                                     this->cursorPageRow + this->cursorPage,
                                     cursorEntryScan - BOMBERS_NOTEBOOK_ENTRY_SIZE)])) {
                                 Audio_PlaySfx(NA_SE_SY_CURSOR);

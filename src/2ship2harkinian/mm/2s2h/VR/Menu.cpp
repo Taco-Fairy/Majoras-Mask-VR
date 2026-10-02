@@ -236,17 +236,24 @@ extern "C" int MMVR_IntroMaskSkipTarget(PlayState* play, const void* script, int
     return frame == 180 && MMVR_SkipIntroMaskVisuals(play) &&
         SOH::Cutscene::HasOriginalMaskFall(script) ? 414 : frame;
 }
+// Notebook descriptions belong to its high-resolution printed page, not the
+// separately scaled 320x240 dialogue panel. Keep native glyph/background alpha.
+static bool NativeNotebookText() {
+    return gPlayState && gPlayState->pauseCtx.bombersNotebookOpen;
+}
 extern "C" float MMVR_DialogueScale(int background) {
-    if (!mmvr::NeedsOwnedFramebuffer()) return 1.f;
+    if (NativeNotebookText() || !mmvr::NeedsOwnedFramebuffer()) return 1.f;
     const auto& settings=mmvr::GetSettings();
     return settings.Get(mmvr::Setting::TextBoxSize)*.01f *
         (background ? 1.f : settings.Get(mmvr::Setting::TextSize)*.01f);
 }
 extern "C" int MMVR_TextAlpha(int alpha) {
+    if (NativeNotebookText()) return std::clamp(alpha, 0, 255);
     return int(std::lround(std::clamp(alpha,0,255) * (mmvr::NeedsOwnedFramebuffer() ?
         mmvr::GetSettings().Get(mmvr::Setting::TextOpacity) : 1.f)));
 }
 extern "C" int MMVR_TextBoxAlpha(int alpha) {
+    if (NativeNotebookText()) return std::clamp(alpha, 0, 255);
     // Match the menu's background-only opacity: glyphs and native fade timing
     // remain unchanged. The value is independent of VR-menu opacity.
     const float opacity = mmvr::NeedsOwnedFramebuffer() ?
@@ -414,7 +421,7 @@ extern "C" void MMVR_RegisterMenu(void) {
         if (page == PAUSE_ITEM || page == PAUSE_MASK) {
             assignSlot = play->pauseCtx.cursorSlot[page] + (page == PAUSE_MASK ? ITEM_NUM_SLOTS : 0);
             if (assignSlot < 0 || assignSlot >= 48 ||
-                gSaveContext.save.saveInfo.inventory.items[assignSlot] == ITEM_NONE)
+                mmvrgame::InventorySlotItem(assignSlot) == ITEM_NONE)
                 assignSlot = -1;
         }
     }
@@ -458,7 +465,7 @@ extern "C" void MMVR_RegisterMenu(void) {
     }
     for (int i = 0; i < mmvr::MaxItemSlots; ++i) {
         int saved = CVarGetInteger(SlotKeys[i], mmvr::GetSlotAssignment(i));
-        if (play && saved >= 0 && saved < 48 && gSaveContext.save.saveInfo.inventory.items[saved] == ITEM_NONE)
+        if (play && saved >= 0 && saved < 48 && mmvrgame::InventorySlotItem(saved) == ITEM_NONE)
             saved = -1;
         mmvr::SetSlotAssignment(i, saved);
         int slot = mmvr::DisplaySlotAssignment(i);
@@ -511,7 +518,7 @@ extern "C" void MMVR_NativePresentationProbe(PlayState* play) {
         return;
     for (const char* flag : { "MMVR_SCRIPT_TEST", "MMVR_DAMAGE_MATRIX_TEST", "MMVR_POTION_SHOP_TEST", "MMVR_EXCHANGE_TEST", "MMVR_LIFECYCLE_TEST", "MMVR_TOWN_TEST",
                               "MMVR_ARENA_EXPANSION_TEST", "MMVR_FLOWER_TEST", "MMVR_PERFORMANCE_TEST", "MMVR_PERFORMANCE_INTERACTIVE", "MMVR_SCENE_SWEEP",
-                              "MMVR_NATIVE_STATE_TEST", "MMVR_RENDER_CADENCE_TEST", "MMVR_KAFEI_DRAW_TEST" }) {
+                              "MMVR_NATIVE_STATE_TEST", "MMVR_RENDER_CADENCE_TEST", "MMVR_KAFEI_DRAW_TEST", "MMVR_FULL_BODY_TEST", "MMVR_NOTEBOOK_BOOK_TEST" }) {
         const char* value = std::getenv(flag);
         if (value && std::strcmp(value, "1") == 0)
             return;
@@ -551,6 +558,14 @@ extern "C" void MMVR_SetPauseCommands(const void* commands) {
 }
 extern "C" int MMVR_WorldPause(void) {
     return (mmvr::StereoActive() || NativeTestEnabled()) && MMVR_NormalPause();
+}
+extern "C" u8 sBombersNotebookOpen;
+extern "C" int MMVR_NotebookBook(void) {
+    return sBombersNotebookOpen && mmvr::FirstPersonRequested() &&
+           (mmvr::StereoActive() || NativeTestEnabled());
+}
+extern "C" int MMVR_NotebookTouch(float* x, float* y) {
+    return x && y && mmvr::ConsumeNotebookTouch(*x, *y);
 }
 extern "C" int MMVR_MenuPaused(void) {
 #if defined(MMVR_STATE_NATIVE_BACKEND)

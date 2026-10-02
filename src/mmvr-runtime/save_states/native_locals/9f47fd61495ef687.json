@@ -3,187 +3,187 @@
   "include": "9f47fd61495ef687.inc",
   "variables": [
     {
-      "name": "mmvr_local_3bf871e3ca11ea68",
+      "name": "mmvr_local_f9578e446a2aa865",
       "original": "sBarColorR",
       "function": "BombersNotebook_DrawRows",
-      "line": 580,
-      "at": 32339
+      "line": 583,
+      "at": 32396
     },
     {
-      "name": "mmvr_local_673148b9fc3855ce",
+      "name": "mmvr_local_9b912428b697c792",
       "original": "sBarColorG",
       "function": "BombersNotebook_DrawRows",
-      "line": 581,
-      "at": 32371
+      "line": 584,
+      "at": 32428
     },
     {
-      "name": "mmvr_local_152b0bafb0ac7684",
+      "name": "mmvr_local_c0a09ce6e348e581",
       "original": "sBarColorB",
       "function": "BombersNotebook_DrawRows",
-      "line": 582,
-      "at": 32403
+      "line": 585,
+      "at": 32460
     },
     {
-      "name": "mmvr_local_70a48dc843a1f783",
+      "name": "mmvr_local_4a10873b2ffb086a",
       "original": "sBarColorTimer",
       "function": "BombersNotebook_DrawRows",
-      "line": 583,
-      "at": 32435
+      "line": 586,
+      "at": 32492
     },
     {
-      "name": "mmvr_local_bc0c7cb0b1b3896e",
+      "name": "mmvr_local_6268ec63addcd5ec",
       "original": "sBarColorIndex",
       "function": "BombersNotebook_DrawRows",
-      "line": 584,
-      "at": 32472
+      "line": 587,
+      "at": 32529
     },
     {
-      "name": "mmvr_local_6518db2c19fe7885",
+      "name": "mmvr_local_dec4ba62eb81aa4d",
       "original": "sBarColorTargetsR",
       "function": "BombersNotebook_DrawRows",
-      "line": 585,
-      "at": 32508
+      "line": 588,
+      "at": 32565
     },
     {
-      "name": "mmvr_local_ec86874484327751",
+      "name": "mmvr_local_c306b9c44901e336",
       "original": "sBarColorTargetsG",
       "function": "BombersNotebook_DrawRows",
-      "line": 586,
-      "at": 32558
+      "line": 589,
+      "at": 32615
     },
     {
-      "name": "mmvr_local_924ea665e13b7a58",
+      "name": "mmvr_local_acd27c0073740946",
       "original": "sBarColorTargetsB",
       "function": "BombersNotebook_DrawRows",
-      "line": 587,
-      "at": 32607
+      "line": 590,
+      "at": 32664
     },
     {
-      "name": "mmvr_local_3e90bff4abd06b97",
+      "name": "mmvr_local_05e0c7315105f164",
       "original": "sUpperArrowColorR",
       "function": "BombersNotebook_DrawArrows",
-      "line": 980,
-      "at": 54080
+      "line": 983,
+      "at": 54137
     },
     {
-      "name": "mmvr_local_3aa12a911e200968",
+      "name": "mmvr_local_11fb95d9600678ef",
       "original": "sUpperArrowColorG",
       "function": "BombersNotebook_DrawArrows",
-      "line": 981,
-      "at": 54119
+      "line": 984,
+      "at": 54176
     },
     {
-      "name": "mmvr_local_ada80811db644105",
+      "name": "mmvr_local_3556f33fc478c6a0",
       "original": "sUpperArrowColorB",
       "function": "BombersNotebook_DrawArrows",
-      "line": 982,
-      "at": 54160
+      "line": 985,
+      "at": 54217
     },
     {
-      "name": "mmvr_local_eb839de90d95aea6",
+      "name": "mmvr_local_18cd8bb48ab8fead",
       "original": "sLowerArrowColorR",
       "function": "BombersNotebook_DrawArrows",
-      "line": 983,
-      "at": 54201
+      "line": 986,
+      "at": 54258
     },
     {
-      "name": "mmvr_local_7c140f6ea0683eae",
+      "name": "mmvr_local_4d5b28d0cc55602f",
       "original": "sLowerArrowColorG",
       "function": "BombersNotebook_DrawArrows",
-      "line": 984,
-      "at": 54240
+      "line": 987,
+      "at": 54297
     },
     {
-      "name": "mmvr_local_9be3186be4ea5b4b",
+      "name": "mmvr_local_f1632eabdb9893c1",
       "original": "sLowerArrowColorB",
       "function": "BombersNotebook_DrawArrows",
-      "line": 985,
-      "at": 54281
+      "line": 988,
+      "at": 54338
     },
     {
-      "name": "mmvr_local_9598258302019773",
+      "name": "mmvr_local_4598be032094aaf2",
       "original": "sUpperArrowColorIndex",
       "function": "BombersNotebook_DrawArrows",
-      "line": 986,
-      "at": 54322
+      "line": 989,
+      "at": 54379
     },
     {
-      "name": "mmvr_local_a4afad6429d69309",
+      "name": "mmvr_local_b04b023b79e424f1",
       "original": "sLowerArrowColorIndex",
       "function": "BombersNotebook_DrawArrows",
-      "line": 987,
-      "at": 54365
+      "line": 990,
+      "at": 54422
     },
     {
-      "name": "mmvr_local_9a7bf3285996f04b",
+      "name": "mmvr_local_51f3ef56a7b21097",
       "original": "sUpperArrowColorTimer",
       "function": "BombersNotebook_DrawArrows",
-      "line": 988,
-      "at": 54408
+      "line": 991,
+      "at": 54465
     },
     {
-      "name": "mmvr_local_e782821e766f81d8",
+      "name": "mmvr_local_63b737f1ff449f1c",
       "original": "sLowerArrowColorTimer",
       "function": "BombersNotebook_DrawArrows",
-      "line": 989,
-      "at": 54451
+      "line": 992,
+      "at": 54508
     },
     {
-      "name": "mmvr_local_e2f12dee7c9ad3d6",
+      "name": "mmvr_local_027f215248d06536",
       "original": "sUpperArrowOffsetY",
       "function": "BombersNotebook_DrawArrows",
-      "line": 990,
-      "at": 54494
+      "line": 993,
+      "at": 54551
     },
     {
-      "name": "mmvr_local_a4373abb7a850aee",
+      "name": "mmvr_local_5d6d3dc36dda72eb",
       "original": "sLowerArrowOffsetY",
       "function": "BombersNotebook_DrawArrows",
-      "line": 991,
-      "at": 54534
+      "line": 994,
+      "at": 54591
     },
     {
-      "name": "mmvr_local_f6d50da4edbcacee",
+      "name": "mmvr_local_95bccfc5483a32df",
       "original": "sArrowColorTargetsG",
       "function": "BombersNotebook_DrawArrows",
-      "line": 992,
-      "at": 54574
+      "line": 995,
+      "at": 54631
     },
     {
-      "name": "mmvr_local_dc21dab02761e083",
+      "name": "mmvr_local_cb1d108cb12a8aae",
       "original": "sArrowColorTargetsB",
       "function": "BombersNotebook_DrawArrows",
-      "line": 993,
-      "at": 54628
+      "line": 996,
+      "at": 54685
     },
     {
-      "name": "mmvr_local_d4a23ba170926c1c",
+      "name": "mmvr_local_85044509d85e0438",
       "original": "sStickXRepeatTimer",
       "function": "BombersNotebook_Update",
-      "line": 1161,
-      "at": 61811
+      "line": 1192,
+      "at": 62984
     },
     {
-      "name": "mmvr_local_941dfe8edfc5ec6c",
+      "name": "mmvr_local_7ec96a50888f1a27",
       "original": "sStickYRepeatTimer",
       "function": "BombersNotebook_Update",
-      "line": 1162,
-      "at": 61851
+      "line": 1193,
+      "at": 63024
     },
     {
-      "name": "mmvr_local_a368ff7fe0f0faab",
+      "name": "mmvr_local_28a8a25009d877b3",
       "original": "sStickXRepeatState",
       "function": "BombersNotebook_Update",
-      "line": 1163,
-      "at": 61891
+      "line": 1194,
+      "at": 63064
     },
     {
-      "name": "mmvr_local_e7e8febfcfb04627",
+      "name": "mmvr_local_18ac534729d56a2e",
       "original": "sStickYRepeatState",
       "function": "BombersNotebook_Update",
-      "line": 1164,
-      "at": 61931
+      "line": 1195,
+      "at": 63104
     }
   ],
-  "sourceSha256": "c62a255a553aec9fa9e8ce0626ef0170b058b0ef88ef9132d1c41af77c25de50"
+  "sourceSha256": "2547121058d167e94900c868581d6a94c68527d9208813f77d48406436cb3aea"
 }

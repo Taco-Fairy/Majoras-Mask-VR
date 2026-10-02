@@ -8,6 +8,7 @@
 #include <utility>
 #include "hud_cadence.h"
 #include "runtime.h"
+#include "notebook_book.h"
 #include "lighting_bench.h"
 #include "lighting_capture.h"
 #include "screen_fade.h"
@@ -219,6 +220,10 @@ int diagnosticScene = -1;
 unsigned diagnosticFrame = 0, diagnosticActors = 0;
 bool sceneGameplay = false, stereoEnabled = false, perspective = false;
 const void* pauseCommands = nullptr;
+bool notebookActive = false, notebookPoseValid = false;
+XrPosef notebookPose{};
+NotebookContact notebookContact;
+NotebookTouch notebookTouch;
 const void* dialogueCommands = nullptr;
 const void* dialogueBody = nullptr;
 bool separateDialogue = false;
@@ -240,6 +245,8 @@ uintptr_t handExtraLow[2][2]{}, handExtraHigh[2][2]{};
 uintptr_t maskLow[2]{}, maskHigh[2]{};
 uintptr_t playerMatrixLow = 0, playerMatrixHigh = 0;
 const void* handMatrixAddresses[2]{};
+struct BodyBoneBinding { const void* address=nullptr; Matrix native{}, visual{}; };
+BodyBoneBinding bodyBones[BodyBoneCount]{};
 const void* skyboxMatrix = nullptr;
 Matrix worldView{};
 EyeFacingCache eyeFacingCache;
@@ -621,7 +628,8 @@ class TheaterRuntime {
     ComPtr<ID3D11ShaderResourceView> blurViews[2];
 #endif
     PlatformTexture* CompositeMotionBlur(PlatformContext* context, PlatformTexture* source, int eye) {
-        if (!drawUi || motionBlurAlpha <= 0 || settings.Get(Setting::ComfortHudEffects) > .5f) {
+        if (!drawUi || motionBlurAlpha <= 0 || settings.Get(Setting::MotionBlur) < .5f ||
+            settings.Get(Setting::ComfortHudEffects) > .5f) {
             blurValid[eye] = false;
             return source;
         }
@@ -1560,6 +1568,12 @@ class TheaterRuntime {
                 quad.pose = pausePose;
                 quad.size = { 1.8f, 1.35f };
             }
+            if (notebookActive) {
+                quad.space = localSpace;
+                quad.pose = notebookPoseValid ? notebookPose : pausePose;
+                quad.size = { NotebookWidth, NotebookHeight };
+                quad.layerFlags = 0; // Opaque paper, independent of HUD opacity.
+            }
         }
         if (stereoFrame && revealFrame) {
             quad.space = localSpace;
@@ -1651,7 +1665,18 @@ class TheaterRuntime {
                 quad.size={hudWidth,hudWidth*.75f};
             }
         }
-        const XrCompositionLayerBaseHeader* layers[4]{};
+        // The native canvas is split at its center without changing glyphs or input coordinates.
+        std::array<XrCompositionLayerQuad,2> bookPages{quad,quad};
+        const bool openBook = stereoFrame && notebookActive && !menu.open && !revealFrame;
+        if(openBook) for(int leaf=0;leaf<2;++leaf) {
+            auto& page=bookPages[leaf];
+            page.pose=NotebookLeafPose(quad.pose,leaf);
+            page.size.width=NotebookWidth*.5f;
+            const int split=int(width/2);
+            page.subImage.imageRect.offset.x=leaf ? split : 0;
+            page.subImage.imageRect.extent.width=leaf ? int(width)-split : split;
+        }
+        const XrCompositionLayerBaseHeader* layers[5]{};
         uint32_t layerCount = 0;
         if (stereoFrame)
             layers[layerCount++] = reinterpret_cast<const XrCompositionLayerBaseHeader*>(&projection);
@@ -1662,7 +1687,10 @@ class TheaterRuntime {
         // Narration is native text over a black world fill. Keep the complete
         // theater image above its full-view backdrop; stereo keeps the old order.
         if (uiVisible && behindTheater) layers[layerCount++] = uiLayer;
-        if (!(stereoFrame && menu.open))
+        if(openBook) {
+            for(const auto& page:bookPages)
+                layers[layerCount++]=reinterpret_cast<const XrCompositionLayerBaseHeader*>(&page);
+        } else if (!(stereoFrame && menu.open))
             layers[layerCount++] = reinterpret_cast<const XrCompositionLayerBaseHeader*>(&quad);
         if (stereoFrame && dialogueVisible && !menu.open)
             layers[layerCount++] = reinterpret_cast<const XrCompositionLayerBaseHeader*>(&dialogue);
@@ -2189,6 +2217,7 @@ class TheaterRuntime {
                 std::memcpy(tracking.visualHeadOffset, visualHeadOffset, sizeof(visualHeadOffset));
                 tracking.visualHeadValid = visualHeadValid;
                 std::memcpy(tracking.visualOffset, visualOffset, sizeof(visualOffset));
+                for(int bone=0;bone<BodyBoneCount;++bone) tracking.bodyBones[bone]=bodyBones[bone].visual;
                 tracking.visualYaw = visualYaw;
                 tracking.visualAlpha = interpolationAlpha;
                 tracking.visualValid = visualValid;
@@ -2303,6 +2332,17 @@ class TheaterRuntime {
                 if (validStereoViews && validHead) {
                     if (cameraCallback && firstPersonRequested)
                         cameraFrame = cameraCallback(tracking);
+                    if (notebookActive && !menu.open && inputFocused && !stateTrackingCallback && !inputRelease) {
+                        const int holdingHand = 1 - DominantController(settings);
+                        notebookPoseValid = tracking.handTracked[holdingHand];
+                        if (notebookPoseValid) notebookPose = NotebookPagePose(tracking.hands[holdingHand]);
+                        if (!notebookPoseValid || !tracking.handTracked[1-holdingHand]) notebookTouch = {};
+                        auto touch = notebookContact.Update(tracking, holdingHand, notebookPoseValid);
+                        if (touch.active && !notebookTouch.active) notebookTouch = touch;
+                    } else {
+                        notebookPoseValid = false;
+                        notebookContact.Reset(); notebookTouch = {};
+                    }
                     MakeEyes(width, height);
                     revealFrame = sceneReveal && cameraFrame.active && !menu.open && !nativePause;
                     if (revealFrame) {
@@ -2491,14 +2531,14 @@ class TheaterRuntime {
                                                     !nativePause && !ocarina && !viewToolKind && !menu.open);
 #endif
                     // Split before applying HUD opacity; dividing alpha cannot fix HUD=0.
-                    separateDialogue = dialogueCommands && dialogueBody;
+                    separateDialogue = !notebookActive && dialogueCommands && dialogueBody;
                     if (revealFrame) {
                         separateDialogue = false;
                         hudCadence = {};
                     } else if (refreshHud || (separateDialogue && !dialogueChain)) {
                         draw(true);
                         ++hudDraws;
-                        if (drawUi && !nativePause && !ocarina &&
+                        if (drawUi && !nativePause && !notebookActive && !ocarina &&
                             (settings.Get(Setting::HudFps) > .5f || settings.Get(Setting::ComfortHudEffects) > .5f ||
                              (!viewToolKind && settings.Get(Setting::HudOpacity) < .999f)))
                             CopyImage(context, CompositeSource(context, source, UiKind::Hud), chain, images);
@@ -2533,6 +2573,8 @@ class TheaterRuntime {
                             " session=" + std::to_string(int(sessionState)));
                     render = false;
                     selector.Cancel();
+                    notebookPoseValid = false;
+                    notebookContact.Reset(); notebookTouch = {};
                     ++trackingEpoch;
                 }
             } else {
@@ -2760,10 +2802,13 @@ bool PumpWithoutGraphics() noexcept {
     }
 }
 static bool nativeRockCapture = false;
+static bool nativeNotebookCapture = false;
 void RequestNativeCapture(const char* name) {
     const char* test = std::getenv("MMVR_NATIVE_TEST");
     if (PrivateDebugTools && test && std::strcmp(test, "1") == 0 && name && std::strcmp(name, "native-room-rock") == 0)
         nativeRockCapture = true;
+    if (PrivateDebugTools && test && std::strcmp(test, "1") == 0 && name && std::strcmp(name, "native-notebook-book") == 0)
+        nativeNotebookCapture = true;
 }
 static void CaptureNativeRock(const GlImage& image) {
     if (!nativeRockCapture)
@@ -2830,7 +2875,34 @@ void VerifyPostNativeOrderingGLES(GlImage& image,const std::function<void(bool)>
         log<<"{\"label\":\""<<orderingLabel<<"\",\"eye\":"<<eye<<",\"bytes\":"<<after.size()<<",\"changedBytes\":"<<changed<<",\"nonUniformChannels\":"<<nonUniform<<",\"maxDelta\":"<<delta<<"}\n"<<std::flush;
     }
 }
+// Private, save-protected GLES replay check; never executes in normal play.
+static void CaptureNotebookGLES(GlImage& image, const std::function<void(bool)>& draw) {
+    if (!nativeNotebookCapture || !draw) return;
+    nativeNotebookCapture = false;
+    struct Restore {
+        int pass=renderPass; bool projection=perspective, dialogue=separateDialogue;
+        XrPosef eye=currentEye, origin=currentOrigin; XrFovf fov=currentFov;
+        ~Restore(){renderPass=pass;perspective=projection;separateDialogue=dialogue;
+            currentEye=eye;currentOrigin=origin;currentFov=fov;}
+    } restore;
+    for(int layer=0;layer<3;++layer) {
+        renderPass=layer+1; perspective=false; separateDialogue=false;
+        currentEye={{0,0,0,1},{layer==0?-.032f:.032f,0,0}};
+        currentOrigin={{0,0,0,1},{0,0,0}}; currentFov={-.8f,.8f,.8f,-.8f};
+        draw(layer==2);
+        const auto pixels=NativeBoundsReadPixels(image);
+        const auto name=std::string("native-notebook-book-")+(layer==2?"hud":("eye"+std::to_string(layer)));
+        std::ofstream out(name+".ppm",std::ios::binary);
+        out<<"P6\n"<<image.width<<" "<<image.height<<"\n255\n";
+        for(unsigned y=0;y<image.height;++y) for(unsigned x=0;x<image.width;++x) {
+            unsigned row=image.inverted?y:image.height-y-1;
+            out.write(reinterpret_cast<const char*>(pixels.data()+(size_t(row)*image.width+x)*4),3);
+        }
+    }
+    Log("Native notebook GLES layers captured");
+}
 void SubmitGameGLES(GlImage& image, const std::function<void(bool)>& draw) noexcept {
+    try { CaptureNotebookGLES(image, draw); } catch (const std::exception& e) { Log(std::string("Notebook capture failed: ")+e.what()); }
     try {
         CaptureNativeRock(image);
     } catch (const std::exception& e) { Log(std::string("Native material capture failed: ") + e.what()); }
@@ -3073,7 +3145,7 @@ void SubmitGame(ID3D11Device* device, ID3D11DeviceContext* context, ID3D11Textur
         CaptureNativeLayer(device, context, texture, capture);
         // Protected lesson fixture: inspect the actual separated alpha layers,
         // not merely the native textbox command predicate.
-        if (capture.rfind("lesson-", 0) == 0 && draw) {
+        if ((capture.rfind("lesson-", 0) == 0 || capture.rfind("native-notebook-", 0) == 0) && draw) {
             TextureBackup original;
             original.Save(context, texture);
             struct RestoreLessonCapture {
@@ -3082,14 +3154,27 @@ void SubmitGame(ID3D11Device* device, ID3D11DeviceContext* context, ID3D11Textur
                 ID3D11Texture2D* texture;
                 int pass = renderPass;
                 bool projection = perspective, dialogue = separateDialogue;
+                XrPosef eye=currentEye, origin=currentOrigin;
+                XrFovf fov=currentFov;
                 ~RestoreLessonCapture() {
                     renderPass = pass;
                     perspective = projection;
                     separateDialogue = dialogue;
+                    currentEye=eye; currentOrigin=origin; currentFov=fov;
                     original.Restore(context, texture);
                 }
             } restore{original, context, texture};
-            separateDialogue = dialogueCommands && dialogueBody;
+            if (capture.rfind("native-notebook-", 0) == 0) {
+                for(int eye=0;eye<2;++eye) {
+                    renderPass=eye+1;perspective=false;
+                    currentEye={{0,0,0,1},{eye==0?-.032f:.032f,0,0}};
+                    currentOrigin={{0,0,0,1},{0,0,0}};
+                    currentFov={-.8f,.8f,.8f,-.8f};
+                    draw(false);
+                    CaptureNativeLayer(device,context,texture,capture+"-eye"+std::to_string(eye));
+                }
+            }
+            separateDialogue = !notebookActive && dialogueCommands && dialogueBody;
             renderPass = 3;
             perspective = false;
             draw(true);
@@ -3255,6 +3340,16 @@ bool MaskStatusVisible() noexcept {
 bool MaskTriggerClaimed() noexcept {
     return MaskCarrying() || maskPending >= 0;
 }
+bool HoldSelectedMask() noexcept {
+    if (!FirstPersonRequested() || !maskAllowed || maskSelected < 0 || maskSelected == maskWornItem ||
+        settings.Get(Setting::QuickWheelItems) <= .5f || !PhysicalActionsAllowed()) return false;
+    CancelHeldMask();
+    maskHand = SwordController(settings);
+    maskItem = maskSelected;
+    maskWorn = false;
+    maskGestures[maskHand].HoldFromWheel();
+    return true;
+}
 void SetMaskIcon(uintptr_t texture) noexcept {
     maskIcon = texture;
 }
@@ -3285,7 +3380,12 @@ bool UpdateMaskTracking(const TrackingFrame& frame, bool allowed) noexcept {
         const bool wasCarrying = gesture.carrying;
         const bool blocked = enabled && candidate >= 0 && !gesture.carrying && gesture.armed &&
                              frame.triggers[hand] > .7f && maskGrabBlocker && maskGrabBlocker(hand);
-        bool use = gesture.Update(frame.timeSeconds, frame.epoch, enabled && candidate >= 0 && !blocked,
+        bool use = gesture.wheelHeld
+            ? gesture.UpdateWheel(frame.timeSeconds, frame.epoch,
+                                  enabled && firstPersonRequested && candidate >= 0 && settings.Get(Setting::QuickWheelItems) > .5f,
+                                  frame.handTracked[hand] && frame.aimValid[hand], frame.triggers[hand],
+                                  frame.hands[hand], frame.head, settings.Get(Setting::MaskFaceDistance))
+            : gesture.Update(frame.timeSeconds, frame.epoch, enabled && candidate >= 0 && !blocked,
                                   frame.handTracked[hand] && frame.aimValid[hand], frame.triggers[hand], worn,
                                   frame.hands[hand], frame.head, settings.Get(Setting::MaskFaceDistance),
                                   settings.Get(Setting::MaskRemoveDistance));
@@ -3538,11 +3638,20 @@ void SetNativeTestEye(float yaw) noexcept {
         worldView = YawPose(0);
     }
 }
+void SetNativeTestNotebook(const XrPosef& hand, float x, float y) noexcept {
+    if (!nativeTestTracking) return;
+    notebookPoseValid=true;
+    notebookPose=NotebookPagePose(hand);
+    notebookTouch={std::isfinite(x)&&std::isfinite(y),x,y};
+}
 void SetNativeTestTracking(bool enabled) noexcept {
     const char* e = std::getenv("MMVR_NATIVE_TEST");
     nativeTestTracking = PrivateDebugTools && enabled && e && std::string(e) == "1";
-    if (!nativeTestTracking)
+    if (!nativeTestTracking) {
         renderPass = 0;
+        notebookPoseValid = false;
+        notebookTouch = {};
+    }
 }
 bool InteractionPointVisible(float x,float y,float z) noexcept {
     return !runtime || runtime->InteractionVisible(x,y,z);
@@ -3645,6 +3754,18 @@ bool IsHudPass() noexcept {
 }
 void SetPauseCommands(const void* commands) noexcept {
     pauseCommands = commands;
+}
+void SetNotebook(bool active) noexcept {
+    active = active && FirstPersonRequested();
+    if (active != notebookActive) {
+        notebookContact.Reset(); notebookTouch = {}; notebookPoseValid = false;
+    }
+    notebookActive = active;
+}
+bool NotebookActive() noexcept { return notebookActive; }
+bool ConsumeNotebookTouch(float& x, float& y) noexcept {
+    if (!notebookActive || !notebookTouch.active) return false;
+    x = notebookTouch.x; y = notebookTouch.y; notebookTouch = {}; return true;
 }
 void SetScreenScaleCommands(const void* overlay, const void* world) noexcept {
     screenScaleOverlay = overlay;
@@ -3848,6 +3969,19 @@ void SetPlayerMatrixRange(const void* low, const void* high, const void* left, c
     handMatrixAddresses[0] = left;
     handMatrixAddresses[1] = right;
 }
+void ClearBodyBones() noexcept { for(auto& bone:bodyBones) bone={}; }
+void SetBodyBone(int index, const void* address, const float* native) noexcept {
+    if(index<0||index>=BodyBoneCount) return;
+    auto& bone=bodyBones[index];bone={};bone.address=address;
+    if(native) std::memcpy(&bone.native,native,sizeof(Matrix));
+    bone.visual=bone.native;
+}
+const void* BodyBoneAddress(int index) noexcept { return index>=0&&index<BodyBoneCount?bodyBones[index].address:nullptr; }
+void SetVisualBodyBone(int index, const float* interpolated) noexcept {
+    if(index<0||index>=BodyBoneCount) return;
+    auto& bone=bodyBones[index];bone.visual=bone.native;
+    if(interpolated) std::memcpy(&bone.visual,interpolated,sizeof(Matrix));
+}
 bool OverrideViewMatrix(const void* address, float matrix[4][4]) noexcept {
     if (cameraFrame.active && FirstPersonRequested() && (renderPass == 1 || renderPass == 2) &&
         address == cameraFrame.viewAddress) {
@@ -3917,6 +4051,8 @@ void SetShieldEffectMatrix(const void* address, const Matrix& local) noexcept {
     if (address && shieldEffectCount < shieldEffects.size())
         shieldEffects[shieldEffectCount++] = { address, local };
 }
+const void* notebookModelAddress = nullptr;
+void SetNotebookModelMatrix(const void* address) noexcept { notebookModelAddress = address; }
 const void* bowStringAddress = nullptr;
 const void* bowArrowAddress = nullptr;
 const void* itemReticleAddress = nullptr;
@@ -3956,6 +4092,12 @@ bool OverrideModelMatrix(const void* address, float matrix[4][4], const float na
                 return true;
             }
     if (cameraFrame.active && FirstPersonRequested() && (renderPass == 1 || renderPass == 2)) {
+        if(cameraFrame.fullBodyArms) for(int bone=0;bone<6;++bone) {
+            if(address && address==bodyBones[bone].address) {
+                std::memcpy(matrix,&cameraFrame.bodyArms[bone],sizeof(Matrix));
+                return true;
+            }
+        }
         if (address == dekuGuardAddress && cameraFrame.dekuGuard.m[3][3]) {
             Matrix pose = cameraFrame.dekuGuard;
             std::memcpy(matrix, &pose, sizeof(Matrix));
@@ -3987,6 +4129,17 @@ bool OverrideModelMatrix(const void* address, float matrix[4][4], const float na
         model = CenterSkybox(model, worldView, currentEye, currentOrigin,
                               40.f * (cameraFrame.active ? cameraFrame.trackingScale : 1.f));
         std::memcpy(matrix, &model, sizeof(model));
+        return true;
+    }
+    if (address == notebookModelAddress && notebookModelAddress && notebookActive &&
+        notebookPoseValid && (renderPass == 1 || renderPass == 2)) {
+        // Millimetre mesh -> raw XR book pose -> game view. Exactly the same
+        // origin/world scale as the eye projection and the composited leaves.
+        auto model=Multiply(PoseMatrix(notebookPose),InversePose(PoseMatrix(currentOrigin)));
+        const float units=40.f*(cameraFrame.active ? cameraFrame.trackingScale : 1.f);
+        for(int r=0;r<4;++r) for(int c=0;c<3;++c) model.m[r][c]*=units*(r==3 ? 1.f : .001f);
+        model=Multiply(model,InversePose(worldView));
+        std::memcpy(matrix,&model,sizeof(model));
         return true;
     }
     if (!cameraFrame.active || !FirstPersonRequested() || (renderPass != 1 && renderPass != 2))
@@ -4110,6 +4263,7 @@ void SetReticleMatrix(int i, const void* p, const float* rotation, float x, floa
     binding.basis.m[3][3] = 1;
 }
 void ResetCoordinateTracking(bool releaseActions) noexcept {
+    ClearBodyBones();
     cameraFrame = {};
     worldView = {};
     eyeFacingCache = {};
@@ -4131,6 +4285,7 @@ void ResetCoordinateTracking(bool releaseActions) noexcept {
     }
     ResetFormEffectMatrices();
     ResetReticles();
+    SetNotebookModelMatrix(nullptr);
     SetBowStringMatrix(nullptr);
     SetBowArrowMatrix(nullptr);
     SetItemReticleMatrix(nullptr);
@@ -4194,9 +4349,12 @@ extern "C" void MMVR_SetYawBillboardMatrix(const void* address, float yaw, float
     mmvr::billboards[address] = { mmvr::YawPose(yaw, x, y, z), true };
 }
 extern "C" int MMVR_RecordMotionBlur(unsigned char alpha) {
-    mmvr::motionBlurAlpha = alpha;
-    return (mmvr::StereoActive() || mmvr::nativeTestTracking) &&
-           mmvr::settings.Get(mmvr::Setting::ComfortHudEffects) < .5f;
+    const auto route = mmvr::RouteMotionBlur(alpha,
+        mmvr::PacingActive() || mmvr::nativeTestTracking, mmvr::StereoActive(),
+        mmvr::settings.Get(mmvr::Setting::ComfortHudEffects) > .5f,
+        mmvr::settings.Get(mmvr::Setting::MotionBlur) > .5f);
+    mmvr::motionBlurAlpha = route.eyeAlpha;
+    return route.consumeNative;
 }
 extern "C" void MMVR_SetTheaterFadeComposition(int theater) {
     mmvr::nativeTheaterFades = theater != 0;

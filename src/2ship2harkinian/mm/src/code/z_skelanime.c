@@ -170,14 +170,24 @@ void SkelAnime_DrawFlexLimbLod(PlayState* play, s32 limbIndex, void** skeleton, 
         Matrix_TranslateRotateZYX(&pos, &rot);
         if (newDList != NULL) {
             Matrix_ToMtx(*mtx);
+#ifdef MMVR_ENABLE
+            MMVR_RecordBodyBone(actor, limbIndex, *mtx);
+#endif
             gSPMatrix(POLY_OPA_DISP++, *mtx, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
 #ifdef MMVR_ENABLE
             if(!MMVR_HidePlayerLimb(actor,limbIndex))
 #endif
             { gSPDisplayList(POLY_OPA_DISP++, newDList); }
+#ifdef MMVR_ENABLE
+            const void* neckCap = MMVR_PlayerNeckCap(actor, limbIndex);
+            if (neckCap) { gSPDisplayList(POLY_OPA_DISP++, (Gfx*)neckCap); }
+#endif
             (*mtx)++;
         } else if (limbDList != NULL) {
             Matrix_ToMtx(*mtx);
+#ifdef MMVR_ENABLE
+            MMVR_RecordBodyBone(actor, limbIndex, *mtx);
+#endif
             (*mtx)++;
         }
     }

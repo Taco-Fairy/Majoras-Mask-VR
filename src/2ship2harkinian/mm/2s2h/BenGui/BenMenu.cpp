@@ -2224,9 +2224,9 @@ BenMenu::BenMenu(const std::string& consoleVariable, const std::string& name)
 void BenMenu::InitElement() {
     Ship::Menu::InitElement();
 #ifdef MMVR_ENABLE
-    AddMenuEntry("FullDiveGames Editions", "gSettings.Menu.FullDiveGamesSidebarSection");
-    AddSidebarEntry("FullDiveGames Editions", "Visuals", 1);
-    WidgetPath editionsPath = {"FullDiveGames Editions", "Visuals", SECTION_COLUMN_1};
+    AddMenuEntry("FullDiveGames Additions", "gSettings.Menu.FullDiveGamesSidebarSection");
+    AddSidebarEntry("FullDiveGames Additions", "Visuals", 1);
+    WidgetPath editionsPath = {"FullDiveGames Additions", "Visuals", SECTION_COLUMN_1};
     AddWidget(editionsPath, "Magic arrow draw effects", WIDGET_CVAR_CHECKBOX)
         .CVar("gEnhancements.FullDiveGames.MagicArrowDrawEffects")
         .Options(CheckboxOptions().DefaultValue(true).Tooltip(
@@ -2387,7 +2387,7 @@ bool BenMenu::DrawVrSection(const char* main, const char* sidebar, const char* s
     const std::string mainName(main);
     const std::string sidebarName(sidebar);
     const bool supportedSection =
-        (mainName == "FullDiveGames Editions" && sidebarName == "Visuals") ||
+        (mainName == "FullDiveGames Additions" && sidebarName == "Visuals") ||
         (mainName == "Settings" && sidebarName == "Audio") ||
         (mainName == "Enhancements" && (sidebarName == "Gameplay" || sidebarName == "Cheats" ||
                                          sidebarName == "Difficulty Options" || sidebarName == "Items/Songs" || sidebarName == "Graphics")) ||

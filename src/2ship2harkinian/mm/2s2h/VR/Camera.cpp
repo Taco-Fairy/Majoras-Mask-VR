@@ -34,6 +34,7 @@
 #include "walk_step_camera.h"
 #include "lock_on_orbit.h"
 #include "room_scale_interpolation.h"
+#include "body_ik.h"
 #include "world_scale.h"
 #include "ui.h"
 #include <libultraship/bridge/consolevariablebridge.h>
@@ -639,6 +640,19 @@ mmvr::CameraFrame Update(const mmvr::TrackingFrame& rawTracking) {
                       -drawPosition.z - tracking.visualOffset[2]),
         mmvr::YawPose(Radians(p->actor.shape.rot.y) - (tracking.visualValid ? tracking.visualYaw : Radians(drawYaw)),
                       visual.x, visual.y, visual.z));
+    if (mmvr::GetSettings().Get(mmvr::Setting::FullBody) > .5f && !MMVR_ControlledKafei(p)) {
+        // Move the visible skeleton to the HMD, never the camera to an animated
+        // skeleton. Remove native torso lean/aim twist before solving the arms.
+        const float neckYaw = mmvr::PoseYaw(viewPose) - Pi + mmvr::PoseYaw(relative);
+        auto neck = mmvr::YawPose(neckYaw,
+            viewPose.m[3][0] - std::sin(neckYaw) * Units * tracking.trackingScale * .04f,
+            viewPose.m[3][1] + relative.m[3][1] * Units - Units * tracking.trackingScale * .07f,
+            viewPose.m[3][2] - std::cos(neckYaw) * Units * tracking.trackingScale * .04f);
+        mmvr::Matrix correction;
+        const float nativeYaw = tracking.visualValid ? tracking.visualYaw : Radians(drawYaw);
+        if (mmvr::body::AnchorTorso(tracking.bodyBones, nativeYaw, neck, correction))
+            result.bodyCorrection = correction;
+    }
     if (reset) {
         itemSmoother.Reset();
         bowHandSmoother.Reset();
@@ -696,6 +710,29 @@ mmvr::CameraFrame Update(const mmvr::TrackingFrame& rawTracking) {
         mmvrgame::OverrideTrackedItemHand(result.hands[1]);
     mmvrgame::FillHeldActorFrame(result);
     mmvrgame::ApplyPhysicalPushHandLock(play, p, result.hands);
+    if(mmvr::GetSettings().Get(mmvr::Setting::FullBody)>.5f && !MMVR_ControlledKafei(p)) {
+        result.fullBodyArms=true;
+        mmvr::Matrix bones[6];
+        for(int i=0;i<6;++i) bones[i]=mmvr::Multiply(tracking.bodyBones[i],result.bodyCorrection);
+        for(int side=0;side<2;++side) {
+            // Anatomical left/right arms attach to the physical controller,
+            // regardless of which native hand mesh currently holds the weapon.
+            int hand=ControllerFor(p,0)==side?0:1;
+            if(!tracking.handTracked[side]) continue;
+            auto outward=mmvr::body::Unit(mmvr::body::Position(bones[side*3])-
+                                          mmvr::body::Position(bones[(1-side)*3]));
+            mmvr::body::Vec pole={outward.x*.6f,-.85f,outward.z*.6f};
+            auto arm=mmvr::body::Solve(bones[side*3],bones[side*3+1],bones[side*3+2],result.hands[hand],pole);
+            if(arm.valid) {
+                result.bodyArms[side*3]=arm.upper;
+                result.bodyArms[side*3+1]=arm.lower;
+                // The arm palette belongs to its anatomical side, while the
+                // existing item hand may be a mirrored opposite-hand mesh.
+                if(hand!=side) for(int c=0;c<3;++c) arm.wrist.m[2][c]=-arm.wrist.m[2][c];
+                result.bodyArms[side*3+2]=arm.wrist;
+            }
+        }
+    }
     result.heldMask = mmvrgame::HeldMaskPose(itemTracking, viewPose, relative);
     if (rewardDrawValid && rewardDrawFrame == play->gameplayFrames) {
         Vec3f target{viewPose.m[3][0],viewPose.m[3][1]+relative.m[3][1]*Units+18*tracking.trackingScale,viewPose.m[3][2]};
@@ -1136,6 +1173,12 @@ extern "C" int MMVR_HidePlayerLimb(Actor* actor, int limb) {
     if (MMVR_ControlledKafei((Player*)actor))
         return true;
     const auto& settings = mmvr::GetSettings();
+    if(settings.Get(mmvr::Setting::FullBody)>.5f) {
+        if(limb==PLAYER_LIMB_SHEATH &&
+           (settings.Get(mmvr::Setting::HideSheath)>.5f || settings.Get(mmvr::Setting::HideShield)>.5f)) return true;
+        return limb==PLAYER_LIMB_HEAD || limb==PLAYER_LIMB_HAT ||
+               limb==PLAYER_LIMB_LEFT_HAND || limb==PLAYER_LIMB_RIGHT_HAND;
+    }
     if (settings.Get(mmvr::Setting::HideLegs) > .5f &&
         (limb == PLAYER_LIMB_WAIST || (limb >= PLAYER_LIMB_RIGHT_THIGH && limb <= PLAYER_LIMB_LEFT_FOOT)))
         return true;
@@ -1146,6 +1189,17 @@ extern "C" int MMVR_HidePlayerLimb(Actor* actor, int limb) {
            limb == PLAYER_LIMB_HAT || limb == PLAYER_LIMB_LEFT_SHOULDER || limb == PLAYER_LIMB_LEFT_FOREARM ||
            limb == PLAYER_LIMB_LEFT_HAND || limb == PLAYER_LIMB_RIGHT_SHOULDER || limb == PLAYER_LIMB_RIGHT_FOREARM ||
            limb == PLAYER_LIMB_RIGHT_HAND;
+}
+extern "C" void MMVR_RecordBodyBone(Actor* actor, int limb, const void* address) {
+
+    if(!gPlayState || actor!=(Actor*)GET_PLAYER(gPlayState) || !drawingPlayer ||
+       drawBeginGeneration!=coordinateGeneration || MMVR_ControlledKafei((Player*)actor) ||
+       mmvr::GetSettings().Get(mmvr::Setting::FullBody)<.5f || !HideCurrentPlayer(gPlayState)) return;
+    int index=limb>=PLAYER_LIMB_LEFT_SHOULDER && limb<=PLAYER_LIMB_RIGHT_HAND
+        ? limb-PLAYER_LIMB_LEFT_SHOULDER : limb==PLAYER_LIMB_HEAD ? 6 : limb==PLAYER_LIMB_WAIST ? 7 : -1;
+    if(index<0 || index>=mmvr::BodyBoneCount) return;
+    MtxF native;Matrix_Get(&native);
+    mmvr::SetBodyBone(index,address,(const float*)&native);
 }
 extern "C" float MMVR_MovementScale(PlayState* play, Player* p) {
     if (!play || !p || !mmvr::FirstPersonRequested() || !mmvrgame::FirstPersonFormAllowed(p) ||
@@ -1252,6 +1306,7 @@ extern "C" void MMVR_PlayerDrawBegin(PlayState* play, Actor* actor) {
         return;
     }
     handSkeletonPalette = nullptr;
+    mmvr::ClearBodyBones();
     handSkeletonCount = 0;
     mmvr::ClearHandSkeletonPalettes();
     rewardDrawValid=false;
@@ -1279,6 +1334,8 @@ extern "C" void MMVR_PlayerDrawBegin(PlayState* play, Actor* actor) {
 }
 #include "KafeiDrawChecks.inl"
 #include "ShieldVisual.inl"
+#include "NotebookBinding.inl"
+#include "NeckCap.inl"
 extern "C" void MMVR_PlayerDrawEnd(PlayState* play, Actor* actor) {
     if (actor != (Actor*)GET_PLAYER(play)) {
         MMVR_TrackedActorEnd(play, actor);
@@ -1350,6 +1407,7 @@ extern "C" void MMVR_PlayerDrawEnd(PlayState* play, Actor* actor) {
         if (handSkeletonPalette)
             gSPSegment(POLY_OPA_DISP++, 0x0D, (uintptr_t)handSkeletonPalette);
         CLOSE_DISPS(play->state.gfxCtx);
+        mmvrgame::DrawTrackedSwordCharge(play, handMatrices[0], ControllerFor((Player*)actor, 0) != 0);
         mmvrgame::DrawTrackedItems(play);
         mmvrgame::DrawHeldMask(play);
         mmvrgame::DrawFormFins(play);
@@ -1362,6 +1420,7 @@ extern "C" void MMVR_PlayerDrawEnd(PlayState* play, Actor* actor) {
 #endif
 }
 #include "ViewTools.inc"
+#include "FullBodyChecks.inl"
 #endif
 
 #if defined(MMVR_ENABLE) && defined(MMVR_STATE_NATIVE_BACKEND)

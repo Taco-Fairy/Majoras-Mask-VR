@@ -100,114 +100,114 @@ void MMVR_StateVisit_9f47fd61495ef687(MMVR_StateSink* sink) {
     }
     sink->block(sink->context, "code/z_play_hireso.c::sBombersNotebookTextIds", &sBombersNotebookTextIds, sizeof(sBombersNotebookTextIds));
     if(sink->layout) {
-    sink->layout(sink->context, "code/z_play_hireso.c::BombersNotebook_DrawRows::sBarColorR::local0", "scalar:short", 0, sizeof(mmvr_local_3bf871e3ca11ea68), MMVR_STATE_SCALAR_ALIGN(mmvr_local_3bf871e3ca11ea68), 1);
+    sink->layout(sink->context, "code/z_play_hireso.c::BombersNotebook_DrawRows::sBarColorR::local0", "scalar:short", 0, sizeof(mmvr_local_f9578e446a2aa865), MMVR_STATE_SCALAR_ALIGN(mmvr_local_f9578e446a2aa865), 1);
     }
-    sink->block(sink->context, "code/z_play_hireso.c::BombersNotebook_DrawRows::sBarColorR::local0", &mmvr_local_3bf871e3ca11ea68, sizeof(mmvr_local_3bf871e3ca11ea68));
+    sink->block(sink->context, "code/z_play_hireso.c::BombersNotebook_DrawRows::sBarColorR::local0", &mmvr_local_f9578e446a2aa865, sizeof(mmvr_local_f9578e446a2aa865));
     if(sink->layout) {
-    sink->layout(sink->context, "code/z_play_hireso.c::BombersNotebook_DrawRows::sBarColorG::local0", "scalar:short", 0, sizeof(mmvr_local_673148b9fc3855ce), MMVR_STATE_SCALAR_ALIGN(mmvr_local_673148b9fc3855ce), 1);
+    sink->layout(sink->context, "code/z_play_hireso.c::BombersNotebook_DrawRows::sBarColorG::local0", "scalar:short", 0, sizeof(mmvr_local_9b912428b697c792), MMVR_STATE_SCALAR_ALIGN(mmvr_local_9b912428b697c792), 1);
     }
-    sink->block(sink->context, "code/z_play_hireso.c::BombersNotebook_DrawRows::sBarColorG::local0", &mmvr_local_673148b9fc3855ce, sizeof(mmvr_local_673148b9fc3855ce));
+    sink->block(sink->context, "code/z_play_hireso.c::BombersNotebook_DrawRows::sBarColorG::local0", &mmvr_local_9b912428b697c792, sizeof(mmvr_local_9b912428b697c792));
     if(sink->layout) {
-    sink->layout(sink->context, "code/z_play_hireso.c::BombersNotebook_DrawRows::sBarColorB::local0", "scalar:short", 0, sizeof(mmvr_local_152b0bafb0ac7684), MMVR_STATE_SCALAR_ALIGN(mmvr_local_152b0bafb0ac7684), 1);
+    sink->layout(sink->context, "code/z_play_hireso.c::BombersNotebook_DrawRows::sBarColorB::local0", "scalar:short", 0, sizeof(mmvr_local_c0a09ce6e348e581), MMVR_STATE_SCALAR_ALIGN(mmvr_local_c0a09ce6e348e581), 1);
     }
-    sink->block(sink->context, "code/z_play_hireso.c::BombersNotebook_DrawRows::sBarColorB::local0", &mmvr_local_152b0bafb0ac7684, sizeof(mmvr_local_152b0bafb0ac7684));
+    sink->block(sink->context, "code/z_play_hireso.c::BombersNotebook_DrawRows::sBarColorB::local0", &mmvr_local_c0a09ce6e348e581, sizeof(mmvr_local_c0a09ce6e348e581));
     if(sink->layout) {
-    sink->layout(sink->context, "code/z_play_hireso.c::BombersNotebook_DrawRows::sBarColorTimer::local0", "scalar:short", 0, sizeof(mmvr_local_70a48dc843a1f783), MMVR_STATE_SCALAR_ALIGN(mmvr_local_70a48dc843a1f783), 1);
+    sink->layout(sink->context, "code/z_play_hireso.c::BombersNotebook_DrawRows::sBarColorTimer::local0", "scalar:short", 0, sizeof(mmvr_local_4a10873b2ffb086a), MMVR_STATE_SCALAR_ALIGN(mmvr_local_4a10873b2ffb086a), 1);
     }
-    sink->block(sink->context, "code/z_play_hireso.c::BombersNotebook_DrawRows::sBarColorTimer::local0", &mmvr_local_70a48dc843a1f783, sizeof(mmvr_local_70a48dc843a1f783));
+    sink->block(sink->context, "code/z_play_hireso.c::BombersNotebook_DrawRows::sBarColorTimer::local0", &mmvr_local_4a10873b2ffb086a, sizeof(mmvr_local_4a10873b2ffb086a));
     if(sink->layout) {
-    sink->layout(sink->context, "code/z_play_hireso.c::BombersNotebook_DrawRows::sBarColorIndex::local0", "scalar:short", 0, sizeof(mmvr_local_bc0c7cb0b1b3896e), MMVR_STATE_SCALAR_ALIGN(mmvr_local_bc0c7cb0b1b3896e), 1);
+    sink->layout(sink->context, "code/z_play_hireso.c::BombersNotebook_DrawRows::sBarColorIndex::local0", "scalar:short", 0, sizeof(mmvr_local_6268ec63addcd5ec), MMVR_STATE_SCALAR_ALIGN(mmvr_local_6268ec63addcd5ec), 1);
     }
-    sink->block(sink->context, "code/z_play_hireso.c::BombersNotebook_DrawRows::sBarColorIndex::local0", &mmvr_local_bc0c7cb0b1b3896e, sizeof(mmvr_local_bc0c7cb0b1b3896e));
+    sink->block(sink->context, "code/z_play_hireso.c::BombersNotebook_DrawRows::sBarColorIndex::local0", &mmvr_local_6268ec63addcd5ec, sizeof(mmvr_local_6268ec63addcd5ec));
     if(sink->layout) {
-    sink->layout(sink->context, "code/z_play_hireso.c::BombersNotebook_DrawRows::sBarColorTargetsR::local0", "array:2:scalar:short", 0, sizeof(mmvr_local_6518db2c19fe7885), MMVR_STATE_SCALAR_ALIGN(mmvr_local_6518db2c19fe7885[0]), 2);
-    sink->layout(sink->context, "code/z_play_hireso.c::BombersNotebook_DrawRows::sBarColorTargetsR::local0[]", "scalar:short", (size_t)((const unsigned char*)&(mmvr_local_6518db2c19fe7885[0])-(const unsigned char*)&(mmvr_local_6518db2c19fe7885)), sizeof(mmvr_local_6518db2c19fe7885[0]), MMVR_STATE_SCALAR_ALIGN(mmvr_local_6518db2c19fe7885[0]), 1);
+    sink->layout(sink->context, "code/z_play_hireso.c::BombersNotebook_DrawRows::sBarColorTargetsR::local0", "array:2:scalar:short", 0, sizeof(mmvr_local_dec4ba62eb81aa4d), MMVR_STATE_SCALAR_ALIGN(mmvr_local_dec4ba62eb81aa4d[0]), 2);
+    sink->layout(sink->context, "code/z_play_hireso.c::BombersNotebook_DrawRows::sBarColorTargetsR::local0[]", "scalar:short", (size_t)((const unsigned char*)&(mmvr_local_dec4ba62eb81aa4d[0])-(const unsigned char*)&(mmvr_local_dec4ba62eb81aa4d)), sizeof(mmvr_local_dec4ba62eb81aa4d[0]), MMVR_STATE_SCALAR_ALIGN(mmvr_local_dec4ba62eb81aa4d[0]), 1);
     }
-    sink->block(sink->context, "code/z_play_hireso.c::BombersNotebook_DrawRows::sBarColorTargetsR::local0", &mmvr_local_6518db2c19fe7885, sizeof(mmvr_local_6518db2c19fe7885));
+    sink->block(sink->context, "code/z_play_hireso.c::BombersNotebook_DrawRows::sBarColorTargetsR::local0", &mmvr_local_dec4ba62eb81aa4d, sizeof(mmvr_local_dec4ba62eb81aa4d));
     if(sink->layout) {
-    sink->layout(sink->context, "code/z_play_hireso.c::BombersNotebook_DrawRows::sBarColorTargetsG::local0", "array:2:scalar:short", 0, sizeof(mmvr_local_ec86874484327751), MMVR_STATE_SCALAR_ALIGN(mmvr_local_ec86874484327751[0]), 2);
-    sink->layout(sink->context, "code/z_play_hireso.c::BombersNotebook_DrawRows::sBarColorTargetsG::local0[]", "scalar:short", (size_t)((const unsigned char*)&(mmvr_local_ec86874484327751[0])-(const unsigned char*)&(mmvr_local_ec86874484327751)), sizeof(mmvr_local_ec86874484327751[0]), MMVR_STATE_SCALAR_ALIGN(mmvr_local_ec86874484327751[0]), 1);
+    sink->layout(sink->context, "code/z_play_hireso.c::BombersNotebook_DrawRows::sBarColorTargetsG::local0", "array:2:scalar:short", 0, sizeof(mmvr_local_c306b9c44901e336), MMVR_STATE_SCALAR_ALIGN(mmvr_local_c306b9c44901e336[0]), 2);
+    sink->layout(sink->context, "code/z_play_hireso.c::BombersNotebook_DrawRows::sBarColorTargetsG::local0[]", "scalar:short", (size_t)((const unsigned char*)&(mmvr_local_c306b9c44901e336[0])-(const unsigned char*)&(mmvr_local_c306b9c44901e336)), sizeof(mmvr_local_c306b9c44901e336[0]), MMVR_STATE_SCALAR_ALIGN(mmvr_local_c306b9c44901e336[0]), 1);
     }
-    sink->block(sink->context, "code/z_play_hireso.c::BombersNotebook_DrawRows::sBarColorTargetsG::local0", &mmvr_local_ec86874484327751, sizeof(mmvr_local_ec86874484327751));
+    sink->block(sink->context, "code/z_play_hireso.c::BombersNotebook_DrawRows::sBarColorTargetsG::local0", &mmvr_local_c306b9c44901e336, sizeof(mmvr_local_c306b9c44901e336));
     if(sink->layout) {
-    sink->layout(sink->context, "code/z_play_hireso.c::BombersNotebook_DrawRows::sBarColorTargetsB::local0", "array:2:scalar:short", 0, sizeof(mmvr_local_924ea665e13b7a58), MMVR_STATE_SCALAR_ALIGN(mmvr_local_924ea665e13b7a58[0]), 2);
-    sink->layout(sink->context, "code/z_play_hireso.c::BombersNotebook_DrawRows::sBarColorTargetsB::local0[]", "scalar:short", (size_t)((const unsigned char*)&(mmvr_local_924ea665e13b7a58[0])-(const unsigned char*)&(mmvr_local_924ea665e13b7a58)), sizeof(mmvr_local_924ea665e13b7a58[0]), MMVR_STATE_SCALAR_ALIGN(mmvr_local_924ea665e13b7a58[0]), 1);
+    sink->layout(sink->context, "code/z_play_hireso.c::BombersNotebook_DrawRows::sBarColorTargetsB::local0", "array:2:scalar:short", 0, sizeof(mmvr_local_acd27c0073740946), MMVR_STATE_SCALAR_ALIGN(mmvr_local_acd27c0073740946[0]), 2);
+    sink->layout(sink->context, "code/z_play_hireso.c::BombersNotebook_DrawRows::sBarColorTargetsB::local0[]", "scalar:short", (size_t)((const unsigned char*)&(mmvr_local_acd27c0073740946[0])-(const unsigned char*)&(mmvr_local_acd27c0073740946)), sizeof(mmvr_local_acd27c0073740946[0]), MMVR_STATE_SCALAR_ALIGN(mmvr_local_acd27c0073740946[0]), 1);
     }
-    sink->block(sink->context, "code/z_play_hireso.c::BombersNotebook_DrawRows::sBarColorTargetsB::local0", &mmvr_local_924ea665e13b7a58, sizeof(mmvr_local_924ea665e13b7a58));
+    sink->block(sink->context, "code/z_play_hireso.c::BombersNotebook_DrawRows::sBarColorTargetsB::local0", &mmvr_local_acd27c0073740946, sizeof(mmvr_local_acd27c0073740946));
     if(sink->layout) {
-    sink->layout(sink->context, "code/z_play_hireso.c::BombersNotebook_DrawArrows::sUpperArrowColorR::local0", "scalar:short", 0, sizeof(mmvr_local_3e90bff4abd06b97), MMVR_STATE_SCALAR_ALIGN(mmvr_local_3e90bff4abd06b97), 1);
+    sink->layout(sink->context, "code/z_play_hireso.c::BombersNotebook_DrawArrows::sUpperArrowColorR::local0", "scalar:short", 0, sizeof(mmvr_local_05e0c7315105f164), MMVR_STATE_SCALAR_ALIGN(mmvr_local_05e0c7315105f164), 1);
     }
-    sink->block(sink->context, "code/z_play_hireso.c::BombersNotebook_DrawArrows::sUpperArrowColorR::local0", &mmvr_local_3e90bff4abd06b97, sizeof(mmvr_local_3e90bff4abd06b97));
+    sink->block(sink->context, "code/z_play_hireso.c::BombersNotebook_DrawArrows::sUpperArrowColorR::local0", &mmvr_local_05e0c7315105f164, sizeof(mmvr_local_05e0c7315105f164));
     if(sink->layout) {
-    sink->layout(sink->context, "code/z_play_hireso.c::BombersNotebook_DrawArrows::sUpperArrowColorG::local0", "scalar:short", 0, sizeof(mmvr_local_3aa12a911e200968), MMVR_STATE_SCALAR_ALIGN(mmvr_local_3aa12a911e200968), 1);
+    sink->layout(sink->context, "code/z_play_hireso.c::BombersNotebook_DrawArrows::sUpperArrowColorG::local0", "scalar:short", 0, sizeof(mmvr_local_11fb95d9600678ef), MMVR_STATE_SCALAR_ALIGN(mmvr_local_11fb95d9600678ef), 1);
     }
-    sink->block(sink->context, "code/z_play_hireso.c::BombersNotebook_DrawArrows::sUpperArrowColorG::local0", &mmvr_local_3aa12a911e200968, sizeof(mmvr_local_3aa12a911e200968));
+    sink->block(sink->context, "code/z_play_hireso.c::BombersNotebook_DrawArrows::sUpperArrowColorG::local0", &mmvr_local_11fb95d9600678ef, sizeof(mmvr_local_11fb95d9600678ef));
     if(sink->layout) {
-    sink->layout(sink->context, "code/z_play_hireso.c::BombersNotebook_DrawArrows::sUpperArrowColorB::local0", "scalar:short", 0, sizeof(mmvr_local_ada80811db644105), MMVR_STATE_SCALAR_ALIGN(mmvr_local_ada80811db644105), 1);
+    sink->layout(sink->context, "code/z_play_hireso.c::BombersNotebook_DrawArrows::sUpperArrowColorB::local0", "scalar:short", 0, sizeof(mmvr_local_3556f33fc478c6a0), MMVR_STATE_SCALAR_ALIGN(mmvr_local_3556f33fc478c6a0), 1);
     }
-    sink->block(sink->context, "code/z_play_hireso.c::BombersNotebook_DrawArrows::sUpperArrowColorB::local0", &mmvr_local_ada80811db644105, sizeof(mmvr_local_ada80811db644105));
+    sink->block(sink->context, "code/z_play_hireso.c::BombersNotebook_DrawArrows::sUpperArrowColorB::local0", &mmvr_local_3556f33fc478c6a0, sizeof(mmvr_local_3556f33fc478c6a0));
     if(sink->layout) {
-    sink->layout(sink->context, "code/z_play_hireso.c::BombersNotebook_DrawArrows::sLowerArrowColorR::local0", "scalar:short", 0, sizeof(mmvr_local_eb839de90d95aea6), MMVR_STATE_SCALAR_ALIGN(mmvr_local_eb839de90d95aea6), 1);
+    sink->layout(sink->context, "code/z_play_hireso.c::BombersNotebook_DrawArrows::sLowerArrowColorR::local0", "scalar:short", 0, sizeof(mmvr_local_18cd8bb48ab8fead), MMVR_STATE_SCALAR_ALIGN(mmvr_local_18cd8bb48ab8fead), 1);
     }
-    sink->block(sink->context, "code/z_play_hireso.c::BombersNotebook_DrawArrows::sLowerArrowColorR::local0", &mmvr_local_eb839de90d95aea6, sizeof(mmvr_local_eb839de90d95aea6));
+    sink->block(sink->context, "code/z_play_hireso.c::BombersNotebook_DrawArrows::sLowerArrowColorR::local0", &mmvr_local_18cd8bb48ab8fead, sizeof(mmvr_local_18cd8bb48ab8fead));
     if(sink->layout) {
-    sink->layout(sink->context, "code/z_play_hireso.c::BombersNotebook_DrawArrows::sLowerArrowColorG::local0", "scalar:short", 0, sizeof(mmvr_local_7c140f6ea0683eae), MMVR_STATE_SCALAR_ALIGN(mmvr_local_7c140f6ea0683eae), 1);
+    sink->layout(sink->context, "code/z_play_hireso.c::BombersNotebook_DrawArrows::sLowerArrowColorG::local0", "scalar:short", 0, sizeof(mmvr_local_4d5b28d0cc55602f), MMVR_STATE_SCALAR_ALIGN(mmvr_local_4d5b28d0cc55602f), 1);
     }
-    sink->block(sink->context, "code/z_play_hireso.c::BombersNotebook_DrawArrows::sLowerArrowColorG::local0", &mmvr_local_7c140f6ea0683eae, sizeof(mmvr_local_7c140f6ea0683eae));
+    sink->block(sink->context, "code/z_play_hireso.c::BombersNotebook_DrawArrows::sLowerArrowColorG::local0", &mmvr_local_4d5b28d0cc55602f, sizeof(mmvr_local_4d5b28d0cc55602f));
     if(sink->layout) {
-    sink->layout(sink->context, "code/z_play_hireso.c::BombersNotebook_DrawArrows::sLowerArrowColorB::local0", "scalar:short", 0, sizeof(mmvr_local_9be3186be4ea5b4b), MMVR_STATE_SCALAR_ALIGN(mmvr_local_9be3186be4ea5b4b), 1);
+    sink->layout(sink->context, "code/z_play_hireso.c::BombersNotebook_DrawArrows::sLowerArrowColorB::local0", "scalar:short", 0, sizeof(mmvr_local_f1632eabdb9893c1), MMVR_STATE_SCALAR_ALIGN(mmvr_local_f1632eabdb9893c1), 1);
     }
-    sink->block(sink->context, "code/z_play_hireso.c::BombersNotebook_DrawArrows::sLowerArrowColorB::local0", &mmvr_local_9be3186be4ea5b4b, sizeof(mmvr_local_9be3186be4ea5b4b));
+    sink->block(sink->context, "code/z_play_hireso.c::BombersNotebook_DrawArrows::sLowerArrowColorB::local0", &mmvr_local_f1632eabdb9893c1, sizeof(mmvr_local_f1632eabdb9893c1));
     if(sink->layout) {
-    sink->layout(sink->context, "code/z_play_hireso.c::BombersNotebook_DrawArrows::sUpperArrowColorIndex::local0", "scalar:short", 0, sizeof(mmvr_local_9598258302019773), MMVR_STATE_SCALAR_ALIGN(mmvr_local_9598258302019773), 1);
+    sink->layout(sink->context, "code/z_play_hireso.c::BombersNotebook_DrawArrows::sUpperArrowColorIndex::local0", "scalar:short", 0, sizeof(mmvr_local_4598be032094aaf2), MMVR_STATE_SCALAR_ALIGN(mmvr_local_4598be032094aaf2), 1);
     }
-    sink->block(sink->context, "code/z_play_hireso.c::BombersNotebook_DrawArrows::sUpperArrowColorIndex::local0", &mmvr_local_9598258302019773, sizeof(mmvr_local_9598258302019773));
+    sink->block(sink->context, "code/z_play_hireso.c::BombersNotebook_DrawArrows::sUpperArrowColorIndex::local0", &mmvr_local_4598be032094aaf2, sizeof(mmvr_local_4598be032094aaf2));
     if(sink->layout) {
-    sink->layout(sink->context, "code/z_play_hireso.c::BombersNotebook_DrawArrows::sLowerArrowColorIndex::local0", "scalar:short", 0, sizeof(mmvr_local_a4afad6429d69309), MMVR_STATE_SCALAR_ALIGN(mmvr_local_a4afad6429d69309), 1);
+    sink->layout(sink->context, "code/z_play_hireso.c::BombersNotebook_DrawArrows::sLowerArrowColorIndex::local0", "scalar:short", 0, sizeof(mmvr_local_b04b023b79e424f1), MMVR_STATE_SCALAR_ALIGN(mmvr_local_b04b023b79e424f1), 1);
     }
-    sink->block(sink->context, "code/z_play_hireso.c::BombersNotebook_DrawArrows::sLowerArrowColorIndex::local0", &mmvr_local_a4afad6429d69309, sizeof(mmvr_local_a4afad6429d69309));
+    sink->block(sink->context, "code/z_play_hireso.c::BombersNotebook_DrawArrows::sLowerArrowColorIndex::local0", &mmvr_local_b04b023b79e424f1, sizeof(mmvr_local_b04b023b79e424f1));
     if(sink->layout) {
-    sink->layout(sink->context, "code/z_play_hireso.c::BombersNotebook_DrawArrows::sUpperArrowColorTimer::local0", "scalar:short", 0, sizeof(mmvr_local_9a7bf3285996f04b), MMVR_STATE_SCALAR_ALIGN(mmvr_local_9a7bf3285996f04b), 1);
+    sink->layout(sink->context, "code/z_play_hireso.c::BombersNotebook_DrawArrows::sUpperArrowColorTimer::local0", "scalar:short", 0, sizeof(mmvr_local_51f3ef56a7b21097), MMVR_STATE_SCALAR_ALIGN(mmvr_local_51f3ef56a7b21097), 1);
     }
-    sink->block(sink->context, "code/z_play_hireso.c::BombersNotebook_DrawArrows::sUpperArrowColorTimer::local0", &mmvr_local_9a7bf3285996f04b, sizeof(mmvr_local_9a7bf3285996f04b));
+    sink->block(sink->context, "code/z_play_hireso.c::BombersNotebook_DrawArrows::sUpperArrowColorTimer::local0", &mmvr_local_51f3ef56a7b21097, sizeof(mmvr_local_51f3ef56a7b21097));
     if(sink->layout) {
-    sink->layout(sink->context, "code/z_play_hireso.c::BombersNotebook_DrawArrows::sLowerArrowColorTimer::local0", "scalar:short", 0, sizeof(mmvr_local_e782821e766f81d8), MMVR_STATE_SCALAR_ALIGN(mmvr_local_e782821e766f81d8), 1);
+    sink->layout(sink->context, "code/z_play_hireso.c::BombersNotebook_DrawArrows::sLowerArrowColorTimer::local0", "scalar:short", 0, sizeof(mmvr_local_63b737f1ff449f1c), MMVR_STATE_SCALAR_ALIGN(mmvr_local_63b737f1ff449f1c), 1);
     }
-    sink->block(sink->context, "code/z_play_hireso.c::BombersNotebook_DrawArrows::sLowerArrowColorTimer::local0", &mmvr_local_e782821e766f81d8, sizeof(mmvr_local_e782821e766f81d8));
+    sink->block(sink->context, "code/z_play_hireso.c::BombersNotebook_DrawArrows::sLowerArrowColorTimer::local0", &mmvr_local_63b737f1ff449f1c, sizeof(mmvr_local_63b737f1ff449f1c));
     if(sink->layout) {
-    sink->layout(sink->context, "code/z_play_hireso.c::BombersNotebook_DrawArrows::sUpperArrowOffsetY::local0", "scalar:short", 0, sizeof(mmvr_local_e2f12dee7c9ad3d6), MMVR_STATE_SCALAR_ALIGN(mmvr_local_e2f12dee7c9ad3d6), 1);
+    sink->layout(sink->context, "code/z_play_hireso.c::BombersNotebook_DrawArrows::sUpperArrowOffsetY::local0", "scalar:short", 0, sizeof(mmvr_local_027f215248d06536), MMVR_STATE_SCALAR_ALIGN(mmvr_local_027f215248d06536), 1);
     }
-    sink->block(sink->context, "code/z_play_hireso.c::BombersNotebook_DrawArrows::sUpperArrowOffsetY::local0", &mmvr_local_e2f12dee7c9ad3d6, sizeof(mmvr_local_e2f12dee7c9ad3d6));
+    sink->block(sink->context, "code/z_play_hireso.c::BombersNotebook_DrawArrows::sUpperArrowOffsetY::local0", &mmvr_local_027f215248d06536, sizeof(mmvr_local_027f215248d06536));
     if(sink->layout) {
-    sink->layout(sink->context, "code/z_play_hireso.c::BombersNotebook_DrawArrows::sLowerArrowOffsetY::local0", "scalar:short", 0, sizeof(mmvr_local_a4373abb7a850aee), MMVR_STATE_SCALAR_ALIGN(mmvr_local_a4373abb7a850aee), 1);
+    sink->layout(sink->context, "code/z_play_hireso.c::BombersNotebook_DrawArrows::sLowerArrowOffsetY::local0", "scalar:short", 0, sizeof(mmvr_local_5d6d3dc36dda72eb), MMVR_STATE_SCALAR_ALIGN(mmvr_local_5d6d3dc36dda72eb), 1);
     }
-    sink->block(sink->context, "code/z_play_hireso.c::BombersNotebook_DrawArrows::sLowerArrowOffsetY::local0", &mmvr_local_a4373abb7a850aee, sizeof(mmvr_local_a4373abb7a850aee));
+    sink->block(sink->context, "code/z_play_hireso.c::BombersNotebook_DrawArrows::sLowerArrowOffsetY::local0", &mmvr_local_5d6d3dc36dda72eb, sizeof(mmvr_local_5d6d3dc36dda72eb));
     if(sink->layout) {
-    sink->layout(sink->context, "code/z_play_hireso.c::BombersNotebook_DrawArrows::sArrowColorTargetsG::local0", "array:2:scalar:short", 0, sizeof(mmvr_local_f6d50da4edbcacee), MMVR_STATE_SCALAR_ALIGN(mmvr_local_f6d50da4edbcacee[0]), 2);
-    sink->layout(sink->context, "code/z_play_hireso.c::BombersNotebook_DrawArrows::sArrowColorTargetsG::local0[]", "scalar:short", (size_t)((const unsigned char*)&(mmvr_local_f6d50da4edbcacee[0])-(const unsigned char*)&(mmvr_local_f6d50da4edbcacee)), sizeof(mmvr_local_f6d50da4edbcacee[0]), MMVR_STATE_SCALAR_ALIGN(mmvr_local_f6d50da4edbcacee[0]), 1);
+    sink->layout(sink->context, "code/z_play_hireso.c::BombersNotebook_DrawArrows::sArrowColorTargetsG::local0", "array:2:scalar:short", 0, sizeof(mmvr_local_95bccfc5483a32df), MMVR_STATE_SCALAR_ALIGN(mmvr_local_95bccfc5483a32df[0]), 2);
+    sink->layout(sink->context, "code/z_play_hireso.c::BombersNotebook_DrawArrows::sArrowColorTargetsG::local0[]", "scalar:short", (size_t)((const unsigned char*)&(mmvr_local_95bccfc5483a32df[0])-(const unsigned char*)&(mmvr_local_95bccfc5483a32df)), sizeof(mmvr_local_95bccfc5483a32df[0]), MMVR_STATE_SCALAR_ALIGN(mmvr_local_95bccfc5483a32df[0]), 1);
     }
-    sink->block(sink->context, "code/z_play_hireso.c::BombersNotebook_DrawArrows::sArrowColorTargetsG::local0", &mmvr_local_f6d50da4edbcacee, sizeof(mmvr_local_f6d50da4edbcacee));
+    sink->block(sink->context, "code/z_play_hireso.c::BombersNotebook_DrawArrows::sArrowColorTargetsG::local0", &mmvr_local_95bccfc5483a32df, sizeof(mmvr_local_95bccfc5483a32df));
     if(sink->layout) {
-    sink->layout(sink->context, "code/z_play_hireso.c::BombersNotebook_DrawArrows::sArrowColorTargetsB::local0", "array:2:scalar:short", 0, sizeof(mmvr_local_dc21dab02761e083), MMVR_STATE_SCALAR_ALIGN(mmvr_local_dc21dab02761e083[0]), 2);
-    sink->layout(sink->context, "code/z_play_hireso.c::BombersNotebook_DrawArrows::sArrowColorTargetsB::local0[]", "scalar:short", (size_t)((const unsigned char*)&(mmvr_local_dc21dab02761e083[0])-(const unsigned char*)&(mmvr_local_dc21dab02761e083)), sizeof(mmvr_local_dc21dab02761e083[0]), MMVR_STATE_SCALAR_ALIGN(mmvr_local_dc21dab02761e083[0]), 1);
+    sink->layout(sink->context, "code/z_play_hireso.c::BombersNotebook_DrawArrows::sArrowColorTargetsB::local0", "array:2:scalar:short", 0, sizeof(mmvr_local_cb1d108cb12a8aae), MMVR_STATE_SCALAR_ALIGN(mmvr_local_cb1d108cb12a8aae[0]), 2);
+    sink->layout(sink->context, "code/z_play_hireso.c::BombersNotebook_DrawArrows::sArrowColorTargetsB::local0[]", "scalar:short", (size_t)((const unsigned char*)&(mmvr_local_cb1d108cb12a8aae[0])-(const unsigned char*)&(mmvr_local_cb1d108cb12a8aae)), sizeof(mmvr_local_cb1d108cb12a8aae[0]), MMVR_STATE_SCALAR_ALIGN(mmvr_local_cb1d108cb12a8aae[0]), 1);
     }
-    sink->block(sink->context, "code/z_play_hireso.c::BombersNotebook_DrawArrows::sArrowColorTargetsB::local0", &mmvr_local_dc21dab02761e083, sizeof(mmvr_local_dc21dab02761e083));
+    sink->block(sink->context, "code/z_play_hireso.c::BombersNotebook_DrawArrows::sArrowColorTargetsB::local0", &mmvr_local_cb1d108cb12a8aae, sizeof(mmvr_local_cb1d108cb12a8aae));
     if(sink->layout) {
-    sink->layout(sink->context, "code/z_play_hireso.c::BombersNotebook_Update::sStickXRepeatTimer::local0", "scalar:short", 0, sizeof(mmvr_local_d4a23ba170926c1c), MMVR_STATE_SCALAR_ALIGN(mmvr_local_d4a23ba170926c1c), 1);
+    sink->layout(sink->context, "code/z_play_hireso.c::BombersNotebook_Update::sStickXRepeatTimer::local0", "scalar:short", 0, sizeof(mmvr_local_85044509d85e0438), MMVR_STATE_SCALAR_ALIGN(mmvr_local_85044509d85e0438), 1);
     }
-    sink->block(sink->context, "code/z_play_hireso.c::BombersNotebook_Update::sStickXRepeatTimer::local0", &mmvr_local_d4a23ba170926c1c, sizeof(mmvr_local_d4a23ba170926c1c));
+    sink->block(sink->context, "code/z_play_hireso.c::BombersNotebook_Update::sStickXRepeatTimer::local0", &mmvr_local_85044509d85e0438, sizeof(mmvr_local_85044509d85e0438));
     if(sink->layout) {
-    sink->layout(sink->context, "code/z_play_hireso.c::BombersNotebook_Update::sStickYRepeatTimer::local0", "scalar:short", 0, sizeof(mmvr_local_941dfe8edfc5ec6c), MMVR_STATE_SCALAR_ALIGN(mmvr_local_941dfe8edfc5ec6c), 1);
+    sink->layout(sink->context, "code/z_play_hireso.c::BombersNotebook_Update::sStickYRepeatTimer::local0", "scalar:short", 0, sizeof(mmvr_local_7ec96a50888f1a27), MMVR_STATE_SCALAR_ALIGN(mmvr_local_7ec96a50888f1a27), 1);
     }
-    sink->block(sink->context, "code/z_play_hireso.c::BombersNotebook_Update::sStickYRepeatTimer::local0", &mmvr_local_941dfe8edfc5ec6c, sizeof(mmvr_local_941dfe8edfc5ec6c));
+    sink->block(sink->context, "code/z_play_hireso.c::BombersNotebook_Update::sStickYRepeatTimer::local0", &mmvr_local_7ec96a50888f1a27, sizeof(mmvr_local_7ec96a50888f1a27));
     if(sink->layout) {
-    sink->layout(sink->context, "code/z_play_hireso.c::BombersNotebook_Update::sStickXRepeatState::local0", "scalar:short", 0, sizeof(mmvr_local_a368ff7fe0f0faab), MMVR_STATE_SCALAR_ALIGN(mmvr_local_a368ff7fe0f0faab), 1);
+    sink->layout(sink->context, "code/z_play_hireso.c::BombersNotebook_Update::sStickXRepeatState::local0", "scalar:short", 0, sizeof(mmvr_local_28a8a25009d877b3), MMVR_STATE_SCALAR_ALIGN(mmvr_local_28a8a25009d877b3), 1);
     }
-    sink->block(sink->context, "code/z_play_hireso.c::BombersNotebook_Update::sStickXRepeatState::local0", &mmvr_local_a368ff7fe0f0faab, sizeof(mmvr_local_a368ff7fe0f0faab));
+    sink->block(sink->context, "code/z_play_hireso.c::BombersNotebook_Update::sStickXRepeatState::local0", &mmvr_local_28a8a25009d877b3, sizeof(mmvr_local_28a8a25009d877b3));
     if(sink->layout) {
-    sink->layout(sink->context, "code/z_play_hireso.c::BombersNotebook_Update::sStickYRepeatState::local0", "scalar:short", 0, sizeof(mmvr_local_e7e8febfcfb04627), MMVR_STATE_SCALAR_ALIGN(mmvr_local_e7e8febfcfb04627), 1);
+    sink->layout(sink->context, "code/z_play_hireso.c::BombersNotebook_Update::sStickYRepeatState::local0", "scalar:short", 0, sizeof(mmvr_local_18ac534729d56a2e), MMVR_STATE_SCALAR_ALIGN(mmvr_local_18ac534729d56a2e), 1);
     }
-    sink->block(sink->context, "code/z_play_hireso.c::BombersNotebook_Update::sStickYRepeatState::local0", &mmvr_local_e7e8febfcfb04627, sizeof(mmvr_local_e7e8febfcfb04627));
+    sink->block(sink->context, "code/z_play_hireso.c::BombersNotebook_Update::sStickYRepeatState::local0", &mmvr_local_18ac534729d56a2e, sizeof(mmvr_local_18ac534729d56a2e));
     sink->function(sink->context, "code/z_play_hireso.c::BombersNotebook_DrawScisTexRect", (void (*)(void))BombersNotebook_DrawScisTexRect);
     sink->function(sink->context, "code/z_play_hireso.c::BombersNotebook_DrawHeaders", (void (*)(void))BombersNotebook_DrawHeaders);
     sink->function(sink->context, "code/z_play_hireso.c::BombersNotebook_DrawColumns", (void (*)(void))BombersNotebook_DrawColumns);

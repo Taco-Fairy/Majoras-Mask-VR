@@ -49,7 +49,7 @@ unsigned DrawVRMenuSearch(const char* query, bool* opened) {
     return matches;
 }
 namespace {
-constexpr const char* Categories[] = { "Audio", "Gameplay", "Cheats", "Difficulty", "Randomizer", "Items and masks", "Clock", "FullDiveGames Editions" };
+constexpr const char* Categories[] = { "Audio", "Gameplay", "Cheats", "Difficulty", "Randomizer", "Items and masks", "Clock", "FullDiveGames Additions" };
 struct Panel {
     ImGuiContext* context = nullptr;
     ImFontAtlas* fonts = nullptr;
@@ -199,7 +199,7 @@ void Contents(Fast::Fast3dGui& gui) {
     if(ImGui::Button("Clear")) panel.search[0]=0;
     if(panel.search[0]) {
         bool any=false;
-        const char* sections[][2]={{"FullDiveGames Editions","Visuals"},{"Settings","Audio"},{"Enhancements","Gameplay"},
+        const char* sections[][2]={{"FullDiveGames Additions","Visuals"},{"Settings","Audio"},{"Enhancements","Gameplay"},
             {"Enhancements","Graphics"},{"Enhancements","Items/Songs"},{"Enhancements","Cheats"},{"Enhancements","Difficulty Options"},
             {"Rando","General"},{"Rando","Logic/Conditions"},{"Rando","Check Pool"},
             {"Rando","Check Exclusions"},{"Rando","Item Pool"},{"Rando","Starting Items"},{"Rando","Hints"}};
@@ -238,7 +238,7 @@ void Contents(Fast::Fast3dGui& gui) {
         case 4: Rando::DrawVrRandomizerMenu(); break;
         case 5: native->DrawVrSection("Enhancements","Items/Songs"); break;
         case 6: native->DrawVrSection("Enhancements","Graphics","Clock"); break;
-        case 7: native->DrawVrSection("FullDiveGames Editions","Visuals"); break;
+        case 7: native->DrawVrSection("FullDiveGames Additions","Visuals"); break;
     }
 }
 } // namespace

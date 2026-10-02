@@ -198,6 +198,8 @@ void DeleteOwlSave() {
  * leaving.
  */
 void LoadRespawnData(s16 fileNum) {
+    // Ordinary cycle saves and statue saves use native respawn initialization.
+    if (!gSaveContext.save.isOwlSave || gSaveContext.save.shipSaveInfo.pauseSaveEntrance == -1) return;
     for (int i = 0; i < RESPAWN_MODE_MAX; i++) {
         gSaveContext.respawn[i] = gSaveContext.save.shipSaveInfo.respawn[i];
     }
@@ -225,10 +227,16 @@ static void UnregisterEntranceCutsceneSkip() {
 void SkipEntranceCutsceneOnLoad(s16 fileNum) {
     // Clean up any existing hooks first
     UnregisterEntranceCutsceneSkip();
+    // Only remembered pause/auto saves restore a previously visited entrance.
+    // A Song of Time save must retain its native story/arrival sequence.
+    if (!gSaveContext.save.isOwlSave || gSaveContext.save.shipSaveInfo.pauseSaveEntrance == -1) return;
     // Register hook to skip entrance cutscenes - may skip multiple if they chain
     skipEntranceCutsceneHookId = REGISTER_VB_SHOULD(VB_START_CUTSCENE, {
         // Only skip normal cutscenes
-        if (gSaveContext.gameMode == GAMEMODE_NORMAL && gPlayState != nullptr && gPlayState->sceneId != SCENE_SPOT00) {
+        // The Clock Tower arrival starts mandatory Mask Salesman progression.
+        // Its actor waits for cutscene cues; suppressing them can strand cursed Deku.
+        if (gSaveContext.gameMode == GAMEMODE_NORMAL && gPlayState != nullptr &&
+            gPlayState->sceneId != SCENE_SPOT00 && gPlayState->sceneId != SCENE_INSIDETOWER) {
             *should = false;
         }
     });

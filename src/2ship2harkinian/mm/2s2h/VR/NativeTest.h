@@ -12,6 +12,12 @@ void CollisionCheck_AC_CylVsQuad(PlayState*,CollisionCheckContext*,Collider*,Col
 }
 // Controlled gameplay pipeline checks run only in the existing isolated harness.
 #include "CombatPipelineTest.h"
+#include "QuickWheelTest.h"
+#include "MoonMaskTest.h"
+#include "NotebookTest.h"
+#include "FullBodyTest.h"
+#include "WeaponReachTest.h"
+#include "SwordChargeTest.h"
 #include "HeadAimTest.h"
 #ifdef MMVR_LOCAL_TEST_TOOLS
 #include "GoronRayReviewTest.h"
@@ -19,6 +25,7 @@ void CollisionCheck_AC_CylVsQuad(PlayState*,CollisionCheckContext*,Collider*,Col
 #include "NativeArmRunTest.h"
 #include "SwordMultiTest.h"
 #include "SavePropOwlTest.h"
+#include "SaveContinueTest.h"
 #include "ControllerBindingsTest.h"
 #include "LockOnOrbitTest.h"
 #include "DamageMatrixTest.h"
@@ -134,6 +141,17 @@ static mmvr::Pad NativeTestInput(){
   log<<tick<<" file "<<fileTicks<<" index="<<file->buttonIndex<<" mode="<<file->menuMode<<" config="<<file->configMode<<" y="<<int(pad.y)<<"\n";
  }else if(gPlayState&&gSaveContext.gameMode==GAMEMODE_NORMAL){
   ++playTicks;
+  if(std::getenv("MMVR_INTERPOLATION_STACK_TEST")) {
+   if(playTicks==60){FrameInterpolation_VerifyScratch();Ship::Context::GetRawInstance()->GetWindow()->Close();}
+   return pad;
+  }
+  if(std::getenv("MMVR_SWORD_CHARGE_TEST")){if(playTicks==60)NativeSwordChargeTest(gPlayState);return pad;}
+  if(std::getenv("MMVR_QUICK_WHEEL_TEST")){if(playTicks==60)NativeQuickWheelTest(gPlayState);return pad;}
+  if(std::getenv("MMVR_MOON_MASK_TEST")){if(playTicks==60)NativeMoonMaskTest(gPlayState);return pad;}
+  if(std::getenv("MMVR_FULL_BODY_TEST")){NativeFullBodyTest(gPlayState,playTicks);return pad;}
+  if(std::getenv("MMVR_SAVE_CONTINUE_TEST")){if(playTicks==60)NativeSaveContinueTest(gPlayState);return pad;}
+  if(std::getenv("MMVR_NOTEBOOK_BOOK_TEST")){NativeNotebookTest(gPlayState,playTicks);return pad;}
+  if(std::getenv("MMVR_WEAPON_REACH_TEST")){if(playTicks==60)NativeWeaponReachTest(gPlayState);return pad;}
   if(std::getenv("MMVR_COMPONENT_AUDIT")) {
    if(playTicks==60) {
     auto* oldInput=sPlayerControlInput;sPlayerControlInput=CONTROLLER1(&gPlayState->state);

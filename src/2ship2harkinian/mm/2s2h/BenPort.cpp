@@ -1285,6 +1285,7 @@ void RunCommands(Gfx* Commands, int time, int step, int denom, int count) {
     MMVR_RegisterCamera();
     MMVR_RegisterMenu();
     mmvr::SetNativePause(MMVR_NormalPause()!=0);
+    mmvr::SetNotebook(MMVR_NotebookBook()!=0);
     mmvr::SetScene(immersive,gPlayState?gPlayState->state.gfxCtx->overlayBuffer:nullptr,
         gPlayState?gPlayState->state.gfxCtx->workBuffer:nullptr);
 #endif

@@ -4179,26 +4179,26 @@ void MMVR_StateVisit_c94cd22351dd5d20(MMVR_StateSink* sink) {
     }
     sink->block(sink->context, "code/z_play.c::Play_UpdateWaterCamera::sIsCameraUnderwater::local0", &mmvr_local_9bbfce0e5dfb16bb, sizeof(mmvr_local_9bbfce0e5dfb16bb));
     if(sink->layout) {
-    sink->layout(sink->context, "code/z_play.c::Play_DrawMain::lastPauseWidth::local0", "scalar:unsigned int", 0, sizeof(mmvr_local_222e60c92dfe0614), MMVR_STATE_SCALAR_ALIGN(mmvr_local_222e60c92dfe0614), 1);
+    sink->layout(sink->context, "code/z_play.c::Play_DrawMain::lastPauseWidth::local0", "scalar:unsigned int", 0, sizeof(mmvr_local_399e588c8157e20d), MMVR_STATE_SCALAR_ALIGN(mmvr_local_399e588c8157e20d), 1);
     }
-    sink->block(sink->context, "code/z_play.c::Play_DrawMain::lastPauseWidth::local0", &mmvr_local_222e60c92dfe0614, sizeof(mmvr_local_222e60c92dfe0614));
+    sink->block(sink->context, "code/z_play.c::Play_DrawMain::lastPauseWidth::local0", &mmvr_local_399e588c8157e20d, sizeof(mmvr_local_399e588c8157e20d));
     if(sink->layout) {
-    sink->layout(sink->context, "code/z_play.c::Play_DrawMain::lastPauseHeight::local0", "scalar:unsigned int", 0, sizeof(mmvr_local_611e2d661e3b6587), MMVR_STATE_SCALAR_ALIGN(mmvr_local_611e2d661e3b6587), 1);
+    sink->layout(sink->context, "code/z_play.c::Play_DrawMain::lastPauseHeight::local0", "scalar:unsigned int", 0, sizeof(mmvr_local_75dee80a6879120e), MMVR_STATE_SCALAR_ALIGN(mmvr_local_75dee80a6879120e), 1);
     }
-    sink->block(sink->context, "code/z_play.c::Play_DrawMain::lastPauseHeight::local0", &mmvr_local_611e2d661e3b6587, sizeof(mmvr_local_611e2d661e3b6587));
+    sink->block(sink->context, "code/z_play.c::Play_DrawMain::lastPauseHeight::local0", &mmvr_local_75dee80a6879120e, sizeof(mmvr_local_75dee80a6879120e));
     if(sink->layout) {
-    sink->layout(sink->context, "code/z_play.c::Play_DrawMain::lastAltAssets::local0", "scalar:_Bool", 0, sizeof(mmvr_local_3e960d5ea2af1905), MMVR_STATE_SCALAR_ALIGN(mmvr_local_3e960d5ea2af1905), 1);
+    sink->layout(sink->context, "code/z_play.c::Play_DrawMain::lastAltAssets::local0", "scalar:_Bool", 0, sizeof(mmvr_local_b6df419022af9d74), MMVR_STATE_SCALAR_ALIGN(mmvr_local_b6df419022af9d74), 1);
     }
-    sink->block(sink->context, "code/z_play.c::Play_DrawMain::lastAltAssets::local0", &mmvr_local_3e960d5ea2af1905, sizeof(mmvr_local_3e960d5ea2af1905));
+    sink->block(sink->context, "code/z_play.c::Play_DrawMain::lastAltAssets::local0", &mmvr_local_b6df419022af9d74, sizeof(mmvr_local_b6df419022af9d74));
     if(sink->layout) {
-    sink->layout(sink->context, "code/z_play.c::Play_DrawMain::hasCapturedPauseBuffer::local0", "scalar:_Bool", 0, sizeof(mmvr_local_f82c0d5a52d804ad), MMVR_STATE_SCALAR_ALIGN(mmvr_local_f82c0d5a52d804ad), 1);
+    sink->layout(sink->context, "code/z_play.c::Play_DrawMain::hasCapturedPauseBuffer::local0", "scalar:_Bool", 0, sizeof(mmvr_local_33f1cc4121222cee), MMVR_STATE_SCALAR_ALIGN(mmvr_local_33f1cc4121222cee), 1);
     }
-    sink->block(sink->context, "code/z_play.c::Play_DrawMain::hasCapturedPauseBuffer::local0", &mmvr_local_f82c0d5a52d804ad, sizeof(mmvr_local_f82c0d5a52d804ad));
+    sink->block(sink->context, "code/z_play.c::Play_DrawMain::hasCapturedPauseBuffer::local0", &mmvr_local_33f1cc4121222cee, sizeof(mmvr_local_33f1cc4121222cee));
     if(sink->layout) {
-    sink->layout(sink->context, "code/z_play.c::Play_Main::prevInput::local0", "pointer:record:struct Input", 0, sizeof(mmvr_local_37bd02a323bb4c9d), MMVR_STATE_ALIGN_TYPE(void*), 1);
+    sink->layout(sink->context, "code/z_play.c::Play_Main::prevInput::local0", "pointer:record:struct Input", 0, sizeof(mmvr_local_498329531a3500b5), MMVR_STATE_ALIGN_TYPE(void*), 1);
     }
-    sink->block(sink->context, "code/z_play.c::Play_Main::prevInput::local0", &mmvr_local_37bd02a323bb4c9d, sizeof(mmvr_local_37bd02a323bb4c9d));
-    sink->pointer(sink->context, (const void*)&(mmvr_local_37bd02a323bb4c9d), 0, "code/z_play.c::Play_Main::prevInput::local0");
+    sink->block(sink->context, "code/z_play.c::Play_Main::prevInput::local0", &mmvr_local_498329531a3500b5, sizeof(mmvr_local_498329531a3500b5));
+    sink->pointer(sink->context, (const void*)&(mmvr_local_498329531a3500b5), 0, "code/z_play.c::Play_Main::prevInput::local0");
     sink->function(sink->context, "code/z_play.c::Play_DrawMotionBlur", (void (*)(void))Play_DrawMotionBlur);
     sink->function(sink->context, "code/z_play.c::Play_InitMotionBlur", (void (*)(void))Play_InitMotionBlur);
     sink->function(sink->context, "code/z_play.c::Play_DestroyMotionBlur", (void (*)(void))Play_DestroyMotionBlur);

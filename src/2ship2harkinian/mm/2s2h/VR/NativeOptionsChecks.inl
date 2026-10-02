@@ -183,7 +183,7 @@ extern "C" void MMVR_VerifyNativeOptions() {
         for(const char* query:{"Magic arrow", "draw effects", "Bomb arrow", "no-such-edition-zzzz"}) {
             ImGui::NewFrame();
             ImGui::SetNextWindowSize({928,480});ImGui::Begin("Editions fixture");
-            check(native->DrawVrSection("FullDiveGames Editions","Visuals",query)==(std::string(query)!="no-such-edition-zzzz"),"Editions search mismatch");
+            check(native->DrawVrSection("FullDiveGames Additions","Visuals",query)==(std::string(query)!="no-such-edition-zzzz"),"Editions search mismatch");
             ImGui::End();ImGui::Render();
         }
         for(const char* query:{"Clock", "24 Hours", "no-such-clock-zzzz"}) {

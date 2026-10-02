@@ -222,7 +222,12 @@ inline void Draw(ImDrawList& list, const UiDrawFrame& frame, ImTextureID frameTe
                     { "v0.26 - Saving and gameplay hotfixes", "Save game in VR; persistent owl saves and remembered location.", "New settings default on; your existing choices stay unchanged." },
                     { "Controllers and settings search", "OpenXR remapping in the desktop controller editor.", "2Ship search now opens matching VR settings." },
                     { "Lock-on and stage songs", "Optional target-centered lock-on orbit under Combat.", "Fixed ocarina input in the Circus Leader mask rehearsal." },
-                    { "Rock collision and pickup", "Fixed rock blocking, bomb/punch damage and large-hand pickup.", "Native rock sizes and form restrictions stay unchanged." }
+                    { "Rock collision and pickup", "Fixed rock blocking, bomb/punch damage and large-hand pickup.", "Native rock sizes and form restrictions stay unchanged." },
+                    { "v0.3 - Physical body hotfixes and more", "Full body with tracked arms (Experimental) defaults on.", "Improved head/neck anchoring and filled the human neck opening." },
+                    { "Physical Bombers' Notebook", "A held open book with native pages and touch navigation.", "Fixed page rendering, event selection and navigation." },
+                    { "Comfort and cutscenes", "Motion blur defaults off; restore it under View > Comfort.", "Graffiti flashback framing and telescope comfort fixes." },
+                    { "Items and combat", "Optional ready-on-selection masks/ocarina; sword reach and charge glow.", "Moon children now correctly remove surrendered masks from use." },
+                    { "Save continuation", "Fixed remembered-save arrival handling for the Mask Salesman.", "Use ordinary game saves across updates; exact states may break." }
                 };
                 static_assert(std::size(notes) == ReleaseNotesCount);
                 const auto& note = notes[i - ReleaseNotesFirstRow];

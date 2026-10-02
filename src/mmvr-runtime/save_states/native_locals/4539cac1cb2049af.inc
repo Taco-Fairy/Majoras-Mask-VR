@@ -170,14 +170,24 @@ void SkelAnime_DrawFlexLimbLod(PlayState* play, s32 limbIndex, void** skeleton, 
         Matrix_TranslateRotateZYX(&pos, &rot);
         if (newDList != NULL) {
             Matrix_ToMtx(*mtx);
+#ifdef MMVR_ENABLE
+            MMVR_RecordBodyBone(actor, limbIndex, *mtx);
+#endif
             gSPMatrix(POLY_OPA_DISP++, *mtx, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
 #ifdef MMVR_ENABLE
             if(!MMVR_HidePlayerLimb(actor,limbIndex))
 #endif
             { gSPDisplayList(POLY_OPA_DISP++, newDList); }
+#ifdef MMVR_ENABLE
+            const void* neckCap = MMVR_PlayerNeckCap(actor, limbIndex);
+            if (neckCap) { gSPDisplayList(POLY_OPA_DISP++, (Gfx*)neckCap); }
+#endif
             (*mtx)++;
         } else if (limbDList != NULL) {
             Matrix_ToMtx(*mtx);
+#ifdef MMVR_ENABLE
+            MMVR_RecordBodyBone(actor, limbIndex, *mtx);
+#endif
             (*mtx)++;
         }
     }
@@ -1282,7 +1292,7 @@ typedef void (*AnimTaskFunc)(struct PlayState* play, AnimTaskData* data);
  * Update the AnimTaskQueue, processing all tasks in order.
  * Variables related to anim task groups are then reset for the next frame.
  */
-static AnimTaskFunc mmvr_local_21d22d03f66f1e14[ANIMTASK_MAX] = {
+static AnimTaskFunc mmvr_local_d411e767c6f6b630[ANIMTASK_MAX] = {
         AnimTask_LoadPlayerFrame,      AnimTask_Copy,          AnimTask_Interp, AnimTask_CopyUsingMap,
         AnimTask_CopyUsingMapInverted, AnimTask_ActorMovement,
     };
@@ -1291,7 +1301,7 @@ void AnimTaskQueue_Update(PlayState* play, AnimTaskQueue* animTaskQueue) {
     AnimTask* task = animTaskQueue->tasks;
 
     while (animTaskQueue->count != 0) {
-        mmvr_local_21d22d03f66f1e14[task->type](play, &task->data);
+        mmvr_local_d411e767c6f6b630[task->type](play, &task->data);
         task++;
         animTaskQueue->count--;
     }

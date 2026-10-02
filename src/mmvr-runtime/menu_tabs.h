@@ -24,7 +24,7 @@ inline constexpr int AssignmentFirst = int(Setting::Count), ResetSettingsRow = A
                      DiagnosticExportRow = NativeOptionsRow + 1,
                      SetupGuideRow = NativeOptionsRow + 2,
                      ReleaseNotesFirstRow = NativeOptionsRow + 3,
-                     ReleaseNotesCount = 29,
+                     ReleaseNotesCount = 34,
                      SaveGameRow = ReleaseNotesFirstRow + ReleaseNotesCount,
                      MenuRows = SaveGameRow + 1;
 inline bool ReleaseNotesRow(int row) { return row >= ReleaseNotesFirstRow && row < ReleaseNotesFirstRow + ReleaseNotesCount; }
@@ -89,6 +89,12 @@ struct MenuEntry {
 };
 // Explicit presentation order is independent of persistent setting IDs.
 inline constexpr MenuEntry OrderedMenu[] = {
+    { ReleaseNotesFirstRow + 29, 39 },
+    { ReleaseNotesFirstRow + 30, 39 },
+    { ReleaseNotesFirstRow + 31, 39 },
+    { ReleaseNotesFirstRow + 32, 39 },
+    { ReleaseNotesFirstRow + 33, 39 },
+
     { ReleaseNotesFirstRow + 25, 39 },
     { ReleaseNotesFirstRow + 26, 39 },
     { ReleaseNotesFirstRow + 27, 39 },
@@ -148,15 +154,18 @@ inline constexpr MenuEntry OrderedMenu[] = {
     { int(Setting::MovementSpeed), 0 },
     { int(Setting::EyeHeight), 0 },
     { int(Setting::ComfortHudEffects), 1 },
+    { int(Setting::MotionBlur), 1 },
     { int(Setting::LockOnDim), 1 },
     { int(Setting::VrCameraCutscenes), 1 },
     { int(Setting::AreaPanoramaScreens), 1 }, // Retired setting ID, always hidden.
     { int(Setting::StableCutsceneHead), 1 },
+    { int(Setting::TelescopeComfort), 1 },
     { int(Setting::ExperimentalFirstPersonMotion), 1 },
     { int(Setting::ExperimentalFirstPersonIntro), 1 },
     { int(Setting::FlowerCameraSpin), 1 },
     { int(Setting::WaterWobble), 1 },
     { int(Setting::HideLegs), 2 },
+    { int(Setting::FullBody), 2 },
     { int(Setting::HideSheath), 2 },
     { int(Setting::HideShield), 2 },
     { int(Setting::HideBunnyHood), 2 },
@@ -263,6 +272,7 @@ inline constexpr MenuEntry OrderedMenu[] = {
     { int(Setting::BottleDistance), 16 },
     { int(Setting::BottleCooldown), 16 },
     { int(Setting::MaskSize), 16 },
+    { int(Setting::QuickWheelItems), 16 },
     { int(Setting::MaskFaceDistance), 16 },
     { int(Setting::MaskRemoveDistance), 16 },
     { int(Setting::ClimbGain), 17 },
@@ -387,6 +397,9 @@ inline constexpr MenuEntry OrderedMenu[] = {
     { TutorialFirstRow + 47, 36 },
     { TutorialFirstRow + 48, 36 },
     { TutorialFirstRow + 49, 36 },
+    { TutorialFirstRow + 50, 36 },
+    { TutorialFirstRow + 51, 36 },
+    { TutorialFirstRow + 52, 36 },
     { NativeOptionsRow, 37 },
 
 };
