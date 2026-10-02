@@ -1459,7 +1459,9 @@ extern "C" void Graph_ProcessGfxCommands(Gfx* commands) {
 
     if (wnd != nullptr) {
 #ifdef MMVR_LOCAL_TEST_TOOLS
-        wnd->SetTargetFps(auditFast ? 10000 : fps);
+        const char* auditSpeed = std::getenv("MMVR_AUDIT_SPEED");
+        const int auditTarget = auditSpeed ? original_fps * std::clamp(std::atoi(auditSpeed), 1, 100) : 10000;
+        wnd->SetTargetFps(auditFast ? auditTarget : fps);
 #else
         wnd->SetTargetFps(fps);
 #endif

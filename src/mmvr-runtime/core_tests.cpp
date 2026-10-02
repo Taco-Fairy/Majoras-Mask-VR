@@ -1,6 +1,7 @@
 #include "body_collision.h"
 #include "notebook_book.h"
 #include "body_ik.h"
+#include "body_roll.h"
 #include "interaction_view.h"
 #include "grab_shake.h"
 #include "arm_run_tests.h"
@@ -1478,6 +1479,7 @@ int main(){
     }
     ArmRunChecks();
     {
+        using namespace mmvr;
         using namespace mmvr::body;
         for(int side:{-1,1}) for(float scale:{.5f,1.f,2.f}) for(int i=0;i<80;++i) {
             auto shoulder=mmvr::YawPose(.13f*i,0,30,0);
@@ -1518,6 +1520,47 @@ int main(){
         auto a=mmvr::YawPose(0),b=mmvr::YawPose(0,10),c=mmvr::YawPose(0,20);
         check(!Solve(a,b,c,mmvr::YawPose(0,10000),{0,-1,0}).valid);
         check(!Solve({},b,c,a,{0,-1,0}).valid);
+        Settings formSettings;
+        for(int form=0;form<5;++form) check(FullBodyForForm(formSettings,form)==(form>=2));
+        formSettings.Set(Setting::FullBody,0);
+        check(!FullBodyForForm(formSettings,4) && FullBodyForForm(formSettings,2));
+        formSettings.Set(Setting::GoronBody,1);
+        check(FullBodyForForm(formSettings,1));
+        check(!FullBodyForForm(formSettings,-1) && !FullBodyForForm(formSettings,5));
+        // Hold an upright render pose through a whole roll while native matrices
+        // rotate independently. Both translation and actor yaw remain supported.
+        RollPose roll;
+        int actor=0, address[24]{};
+        auto root=YawPose(.2f,100,40,70);
+        roll.Begin(true,false,&actor,1,4,root,0xFFFFFF);
+        for(unsigned limb=0;limb<24;++limb)
+            roll.Record(limb,&address[limb],Multiply(YawPose(0,float(limb),20,0),root));
+        for(int frame=0;frame<40;++frame) {
+            auto travel=YawPose(.2f+frame*.1f,100+frame*3.f,40+frame,70);
+            roll.Begin(true,true,&actor,1,4,travel,0xFFFFFF);
+            check(!roll.Waiting());
+            for(unsigned limb=0;limb<24;++limb) {
+                auto native=PoseMatrix({{std::sin(frame*.15f),0,0,std::cos(frame*.15f)},{0,0,0}});
+                auto unchanged=native;
+                roll.Record(limb,&address[limb],native);
+                const auto* held=roll.Find(&address[limb]);
+                check(held!=nullptr);
+                auto expected=Multiply(YawPose(0,float(limb),20,0),travel);
+                for(int row=0;row<4;++row) for(int col=0;col<4;++col)
+                    check(std::abs(held->m[row][col]-expected.m[row][col])<.001f);
+                check(std::memcmp(&native,&unchanged,sizeof(native))==0);
+            }
+        }
+        roll.Begin(true,false,&actor,1,4,root,0xFFFFFF);
+        check(!roll.Find(&address[0]) && !roll.Waiting());
+        roll.Begin(true,true,&actor,2,4,root,0xFFFFFF);
+        check(roll.Waiting() && !roll.Find(&address[0])); // Scene/load/recenter.
+        roll.Begin(true,false,&actor,2,4,root,1);
+        roll.Record(0,&address[0],root);
+        roll.Begin(true,true,&actor,2,2,root,1);
+        check(roll.Waiting()); // Never borrow a different form's pose.
+        roll.Begin(false,true,&actor,2,2,root,1);
+        check(!roll.Waiting() && !roll.Find(&address[0])); // Theater/disabled.
         check(mmvr::Settings{}.Get(mmvr::Setting::FullBody)==1);
         check(mmvr::Settings{}.Get(mmvr::Setting::MotionBlur)==0);
         for (int alpha=0;alpha<256;++alpha) for (bool stereo:{false,true})

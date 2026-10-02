@@ -224,4 +224,4 @@ Bow hand angles and holding-hand smoothing are under **Items → Bow and aiming*
 
 **v0.26:** Save game is under System > Session and files. Persistent owl saves, pause-menu saving and remembered location default on for unconfigured settings. Combat has an optional target-centered lock-on orbit. 2Ship search also finds VR settings.
 
-In first person, the Bombers' Notebook is a held open book: touch entries and arrows, or use the usual stick and B controls. **View > Body visibility > Full body with tracked arms (Experimental)** shows Link's headless body and defaults on. Motion blur defaults off; restore it under **View > Comfort and cutscenes**. Extra non-VR options are under **FullDiveGames Additions** in 2Ship.
+In first person, the Bombers' Notebook is a held open book: touch entries and arrows, or use the usual stick and B controls. **View > Body visibility** has separate experimental tracked-body options. Human, Zora and Deku default on; Goron (very experimental) and Fierce Deity default off. Motion blur defaults off; restore it under **View > Comfort and cutscenes**. Extra non-VR options are under **FullDiveGames Additions** in 2Ship.

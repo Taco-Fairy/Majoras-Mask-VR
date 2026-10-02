@@ -203,6 +203,10 @@ enum class Setting {
     TelescopeComfort,
     FullBody,
     MotionBlur,
+    GoronBody,
+    ZoraBody,
+    DekuBody,
+    FierceDeityBody,
     Count
 };
 struct SettingDefinition {
@@ -407,8 +411,12 @@ inline constexpr SettingDefinition SettingDefinitions[] = {
     { "gVR.LockOnOrbit", "Lock-on target camera orbit", 0, 0, 1, 1, "off/on" },
     { "gVR.QuickWheelItems", "Ready masks and ocarina on selection", 0, 0, 1, 1, "off/on" },
     { "gVR.TelescopeComfort", "Stable telescope screen", 1, 0, 1, 1, "off/on" },
-    { "gVR.FullBody", "Full body with tracked arms (Experimental)", 1, 0, 1, 1, "off/on" },
+    { "gVR.FullBody", "Human body with tracked arms (Experimental)", 1, 0, 1, 1, "off/on" },
     { "gVR.MotionBlur", "Motion blur", 0, 0, 1, 1, "off/on" },
+    { "gVR.GoronBody", "Goron body (Very experimental)", 0, 0, 1, 1, "off/on" },
+    { "gVR.ZoraBody", "Zora body (Experimental)", 1, 0, 1, 1, "off/on" },
+    { "gVR.DekuBody", "Deku body (Experimental)", 1, 0, 1, 1, "off/on" },
+    { "gVR.FierceDeityBody", "Fierce Deity body (Experimental)", 0, 0, 1, 1, "off/on" },
 };
 static_assert(sizeof(SettingDefinitions) / sizeof(SettingDefinitions[0]) == size_t(Setting::Count));
 inline float BoundSetting(Setting id, float value) {
@@ -441,6 +449,12 @@ struct Settings {
         values[size_t(id)] = BoundSetting(id, value);
     }
 };
+// Native PLAYER_FORM order: Fierce Deity, Goron, Zora, Deku, Human.
+inline bool FullBodyForForm(const Settings& settings, int form) {
+    constexpr Setting options[]{Setting::FierceDeityBody, Setting::GoronBody,
+        Setting::ZoraBody, Setting::DekuBody, Setting::FullBody};
+    return form >= 0 && form < 5 && settings.Get(options[form]) > .5f;
+}
 inline constexpr int MaxItemSlots = 8;
 inline int ActiveItemSlots(const Settings& s) {
     return int(s.Get(Setting::ItemSlotCount));

@@ -212,6 +212,10 @@ void SetHandSkeletonPalette(int hand, const void* base, unsigned stride, const M
 void SetHandExtraRange(int hand, const void* low, const void* high, int layer = 0) noexcept;
 void SetPlayerMatrixRange(const void* low, const void* high, const void* left, const void* right) noexcept;
 void ClearBodyBones() noexcept;
+void BeginBodyRollPose(bool enabled, bool rolling, const void* owner, uint64_t generation,
+                       int form, const Matrix& root, uint32_t requiredBones) noexcept;
+void RecordBodyRollLimb(unsigned limb, const void* address, const Matrix& native) noexcept;
+bool BodyRollPoseWaiting() noexcept;
 void SetBodyBone(int index, const void* address, const float* native) noexcept;
 const void* BodyBoneAddress(int index) noexcept;
 void SetVisualBodyBone(int index, const float* interpolated) noexcept;

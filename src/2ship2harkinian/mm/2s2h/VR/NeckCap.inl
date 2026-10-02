@@ -28,6 +28,6 @@ static Gfx humanNeckCapDL[] = {
 extern "C" const void* MMVR_PlayerNeckCap(Actor* actor,int limb) {
     if(!gPlayState || actor!=(Actor*)GET_PLAYER(gPlayState) || limb!=PLAYER_LIMB_TORSO ||
        ((Player*)actor)->transformation!=PLAYER_FORM_HUMAN || MMVR_ControlledKafei((Player*)actor) ||
-       mmvr::GetSettings().Get(mmvr::Setting::FullBody)<.5f || !HideCurrentPlayer(gPlayState)) return nullptr;
+       mmvr::GetSettings().Get(mmvr::Setting::FullBody)<.5f || mmvr::BodyRollPoseWaiting() || !HideCurrentPlayer(gPlayState)) return nullptr;
     return humanNeckCapDL;
 }

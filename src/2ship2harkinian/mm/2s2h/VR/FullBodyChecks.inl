@@ -73,9 +73,13 @@ bool TestFullBodyRig() {
     frame.handTracked[0]=false;
     auto lost=Update(frame);
     check(!lost.bodyArms[0].m[3][3]&&!lost.bodyArms[1].m[3][3],"lost-hand-hides-arm");
-    mmvr::ApplyViewMode(1);
-    check(!MMVR_HidePlayerLimb(&player->actor,PLAYER_LIMB_HEAD),"third-person-head-restored");
-    check(!MMVR_PlayerNeckCap(&player->actor,PLAYER_LIMB_TORSO),"third-person-neck-unchanged");
+    for (int viewMode : {0, 1}) {
+        mmvr::ApplyViewMode(viewMode);
+        check(!MMVR_HidePlayerLimb(&player->actor,PLAYER_LIMB_HEAD),"theater-third-person-head-restored");
+        check(!MMVR_PlayerNeckCap(&player->actor,PLAYER_LIMB_TORSO),"theater-third-person-neck-unchanged");
+        auto nativeView = Update(frame);
+        check(!nativeView.fullBodyArms,"theater-third-person-no-tracked-body");
+    }
     mmvr::GetSettings()=settings;gPlayState->pauseCtx=pause;
     mmvr::ApplyViewMode(int(settings.Get(mmvr::Setting::ViewMode)));
     mmvr::SetNativeTestCamera({});

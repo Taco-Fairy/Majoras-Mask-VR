@@ -9,6 +9,7 @@
 #include "hud_cadence.h"
 #include "runtime.h"
 #include "notebook_book.h"
+#include "body_roll.h"
 #include "lighting_bench.h"
 #include "lighting_capture.h"
 #include "screen_fade.h"
@@ -247,6 +248,7 @@ uintptr_t playerMatrixLow = 0, playerMatrixHigh = 0;
 const void* handMatrixAddresses[2]{};
 struct BodyBoneBinding { const void* address=nullptr; Matrix native{}, visual{}; };
 BodyBoneBinding bodyBones[BodyBoneCount]{};
+body::RollPose bodyRoll;
 const void* skyboxMatrix = nullptr;
 Matrix worldView{};
 EyeFacingCache eyeFacingCache;
@@ -3970,17 +3972,27 @@ void SetPlayerMatrixRange(const void* low, const void* high, const void* left, c
     handMatrixAddresses[1] = right;
 }
 void ClearBodyBones() noexcept { for(auto& bone:bodyBones) bone={}; }
+void BeginBodyRollPose(bool enabled, bool rolling, const void* owner, uint64_t generation,
+                      int form, const Matrix& root, uint32_t requiredBones) noexcept {
+    bodyRoll.Begin(enabled, rolling, owner, generation, form, root, requiredBones);
+}
+void RecordBodyRollLimb(unsigned limb, const void* address, const Matrix& native) noexcept {
+    bodyRoll.Record(limb, address, native);
+}
+bool BodyRollPoseWaiting() noexcept { return bodyRoll.Waiting(); }
 void SetBodyBone(int index, const void* address, const float* native) noexcept {
     if(index<0||index>=BodyBoneCount) return;
     auto& bone=bodyBones[index];bone={};bone.address=address;
     if(native) std::memcpy(&bone.native,native,sizeof(Matrix));
+    if(const auto* upright=bodyRoll.Find(address)) bone.native=*upright;
     bone.visual=bone.native;
 }
 const void* BodyBoneAddress(int index) noexcept { return index>=0&&index<BodyBoneCount?bodyBones[index].address:nullptr; }
 void SetVisualBodyBone(int index, const float* interpolated) noexcept {
     if(index<0||index>=BodyBoneCount) return;
     auto& bone=bodyBones[index];bone.visual=bone.native;
-    if(interpolated) std::memcpy(&bone.visual,interpolated,sizeof(Matrix));
+    if(const auto* upright=bodyRoll.Find(bone.address)) bone.visual=*upright;
+    else if(interpolated) std::memcpy(&bone.visual,interpolated,sizeof(Matrix));
 }
 bool OverrideViewMatrix(const void* address, float matrix[4][4]) noexcept {
     if (cameraFrame.active && FirstPersonRequested() && (renderPass == 1 || renderPass == 2) &&
@@ -4232,6 +4244,8 @@ bool OverrideModelMatrix(const void* address, float matrix[4][4], const float na
     if (p >= playerMatrixLow && p < playerMatrixHigh) {
         Matrix native;
         std::memcpy(&native, matrix, sizeof(native));
+        if(cameraFrame.fullBodyArms)
+            if(const auto* upright=bodyRoll.Find(address)) native=*upright;
         auto corrected = Multiply(native, cameraFrame.bodyCorrection);
         std::memcpy(matrix, &corrected, sizeof(corrected));
         return true;
@@ -4264,6 +4278,7 @@ void SetReticleMatrix(int i, const void* p, const float* rotation, float x, floa
 }
 void ResetCoordinateTracking(bool releaseActions) noexcept {
     ClearBodyBones();
+    bodyRoll = {};
     cameraFrame = {};
     worldView = {};
     eyeFacingCache = {};

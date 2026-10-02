@@ -640,13 +640,16 @@ mmvr::CameraFrame Update(const mmvr::TrackingFrame& rawTracking) {
                       -drawPosition.z - tracking.visualOffset[2]),
         mmvr::YawPose(Radians(p->actor.shape.rot.y) - (tracking.visualValid ? tracking.visualYaw : Radians(drawYaw)),
                       visual.x, visual.y, visual.z));
-    if (mmvr::GetSettings().Get(mmvr::Setting::FullBody) > .5f && !MMVR_ControlledKafei(p)) {
+    if (mmvr::FullBodyForForm(mmvr::GetSettings(), p->transformation) && !MMVR_ControlledKafei(p)) {
         // Move the visible skeleton to the HMD, never the camera to an animated
         // skeleton. Remove native torso lean/aim twist before solving the arms.
         const float neckYaw = mmvr::PoseYaw(viewPose) - Pi + mmvr::PoseYaw(relative);
+        // Goron's high necklace needs another 8 cm of visual clearance. This
+        // moves the torso anchor only; eye height and controller poses stay put.
+        const float neckDropMeters = p->transformation == PLAYER_FORM_GORON ? .15f : .07f;
         auto neck = mmvr::YawPose(neckYaw,
             viewPose.m[3][0] - std::sin(neckYaw) * Units * tracking.trackingScale * .04f,
-            viewPose.m[3][1] + relative.m[3][1] * Units - Units * tracking.trackingScale * .07f,
+            viewPose.m[3][1] + relative.m[3][1] * Units - Units * tracking.trackingScale * neckDropMeters,
             viewPose.m[3][2] - std::cos(neckYaw) * Units * tracking.trackingScale * .04f);
         mmvr::Matrix correction;
         const float nativeYaw = tracking.visualValid ? tracking.visualYaw : Radians(drawYaw);
@@ -710,7 +713,7 @@ mmvr::CameraFrame Update(const mmvr::TrackingFrame& rawTracking) {
         mmvrgame::OverrideTrackedItemHand(result.hands[1]);
     mmvrgame::FillHeldActorFrame(result);
     mmvrgame::ApplyPhysicalPushHandLock(play, p, result.hands);
-    if(mmvr::GetSettings().Get(mmvr::Setting::FullBody)>.5f && !MMVR_ControlledKafei(p)) {
+    if(mmvr::FullBodyForForm(mmvr::GetSettings(), p->transformation) && !MMVR_ControlledKafei(p)) {
         result.fullBodyArms=true;
         mmvr::Matrix bones[6];
         for(int i=0;i<6;++i) bones[i]=mmvr::Multiply(tracking.bodyBones[i],result.bodyCorrection);
@@ -1173,7 +1176,8 @@ extern "C" int MMVR_HidePlayerLimb(Actor* actor, int limb) {
     if (MMVR_ControlledKafei((Player*)actor))
         return true;
     const auto& settings = mmvr::GetSettings();
-    if(settings.Get(mmvr::Setting::FullBody)>.5f) {
+    if(mmvr::FullBodyForForm(settings, ((Player*)actor)->transformation)) {
+        if(mmvr::BodyRollPoseWaiting()) return true; // No stale pose when loading mid-roll.
         if(limb==PLAYER_LIMB_SHEATH &&
            (settings.Get(mmvr::Setting::HideSheath)>.5f || settings.Get(mmvr::Setting::HideShield)>.5f)) return true;
         return limb==PLAYER_LIMB_HEAD || limb==PLAYER_LIMB_HAT ||
@@ -1194,11 +1198,13 @@ extern "C" void MMVR_RecordBodyBone(Actor* actor, int limb, const void* address)
 
     if(!gPlayState || actor!=(Actor*)GET_PLAYER(gPlayState) || !drawingPlayer ||
        drawBeginGeneration!=coordinateGeneration || MMVR_ControlledKafei((Player*)actor) ||
-       mmvr::GetSettings().Get(mmvr::Setting::FullBody)<.5f || !HideCurrentPlayer(gPlayState)) return;
+       !mmvr::FullBodyForForm(mmvr::GetSettings(), ((Player*)actor)->transformation) || !HideCurrentPlayer(gPlayState)) return;
     int index=limb>=PLAYER_LIMB_LEFT_SHOULDER && limb<=PLAYER_LIMB_RIGHT_HAND
         ? limb-PLAYER_LIMB_LEFT_SHOULDER : limb==PLAYER_LIMB_HEAD ? 6 : limb==PLAYER_LIMB_WAIST ? 7 : -1;
-    if(index<0 || index>=mmvr::BodyBoneCount) return;
     MtxF native;Matrix_Get(&native);
+    mmvr::Matrix pose;std::memcpy(&pose,&native,sizeof(pose));
+    mmvr::RecordBodyRollLimb(limb,address,pose);
+    if(index<0 || index>=mmvr::BodyBoneCount) return;
     mmvr::SetBodyBone(index,address,(const float*)&native);
 }
 extern "C" float MMVR_MovementScale(PlayState* play, Player* p) {
@@ -1307,6 +1313,16 @@ extern "C" void MMVR_PlayerDrawBegin(PlayState* play, Actor* actor) {
     }
     handSkeletonPalette = nullptr;
     mmvr::ClearBodyBones();
+    auto* player = (Player*)actor;
+    const bool trackedBody = HideCurrentPlayer(play) && !MMVR_ControlledKafei(player) &&
+        mmvr::FullBodyForForm(mmvr::GetSettings(), player->transformation);
+    const uint32_t poseBones = (1u << PLAYER_LIMB_WAIST) | (1u << PLAYER_LIMB_HEAD) |
+        (1u << PLAYER_LIMB_LEFT_SHOULDER) | (1u << PLAYER_LIMB_RIGHT_SHOULDER);
+    mmvr::BeginBodyRollPose(trackedBody, player->csAction == PLAYER_CSACTION_NONE && !mmvrgame::InWorldCinematic(play) &&
+        (player->stateFlags3 & PLAYER_STATE3_8000000) != 0,
+        actor, coordinateGeneration, player->transformation,
+        mmvr::YawPose(Radians(actor->shape.rot.y), actor->world.pos.x, actor->world.pos.y, actor->world.pos.z),
+        poseBones);
     handSkeletonCount = 0;
     mmvr::ClearHandSkeletonPalettes();
     rewardDrawValid=false;

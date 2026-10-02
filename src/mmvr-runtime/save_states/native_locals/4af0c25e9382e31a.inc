@@ -1012,10 +1012,10 @@ Color_RGBA8 sSkyboxEnvColors[] = {
     { 60, 0, 10, 0 },    { 75, 45, 0, 0 },    { 20, 20, 89, 0 },   { 0, 7, 17, 0 },
 };
 
-static bool mmvr_local_ad42f82fcbfc6fd0 = false;
-static u8 mmvr_local_cd653a9fb21a02ba;
-static u16 mmvr_local_542a0369d29828dd;
-static u32 mmvr_local_c7c44689a420db36;
+static bool mmvr_local_2214044dd892bc10 = false;
+static u8 mmvr_local_0d921d287538aac1;
+static u16 mmvr_local_59d75f79cbcc886b;
+static u32 mmvr_local_373c8c7002df216d;
 void Environment_UpdateSkybox(u8 skyboxId, EnvironmentContext* envCtx, SkyboxContext* skyboxCtx) {
 #ifdef MMVR_ENABLE
     // The Skull Kid encounter is rooftop layer 0. Layer 2 is the later moon
@@ -1026,19 +1026,19 @@ void Environment_UpdateSkybox(u8 skyboxId, EnvironmentContext* envCtx, SkyboxCon
     /* persistent local storage is declared above */
     /* persistent local storage is declared above */
     if (gPlayState && gPlayState->sceneId == SCENE_OKUJOU && gSaveContext.sceneLayer == 0) {
-        if (gPlayState->gameplayFrames < mmvr_local_c7c44689a420db36) mmvr_local_ad42f82fcbfc6fd0 = false;
-        if (!mmvr_local_ad42f82fcbfc6fd0) {
-            mmvr_local_cd653a9fb21a02ba = envCtx->skyboxConfig;
-            mmvr_local_542a0369d29828dd = gSaveContext.skyboxTime;
-            mmvr_local_ad42f82fcbfc6fd0 = true;
+        if (gPlayState->gameplayFrames < mmvr_local_373c8c7002df216d) mmvr_local_2214044dd892bc10 = false;
+        if (!mmvr_local_2214044dd892bc10) {
+            mmvr_local_0d921d287538aac1 = envCtx->skyboxConfig;
+            mmvr_local_59d75f79cbcc886b = gSaveContext.skyboxTime;
+            mmvr_local_2214044dd892bc10 = true;
         }
-        mmvr_local_c7c44689a420db36 = gPlayState->gameplayFrames;
-        envCtx->skyboxConfig = mmvr_local_cd653a9fb21a02ba;
+        mmvr_local_373c8c7002df216d = gPlayState->gameplayFrames;
+        envCtx->skyboxConfig = mmvr_local_0d921d287538aac1;
         envCtx->changeSkyboxState = CHANGE_SKYBOX_INACTIVE;
-        gSaveContext.skyboxTime = mmvr_local_542a0369d29828dd;
+        gSaveContext.skyboxTime = mmvr_local_59d75f79cbcc886b;
     } else {
-        mmvr_local_ad42f82fcbfc6fd0 = false;
-        mmvr_local_c7c44689a420db36 = 0;
+        mmvr_local_2214044dd892bc10 = false;
+        mmvr_local_373c8c7002df216d = 0;
     }
 #endif
     size_t size;
@@ -1850,7 +1850,7 @@ void Environment_Update(PlayState* play, EnvironmentContext* envCtx, LightContex
     }
 }
 
-static Vtx mmvr_local_b34c529614a32c98[] = {
+static Vtx mmvr_local_fc366c16cd4b96df[] = {
                 VTX(-31, -31, 0, 0, 0, 255, 255, 255, 255),
                 VTX(32, -31, 0, 2016, 0, 255, 255, 255, 255),
                 VTX(-31, 32, 0, 0, 2016, 255, 255, 255, 255),
@@ -1875,7 +1875,21 @@ void Environment_DrawSun(PlayState* play) {
                 gDPSetEnvColor(POLY_OPA_DISP++, 180, (u8)(sSunColor * 255.0f), (u8)(sSunColor * 200.0f), sSunEnvAlpha);
             }
             Matrix_Scale(sSunScale, sSunScale, sSunScale, MTXMODE_APPLY);
+#ifdef MMVR_ENABLE
+            // Own the complete sun billboard: a segment-only rotation is not
+            // registered for late stereo replay. Use the native matrix copy,
+            // since star drawing can temporarily replace billboardMtxF.
+            MtxF sunFacing;
+            Matrix_MtxToMtxF(play->billboardMtx, &sunFacing);
+            Matrix_ReplaceRotation(&sunFacing);
+            Mtx* sunMatrix = Matrix_Finalize(play->state.gfxCtx);
+            MMVR_SetBillboardMatrix(sunMatrix, &sunFacing.mf[0][0],
+                play->view.eye.x + play->envCtx.sunPos.x, play->view.eye.y + play->envCtx.sunPos.y,
+                play->view.eye.z + play->envCtx.sunPos.z);
+            gSPMatrix(POLY_OPA_DISP++, sunMatrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+#else
             MATRIX_FINALIZE_AND_LOAD(POLY_OPA_DISP++, play->state.gfxCtx);
+#endif
             Gfx_SetupDL54_Opa(play->state.gfxCtx);
 
             // #region 2S2H [Port] The sun texture was originally broken up into 3 pieces, but this causes
@@ -1884,13 +1898,15 @@ void Environment_DrawSun(PlayState* play) {
             // gSPDisplayList(POLY_OPA_DISP++, gSunDL);
             /* persistent local storage is declared above */
 
+#ifndef MMVR_ENABLE
             gSPMatrix(POLY_OPA_DISP++, D_01000000_TO_SEGMENTED, G_MTX_NOPUSH | G_MTX_MUL | G_MTX_MODELVIEW);
+#endif
             gDPPipeSync(POLY_OPA_DISP++);
             gDPLoadTextureBlock_4b(POLY_OPA_DISP++, gSun1Tex, G_IM_FMT_I, 64, 64, 0, G_TX_NOMIRROR | G_TX_CLAMP,
                                    G_TX_NOMIRROR | G_TX_CLAMP, 6, 6, G_TX_NOLOD, G_TX_NOLOD);
             gDPLoadMultiBlock_4b(POLY_OPA_DISP++, gSunEvening1Tex, 0x0100, 1, G_IM_FMT_I, 64, 64, 0,
                                  G_TX_NOMIRROR | G_TX_CLAMP, G_TX_NOMIRROR | G_TX_CLAMP, 6, 6, G_TX_NOLOD, G_TX_NOLOD);
-            gSPVertex(POLY_OPA_DISP++, mmvr_local_b34c529614a32c98, 4, 0);
+            gSPVertex(POLY_OPA_DISP++, mmvr_local_fc366c16cd4b96df, 4, 0);
             gSP2Triangles(POLY_OPA_DISP++, 0, 1, 2, 0, 2, 1, 3, 0);
             // #endregion
         }
@@ -3261,8 +3277,8 @@ void Environment_DrawSkyboxStar(Gfx** gfxP, f32 x, f32 y, s32 width, s32 height)
 }
 
 // 2S2H [Enhancement] Renders a star as a quad against the projection matrix by rotating it with the billboard matrix
-static MtxF mmvr_local_199893c4ab8f1d28;
-static Vtx mmvr_local_0e9a145fa15ff54f[] = {
+static MtxF mmvr_local_90d9862c3c953a41;
+static Vtx mmvr_local_00acbda6acdcdb91[] = {
         VTX(-1, -1, 0, 0, 0, 0, 0, 0, 255),
         VTX(1, -1, 0, 0, 0, 0, 0, 0, 255),
         VTX(-1, 1, 0, 0, 0, 0, 0, 0, 255),
@@ -3279,7 +3295,7 @@ void Ship_DrawSkyboxStarInterpolated(Gfx** gfxP, PlayState* play, Vec3f pos, con
     if (starNum == 0) {
         // play->billboardMtxF is overwitten by the skybox stars draw earlier,
         // so we need to derive the MtxF from the original Mtx
-        Matrix_MtxToMtxF(play->billboardMtx, &mmvr_local_199893c4ab8f1d28);
+        Matrix_MtxToMtxF(play->billboardMtx, &mmvr_local_90d9862c3c953a41);
 
         gSPLoadGeometryMode(gfx++, G_CULL_BACK);
     }
@@ -3308,7 +3324,7 @@ void Ship_DrawSkyboxStarInterpolated(Gfx** gfxP, PlayState* play, Vec3f pos, con
         // roughly how the texture rectangle would have looked
         Matrix_Translate(x, y, z, MTXMODE_NEW);
         Matrix_Scale(width * scaleMultiplier, height * scaleMultiplier, 1.0f, MTXMODE_APPLY);
-        Matrix_ReplaceRotation(&mmvr_local_199893c4ab8f1d28);
+        Matrix_ReplaceRotation(&mmvr_local_90d9862c3c953a41);
 
 #ifdef MMVR_ENABLE
         if (play->sceneId == SCENE_OKUJOU && gSaveContext.sceneLayer == 0) {
@@ -3316,7 +3332,7 @@ void Ship_DrawSkyboxStarInterpolated(Gfx** gfxP, PlayState* play, Vec3f pos, con
             // the normal VR matrix hook cannot identify it. Register this
             // matrix explicitly to face each eye rather than a cutscene camera.
             Mtx* starMtx = Matrix_Finalize(play->state.gfxCtx);
-            MMVR_SetBillboardMatrix(starMtx, &mmvr_local_199893c4ab8f1d28.mf[0][0], x, y, z);
+            MMVR_SetBillboardMatrix(starMtx, &mmvr_local_90d9862c3c953a41.mf[0][0], x, y, z);
             gSPMatrix(gfx++, starMtx, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
         } else
 #endif
@@ -3324,7 +3340,7 @@ void Ship_DrawSkyboxStarInterpolated(Gfx** gfxP, PlayState* play, Vec3f pos, con
             MATRIX_FINALIZE_AND_LOAD(gfx++, play->state.gfxCtx);
         }
 
-        gSPVertex(gfx++, mmvr_local_0e9a145fa15ff54f, ARRAY_COUNT(mmvr_local_0e9a145fa15ff54f), 0);
+        gSPVertex(gfx++, mmvr_local_00acbda6acdcdb91, ARRAY_COUNT(mmvr_local_00acbda6acdcdb91), 0);
         gSP2Triangles(gfx++, 0, 1, 2, 0, 1, 3, 2, 0);
 
         Matrix_Pop();
@@ -3333,17 +3349,17 @@ void Ship_DrawSkyboxStarInterpolated(Gfx** gfxP, PlayState* play, Vec3f pos, con
     *gfxP = gfx;
 }
 
-static const Vec3s mmvr_local_d821bc1326d72f57[] = {
+static const Vec3s mmvr_local_728ef22255d1f1fe[] = {
         { 0x0384, 0x2328, 0xD508 }, { 0x09C4, 0x2328, 0xDA1C }, { 0x0E74, 0x22D8, 0xDA1C }, { 0x1450, 0x2468, 0xD8F0 },
         { 0x1C84, 0x28A0, 0xCBA8 }, { 0x1F40, 0x2134, 0xD8F0 }, { 0x1F40, 0x28A0, 0xDAE4 }, { 0xE4A8, 0x4A38, 0x4A38 },
         { 0xD058, 0x4C2C, 0x3A98 }, { 0xD8F0, 0x36B0, 0x47E0 }, { 0xD954, 0x3264, 0x3E1C }, { 0xD8F0, 0x3070, 0x37DC },
         { 0xD8F0, 0x1F40, 0x5208 }, { 0xD760, 0x1838, 0x27D8 }, { 0x0000, 0x4E20, 0x4A38 }, { 0x076C, 0x2328, 0xDCD8 },
     };
-static const Color_RGBA8 mmvr_local_7e479505f47fb970[] = {
+static const Color_RGBA8 mmvr_local_d0b9b113e5b5d415[] = {
         { 65, 164, 255, 255 },  { 131, 164, 230, 255 }, { 98, 205, 255, 255 }, { 82, 82, 255, 255 },
         { 123, 164, 164, 255 }, { 98, 205, 255, 255 },  { 98, 164, 230, 255 }, { 255, 90, 0, 255 },
     };
-static const Color_RGBA8 mmvr_local_c11a3ddb91bb9984[] = {
+static const Color_RGBA8 mmvr_local_dec0d762fa5606a4[] = {
         { 64, 80, 112, 255 },   { 96, 96, 128, 255 },   { 128, 112, 144, 255 }, { 160, 128, 160, 255 },
         { 192, 144, 168, 255 }, { 224, 160, 176, 255 }, { 224, 160, 176, 255 }, { 104, 104, 136, 255 },
         { 136, 120, 152, 255 }, { 168, 136, 168, 255 }, { 200, 152, 184, 255 }, { 232, 168, 184, 255 },
@@ -3423,9 +3439,9 @@ void Environment_DrawSkyboxStarsImpl(PlayState* play, Gfx** gfxP) {
 
     for (i = 0; i < sEnvSkyboxNumStars; i++) {
         if (i < 16) {
-            pos.x = skyEye.x + (s32)mmvr_local_d821bc1326d72f57[i].x;
-            pos.y = skyEye.y + (s32)mmvr_local_d821bc1326d72f57[i].y;
-            pos.z = skyEye.z + (s32)mmvr_local_d821bc1326d72f57[i].z;
+            pos.x = skyEye.x + (s32)mmvr_local_728ef22255d1f1fe[i].x;
+            pos.y = skyEye.y + (s32)mmvr_local_728ef22255d1f1fe[i].y;
+            pos.z = skyEye.z + (s32)mmvr_local_728ef22255d1f1fe[i].z;
             imgWidth = 8;
         } else {
             f32 temp_f22;
@@ -3466,10 +3482,10 @@ void Environment_DrawSkyboxStarsImpl(PlayState* play, Gfx** gfxP) {
 
         if ((i < 15) || ((i == 15) && ((((void)0, gSaveContext.save.day) % 7) == 0))) {
             // 2S2H [Port] Switched from gDPSetColor to gDPSetPrimColor for Color_RGBA8 individual fields
-            Color_RGBA8 color = mmvr_local_7e479505f47fb970[i % ARRAY_COUNTU(mmvr_local_7e479505f47fb970)];
+            Color_RGBA8 color = mmvr_local_d0b9b113e5b5d415[i % ARRAY_COUNTU(mmvr_local_d0b9b113e5b5d415)];
             gDPSetPrimColor(gfx++, 0, 0, color.r, color.g, color.b, color.a);
         } else if (((i & 0x3F) == 0) || (i == 16)) {
-            Color_RGBA8 color = mmvr_local_c11a3ddb91bb9984[phi_v1 % ARRAY_COUNTU(mmvr_local_c11a3ddb91bb9984)];
+            Color_RGBA8 color = mmvr_local_dec0d762fa5606a4[phi_v1 % ARRAY_COUNTU(mmvr_local_dec0d762fa5606a4)];
             gDPSetPrimColor(gfx++, 0, 0, color.r, color.g, color.b, color.a);
             phi_v1++;
         }

@@ -54,7 +54,7 @@ inline constexpr ControlTutorialEntry ControlTutorial[] = {
     { "Hand-mounted HUD", "HUD attachment selects Headset, Left hand or Right hand; Hand HUD size resizes it.", "HUD opacity still applies. Dialogue, pause screens and settings stay separate." },
     { "Bombers' Notebook", "Open the notebook in the pause menu; its page rests on your off hand.", "Touch page arrows or known entries with your other hand. Stick navigation and B to close still work." },
     { "Telescope comfort", "View > Comfort > Stable telescope screen uses the native telescope on a theater screen.", "Switch it off to use the headset-directed telescope view." },
-    { "Experimental full body", "View > Body visibility controls the experimental body and tracked arms (default on).", "Off restores your previous visibility settings. Kafei keeps his tracked hands." },
+    { "Experimental bodies", "View > Body visibility has separate tracked-body options for each form. Human, Zora and Deku default on.", "Goron and Fierce Deity default off. Off restores previous visibility; Kafei keeps his tracked hands." },
     { "Finding native settings", "Search 2Ship or VR settings with the VR keyboard; select a VR result to open its control.", "Persistent Bunny Hood: enable, then press A on the owned hood in the mask menu." },
     { "Combat assistance", "Combat tunes sword/stick and Goron fist hitboxes; Forms tunes Zora fin reach.", "Swords have a small reach aid. Sliders change collision, not models; walls still block." },
 };
