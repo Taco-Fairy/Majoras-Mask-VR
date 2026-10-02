@@ -1,4 +1,6 @@
+#include "2s2h/Enhancements/Saving/SavingEnhancements.h"
 #include "FairyComfort.h"
+#include "ControllerBindings.h"
 #include "NativeActions.h"
 #include "PresentationOptions.h"
 #include "ScenePresentation.h"
@@ -137,6 +139,56 @@ void Render(const mmvr::UiDrawFrame& frame) {
           mmvr::setupGuideRendered = true; }
 }
 } // namespace
+namespace mmvrgame {
+bool SetVRControlBinding(int action, int source) {
+    const auto* left = mmvr::compat::Find(mmvr::deviceInfo.profiles[0].c_str());
+    const auto* right = mmvr::compat::Find(mmvr::deviceInfo.profiles[1].c_str());
+    if (!mmvr::ValidControlBinding(action, source) || !mmvr::ControlAvailable(source, left, right)) return false;
+    mmvr::AssignControl(mmvr::GetSettings(), action, source, Change);
+    mmvr::ControlBindingsChanged();
+    return CommitSettings();
+}
+bool ResetVRControlBindings() {
+    for (int i = 0; i < mmvr::ControlCount; ++i) Change(mmvr::ControlSetting(i), float(i));
+    mmvr::ControlBindingsChanged();
+    return CommitSettings();
+}
+void DrawVRControllerBindings() {
+    const auto* left = mmvr::compat::Find(mmvr::deviceInfo.profiles[0].c_str());
+    const auto* right = mmvr::compat::Find(mmvr::deviceInfo.profiles[1].c_str());
+    ImGui::TextWrapped("VR controllers use OpenXR. Choose bindings here or in VR settings > Controls. "
+                       "Quest Link does not require Virtual Desktop.");
+    ImGui::TextWrapped("Runtime: %s", mmvr::deviceInfo.runtime.c_str());
+    ImGui::TextWrapped("Left: %s", mmvr::deviceInfo.profiles[0].c_str());
+    ImGui::TextWrapped("Right: %s", mmvr::deviceInfo.profiles[1].c_str());
+    ImGui::TextWrapped("Changes save immediately. An occupied control swaps with the previous binding. "
+                       "Release all controls before resuming. VR menu navigation keeps its original controls.");
+    if (ImGui::Button("Reset VR controller bindings")) ResetVRControlBindings();
+    if (settingsDirty) {
+        ImGui::TextWrapped("Settings could not save. Check storage and retry.");
+        if (ImGui::Button("Retry saving bindings")) CommitSettings();
+    }
+    ImGui::Separator();
+    for (int action = 0; action < mmvr::ControlCount; ++action) {
+        ImGui::PushID(action);
+        const int current = mmvr::ControlSource(mmvr::GetSettings(), action);
+        const auto& definition = mmvr::SettingDefinitions[int(mmvr::ControlSetting(action))];
+        if (ImGui::BeginCombo(definition.label, mmvr::ControlName(current, left, right))) {
+            for (int source = 0; source < mmvr::ControlCount; ++source) {
+                if (!mmvr::ValidControlBinding(action, source)) continue;
+                const bool available = mmvr::ControlAvailable(source, left, right);
+                ImGui::BeginDisabled(!available);
+                if (ImGui::Selectable(mmvr::ControlName(source, left, right), current == source))
+                    SetVRControlBinding(action, source);
+                if (current == source) ImGui::SetItemDefaultFocus();
+                ImGui::EndDisabled();
+            }
+            ImGui::EndCombo();
+        }
+        ImGui::PopID();
+    }
+}
+} // namespace mmvrgame
 extern "C" int MMVR_HideCompanionFairy(PlayState* play, Actor* actor) {
     auto* player = play ? GET_PLAYER(play) : nullptr;
     const bool companion = actor && ((player && player->tatlActor == actor) ||
@@ -212,11 +264,16 @@ extern "C" int MMVR_InstrumentButtons(unsigned short* buttons) {
     return true;
 }
 extern "C" int MMVR_ScriptedInstrumentVisible(void) {
-    if (!gPlayState || gPlayState->csCtx.state == CS_STATE_IDLE) return false;
+    if (!gPlayState) return false;
     auto* player = GET_PLAYER(gPlayState);
     // Player_CsAction_14/29 set itemAction and the native model, but never
-    // PLAYER_STATE2_USING_OCARINA. Preserve the scripted prop in the VR hand.
-    return player && player->itemAction == PLAYER_IA_OCARINA;
+    // PLAYER_STATE2_USING_OCARINA. Actor-owned lessons (Toto's rehearsal and
+    // the Zora band) use those actions without running a csCtx script.
+    // Require the actual instrument owner; a stale itemAction after END is
+    // insufficient to capture gameplay input or keep the prop visible.
+    return player && player->itemAction == PLAYER_IA_OCARINA &&
+        (gPlayState->csCtx.state != CS_STATE_IDLE || player->csAction == PLAYER_CSACTION_16 ||
+         player->csAction == PLAYER_CSACTION_68);
 }
 extern "C" int MMVR_ClearLessonBackground(void) {
     return mmvr::FirstPersonRequested() && MMVR_ScriptedInstrumentVisible();
@@ -505,6 +562,10 @@ extern "C" void MMVR_BeforePlayUpdate(PlayState* play) {
 #if defined(MMVR_STATE_NATIVE_BACKEND)
     if (mmvrgame::StateTrackingResumePending()) return;
 #endif
+    if (mmvr::gameSaveRequested.exchange(false)) {
+        mmvr::GetMenu().stateStatus = SavingEnhancements_SaveGame() ? "Game saved." :
+            "Cannot save here yet. Finish dialogue, cutscenes or the current minigame first.";
+    }
     if (mmvr::skipDayRequested.exchange(false)) mmvrgame::SkipDebugDay(play);
     if (mmvr::skipTwoHoursRequested.exchange(false)) mmvrgame::SkipDebugHours(play);
     if (mmvr::mainMenuRequested.exchange(false)) {

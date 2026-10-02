@@ -5,7 +5,7 @@
 extern "C" PlayState* gPlayState;
 
 #define CVAR_NAME "gEnhancements.Saving.PauseSave"
-#define CVAR CVarGetInteger(CVAR_NAME, false)
+#define CVAR CVarGetInteger(CVAR_NAME, SAVING_ENHANCEMENTS_DEFAULT_ENABLED)
 
 void RegisterPauseSave() {
     COND_VB_SHOULD(VB_SAVE_ON_B_BUTTON_IN_PAUSE_MENU, CVAR, {

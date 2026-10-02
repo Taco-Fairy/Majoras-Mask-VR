@@ -7,6 +7,7 @@
 #include "2s2h/Rando/StaticData/StaticData.h"
 #include "2s2h/ShipUtils.h"
 #include "Traps.h"
+#include "2s2h/Network/Anchor/Anchor.h"
 
 extern "C" {
 #include "variables.h"
@@ -91,6 +92,8 @@ void Rando::MiscBehavior::CheckQueue() {
                                 });
                             }
                         }
+                        Anchor::Instance->SendPacket_SetCheckStatus((RandoCheckId)CUSTOM_ITEM_PARAM);
+                        Anchor::Instance->SendPacket_GiveItem(1, randoItemId);
                         Rando::GiveItem(randoItemId);
                         randoSaveCheck.cycleObtained = true;
                         randoSaveCheck.obtained = true;

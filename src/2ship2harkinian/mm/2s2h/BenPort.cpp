@@ -1,3 +1,4 @@
+#include "2s2h/Enhancements/Saving/SavingEnhancements.h"
 #ifdef MMVR_ENABLE
 #include "renderer_metrics.h"
 #endif
@@ -84,6 +85,7 @@ CrowdControl* CrowdControl::Instance;
 #include "2s2h/ShipInit.hpp"
 #include "2s2h/PresetManager/PresetManager.h"
 #include "2s2h/config/ConfigUpdaters.h"
+#include "2s2h/Network/Anchor/Anchor.h"
 
 // Resource Types/Factories
 #include <ship/resource/type/Blob.h>
@@ -134,6 +136,7 @@ CrowdControl* CrowdControl::Instance;
 OTRGlobals* OTRGlobals::Instance;
 GameInteractor* GameInteractor::Instance;
 AudioCollection* AudioCollection::Instance;
+Anchor* Anchor::Instance;
 
 extern "C" char** cameraStrings;
 bool prevAltAssets = false;
@@ -1023,8 +1026,13 @@ extern "C" void InitOTR(int argc, char* argv[]) {
 
     GameInteractor::Instance = new GameInteractor();
     AudioCollection::Instance = new AudioCollection();
+    if (SDLNet_Init() < 0) {
+        SPDLOG_ERROR("[Anchor] SDLNet_Init: {}", SDLNet_GetError());
+    }
+    Anchor::Instance = new Anchor();
     LoadGuiTextures();
     ModMenu_LoadArchives();
+    SavingEnhancements_SetVRDefaults();
     BenGui::SetupGuiElements();
     ShipInit::InitAll();
     Rando::Init();
@@ -1053,6 +1061,9 @@ extern "C" void InitOTR(int argc, char* argv[]) {
     }
 
     srand(now);
+    if (CVarGetInteger("gNetwork.Anchor.Enabled", 0)) {
+        Anchor::Instance->Enable();
+    }
 #ifdef ENABLE_CROWD_CONTROL
     CrowdControl::Instance = new CrowdControl();
     CrowdControl::Instance->Init();
@@ -1073,6 +1084,12 @@ extern "C" void SaveManager_ThreadPoolWait() {
 
 extern "C" void DeinitOTR() {
     SaveManager_ThreadPoolWait();
+    if (Anchor::Instance != nullptr) {
+        Anchor::Instance->Disable();
+        delete Anchor::Instance;
+        Anchor::Instance = nullptr;
+    }
+    SDLNet_Quit();
     OTRAudio_Exit();
 #ifdef ENABLE_CROWD_CONTROL
     CrowdControl::Instance->Disable();

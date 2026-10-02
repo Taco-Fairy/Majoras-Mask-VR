@@ -11,6 +11,7 @@
 #include "CosmeticEditor.h"
 #include "Notification.h"
 #include "2s2h/Rando/CheckTracker/CheckTracker.h"
+#include "2s2h/Network/Anchor/Anchor.h"
 
 #ifdef __APPLE__
 #include <fast/backends/gfx_metal.h>
@@ -59,6 +60,7 @@ std::shared_ptr<MessageViewerWindow> mMessageViewerWindow;
 std::shared_ptr<AudioEditor> mAudioEditorWindow;
 std::shared_ptr<ModMenuWindow> mModMenuWindow;
 std::shared_ptr<BenMenu> mBenMenu;
+std::shared_ptr<AnchorRoomWindow> mAnchorRoomWindow;
 std::shared_ptr<Notification::Window> mNotificationWindow;
 std::shared_ptr<Rando::CheckTracker::CheckTrackerWindow> mRandoCheckTrackerWindow;
 std::shared_ptr<Rando::CheckTracker::SettingsWindow> mRandoCheckTrackerSettingsWindow;
@@ -182,6 +184,9 @@ void SetupGuiElements() {
     mInputViewerSettings = std::make_shared<InputViewerSettingsWindow>("gWindows.InputViewerSettings",
                                                                        "Input Viewer Settings", ImVec2(500, 525));
     gui->AddGuiWindow(mInputViewerSettings);
+
+    mAnchorRoomWindow = std::make_shared<AnchorRoomWindow>("gWindows.AnchorRoom", "Anchor Room");
+    gui->AddGuiWindow(mAnchorRoomWindow);
 }
 
 void Destroy() {
@@ -190,6 +195,7 @@ void Destroy() {
     gui->RemoveAllGuiWindows();
     mBenMenuBar = nullptr;
     mBenMenu = nullptr;
+    mAnchorRoomWindow = nullptr;
     mModalWindow = nullptr;
     mStatsWindow = nullptr;
     mConsoleWindow = nullptr;

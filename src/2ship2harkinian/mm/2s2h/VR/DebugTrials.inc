@@ -13,6 +13,8 @@ int townPanoramaPending=-1;
 int koumeRoomPending=0;
 int woodfallWebPending=0,woodfallWebSettle=0;
 int interactionRoom=3;
+int grottoRockPending=0;
+int stageRehearsalPending=0;
 Save trialSave{};u8 trialEvents[8]{};CycleSceneFlags trialCycles[120]{};
 u16 trialSkyboxTime=0;s16 trialTimeSpeed=0;
 bool IsTownArrival(DebugNativeTriggerKind kind){
@@ -57,6 +59,7 @@ void PrepareKafeiCheckpoint(int preset){
  }
 }
 void TrialTransition(PlayState* play,int entranceId,bool human=false){
+ grottoRockPending=0;stageRehearsalPending=0;
  mmvrgame::ClearTracking();mmvrgame::ClearItemSelection();mmvr::CancelHeldMask();mmvr::GetMenu().open=false;
  play->nextEntrance=entranceId;gSaveContext.nextCutsceneIndex=0;gSaveContext.cutsceneTrigger=0;gSaveContext.respawnFlag=0;
  gSaveContext.save.cutsceneIndex=0;
@@ -129,6 +132,39 @@ extern "C" int MMVR_DebugLocationBegin(PlayState* play,int index){
     gSaveContext.save.time=CLOCK_TIME(15,30);
     gSaveContext.skyboxTime=gSaveContext.save.time;
    }
+  } else if(interaction>=17 && interaction<=21) {
+   // One full quest or a selected form's final part. Native Toto dialogue,
+   // spotlights, notes, ensemble playback and mask handoff stay in charge.
+   // Returning restores all these prerequisites through the visitor snapshot.
+   auto& save=gSaveContext.save;
+   save.time=CLOCK_TIME(22,30);save.isNight=true;gSaveContext.skyboxTime=save.time;
+   R_TIME_SPEED=0; // Keep the late-night test encounter available.
+   save.saveInfo.permanentSceneFlags[SCENE_MILK_BAR]={};
+   gSaveContext.cycleSceneFlags[SCENE_MILK_BAR]={};
+   CLEAR_WEEKEVENTREG(WEEKEVENTREG_50_01);CLEAR_WEEKEVENTREG(WEEKEVENTREG_51_80);
+   constexpr int forms[]={PLAYER_FORM_HUMAN,PLAYER_FORM_GORON,PLAYER_FORM_ZORA,PLAYER_FORM_DEKU};
+   constexpr int parts[]={WEEKEVENTREG_56_10,WEEKEVENTREG_56_80,WEEKEVENTREG_56_40,WEEKEVENTREG_56_20};
+   const int part=interaction-18;
+   for(int i=0;i<4;++i) {
+    auto& flag=save.saveInfo.weekEventReg[parts[i]>>8];
+    if(part<0 || i==part)flag &= ~(parts[i]&0xff);
+    else flag |= parts[i]&0xff;
+   }
+   save.playerForm=part<0?PLAYER_FORM_HUMAN:forms[part];
+   auto& inventory=save.saveInfo.inventory;
+   inventory.items[SLOT_OCARINA]=ITEM_OCARINA_OF_TIME;
+   inventory.items[SLOT_MASK_DEKU]=ITEM_MASK_DEKU;
+   inventory.items[SLOT_MASK_GORON]=ITEM_MASK_GORON;
+   inventory.items[SLOT_MASK_ZORA]=ITEM_MASK_ZORA;
+   inventory.items[SLOT_MASK_CIRCUS_LEADER]=ITEM_NONE;
+  } else if(interaction==16) {
+   // Ensure the covering rock is intact. The visitor snapshot restores these
+   // scene flags and items; the real native rock/grotto actors remain in charge.
+   gSaveContext.save.saveInfo.permanentSceneFlags[SCENE_00KEIKOKU]={};
+   gSaveContext.cycleSceneFlags[SCENE_00KEIKOKU]={};
+   gSaveContext.save.saveInfo.inventory.items[SLOT_BOMB]=ITEM_BOMB;
+   gSaveContext.save.saveInfo.inventory.items[SLOT_MASK_GORON]=ITEM_MASK_GORON;
+   Inventory_ChangeUpgrade(UPG_BOMB_BAG,1);AMMO(ITEM_BOMB)=30;
   } else if(interaction==0) {
    SET_WEEKEVENTREG(WEEKEVENTREG_TALKED_KOUME_INJURED);
    CLEAR_WEEKEVENTREG(WEEKEVENTREG_SAVED_KOUME);
@@ -197,6 +233,8 @@ extern "C" int MMVR_DebugLocationBegin(PlayState* play,int index){
  }
  Log()<<"location-trial index="<<index<<" name="<<debugLocations[index].name<<"\n"<<std::flush;
  TrialTransition(play,debugLocations[index].entrance);
+ if(interaction==16)grottoRockPending=1;
+ if(interaction>=17 && interaction<=21)stageRehearsalPending=1;
  if(interaction==7) {
   // Initialize the native scene in Wart's room, not in the entrance room.
   // The room floor also extends outside its walls, so a floor hit alone is
@@ -260,6 +298,97 @@ extern "C" int MMVR_DebugNativeTriggerBegin(PlayState* play,int index){
  TrialTransition(play,entry.entrance,true);
  townPanoramaPending=IsTownArrival(entry.kind)?index:-1;
  return true;
+}
+// Match actual native rock and entrance actors, rather than guessed map points.
+// A rock above an ordinary floor is not enough: it must cover a grotto actor.
+static const ColliderCylinder* GrottoCoverCollider(const Actor* actor){
+ if(!actor||!actor->update||actor->init||actor->parent)return nullptr;
+ if(actor->id==ACTOR_EN_ISHI&&ENISHI_GET_SIZE_FLAG(actor))
+  return &reinterpret_cast<const EnIshi*>(actor)->collider;
+ if(actor->id==ACTOR_OBJ_BOMBIWA)
+  return &reinterpret_cast<const ObjBombiwa*>(actor)->collider;
+ return nullptr;
+}
+void MaybePlaceStageRehearsalCheckpoint(PlayState* play){
+ if(!stageRehearsalPending||!play||!trialSnapshot||trialReturning||play->sceneId!=SCENE_MILK_BAR||
+    play->transitionTrigger!=TRANS_TRIGGER_OFF||play->transitionMode!=TRANS_MODE_OFF||
+    play->roomCtx.status||!GET_PLAYER(play)||GET_PLAYER(play)->actor.init)return;
+ if(++stageRehearsalPending<30)return;
+ auto* player=GET_PLAYER(play);
+ Actor* toto=nullptr;
+ for(auto* a=play->actorCtx.actorLists[ACTORCAT_NPC].first;a;a=a->next)
+  if(a->id==ACTOR_EN_TOTO&&a->update&&!a->init){toto=a;break;}
+ Vec3f landing{-28.f,120.f,-224.f};
+ CollisionPoly* floor=nullptr;int bg=BGCHECK_SCENE;
+ const float y=BgCheck_EntityRaycastFloor5(&play->colCtx,&floor,&bg,&player->actor,&landing);
+ bool clear=toto&&floor&&std::abs(y+8.f)<5.f&&floor->normal.y>23000;
+ for(float h:{20.f,45.f,70.f}){
+  Vec3f center{landing.x,y+h,landing.z};
+  clear &= !BgCheck_SphVsFirstWall(&play->colCtx,&center,22.f);
+ }
+ stageRehearsalPending=0;
+ if(!clear){Log()<<"stage-rehearsal rejected: unsafe landing or missing Toto\n"<<std::flush;MMVR_DebugTrialReturn(play);return;}
+ landing.y=y;
+ player->actor.world.pos=player->actor.prevPos=player->actor.home.pos=landing;
+ player->actor.floorHeight=y;player->actor.floorPoly=floor;player->actor.floorBgId=bg;
+ player->actor.shape.rot.y=player->actor.world.rot.y=player->yaw=Math_Vec3f_Yaw(&landing,&toto->world.pos);
+ player->actor.velocity={};player->actor.speed=player->speedXZ=0;
+ player->fallStartHeight=static_cast<s16>(y);player->fallDistance=0;
+ MMVR_CameraCoordinateBoundary(play);mmvr::Recenter();
+ Log()<<"stage-rehearsal ready form="<<int(player->transformation)<<" floor="<<y<<"\n"<<std::flush;
+}
+void MaybePlaceGrottoRockCheckpoint(PlayState* play){
+ if(!grottoRockPending||!play||!trialSnapshot||trialReturning||play->sceneId!=SCENE_00KEIKOKU||
+    play->transitionTrigger!=TRANS_TRIGGER_OFF||play->transitionMode!=TRANS_MODE_OFF||
+    play->roomCtx.status||!GET_PLAYER(play)||GET_PLAYER(play)->actor.init)return;
+ if(++grottoRockPending<30)return;
+ auto* player=GET_PLAYER(play);
+ for(auto& list:play->actorCtx.actorLists)for(auto* rock=list.first;rock;rock=rock->next){
+  const auto* collider=GrottoCoverCollider(rock);
+  if(!collider||!(collider->base.ocFlags1&OC1_ON)||!(collider->elem.ocElemFlags&OCELEM_ON))continue;
+  bool coversHole=false;
+  for(auto* hole=play->actorCtx.actorLists[ACTORCAT_ITEMACTION].first;hole;hole=hole->next)
+   if(hole->id==ACTOR_DOOR_ANA&&hole->update&&!hole->init&&
+      std::hypot(hole->world.pos.x-rock->world.pos.x,hole->world.pos.z-rock->world.pos.z)<30.f&&
+      std::abs(hole->world.pos.y-rock->world.pos.y)<80.f){coversHole=true;break;}
+  if(!coversHole)continue;
+  const float radius=collider->dim.radius+85.f;
+  for(int side=0;side<8;++side){
+   const float angle=side*(3.14159265359f/4);
+   Vec3f landing{rock->world.pos.x+radius*std::sin(angle),rock->world.pos.y+150.f,
+                 rock->world.pos.z+radius*std::cos(angle)};
+   CollisionPoly* floor=nullptr;int bg=BGCHECK_SCENE;
+   const float y=BgCheck_EntityRaycastFloor5(&play->colCtx,&floor,&bg,&player->actor,&landing);
+   if(!floor||std::abs(y-rock->world.pos.y)>45.f||floor->normal.y<23000)continue;
+   bool clear=true;
+   for(float h:{20.f,45.f,70.f}){
+    Vec3f center{landing.x,y+h,landing.z};
+    clear&=!BgCheck_SphVsFirstWall(&play->colCtx,&center,22.f);
+   }
+   // Reject other covering boulders too, including ones too distant to have
+   // registered native OC this tick at the original entrance.
+   for(auto& otherList:play->actorCtx.actorLists)for(auto* other=otherList.first;other;other=other->next){
+    const auto* solid=GrottoCoverCollider(other);
+    if(solid&&std::abs(y-other->world.pos.y)<solid->dim.height&&
+       std::hypot(landing.x-other->world.pos.x,landing.z-other->world.pos.z)<solid->dim.radius+30.f)clear=false;
+   }
+   if(!clear)continue;
+   landing.y=y;
+   player->actor.world.pos=player->actor.prevPos=player->actor.home.pos=landing;
+   player->actor.floorHeight=y;player->actor.floorPoly=floor;player->actor.floorBgId=bg;
+   player->actor.shape.rot.y=player->actor.world.rot.y=player->yaw=Math_Vec3f_Yaw(&landing,&rock->world.pos);
+   player->actor.velocity={};player->actor.speed=player->speedXZ=0;
+   player->fallStartHeight=static_cast<s16>(y);player->fallDistance=0;
+   MMVR_CameraCoordinateBoundary(play);mmvr::Recenter();grottoRockPending=0;
+   Log()<<"grotto-rock-checkpoint rock="<<rock->id<<" rockPos="<<rock->world.pos.x<<","<<rock->world.pos.y
+        <<","<<rock->world.pos.z<<" landing="<<landing.x<<","<<landing.y<<","<<landing.z<<" ready\n"<<std::flush;
+   return;
+  }
+ }
+ // Fail safely without leaving a visitor inside a wall or an open hole.
+ grottoRockPending=0;
+ Log()<<"grotto-rock-checkpoint rejected: no safe rock-covered entrance\n"<<std::flush;
+ MMVR_DebugTrialReturn(play);
 }
 void MaybePlaceInteractionRoomCheckpoint(PlayState* play){
  if(!woodfallWebPending||!play||!trialSnapshot||trialReturning)return;

@@ -236,6 +236,9 @@ endif()
 ################################################################################
 find_package(SDL2)
 set(SDL2-INCLUDE ${SDL2_INCLUDE_DIRS})
+if(NOT ANDROID)
+    find_package(SDL2_net 2.2.0 REQUIRED)
+endif()
 
 if (BUILD_CROWD_CONTROL)
     find_package(SDL2_net)
@@ -574,6 +577,7 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
 		"glu32;"
 		"SDL2::SDL2;"
 		"SDL2::SDL2main;"
+        "SDL2_net::SDL2_net-static;"
         #"$<$<BOOL:${BUILD_CROWD_CONTROL}>:SDL2_net::SDL2_net-static>"
 		"glfw;"
 		"winmm;"
@@ -588,7 +592,7 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
 		"OpusFile::opusfile"
 	)
 elseif(ANDROID)
-    set(ADDITIONAL_LIBRARY_DEPENDENCIES libultraship SDL2::SDL2 ogg vorbis vorbisfile opus opusfile png_static android log)
+    set(ADDITIONAL_LIBRARY_DEPENDENCIES libultraship SDL2::SDL2 SDL2_net::SDL2_net ogg vorbis vorbisfile opus opusfile png_static android log)
 elseif(CMAKE_SYSTEM_NAME STREQUAL "NintendoSwitch")
     find_package(SDL2)
     set(THREADS_PREFER_PTHREAD_FLAG ON)
@@ -629,6 +633,7 @@ else()
         "Opus::opus"
         "Opusfile::Opusfile"
 		SDL2::SDL2
+        SDL2_net::SDL2_net
  #       "$<$<BOOL:${BUILD_CROWD_CONTROL}>:SDL2_net::SDL2_net>"
 		${CMAKE_DL_LIBS}
 		Threads::Threads

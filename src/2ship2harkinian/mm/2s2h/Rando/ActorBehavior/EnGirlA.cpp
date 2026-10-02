@@ -2,6 +2,7 @@
 #include <libultraship/bridge/consolevariablebridge.h>
 #include "2s2h/CustomMessage/CustomMessage.h"
 #include "2s2h/Rando/MiscBehavior/Traps.h"
+#include "2s2h/Network/Anchor/Anchor.h"
 
 extern "C" {
 #include "variables.h"
@@ -84,6 +85,8 @@ void EnGirlA_RandoBuyFunc(PlayState* play, EnGirlA* enGirlA) {
     } else if (randoItemId == RI_JUNK) {
         randoItemId = Rando::CurrentJunkItem(randoCheckId);
     }
+    Anchor::Instance->SendPacket_SetCheckStatus(randoCheckId);
+    Anchor::Instance->SendPacket_GiveItem(1, randoItemId);
     Rando::GiveItem(randoItemId);
 }
 

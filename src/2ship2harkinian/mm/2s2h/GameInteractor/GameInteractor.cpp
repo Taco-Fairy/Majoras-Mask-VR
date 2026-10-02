@@ -67,6 +67,10 @@ void GameInteractor_ExecuteAfterEndOfCycleSave() {
     GameInteractor::Instance->ExecuteHooks<GameInteractor::AfterEndOfCycleSave>();
 }
 
+void GameInteractor_ExecuteAfterOwlSave() {
+    GameInteractor::Instance->ExecuteHooks<GameInteractor::AfterOwlSave>();
+}
+
 void GameInteractor_ExecuteBeforeMoonCrash() {
     GameInteractor::Instance->ExecuteHooks<GameInteractor::BeforeMoonCrash>();
 }
@@ -78,7 +82,6 @@ void GameInteractor_ExecuteOnInterfaceDrawStart() {
 void GameInteractor_ExecuteAfterInterfaceClockDraw() {
     GameInteractor::Instance->ExecuteHooks<GameInteractor::AfterInterfaceClockDraw>();
 }
-
 void GameInteractor_ExecuteBeforeInterfaceClockDraw() {
     GameInteractor::Instance->ExecuteHooks<GameInteractor::BeforeInterfaceClockDraw>();
 }

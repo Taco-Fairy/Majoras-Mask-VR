@@ -10,7 +10,7 @@ $ndk=Join-Path $env:ANDROID_HOME 'ndk/27.0.12077973'
 $stage=Join-Path $root 'build/quest-package'
 $libs=Join-Path $stage 'jniLibs/arm64-v8a';$assets=Join-Path $stage 'assets'
 New-Item -ItemType Directory -Path $libs,$assets -Force | Out-Null
-foreach($name in @('lib2ship.so','libSDL2.so','libopenxr_loader.so','libmmvr_extract.so')){
+foreach($name in @('lib2ship.so','libSDL2.so','libSDL2_net.so','libopenxr_loader.so','libmmvr_extract.so')){
  $matches=@(Get-ChildItem -LiteralPath (Join-Path $root 'build/android-quest') -Filter $name -File -Recurse)
  if($matches.Count -ne 1){throw "Expected exactly one native library: $name (found $($matches.Count))"}
  Copy-Item -LiteralPath $matches[0].FullName -Destination (Join-Path $libs $name) -Force

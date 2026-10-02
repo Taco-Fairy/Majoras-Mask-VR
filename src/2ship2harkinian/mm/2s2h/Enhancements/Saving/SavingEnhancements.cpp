@@ -1,3 +1,4 @@
+#include "SavingEnhancements.h"
 #include <libultraship/bridge/consolevariablebridge.h>
 #include "BenPort.h"
 #include "2s2h/GameInteractor/GameInteractor.h"
@@ -10,7 +11,20 @@ extern "C" {
 }
 
 #define CVAR_REMEMBER_SAVE_LOCATION_NAME "gEnhancements.Saving.RememberSaveLocation"
-#define CVAR_REMEMBER_SAVE_LOCATION CVarGetInteger(CVAR_REMEMBER_SAVE_LOCATION_NAME, 0)
+#define CVAR_REMEMBER_SAVE_LOCATION CVarGetInteger(CVAR_REMEMBER_SAVE_LOCATION_NAME, SAVING_ENHANCEMENTS_DEFAULT_ENABLED)
+
+// Apply before ShipInit registers setting-dependent hooks. Preserve explicit
+// player choices and persist the defaults in the ordinary shared config.
+extern "C" void SavingEnhancements_SetVRDefaults() {
+#ifdef MMVR_ENABLE
+    bool changed = false;
+    for (const char* key : { "gEnhancements.Saving.PersistentOwlSaves", "gEnhancements.Saving.PauseSave",
+                            "gEnhancements.Saving.RememberSaveLocation" }) {
+        if (!CVarGet(key)) { CVarSetInteger(key, 1); changed = true; }
+    }
+    if (changed) CVarSave();
+#endif
+}
 
 static int lastEntrance = -1;
 static int entranceToSave = -1;
@@ -133,6 +147,28 @@ extern "C" bool SavingEnhancements_CanSave() {
     return true;
 }
 
+// VR menu uses the same persistent owl-save sequence as native pause/autosave.
+// Keep its eligibility checks, cycle flags, respawn data and existing file slot.
+extern "C" bool SavingEnhancements_SaveGame() {
+    if (!SavingEnhancements_CanSave() || gPlayState->transitionTrigger == TRANS_TRIGGER_START ||
+        gPlayState->transitionMode != TRANS_MODE_OFF || gPlayState->sramCtx.status != 0)
+        return false;
+    const bool owlState = gSaveContext.save.isOwlSave;
+    gSaveContext.save.isOwlSave = true;
+    SavingEnhancements_PersistSaveEntranceInfo();
+    SavingEnhancements_AdvancePlaytime();
+    Play_SaveCycleSceneFlags(gPlayState);
+    gSaveContext.save.saveInfo.playerData.savedSceneId = gPlayState->sceneId;
+    func_8014546C(&gPlayState->sramCtx);
+    Sram_SetFlashPagesOwlSave(&gPlayState->sramCtx,
+        gFlashOwlSaveStartPages[gSaveContext.fileNum * FLASH_SAVE_MAIN_MULTIPLIER],
+        gFlashOwlSaveNumPages[gSaveContext.fileNum * FLASH_SAVE_MAIN_MULTIPLIER]);
+    Sram_StartWriteToFlashOwlSave(&gPlayState->sramCtx);
+    gSaveContext.save.isOwlSave = owlState;
+    SavingEnhancements_ClearSaveEntranceInfo();
+    return true;
+}
+
 extern "C" void SavingEnhancements_AdvancePlaytime() {
     if (gSaveContext.save.shipSaveInfo.fileCompletedAt == 0) {
         uint64_t timestamp = GetUnixTimestamp();
@@ -211,7 +247,7 @@ static RegisterShipInitFunc registerSavingEnhancements(
     []() {
         // Prevent deletion of owl saves based on cvar or if this was a pause/auto save
         COND_VB_SHOULD(VB_DELETE_OWL_SAVE, true, {
-            if (CVarGetInteger("gEnhancements.Saving.PersistentOwlSaves", 0) ||
+            if (CVarGetInteger("gEnhancements.Saving.PersistentOwlSaves", SAVING_ENHANCEMENTS_DEFAULT_ENABLED) ||
                 gSaveContext.save.shipSaveInfo.pauseSaveEntrance != -1) {
                 *should = false;
             }

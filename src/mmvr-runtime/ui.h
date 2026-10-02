@@ -6,6 +6,7 @@
 namespace mmvr {
 inline std::atomic<bool> debugReturnRequested{ false };
 inline std::atomic<bool> mainMenuRequested{ false };
+inline std::atomic<bool> gameSaveRequested{ false };
 inline std::atomic<bool> skipDayRequested{ false };
 inline std::atomic<bool> skipTwoHoursRequested{ false };
 // Positive = save, negative = load; zero means no queued request. Slots 1..3.
@@ -161,6 +162,7 @@ int DisplaySlotAssignment(int index) noexcept;
 void SetInputContext(bool canSelect, bool ocarina) noexcept;
 void SetHolsterContext(bool available) noexcept;
 MenuState& GetMenu() noexcept;
+bool OpenVRMenuSearchResult(int row) noexcept;
 const SelectorState& GetSelector() noexcept;
 void SetSlotAssignment(int index, int inventorySlot) noexcept;
 int GetSlotAssignment(int index) noexcept;

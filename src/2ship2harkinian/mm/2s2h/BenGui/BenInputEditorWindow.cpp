@@ -1,4 +1,5 @@
 #include "BenInputEditorWindow.h"
+#include "2s2h/VR/ControllerBindings.h"
 #include <ship/Context.h>
 #include <libultraship/bridge/consolevariablebridge.h>
 #include <ship/controller/controldevice/controller/mapping/ControllerRumbleMapping.h>
@@ -1541,11 +1542,16 @@ void BenInputEditorWindow::DrawSetDefaultsButton(uint8_t portIndex) {
 }
 
 void BenInputEditorWindow::DrawFullContents() {
-    ImGui::BeginTabBar("##ControllerConfigPortTabs");
-    for (uint8_t i = 0; i < 4; i++) {
-        DrawPortTab(i);
+    if (ImGui::BeginTabBar("##ControllerConfigPortTabs")) {
+#ifdef MMVR_ENABLE
+        if (ImGui::BeginTabItem("VR controllers (OpenXR)")) {
+            mmvrgame::DrawVRControllerBindings();
+            ImGui::EndTabItem();
+        }
+#endif
+        for (uint8_t i = 0; i < 4; i++) DrawPortTab(i);
+        ImGui::EndTabBar();
     }
-    ImGui::EndTabBar();
 }
 
 void BenInputEditorWindow::DrawElement() {

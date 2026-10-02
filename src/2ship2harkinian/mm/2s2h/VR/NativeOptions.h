@@ -4,5 +4,6 @@ namespace mmvr { struct UiDrawFrame; }
 namespace Fast { class Fast3dGui; }
 namespace mmvrgame {
 void DrawNativeOptions(const mmvr::UiDrawFrame& frame, Fast::Fast3dGui& gui);
+unsigned DrawVRMenuSearch(const char* query, bool* opened = nullptr);
 }
 #endif

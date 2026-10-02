@@ -2,6 +2,9 @@
 #include "NativeOptions.h"
 #include "NamedTab.h"
 #include "ui.h"
+#include "menu_search.h"
+#include "control_bindings.h"
+#include "runtime.h"
 #include "presentation.h"
 #include "2s2h/BenGui/BenMenu.h"
 #include "2s2h/Enhancements/Audio/AudioEditor.h"
@@ -18,14 +21,41 @@
 #include <stdexcept>
 
 namespace mmvrgame {
+unsigned DrawVRMenuSearch(const char* query, bool* opened) {
+    if (opened) *opened = false;
+    if (!query || !*query) return 0;
+    unsigned matches = 0;
+    const char* blocked = mmvr::setupGuideVisible ? "Finish the VR setup guide first." :
+        mmvr::GetBindingEditor().Active() ? "Finish or cancel the current control binding first." :
+        (!mmvr::GetMenu().open && !mmvr::PacingActive()) ? "Connect a VR headset to open its menu." : nullptr;
+    const bool canOpen = blocked == nullptr;
+    ImGui::PushID("VR menu search");
+    for (const auto& entry : mmvr::VrMenuSearchEntries(mmvr::GetMenu())) {
+        if (!mmvr::VrMenuSearchMatch(query, entry)) continue;
+        if (!matches++) ImGui::SeparatorText("VR menu");
+        ImGui::PushID(entry.row);
+        ImGui::BeginDisabled(!canOpen);
+        if (ImGui::Selectable(entry.label) && canOpen && mmvr::OpenVRMenuSearchResult(entry.row)) {
+            if (opened) *opened = true;
+        }
+        ImGui::EndDisabled();
+        if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled))
+            ImGui::SetTooltip("%s\n%s", entry.label, canOpen ? "Open this control in the VR menu." : blocked);
+        const auto& section = mmvr::MenuSections[entry.section];
+        ImGui::TextDisabled("VR / %s / %s", mmvr::TabNames[section.tab], section.label);
+        ImGui::PopID();
+    }
+    ImGui::PopID();
+    return matches;
+}
 namespace {
-constexpr const char* Categories[] = { "Audio", "Gameplay", "Cheats", "Difficulty", "Randomizer", "Items and masks", "Clock", "FullDiveGames Editions" };
+constexpr const char* Categories[] = { "Audio", "Gameplay", "Cheats", "Difficulty", "Randomizer", "Items and masks", "Clock", "FullDiveGames Editions", "Network" };
 struct Panel {
     ImGuiContext* context = nullptr;
     ImFontAtlas* fonts = nullptr;
     uint64_t session = std::numeric_limits<uint64_t>::max(), frame = 0;
     int category = -1;
-    bool pointerMode = false, previousConfirm = false, previousBack = false, previousCollapse = false;
+    bool pointerMode = false, previousClick = false, previousConfirm = false, previousBack = false, previousCollapse = false;
     bool upperCase = false, keyboard = false, inputReady = false;
     char search[128]{};
     int keyboardRow = 0, keyboardColumn = 0, navX = 0, navY = 0;
@@ -76,7 +106,8 @@ void SyncKeyboard(const mmvr::NativeMenuInput& input) {
     if (active && !panel.keyboard) {
         panel.keyboardRow = panel.keyboardColumn = panel.navX = panel.navY = 0;
         panel.keyboardRepeat = 0;
-        panel.previousConfirm = input.confirm; // Opening A must not type a key.
+        panel.previousClick = input.click;
+        panel.previousConfirm = input.confirm;
         panel.pointer = {102, 800};
     }
     panel.keyboard = active;
@@ -97,20 +128,18 @@ void FeedInput(const mmvr::NativeMenuInput& input) {
     auto& io = ImGui::GetIO();
     const float dt = std::clamp(input.delta, .001f, .1f);
     io.DeltaTime = dt;
-    const float pointerMagnitude = std::hypot(input.pointerX, input.pointerY);
-    const float navMagnitude = std::hypot(input.navigateX, input.navigateY);
-    if (navMagnitude > .45f) panel.pointerMode = false;
-    // Deliberate navigation wins over incidental movement of the pointer stick.
-    else if (pointerMagnitude > .20f) {
-        panel.pointerMode = true;
-        panel.pointer.x = std::clamp(panel.pointer.x + input.pointerX * 750.f * dt, 42.f, 982.f);
-        panel.pointer.y = std::clamp(panel.pointer.y - input.pointerY * 750.f * dt, 184.f, panel.keyboard ? 1026.f : 674.f);
+    panel.pointerMode = panel.category >= 0;
+    const float cursorMagnitude = std::hypot(input.navigateX, input.navigateY);
+    if (panel.pointerMode && cursorMagnitude > .20f) {
+        panel.pointer.x = std::clamp(panel.pointer.x + input.navigateX * 750.f * dt, 42.f, 982.f);
+        panel.pointer.y = std::clamp(panel.pointer.y - input.navigateY * 750.f * dt, 184.f, panel.keyboard ? 1026.f : 674.f);
     }
     if (panel.keyboard && !panel.pointerMode) NavigateKeyboard(input, dt);
     io.AddMousePosEvent(panel.pointerMode ? panel.pointer.x : -FLT_MAX,
                         panel.pointerMode ? panel.pointer.y : -FLT_MAX);
+    io.AddMouseWheelEvent(0.f, input.scrollY);
     // The drawn keyboard never takes ActiveId from the text field it edits.
-    io.AddMouseButtonEvent(0, panel.pointerMode && !KeyboardHit(panel.pointer) && input.confirm);
+    io.AddMouseButtonEvent(0, panel.pointerMode && !KeyboardHit(panel.pointer) && input.click);
     io.AddKeyEvent(ImGuiKey_GamepadFaceDown, !panel.pointerMode && !panel.keyboard && input.confirm);
     // FaceUp is ImGui's text-input activation; A must also enter InputText.
     io.AddKeyEvent(ImGuiKey_GamepadFaceUp, !panel.pointerMode && !panel.keyboard && input.confirm);
@@ -145,7 +174,9 @@ void DrawKeyboard(const mmvr::NativeMenuInput& input) {
                             hover ? IM_COL32(52, 123, 128, 255) : IM_COL32(29, 57, 72, 255), 4);
         const auto text = ImGui::CalcTextSize(label);
         draw->AddText({pos.x + (size.x-text.x)*.5f, pos.y+(size.y-text.y)*.5f}, IM_COL32_WHITE, label);
-        return hover && input.confirm && !panel.previousConfirm;
+        const bool select = panel.pointerMode ? input.click : input.confirm;
+        const bool previousSelect = panel.pointerMode ? panel.previousClick : panel.previousConfirm;
+        return hover && select && !previousSelect;
     };
     const char* rows[] = {"1234567890-", "qwertyuiop_", "asdfghjkl./", "zxcvbnm,:@?"};
     for (int y = 0; y < 4; ++y) {
@@ -164,7 +195,7 @@ void Contents(Fast::Fast3dGui& gui) {
     auto native = std::dynamic_pointer_cast<BenGui::BenMenu>(gui.GetMenu());
     if (!native) { ImGui::TextWrapped("2Ship options are still initializing."); return; }
     ImGui::SetNextItemWidth(-90.f);
-    ImGui::InputTextWithHint("##SettingSearch", "Search 2Ship settings (e.g. Bunny or Blast)", panel.search, sizeof(panel.search));
+    ImGui::InputTextWithHint("##SettingSearch", "Search 2Ship and VR settings", panel.search, sizeof(panel.search));
     ImGui::SameLine();
     if(ImGui::Button("Clear")) panel.search[0]=0;
     if(panel.search[0]) {
@@ -172,8 +203,10 @@ void Contents(Fast::Fast3dGui& gui) {
         const char* sections[][2]={{"FullDiveGames Editions","Visuals"},{"Settings","Audio"},{"Enhancements","Gameplay"},
             {"Enhancements","Graphics"},{"Enhancements","Items/Songs"},{"Enhancements","Cheats"},{"Enhancements","Difficulty Options"},
             {"Rando","General"},{"Rando","Logic/Conditions"},{"Rando","Check Pool"},
-            {"Rando","Check Exclusions"},{"Rando","Item Pool"},{"Rando","Starting Items"},{"Rando","Hints"}};
+            {"Rando","Check Exclusions"},{"Rando","Item Pool"},{"Rando","Starting Items"},{"Rando","Hints"},
+            {"Network","Anchor"}};
         ImGui::BeginChild("Search results",{0,0},false,ImGuiWindowFlags_AlwaysVerticalScrollbar);
+        any = DrawVRMenuSearch(panel.search) > 0;
         for(const auto& section:sections) any=native->DrawVrSection(section[0],section[1],panel.search)||any;
         if(!any)ImGui::TextWrapped("No matching settings. Try a shorter name.");
         ImGui::EndChild();
@@ -185,7 +218,7 @@ void Contents(Fast::Fast3dGui& gui) {
             const int i = order == 0 ? int(std::size(Categories))-1 : order-1;
             if (ImGui::Button(Categories[i], {-1,52})) { panel.category=i; ImGui::SetScrollY(0); }
         }
-        ImGui::TextWrapped("Use the left stick to navigate. Use the right stick as a pointer for lists, dragging and the keyboard.");
+        ImGui::TextWrapped("Choose a group with the left stick and A. Inside a group, the left stick moves the cursor, the right stick scrolls, and the dominant trigger clicks.");
         return;
     }
     if (ImGui::Button("Back to 2Ship")) { panel.category=-1; return; }
@@ -208,6 +241,7 @@ void Contents(Fast::Fast3dGui& gui) {
         case 5: native->DrawVrSection("Enhancements","Items/Songs"); break;
         case 6: native->DrawVrSection("Enhancements","Graphics","Clock"); break;
         case 7: native->DrawVrSection("FullDiveGames Editions","Visuals"); break;
+        case 8: native->DrawVrSection("Network","Anchor"); break;
     }
 }
 } // namespace
@@ -220,8 +254,8 @@ static void BuildNativeOptions(const mmvr::UiDrawFrame& frame, Fast::Fast3dGui& 
     auto input = menu.nativeInput;
     // Entering a tab must never reuse the button press that selected it.
     if (!panel.inputReady) {
-        panel.inputReady = !input.confirm && !input.back && !input.collapse;
-        input.confirm = input.back = input.collapse = false;
+        panel.inputReady = !input.confirm && !input.click && !input.back && !input.collapse;
+        input.confirm = input.click = input.back = input.collapse = false;
     }
     // A menu image may be submitted more than once; consume XR input only once.
     if (panel.frame != input.frame || panel.frame == 0) {
@@ -252,6 +286,7 @@ static void BuildNativeOptions(const mmvr::UiDrawFrame& frame, Fast::Fast3dGui& 
         ImGui::Begin("##VR2Ship", nullptr, flags);
         if (panel.frame==0) ImGui::SetWindowFocus();
         Contents(gui);
+        menu.nativeInput.captureTabSwitch = panel.category >= 0;
         ImGui::End();
         SyncKeyboard(input);
         DrawKeyboard(input);
@@ -262,6 +297,7 @@ static void BuildNativeOptions(const mmvr::UiDrawFrame& frame, Fast::Fast3dGui& 
         }
         ImGui::Render();
         panel.frame = input.frame;
+        panel.previousClick = input.click;
         panel.previousConfirm = input.confirm;
         panel.previousBack = input.back;
         panel.previousCollapse = input.collapse;

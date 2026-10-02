@@ -30,6 +30,10 @@
 #include <iomanip>
 extern "C" {
 #include "global.h"
+void MMVR_PrioritizeAC(CollisionCheckContext*, Collider*);
+void MMVR_RemoveACOverflow(CollisionCheckContext*, Collider*);
+int MMVR_CollisionACCount(CollisionCheckContext*);
+Collider* MMVR_CollisionACAt(CollisionCheckContext*, int);
 void MMVR_PlayerEquipSword(PlayState* play, Player* player, ItemId item);
 void CollisionCheck_AC(PlayState*, CollisionCheckContext*, Collider*);
 bool Player_IsZTargeting(Player*);
@@ -130,8 +134,8 @@ void CombatLog(const char* event, PlayState* play, Player* p) {
         float nearest = 100000;
         int target = -1;
         int eligible = 0;
-        for (int i = 0; i < play->colChkCtx.colACCount; ++i) {
-            auto* ac = play->colChkCtx.colAC[i];
+        for (int i = 0; i < MMVR_CollisionACCount(&play->colChkCtx); ++i) {
+            auto* ac = MMVR_CollisionACAt(&play->colChkCtx,i);
             if (!ac || !ac->actor || ac->actor == &p->actor || !(ac->acFlags & AC_ON))
                 continue;
             ++eligible;
@@ -619,6 +623,7 @@ void QueuePhysicalCombat(PlayState* play, Player* p) {
         p->shieldQuad.base.colMaterial = COL_MATERIAL_METAL;
         Collider_SetQuadVertices(&p->shieldQuad, &world[0], &world[1], &world[2], &world[3]);
         CollisionCheck_SetAC(play, &play->colChkCtx, &p->shieldQuad.base);
+        MMVR_PrioritizeAC(&play->colChkCtx, &p->shieldQuad.base);
         // Put the shield before the body so an intercepted attack cannot also hit it.
         auto& ctx = play->colChkCtx;
         for (int i = ctx.colACCount - 1; i > 0; --i)
@@ -871,6 +876,7 @@ extern "C" void MMVR_FilterAttackCollisions(PlayState* play) {
             shieldQueued) {
             mmvr::RemoveQueued(context.colAT, context.colATCount, &p->shieldQuad.base);
             mmvr::RemoveQueued(context.colAC, context.colACCount, &p->shieldQuad.base);
+            MMVR_RemoveACOverflow(&context, &p->shieldQuad.base);
         }
     }
     physicalQuadQueued = shieldQueued = false;

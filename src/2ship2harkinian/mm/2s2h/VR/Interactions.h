@@ -10,6 +10,7 @@ void RecordPhysicalPushTracking(const mmvr::TrackingFrame&, const mmvr::Matrix& 
 void ApplyPhysicalPushHandLock(PlayState*, Player*, mmvr::Matrix* hands);
 void ClearPhysicalPushTracking();
 mmvr::Matrix CarryPalmPose(const mmvr::Matrix& gripPose,int hand);
+float InteractionTrackingScale();
 bool TrackedMaskHand(PlayState*,mmvr::Matrix&,int hand=-1);
 bool TrackedMuzzle(PlayState*,Player*,mmvr::Matrix&);
 void OverrideTrackedItemHand(mmvr::Matrix& hand);

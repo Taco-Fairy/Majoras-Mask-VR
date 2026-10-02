@@ -79,6 +79,7 @@ mmvr::Matrix handAim[2]{}, handGrip[2]{};
 // Render-derived attachment, always rebuilt from the fresh controller sample.
 mmvr::Matrix trackedItemHand{};
 std::array<std::array<float,3>,2> palmOffset{};
+float interactionTrackingScale=1.f;
 bool handTracked[2]{}, handHasVelocity[2]{};
 std::array<float, 3> handVelocity[2]{};
 mmvr::MotionHistory handMotion[2];
@@ -292,6 +293,7 @@ void ClearTracking() {
     ClearPhysicalPushTracking();
     trackedItemHand={};
     palmOffset={};
+    interactionTrackingScale=1.f;
     ClearBodyTracking();
     handTracked[0] = handTracked[1] = false;
     for (auto& history : handMotion)
@@ -311,6 +313,7 @@ void ClearTracking() {
     motion.Reset();
     ClearCombat();
 }
+float InteractionTrackingScale() { return interactionTrackingScale; }
 void RecordTracking(const mmvr::TrackingFrame& frame, const mmvr::Matrix& view, const mmvr::Matrix& relativeHead) {
     auto* play = gPlayState;
     auto* player = play ? GET_PLAYER(play) : nullptr;
@@ -319,6 +322,7 @@ void RecordTracking(const mmvr::TrackingFrame& frame, const mmvr::Matrix& view, 
         ClearTracking();
         return;
     }
+    interactionTrackingScale=std::isfinite(frame.trackingScale) && frame.trackingScale>0.f ? frame.trackingScale : 1.f;
     if (owner != player || recordedHand != itemHand || scene != play->sceneId || epoch != frame.epoch ||
         std::abs(frame.snapYaw - recordedSnap) > .2f)
         ClearItemTrigger();
@@ -735,6 +739,7 @@ void RebaseInteractionTracking(const mmvr::TrackingFrame& f) {
     handTracked[0]=handTracked[1]=false;valid=false;recorded={};
     trackedItemHand={};
     palmOffset={};
+    interactionTrackingScale=1.f;
     haveWeapon=haveNativeHand=false;actorRange=false;drawnActor=nullptr;
     actorHigh=actorXluHigh=nullptr;
     // physicalRelease/releaseVelocity represent an accepted throw and survive.

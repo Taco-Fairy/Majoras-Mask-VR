@@ -75,9 +75,14 @@ mmvr::Matrix DekuGuardCorrection(PlayState* play,Player* p){
  return mmvr::Multiply(inverse,current);
 }
 void QueueDekuGuard(PlayState* play,Player* p){
+ if(dekuGuardQueued){
+  mmvr::RemoveQueued(play->colChkCtx.colAC,play->colChkCtx.colACCount,&dekuGuard.base);
+  MMVR_RemoveACOverflow(&play->colChkCtx,&dekuGuard.base);
+ }
  dekuGuardQueued=false;
  if(p->transformation!=PLAYER_FORM_DEKU||!mmvr::FirstPersonRequested()||mmvr::GetSettings().Get(mmvr::Setting::PhysicalShield)<.5f)return;
  auto& ctx=play->colChkCtx;mmvr::RemoveQueued(ctx.colAC,ctx.colACCount,&p->shieldCylinder.base);
+ MMVR_RemoveACOverflow(&ctx,&p->shieldCylinder.base);
  if(!(p->stateFlags1&PLAYER_STATE1_400000)||dekuGuardOwner!=p||play->gameplayFrames-dekuGuardFrame>2)return;
  dekuGuard.base=p->shieldQuad.base;dekuGuard.base.shape=COLSHAPE_TRIS;dekuGuard.base.colMaterial=COL_MATERIAL_WOOD;dekuGuard.base.acFlags=AC_ON|AC_HARD|AC_TYPE_ENEMY;
  dekuGuard.count=12;dekuGuard.elements=dekuGuardElements;
@@ -86,7 +91,8 @@ void QueueDekuGuard(PlayState* play,Player* p){
   for(int c=0;c<3;++c){(&corners[i].x)[c]=guardPose.m[3][c];for(int r=0;r<3;++r)(&corners[i].x)[c]+=local[r]*guardPose.m[r][c];}}
  const int triangles[12][3]={{0,1,3},{0,3,2},{4,6,7},{4,7,5},{0,4,5},{0,5,1},{2,3,7},{2,7,6},{0,2,6},{0,6,4},{1,5,7},{1,7,3}};
  for(int i=0;i<12;++i){dekuGuardElements[i].base=p->shieldQuad.elem;dekuGuardElements[i].base.acElemFlags=ACELEM_ON;Collider_SetTrisVertices(&dekuGuard,i,&corners[triangles[i][0]],&corners[triangles[i][1]],&corners[triangles[i][2]]);}
- CollisionCheck_SetAC(play,&ctx,&dekuGuard.base);for(int i=ctx.colACCount-1;i>0;--i)if(ctx.colAC[i]==&dekuGuard.base)std::swap(ctx.colAC[i],ctx.colAC[i-1]);dekuGuardQueued=true;
+ CollisionCheck_SetAC(play,&ctx,&dekuGuard.base);MMVR_PrioritizeAC(&ctx,&dekuGuard.base);
+ for(int i=ctx.colACCount-1;i>0;--i)if(ctx.colAC[i]==&dekuGuard.base)std::swap(ctx.colAC[i],ctx.colAC[i-1]);dekuGuardQueued=true;
 }
 }
 extern "C" void MMVR_RecordDekuGuard(PlayState* play,Player* p){

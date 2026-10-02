@@ -1,3 +1,4 @@
+#include "body_collision.h"
 #include "interaction_view.h"
 #include "grab_shake.h"
 #include "arm_run_tests.h"
@@ -26,6 +27,7 @@
 #include "input.h"
 #include "control_bindings.h"
 #include "ui.h"
+#include "menu_search.h"
 #include "hud_layout.h"
 #include "motion.h"
 #include "throw_arc.h"
@@ -51,9 +53,26 @@ bool close(float a,float b){return std::abs(a-b)<.0001f;}
 #include "state_tracking_tests.h"
 #include "eye_facing_cache_tests.h"
 #include "fixed_history_tests.h"
+#include "lock_on_orbit_tests.h"
 namespace mmvr { Settings& GetSettings() noexcept { static Settings s; return s; } }
 #include "geometry_culling_tests.h"
 int main(){
+    LockOnOrbitChecks();
+    // Body sweep covers small/silver/bombable/bronze/huge boulder radii,
+    // both travel directions, complete tunnelling, vertical clearance and
+    // recovery from a slight pre-existing native overlap.
+    for (float radius : {10.f, 50.f, 55.f, 75.f, 180.f}) {
+        const float edge = radius + 12;
+        check(mmvr::BodyCylinderSweep(-edge - 1, 0, 0, -edge + 3, 0, 0, 12, 45, 0, 0, 0, radius, 70));
+        check(mmvr::BodyCylinderSweep(edge + 1, 0, 0, edge - 3, 0, 0, 12, 45, 0, 0, 0, radius, 70));
+        check(mmvr::BodyCylinderSweep(-edge - 1, 0, 0, edge + 1, 0, 0, 12, 45, 0, 0, 0, radius, 70));
+        check(!mmvr::BodyCylinderSweep(-edge - 1, 0, edge + 1, edge + 1, 0, edge + 1, 12, 45, 0, 0, 0, radius, 70));
+        check(!mmvr::BodyCylinderSweep(-edge - 1, 71, 0, edge + 1, 71, 0, 12, 45, 0, 0, 0, radius, 70));
+        check(!mmvr::BodyCylinderSweep(-edge - 1, -46, 0, edge + 1, -46, 0, 12, 45, 0, 0, 0, radius, 70));
+        check(!mmvr::BodyCylinderSweep(-edge + 1, 0, 0, -edge - 3, 0, 0, 12, 45, 0, 0, 0, radius, 70));
+        check(mmvr::BodyCylinderSweep(-edge + 1, 0, 0, -edge + 3, 0, 0, 12, 45, 0, 0, 0, radius, 70));
+    }
+
     {
         const auto identity=mmvr::PoseMatrix({{0,0,0,1},{0,0,0}});
         const XrFovf fov{-.8f,.9f,.7f,-.65f};
@@ -550,6 +569,51 @@ int main(){
         check(!mmvr::MenuRowVisible(mmvr::SkipTwoHoursRow));
     }
     // Navigation walks every setting exactly once and debounces trigger holds.
+    {
+        mmvr::MenuState menu; menu.tab=mmvr::NativeTab; menu.open=true;
+        menu.exactStatesAvailable=true;
+        const auto entries=mmvr::VrMenuSearchEntries(menu);
+        int seen[mmvr::AssignmentFirst]{};
+        for (const auto& entry:entries) {
+            check(mmvr::VrMenuSearchMatch("VR menu",entry));
+            check(mmvr::VrMenuSearchMatch(entry.label,entry));
+            check(mmvr::VrMenuSearchMatch(mmvr::CompactSearchText(entry.label),entry));
+            check(!mmvr::VrMenuSearchMatch("no-such-option-zzzz",entry));
+            check(!mmvr::VrMenuSearchMatch("VR,-VR",entry));
+            check(mmvr::VrMenuSearchMatch("no-such-option-zzzz,VR",entry));
+            check(!mmvr::VrMenuSearchMatch("  , -  ",entry));
+            check(menu.FocusSearchRow(entry.row));
+            check(menu.tab==mmvr::MenuSections[entry.section].tab && menu.expanded[entry.section]);
+            check(menu.Selected()==entry.row);
+            check(menu.first<=menu.row && menu.row<menu.first+mmvr::MenuVisibleRows);
+            for(int i=0;i<mmvr::MenuSectionCount;++i)check(menu.expanded[i]==(i==entry.section));
+            mmvr::NativeMenuInput input{}; input.confirm=true;
+            check(menu.ConsumeSearchInput(input) && menu.searchInputRelease);
+            input.confirm=false; input.navigateY=1;
+            check(menu.ConsumeSearchInput(input) && menu.searchInputRelease);
+            input.navigateY=0;
+            check(menu.ConsumeSearchInput(input) && !menu.searchInputRelease);
+            check(!menu.ConsumeSearchInput(input));
+            if(entry.row<mmvr::AssignmentFirst)++seen[entry.row];
+        }
+        for(int row=0;row<mmvr::AssignmentFirst;++row)
+            check(seen[row]==(mmvr::MenuRowVisible(row)?1:0));
+        const auto oldTab=menu.tab, oldRow=menu.row;
+        for(int bad:{-1,mmvr::AssignmentFirst,mmvr::MenuRows+mmvr::MenuSectionCount,
+                     int(mmvr::Setting::PhysicalSword),int(mmvr::Setting::AreaPanoramaScreens)})
+            check(!menu.FocusSearchRow(bad) && menu.tab==oldTab && menu.row==oldRow);
+        if(!mmvr::PrivateDebugTools)check(!menu.FocusSearchRow(mmvr::MenuRows+33));
+        menu.gameplayAvailable=false;
+        check(!menu.FocusSearchRow(mmvr::MenuRows+35));
+        for(const auto& entry:mmvr::VrMenuSearchEntries(menu))check(entry.section!=35);
+        for(const auto& form:mmvr::FormProfiles) {
+            menu.playerForm=int(form.id);
+            for(const auto& entry:mmvr::VrMenuSearchEntries(menu))if(entry.row==int(mmvr::Setting::EyeHeight)) {
+                check(std::string(entry.label)==mmvr::SettingDefinitions[int(form.eyeHeight)].label);
+                check(menu.FocusSearchRow(entry.row) && menu.Selected()==int(form.eyeHeight));
+            }
+        }
+    }
     mmvr::MenuState tabs;int visits[mmvr::MenuRows]{};
     for(int t=0;t<mmvr::TabCount;++t){for(int row=0;row<mmvr::TabRows(t);++row)++visits[mmvr::TabSetting(t,row)];}
     for(int i=0;i<mmvr::MenuRows;++i)check(visits[i]==(mmvr::MenuRowVisible(i)?1:0));
@@ -1111,6 +1175,19 @@ int main(){
             if(mmvr::StickControl(action))check(output.sticks[action-9].x==raw.sticks[source-9].x);
             else check(output.value[action]==raw.value[source]);
         }
+        int invalidWrites=0;
+        for (auto pair : {std::pair{-1,0}, {13,0}, {0,-1}, {0,13}, {0,9}, {9,0}})
+            mmvr::AssignControl(defaults,pair.first,pair.second,[&](auto,float){++invalidWrites;});
+        check(invalidWrites==0);
+        for (const auto& profile : mmvr::compat::Profiles()) {
+            for(int source=0;source<mmvr::ControlCount;++source)
+                check(mmvr::ControlAvailable(source,&profile,&profile)==
+                      !(source==5 && profile.layout==mmvr::compat::Layout::Generic));
+            check(!mmvr::ControlAvailable(-1,&profile,&profile));
+            check(!mmvr::ControlAvailable(13,&profile,&profile));
+        }
+        for(int source=0;source<mmvr::ControlCount;++source)
+            check(mmvr::ControlAvailable(source,nullptr,nullptr));
         defaults.Set(mmvr::Setting::BindA,9);check(mmvr::ControlSource(defaults,0)==0);
         defaults.Set(mmvr::Setting::BindMove,std::numeric_limits<float>::quiet_NaN());check(mmvr::ControlSource(defaults,9)==9);
         mmvr::BindingEditor editor;mmvr::ControlSample input;
@@ -1323,4 +1400,3 @@ int main(){
     StateTrackingChecks();
     std::puts("Shared VR core checks passed");
 }
-

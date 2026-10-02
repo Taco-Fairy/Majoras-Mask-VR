@@ -5,6 +5,7 @@
 #include "2s2h/BenGui/UIWidgets.hpp"
 #include "2s2h/Rando/StaticData/StaticData.h"
 #include "2s2h/BenPort.h"
+#include "2s2h/Network/Anchor/Anchor.h"
 #include <cstring>
 
 // Image Icons
@@ -470,6 +471,7 @@ void CheckTrackerDrawNonLogicalList() {
                                                                           : IM_COL32(255, 255, 255, 0));
                     if (ImGui::IsItemClicked()) {
                         randoSaveCheck.skipped = !randoSaveCheck.skipped;
+                        Anchor::Instance->SendPacket_SetCheckStatus(randoCheckId);
                     }
                     ImGui::TableNextColumn();
                 }

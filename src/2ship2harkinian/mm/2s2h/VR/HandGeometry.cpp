@@ -145,6 +145,10 @@ mmvr::HandPoint WorldPosition(const XrPosef& pose, const mmvr::TrackingFrame& fr
 }
 namespace mmvrgame {
 void ResetHandGeometry(){for(auto& hand:hands)hand.Reset();lastTime=0;lastView={};}
+float HandContactRadius(const Player* player, float trackingScale) {
+    return (player && player->transformation == PLAYER_FORM_GORON ? 6.f : 3.5f) *
+        mmvr::GetSettings().Get(mmvr::Setting::HandScale) * trackingScale;
+}
 mmvr::TrackingFrame ResolveHandGeometry(PlayState* play, Player* player,
     const mmvr::TrackingFrame& filtered, const mmvr::TrackingFrame& raw,
     const mmvr::Matrix& view, const mmvr::Matrix& relativeHead) {
@@ -172,7 +176,7 @@ mmvr::TrackingFrame ResolveHandGeometry(PlayState* play, Player* player,
         mmvr::HandPoint palm{};
         for(int k=0;k<3;++k)palm[k]=model.m[3][k]+275.f*model.m[1][k]-target[k];
         target=mmvr::HandAdd(target,palm);controller=mmvr::HandAdd(controller,palm);
-        float radius=(player->transformation==PLAYER_FORM_GORON?6.f:3.5f)*mmvr::GetSettings().Get(mmvr::Setting::HandScale)*raw.trackingScale;
+        const float radius=HandContactRadius(player,raw.trackingScale);
         auto query=[&](mmvr::HandPoint point,float r,mmvr::HandContact& hit) {
             return WorldContact(play->colCtx,player,point,r,hit)||PropContact(play,player,point,r,hit);
         };

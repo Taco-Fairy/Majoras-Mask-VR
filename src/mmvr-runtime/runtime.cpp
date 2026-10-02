@@ -1007,29 +1007,30 @@ class TheaterRuntime {
                 const int result = binding.Update(physicalControls, turnDelta);
                 if (result == 1 && changeSetting) {
                     AssignControl(settings, binding.action, binding.source, changeSetting);
-                    binding.Cancel();
-                    inputRelease = true;
-                    handChangeRelease = true;
-                    ++trackingEpoch;
-                    selector.Cancel();
-                    assignment.Cancel();
-                    CancelMaskGestures();
-                    maskPending = pendingSlot = -1;
-                    throwArmed = throwRequested = false;
+                    ControlBindingsChanged();
                     nextMenuStep = displayTime + 250000000;
                 }
                 ClearPad();
                 return;
             }
             const auto navigate = MenuNavigateInput(stick, item), adjust = MenuAdjustInput(stick, item);
-            if (menu.NavigateTabs(Float(target), useValue)) {
+            if (menu.ConsumeSearchInput({0, turnDelta, navigate.x, navigate.y, adjust.x, adjust.y,
+                                         Bool(buttons[0]), Bool(buttons[1]), Bool(buttons[2])})) {
+                ClearPad();
+                return;
+            }
+            const bool captureNativeClick = menu.tab == NativeTab && menu.nativeInput.captureTabSwitch;
+            if (!captureNativeClick && menu.NavigateTabs(Float(target), useValue)) {
                 Pulse(DominantController(settings), .15f);
                 nextMenuStep = displayTime + 180000000;
             }
             if (menu.tab == NativeTab) {
+                const bool captureTabSwitch = menu.nativeInput.captureTabSwitch;
                 menu.nativeInput = { uint64_t(displayTime), std::clamp(turnDelta, .001f, .1f),
                     navigate.x, navigate.y, adjust.x, adjust.y,
-                    Bool(buttons[0]), Bool(buttons[1]), Bool(buttons[2]) };
+                    Bool(buttons[0]), Bool(buttons[1]), Bool(buttons[2]), adjust.y,
+                    DominantInput(settings, physicalControls.value[11], physicalControls.value[12]) > .65f,
+                    captureTabSwitch };
                 ClearPad();
                 return;
             }
@@ -1087,9 +1088,7 @@ class TheaterRuntime {
                 } else if (confirmed == ResetControlsRow) {
                     for (int i = 0; i < ControlCount; ++i)
                         changeSetting(ControlSetting(i), float(i));
-                    inputRelease = true;
-                    handChangeRelease = true;
-                    ++trackingEpoch;
+                    ControlBindingsChanged();
                 } else if (confirmed >= 0 && confirmed < AssignmentFirst) {
                     const auto& d = SettingDefinitions[confirmed];
                     const bool toggle = d.minimum == 0 && d.maximum == 1 && d.step == 1;
@@ -1125,6 +1124,9 @@ class TheaterRuntime {
                             inputRelease=true;
                         }
                     }
+                }
+                else if (confirmed == SaveGameRow && sceneGameplay) {
+                    gameSaveRequested.store(true);
                 }
                 else if (confirmed == MainMenuRow && sceneGameplay) {
                     if (menu.confirmMainMenu) {
@@ -1922,6 +1924,15 @@ class TheaterRuntime {
         sceneRelease = false;
         inputRelease = true;
         ClearPad();
+    }
+    void ClearBindingState() {
+        ResetPhysicalInput();
+        handChangeRelease = true;
+        logicalButtons = {};
+        logicalChanged = {};
+        recoveryHeld = 0;
+        recoveryLatched = false;
+        snapLatched = false;
     }
     bool GetPreparedTiming(RenderFrameTiming& timing) const noexcept {
         if (!preparedFramePending) return false;
@@ -3208,6 +3219,19 @@ double MaskClock() {
     return std::chrono::duration<double>(std::chrono::steady_clock::now().time_since_epoch()).count();
 }
 } // namespace
+void ControlBindingsChanged() noexcept {
+    GetBindingEditor().Cancel();
+    ++trackingEpoch;
+    selector.Cancel();
+    assignment.Cancel();
+    assignmentPositionPending = false;
+    CancelMaskGestures();
+    maskPending = pendingSlot = -1;
+    throwArmed = throwRequested = false;
+    lockOn = {};
+    ClearPad();
+    if (runtime) runtime->ClearBindingState();
+}
 void SetDialogueChoice(bool active) noexcept { dialogueChoice = active; }
 void SetMaskGrabBlocker(bool (*callback)(int)) noexcept { maskGrabBlocker = callback; }
 void SetMaskInventory(int selected, int worn, bool allowed) noexcept {
@@ -3360,6 +3384,14 @@ void OpenSystemSettings() {
 }
 MenuState& GetMenu() noexcept {
     return menu;
+}
+bool OpenVRMenuSearchResult(int row) noexcept {
+    const bool wasOpen = menu.open;
+    if (!menu.FocusSearchRow(row)) return false;
+    // Desktop search may open a closed headset menu. An embedded search keeps
+    // the existing panel anchor; both paths wait for the selecting input to lift.
+    if (!wasOpen) systemMenuOpenRequested = true;
+    return true;
 }
 const SelectorState& GetSelector() noexcept {
     return selector;

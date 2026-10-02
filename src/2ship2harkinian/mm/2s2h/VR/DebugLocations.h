@@ -118,4 +118,10 @@ constexpr DebugLocation debugLocations[]={
  {"Test - bomb and magic arrows",ENTRANCE(TERMINA_FIELD,0),SCENE_00KEIKOKU,-1,13},
  {"Test - stray fairy billboard",ENTRANCE(LAUNDRY_POOL,0),SCENE_ALLEY,-1,14},
  {"Test - shield size and clock",ENTRANCE(TERMINA_FIELD,0),SCENE_00KEIKOKU,-1,15},
+ {"Rock-blocked grotto - outside",ENTRANCE(TERMINA_FIELD,0),SCENE_00KEIKOKU,-1,16},
+ {"Milk Bar - complete stage quest",ENTRANCE(MILK_BAR,0),SCENE_MILK_BAR,-1,17},
+ {"Toto final rehearsal - Human",ENTRANCE(MILK_BAR,0),SCENE_MILK_BAR,-1,18},
+ {"Toto final rehearsal - Goron",ENTRANCE(MILK_BAR,0),SCENE_MILK_BAR,-1,19},
+ {"Toto final rehearsal - Zora",ENTRANCE(MILK_BAR,0),SCENE_MILK_BAR,-1,20},
+ {"Toto final rehearsal - Deku",ENTRANCE(MILK_BAR,0),SCENE_MILK_BAR,-1,21},
 };

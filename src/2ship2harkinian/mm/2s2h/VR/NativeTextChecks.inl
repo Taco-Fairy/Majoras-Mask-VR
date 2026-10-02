@@ -4,38 +4,51 @@ template<class Check> void VerifyNativeTextKeyboard(Check check) {
     const std::string savedSeed=CVarGetString("gRando.InputSeed", "");
     for (int kind=0;kind<3;++kind) {
         char value[64]="";
-        CVarSetString("gRando.InputSeed", "");
+        CVarSetString("gRando.InputSeed", kind==0 ? "x" : "");
         ImGui::ClearActiveID();
-        panel.keyboard=false; panel.pointerMode=false; panel.previousConfirm=false;
+        panel.keyboard=false; panel.pointerMode=true; panel.previousClick=false;
         panel.previousBack=false;panel.queuedKey=panel.heldKey=ImGuiKey_None;
         unsigned ticks=0;
-        auto textStep=[&](float x=0,float y=0,bool confirm=false) {
-            mmvr::NativeMenuInput input{};input.navigateX=x;input.navigateY=y;input.confirm=confirm;
+        ImVec2 fieldCenter{512,300};
+        auto textStep=[&](ImVec2 cursor, bool click=false) {
+            mmvr::NativeMenuInput input{};input.click=click;
+            panel.pointer=cursor;
             SyncKeyboard(input);FeedInput(input);ImGui::NewFrame();
             ImGui::SetNextWindowPos({48,190});ImGui::SetNextWindowSize({928,223});
             ImGui::Begin(("Text activation fixture##"+std::to_string(kind)).c_str(),nullptr,ImGuiWindowFlags_NoDecoration);
             if(ticks==0)ImGui::SetWindowFocus();
-            if(kind==0)Rando::DrawVrSeedInput();
+            if(kind==0) {
+                Rando::DrawVrSeedInput();
+                if(ticks==0) {
+                    const auto lo=ImGui::GetItemRectMin(),hi=ImGui::GetItemRectMax();
+                    fieldCenter={(lo.x+hi.x)*.5f,(lo.y+hi.y)*.5f};
+                    CVarSetString("gRando.InputSeed", "");
+                }
+            }
             else if(kind==1)ImGui::InputText("Other text",value,sizeof(value));
             else ImGui::InputTextMultiline("Multiline",value,sizeof(value),{500,100});
+            if(kind!=0) {
+                const auto lo=ImGui::GetItemRectMin(),hi=ImGui::GetItemRectMax();
+                fieldCenter={(lo.x+hi.x)*.5f,(lo.y+hi.y)*.5f};
+            }
             ImGui::SetItemDefaultFocus();
             ImGui::End();SyncKeyboard(input);DrawKeyboard(input);ImGui::Render();
             std::ofstream("native-keyboard-trace.log",std::ios::app)
                 <<kind<<","<<ticks<<","<<panel.keyboard<<","<<panel.context->NavId<<","<<panel.context->ActiveId
                 <<","<<panel.context->NavCursorVisible<<","<<panel.context->NavActivateFlags<<","<<panel.keyboardRow<<","<<panel.keyboardColumn<<"\n";
-            panel.previousConfirm=confirm;panel.previousBack=false;++ticks;
+            panel.previousClick=click;panel.previousBack=false;++ticks;
         };
-        for(int i=0;i<5;++i)textStep();
-        textStep(0,-1);textStep();textStep(); // Resume stick navigation after the pointer fixture.
-        textStep(0,0,true);textStep();textStep();
-        check(panel.keyboard,"A did not open keyboard for text field");
-        check((kind==0?std::string(CVarGetString("gRando.InputSeed","")):std::string(value)).empty(),"Opening A typed a stray character");
-        textStep(1,0);textStep();textStep(0,0,true);textStep();textStep();
-        check((kind==0?std::string(CVarGetString("gRando.InputSeed","")):std::string(value))=="2","Keyboard navigation did not type into field");
-        for(int i=0;i<4;++i){textStep(0,-1);textStep();}
-        for(int i=0;i<2;++i){textStep(1,0);textStep();}
-        textStep(0,0,true);textStep();textStep();
-        check(!panel.keyboard && !ImGui::GetCurrentContext()->ActiveId,"Enter did not finish text editing");
+        textStep({512,300});
+        textStep(fieldCenter,true);
+        check(panel.keyboard,"Dominant trigger did not open keyboard for text field");
+        check((kind==0?std::string(CVarGetString("gRando.InputSeed","")):std::string(value)).empty(),"Opening text field typed a stray character");
+        textStep({102,800});
+        textStep({183,800},true);
+        textStep({183,800});
+        check((kind==0?std::string(CVarGetString("gRando.InputSeed","")):std::string(value))=="2","Cursor and trigger did not type into field");
+        textStep({858,988},true);
+        textStep({858,988});
+        check(!panel.keyboard && !ImGui::GetCurrentContext()->ActiveId,"Trigger-clicked Enter did not finish text editing");
         check((kind==0?std::string(CVarGetString("gRando.InputSeed","")):std::string(value))=="2","Enter lost or changed typed value");
     }
     CVarSetString("gRando.InputSeed",savedSeed.c_str());
