@@ -99,7 +99,7 @@ bool PhysicalMelee(int w) {
     return w >= PLAYER_MELEEWEAPON_SWORD_KOKIRI && w <= PLAYER_MELEEWEAPON_DEKU_STICK;
 }
 bool SwordDrawn(Player* p) {
-    if (!p || p->transformation != PLAYER_FORM_HUMAN)
+    if (!p || p->actor.id != ACTOR_PLAYER || p->transformation != PLAYER_FORM_HUMAN)
         return false;
     const int weapon = Player_GetMeleeWeaponHeld(p);
     return weapon >= PLAYER_MELEEWEAPON_SWORD_KOKIRI && weapon <= PLAYER_MELEEWEAPON_SWORD_TWO_HANDED;
@@ -303,9 +303,7 @@ void UpdateShield(const mmvr::TrackingFrame& frame, const mmvr::Matrix& rightHan
     }
 }
 const void* TrackedShieldMesh(Player* p) {
-    const bool keepWithSword = p && mmvr::GetSettings().Get(mmvr::Setting::AlwaysShield) > .5f &&
-                               SwordDrawn(p) && p->currentShield != PLAYER_SHIELD_NONE;
-    if ((!shieldValid && !keepWithSword) || !p || p->transformation != PLAYER_FORM_HUMAN)
+    if (!p || !shieldValid || p->transformation != PLAYER_FORM_HUMAN)
         return nullptr;
     if (p->currentShield == PLAYER_SHIELD_HEROS_SHIELD)
         return gLinkHumanRightHandHoldingHerosShieldDL;

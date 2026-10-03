@@ -71,7 +71,6 @@ enum class Setting {
     HideLegs,
     HideSheath,
     HideShield,
-    AlwaysShield,
     HudHorizontalSpread,
     HudSize,
     PhysicalBow,
@@ -199,6 +198,7 @@ enum class Setting {
     HideBunnyHood,
     ShieldVisualSize,
     BowHandSmoothing,
+    AlwaysShield,
     Count
 };
 struct SettingDefinition {
@@ -269,7 +269,6 @@ inline constexpr SettingDefinition SettingDefinitions[] = {
     { "gVR.HideLegs", "Hide legs and waist", 1, 0, 1, 1, "off/on" },
     { "gVR.HideSheath", "Hide sword sheath", 1, 0, 1, 1, "off/on" },
     { "gVR.HideShield", "Hide back shield", 1, 0, 1, 1, "off/on" },
-    { "gVR.AlwaysShield", "Always hold shield when sword is drawn", 0, 0, 1, 1, "off/on" },
     { "gVR.HudHorizontalSpread", "HUD horizontal spread", 100, 0, 300, 5, "%" },
     { "gVR.HudSize", "HUD element size", 1, .5f, 1.5f, .05f, "x" },
     { "gVR.PhysicalBow", "Physical bow", 1, 0, 1, 1, "off/on" },
@@ -401,6 +400,7 @@ inline constexpr SettingDefinition SettingDefinitions[] = {
     { "gVR.HideBunnyHood", "Hide worn Bunny Hood in first person", 1, 0, 1, 1, "off/on" },
     { "gVR.ShieldVisualSize", "Shield visual size", 100, 50, 200, 5, "%" },
     { "gVR.BowHandSmoothing", "Bow holding hand smoothing", 12, 0, 40, 1, "ms" },
+    { "gVR.AlwaysShield", "Always hold shield when sword is drawn", 0, 0, 1, 1, "off/on" },
 };
 static_assert(sizeof(SettingDefinitions) / sizeof(SettingDefinitions[0]) == size_t(Setting::Count));
 inline float BoundSetting(Setting id, float value) {
