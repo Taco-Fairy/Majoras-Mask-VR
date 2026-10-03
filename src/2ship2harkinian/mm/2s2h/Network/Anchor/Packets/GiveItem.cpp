@@ -31,8 +31,40 @@ void Anchor::SendPacket_GiveItem(u16 modId, s16 getItemId, std::string targetTea
     QueueOutgoingPacket(payload);
 }
 
+void Anchor::SendPacket_GiveVanillaItem(u8 itemId) {
+    if (!IsSaveLoaded() || !roomState.syncItemsAndFlags || IS_RANDO || itemId >= ITEM_SHIP) {
+        return;
+    }
+
+    nlohmann::json payload;
+    payload["type"] = GIVE_ITEM;
+    payload["targetTeamId"] = CVarGetString("gNetwork.Anchor.TeamId", "default");
+    payload["addToQueue"] = true;
+    payload["modId"] = 1;
+    payload["getItemId"] = itemId;
+    payload["vanillaItem"] = true;
+
+    QueueOutgoingPacket(payload);
+}
+
 void Anchor::HandlePacket_GiveItem(nlohmann::json payload) {
     if (!IsSaveLoaded() || !roomState.syncItemsAndFlags) {
+        return;
+    }
+
+    if (payload.value("vanillaItem", false)) {
+        if (IS_RANDO) {
+            return;
+        }
+
+        const s16 itemId = payload.value("getItemId", static_cast<s16>(ITEM_NONE));
+        if (itemId < ITEM_OCARINA_OF_TIME || itemId >= ITEM_SHIP) {
+            return;
+        }
+
+        applyingSyncedVanillaItem = true;
+        Item_Give(gPlayState, static_cast<u8>(itemId));
+        applyingSyncedVanillaItem = false;
         return;
     }
 

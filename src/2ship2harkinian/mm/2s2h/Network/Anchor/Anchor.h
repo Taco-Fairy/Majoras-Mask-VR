@@ -64,21 +64,29 @@ typedef struct {
     u8 showLocationsMode; // 0 = none, 1 = team, 2 = all
     u8 teleportMode;      // 0 = off, 1 = team, 2 = all
     u8 syncItemsAndFlags; // 0 = off, 1 = on
+  bool syncGameTime;
+  bool hasGameTime;
+  u8 gameDay;
+  u16 gameTime;
+  s32 timeSpeedOffset;
 } RoomState;
 
 class Anchor : public Network {
   private:
     bool refreshingActors = false;
     bool shouldRefreshActors = false;
+    bool applyingSyncedVanillaItem = false;
     std::queue<nlohmann::json> incomingPacketQueue;
     std::mutex incomingPacketQueueMutex;
     std::queue<nlohmann::json> outgoingPacketQueue;
     std::mutex outgoingPacketQueueMutex;
     std::queue<nlohmann::json> queuedPacketsFromTeamState;
+    bool roomStateReceived = false;
 
     nlohmann::json PrepClientState();
     nlohmann::json PrepRoomState();
     void RegisterHooks();
+    void UpdateGameTimeSync();
     void RefreshClientActors();
     void HandlePacket_AllClientState(nlohmann::json payload);
     void HandlePacket_DamagePlayer(nlohmann::json payload);
@@ -143,6 +151,7 @@ class Anchor : public Network {
     void SendPacket_DamagePlayer(u32 clientId, u8 damageEffect, u8 damage);
     void SendPacket_GameComplete();
     void SendPacket_GiveItem(u16 modId, s16 getItemId, std::string targetTeamId = "");
+    void SendPacket_GiveVanillaItem(u8 itemId);
     void SendPacket_Handshake();
     void SendPacket_PlayerSfx(u16 sfxId);
     void SendPacket_PlayerUpdate();

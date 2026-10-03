@@ -8,12 +8,14 @@
 #include "2s2h/ShipUtils.h"
 #include "2s2h/Rando/Spoiler/Spoiler.h"
 #include "2s2h/Rando/MiscBehavior/MiscBehavior.h"
+#include <chrono>
 
 extern "C" {
 #include "variables.h"
 #include "functions.h"
 extern PlayState* gPlayState;
 }
+extern void UpdateGameTime(u16 gameTime);
 
 // MARK: - Overrides
 
@@ -22,6 +24,12 @@ void Anchor::Enable() {
                     CVarGetInteger("gNetwork.Anchor.Port", 43383));
     ownClientId = CVarGetInteger("gNetwork.Anchor.LastClientId", 0);
     roomState.ownerClientId = 0;
+    roomState.syncGameTime = false;
+    roomState.hasGameTime = false;
+    roomState.gameDay = 0;
+    roomState.gameTime = 0;
+    roomState.timeSpeedOffset = 0;
+    roomStateReceived = false;
 }
 
 void Anchor::Disable() {
@@ -41,6 +49,8 @@ void Anchor::OnConnected() {
 }
 
 void Anchor::OnDisconnected() {
+    roomStateReceived = false;
+    roomState.hasGameTime = false;
     RegisterHooks();
 }
 
@@ -114,6 +124,12 @@ void Anchor::ProcessIncomingPacket(nlohmann::json payload) {
 static bool justReset = false;
 
 void Anchor::RegisterHooks() {
+    COND_HOOK(OnItemGive, isConnected, [&](u8 itemId) {
+        if (roomStateReceived && !IS_RANDO && !applyingSyncedVanillaItem) {
+            SendPacket_GiveVanillaItem(itemId);
+        }
+    });
+
     COND_HOOK(OnSceneInit, isConnected, [&](s16 sceneId, s8 spawnNum) {
         SendPacket_UpdateClientState();
         justReset = false;
@@ -189,7 +205,51 @@ void Anchor::RegisterHooks() {
                 SPDLOG_ERROR("[Anchor] Packet: {}", payload.dump());
             }
         }
+
+        Anchor::Instance->UpdateGameTimeSync();
     });
+}
+
+void Anchor::UpdateGameTimeSync() {
+    if (!roomStateReceived || !isConnected || !IsSaveLoaded()) {
+        return;
+    }
+
+    const bool isRoomOwner = roomState.ownerClientId == ownClientId;
+    const bool isGlobalRoom = std::string("2ship-global") == CVarGetString("gNetwork.Anchor.RoomId", "");
+    if (isRoomOwner) {
+        if (isGlobalRoom || !CVarGetInteger("gNetwork.Anchor.RoomSettings.SyncGameTime", 1)) {
+            return;
+        }
+
+        static auto lastBroadcast = std::chrono::steady_clock::time_point{};
+        const auto now = std::chrono::steady_clock::now();
+        if (lastBroadcast == std::chrono::steady_clock::time_point{} ||
+            now - lastBroadcast >= std::chrono::seconds(1)) {
+            lastBroadcast = now;
+            SendPacket_UpdateRoomState();
+        }
+        return;
+    }
+
+    if (!roomState.syncGameTime || !roomState.hasGameTime) {
+        return;
+    }
+
+    gSaveContext.save.timeSpeedOffset = roomState.timeSpeedOffset;
+
+    s32 delta = static_cast<s32>(roomState.gameTime) - static_cast<s32>(CURRENT_TIME);
+    if (delta > DAY_LENGTH / 2) {
+        delta -= DAY_LENGTH;
+    } else if (delta < -(DAY_LENGTH / 2)) {
+        delta += DAY_LENGTH;
+    }
+
+    if (roomState.gameDay != gSaveContext.save.day || delta > CLOCK_TIME(0, 1) || delta < -CLOCK_TIME(0, 1)) {
+        gSaveContext.save.day = roomState.gameDay;
+        UpdateGameTime(roomState.gameTime);
+        gSaveContext.skyboxTime = roomState.gameTime;
+    }
 }
 
 // MARK: - Misc/Helpers

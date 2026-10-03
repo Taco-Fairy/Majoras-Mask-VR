@@ -197,6 +197,10 @@ void AnchorAdminMenu(WidgetInfo& info) {
                                 UIWidgets::CheckboxOptions().DefaultValue(true).Color(THEME_COLOR))) {
         anchor->SendPacket_UpdateRoomState();
     }
+    if (UIWidgets::CVarCheckbox("Sync Game Time", "gNetwork.Anchor.RoomSettings.SyncGameTime",
+                                UIWidgets::CheckboxOptions().DefaultValue(true).Color(THEME_COLOR))) {
+        anchor->SendPacket_UpdateRoomState();
+    }
 }
 
 void AnchorInstructionsMenu(WidgetInfo& info) {

@@ -30,6 +30,14 @@ nlohmann::json Anchor::PrepRoomState() {
         payload["syncItemsAndFlags"] = CVarGetInteger("gNetwork.Anchor.RoomSettings.SyncItemsAndFlags", 1);
     }
 
+    bool syncGameTime = !isGlobalRoom && CVarGetInteger("gNetwork.Anchor.RoomSettings.SyncGameTime", 1);
+    payload["syncGameTime"] = syncGameTime;
+    if (syncGameTime && IsSaveLoaded()) {
+        payload["gameDay"] = gSaveContext.save.day;
+        payload["gameTime"] = gSaveContext.save.time;
+        payload["timeSpeedOffset"] = gSaveContext.save.timeSpeedOffset;
+    }
+
     return payload;
 }
 
@@ -46,9 +54,18 @@ void Anchor::HandlePacket_UpdateRoomState(nlohmann::json payload) {
         return;
     }
 
-    roomState.ownerClientId = payload["state"].value("ownerClientId", 0);
-    roomState.pvpMode = payload["state"].value("pvpMode", 2);
-    roomState.teleportMode = payload["state"].value("teleportMode", 1);
-    roomState.showLocationsMode = payload["state"].value("showLocationsMode", 1);
-    roomState.syncItemsAndFlags = payload["state"].value("syncItemsAndFlags", 1);
+    const auto& state = payload["state"];
+    roomState.ownerClientId = state.value("ownerClientId", 0);
+    roomState.pvpMode = state.value("pvpMode", 2);
+    roomState.teleportMode = state.value("teleportMode", 1);
+    roomState.showLocationsMode = state.value("showLocationsMode", 1);
+    roomState.syncItemsAndFlags = state.value("syncItemsAndFlags", 1);
+    roomState.syncGameTime = state.value("syncGameTime", false);
+    roomState.hasGameTime = roomState.syncGameTime && state.contains("gameDay") && state.contains("gameTime");
+    if (roomState.hasGameTime) {
+        roomState.gameDay = state.value("gameDay", (u8)0);
+        roomState.gameTime = state.value("gameTime", (u16)0);
+        roomState.timeSpeedOffset = state.value("timeSpeedOffset", (s32)0);
+    }
+    roomStateReceived = true;
 }
