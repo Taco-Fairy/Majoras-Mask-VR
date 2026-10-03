@@ -1196,7 +1196,7 @@ void Play_PostWorldDraw(PlayState* this) {
             gfx->polyXlu.p = xluBody;
             gDPPipeSync(gfx->polyOpa.p++);
             gDPSetScissor(gfx->polyOpa.p++, G_SC_NON_INTERLACE, 0, 0, gScreenWidth, gScreenHeight);
-            KaleidoScopeCall_Draw(this);
+            if (!MMVR_NotebookBook()) KaleidoScopeCall_Draw(this);
             gSPDisplayList(gfx->polyOpa.p++, xluBody);
             gSPEndDisplayList(gfx->polyOpa.p++);
             MMVR_SetPauseCommands(opaBody);
@@ -1770,8 +1770,33 @@ void Play_Draw(PlayState* this) {
     }
 
     if (sBombersNotebookOpen && ((SREG(2) != 2) || (gZBufferPtr == NULL))) {
+#ifdef MMVR_ENABLE
+        if (MMVR_NotebookBook()) {
+            // Preserve the paused world. The high-resolution paper is one
+            // isolated overlay, never projected independently into each eye.
+            Play_DrawMain(this);
+            MMVR_DrawNotebookBinding(this);
+            Gfx* opa = gfxCtx->polyOpa.p;
+            Gfx* xlu = gfxCtx->polyXlu.p;
+            Gfx* body = Graph_GfxPlusOne(opa);
+            Gfx* xluBody = Graph_GfxPlusOne(xlu);
+            gfxCtx->polyOpa.p = body;
+            gfxCtx->polyXlu.p = xluBody;
+            // Paper first, then Message_Draw's overlay commands for its text.
+            gSPDisplayList(gfxCtx->overlay.p++, body);
+            BombersNotebook_Draw(&sBombersNotebook, gfxCtx);
+            Message_Draw(this);
+            gSPDisplayList(gfxCtx->polyOpa.p++, xluBody);
+            gSPEndDisplayList(gfxCtx->polyOpa.p++);
+            gSPEndDisplayList(gfxCtx->polyXlu.p++);
+            Graph_BranchDlist(opa, gfxCtx->polyOpa.p);
+            Graph_BranchDlist(xlu, gfxCtx->polyXlu.p);
+        } else
+#endif
+        {
         BombersNotebook_Draw(&sBombersNotebook, gfxCtx);
         Message_Draw(this);
+        }
     } else {
         Play_DrawMain(this);
     }

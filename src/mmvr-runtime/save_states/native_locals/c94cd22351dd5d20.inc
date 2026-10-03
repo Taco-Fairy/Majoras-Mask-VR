@@ -1201,7 +1201,7 @@ void Play_PostWorldDraw(PlayState* this) {
             gfx->polyXlu.p = xluBody;
             gDPPipeSync(gfx->polyOpa.p++);
             gDPSetScissor(gfx->polyOpa.p++, G_SC_NON_INTERLACE, 0, 0, gScreenWidth, gScreenHeight);
-            KaleidoScopeCall_Draw(this);
+            if (!MMVR_NotebookBook()) KaleidoScopeCall_Draw(this);
             gSPDisplayList(gfx->polyOpa.p++, xluBody);
             gSPEndDisplayList(gfx->polyOpa.p++);
             MMVR_SetPauseCommands(opaBody);
@@ -1269,10 +1269,10 @@ static void Play_FillWorldScreen(GraphicsContext* gfxCtx,u8 r,u8 g,u8 b,u8 a,u8 
     Environment_FillScreen(gfxCtx,r,g,b,a,passes);
 }
 
-static u32 mmvr_local_222e60c92dfe0614;
-static u32 mmvr_local_611e2d661e3b6587;
-static bool mmvr_local_3e960d5ea2af1905;
-static bool mmvr_local_f82c0d5a52d804ad;
+static u32 mmvr_local_399e588c8157e20d;
+static u32 mmvr_local_75dee80a6879120e;
+static bool mmvr_local_b6df419022af9d74;
+static bool mmvr_local_33f1cc4121222cee;
 void Play_DrawMain(PlayState* this) {
 #ifdef MMVR_ENABLE
     Gfx* vrMonochromeWorld = NULL;
@@ -1297,8 +1297,8 @@ void Play_DrawMain(PlayState* this) {
     // This requires not rendering kaleido during this copy to avoid kaleido itself being copied too.
     if ((R_PAUSE_BG_PRERENDER_STATE == PAUSE_BG_PRERENDER_PROCESS ||
          R_PAUSE_BG_PRERENDER_STATE == PAUSE_BG_PRERENDER_READY) &&
-        (mmvr_local_222e60c92dfe0614 != OTRGetGameRenderWidth() || mmvr_local_611e2d661e3b6587 != OTRGetGameRenderHeight() ||
-         mmvr_local_3e960d5ea2af1905 != ResourceMgr_IsAltAssetsEnabled() || !mmvr_local_f82c0d5a52d804ad || sJustClosedBomberNotebook)) {
+        (mmvr_local_399e588c8157e20d != OTRGetGameRenderWidth() || mmvr_local_75dee80a6879120e != OTRGetGameRenderHeight() ||
+         mmvr_local_b6df419022af9d74 != ResourceMgr_IsAltAssetsEnabled() || !mmvr_local_33f1cc4121222cee || sJustClosedBomberNotebook)) {
         R_PAUSE_BG_PRERENDER_STATE = PAUSE_BG_PRERENDER_SETUP;
         recapturePauseBuffer = true;
     }
@@ -1649,12 +1649,12 @@ void Play_DrawMain(PlayState* this) {
                     this->pauseBgPreRender.cvgSave = this->unk_18E58;
 
                     // #region 2S2H [Port] Custom handling for pause prerender background capture
-                    mmvr_local_222e60c92dfe0614 = OTRGetGameRenderWidth();
-                    mmvr_local_611e2d661e3b6587 = OTRGetGameRenderHeight();
-                    mmvr_local_3e960d5ea2af1905 = ResourceMgr_IsAltAssetsEnabled();
-                    mmvr_local_f82c0d5a52d804ad = false;
+                    mmvr_local_399e588c8157e20d = OTRGetGameRenderWidth();
+                    mmvr_local_75dee80a6879120e = OTRGetGameRenderHeight();
+                    mmvr_local_b6df419022af9d74 = ResourceMgr_IsAltAssetsEnabled();
+                    mmvr_local_33f1cc4121222cee = false;
 
-                    FB_CopyToFramebuffer(&sp74, 0, gPauseFrameBuffer, false, &mmvr_local_f82c0d5a52d804ad);
+                    FB_CopyToFramebuffer(&sp74, 0, gPauseFrameBuffer, false, &mmvr_local_33f1cc4121222cee);
 
                     // Set the state back to ready after the recapture is done
                     if (recapturePauseBuffer) {
@@ -1779,19 +1779,44 @@ void Play_Draw(PlayState* this) {
     }
 
     if (sBombersNotebookOpen && ((SREG(2) != 2) || (gZBufferPtr == NULL))) {
+#ifdef MMVR_ENABLE
+        if (MMVR_NotebookBook()) {
+            // Preserve the paused world. The high-resolution paper is one
+            // isolated overlay, never projected independently into each eye.
+            Play_DrawMain(this);
+            MMVR_DrawNotebookBinding(this);
+            Gfx* opa = gfxCtx->polyOpa.p;
+            Gfx* xlu = gfxCtx->polyXlu.p;
+            Gfx* body = Graph_GfxPlusOne(opa);
+            Gfx* xluBody = Graph_GfxPlusOne(xlu);
+            gfxCtx->polyOpa.p = body;
+            gfxCtx->polyXlu.p = xluBody;
+            // Paper first, then Message_Draw's overlay commands for its text.
+            gSPDisplayList(gfxCtx->overlay.p++, body);
+            BombersNotebook_Draw(&sBombersNotebook, gfxCtx);
+            Message_Draw(this);
+            gSPDisplayList(gfxCtx->polyOpa.p++, xluBody);
+            gSPEndDisplayList(gfxCtx->polyOpa.p++);
+            gSPEndDisplayList(gfxCtx->polyXlu.p++);
+            Graph_BranchDlist(opa, gfxCtx->polyOpa.p);
+            Graph_BranchDlist(xlu, gfxCtx->polyXlu.p);
+        } else
+#endif
+        {
         BombersNotebook_Draw(&sBombersNotebook, gfxCtx);
         Message_Draw(this);
+        }
     } else {
         Play_DrawMain(this);
     }
 }
 
-static Input* mmvr_local_37bd02a323bb4c9d = NULL;
+static Input* mmvr_local_498329531a3500b5 = NULL;
 void Play_Main(GameState* thisx) {
     /* persistent local storage is declared above */
     PlayState* this = (PlayState*)thisx;
 
-    mmvr_local_37bd02a323bb4c9d = CONTROLLER1(&this->state);
+    mmvr_local_498329531a3500b5 = CONTROLLER1(&this->state);
     DebugDisplay_Init();
 
     {

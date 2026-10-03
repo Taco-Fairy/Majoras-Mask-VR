@@ -29,11 +29,62 @@ struct MaskGesture {
     XrVector3f previous{};
     bool have = false;
     float grabbedDistance = 0;
+    bool wheelHeld = false, wheelSeen = false, wheelOutside = false;
     void Cancel() {
         carrying = false;
+        wheelHeld = wheelSeen = wheelOutside = false;
         armed = false;
         nearSince = -1;
         have = false;
+    }
+    void HoldFromWheel() {
+        Cancel();
+        carrying = wheelHeld = true;
+        removing = false;
+    }
+    bool UpdateWheel(double time, uint64_t generation, bool allowed, bool tracked, float trigger,
+                     const XrPosef& hand, const XrPosef& head, float faceDistance) {
+        if (!allowed || !tracked || !std::isfinite(time) || !std::isfinite(trigger) ||
+            !std::isfinite(MaskSlotDistance(hand, head))) {
+            Cancel();
+            return false;
+        }
+        // First sample establishes the tracking epoch. Selection while already
+        // at the face must leave the face slot before it can wear the mask.
+        if (!wheelSeen) {
+            epoch = generation;
+            lastTime = time;
+            previous = hand.position;
+            wheelSeen = true;
+            armed = trigger < .25f;
+            wheelOutside = !InMaskFaceSlot(hand, head, faceDistance);
+            return false;
+        }
+        if (time == lastTime) return false;
+        float dx=hand.position.x-previous.x, dy=hand.position.y-previous.y, dz=hand.position.z-previous.z;
+        if (epoch != generation || time < lastTime || time-lastTime > .15 ||
+            !std::isfinite(dx+dy+dz) || dx*dx+dy*dy+dz*dz > .25f*.25f) {
+            Cancel();
+            return false;
+        }
+        lastTime = time;
+        previous = hand.position;
+        if (trigger < .25f) armed = true;
+        if (armed && trigger > .7f) {
+            Cancel(); // Dismiss, including at the face; never also equip.
+            return false;
+        }
+        if (!InMaskFaceSlot(hand, head, faceDistance)) {
+            wheelOutside = true;
+            nearSince = -1;
+        } else if (wheelOutside) {
+            if (nearSince < 0) nearSince = time;
+            if (time-nearSince >= .08) {
+                Cancel();
+                return true;
+            }
+        }
+        return false;
     }
     bool Update(double time, uint64_t generation, bool allowed, bool tracked, float trigger, bool worn,
                 const XrPosef& hand, const XrPosef& head, float faceDistance, float removeDistance) {

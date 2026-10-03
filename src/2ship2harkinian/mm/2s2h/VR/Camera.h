@@ -4,6 +4,10 @@ extern "C" {
 #endif
 struct PlayState;struct Actor;struct Player;
 void MMVR_RegisterCamera(void);
+int MMVR_NotebookBook(void);
+void MMVR_DrawNotebookBinding(struct PlayState*);
+const void* MMVR_PlayerNeckCap(struct Actor*, int limb);
+int MMVR_NotebookTouch(float* x, float* y);
 void MMVR_CameraSaveLoaded(void);
 void MMVR_BeginFormReload(struct PlayState*, struct Player*);
 int MMVR_FormReloadActive(struct PlayState*);
@@ -50,6 +54,7 @@ unsigned short MMVR_GameButtons(void);
 int MMVR_InputYaw(int fallback);
 float MMVR_MovementScale(struct PlayState*,struct Player*);
 int MMVR_HidePlayerLimb(struct Actor*,int limb);
+void MMVR_RecordBodyBone(struct Actor*, int limb, const void* matrix);
 void MMVR_RecordHandSkeletonPalette(struct PlayState*, struct Actor*, void* palette, int count);
 void MMVR_HandPostBegin(struct PlayState*,struct Actor*,int limb);
 void MMVR_HandPostEnd(struct PlayState*,struct Actor*,int limb);

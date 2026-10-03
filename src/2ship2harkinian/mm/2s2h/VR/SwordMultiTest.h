@@ -132,12 +132,14 @@ static void NativeSwordMultiTest(PlayState* play) {
         log<<"monkey wrist hand="<<hand<<" weapon="<<weapon<<" response="<<responded
            <<" stationary="<<stationaryHit<<" intent="<<intent<<" expired="<<expired<<"\n";
         failures+=!responded || stationaryHit || !intent || !expired;
-        mmvr::GetSettings().Set(mmvr::Setting::PhysicalSword,0);
+        // Physical sword is mandatory in first person. Test native fallback
+        // in the reachable third-person mode, not with its removed switch.
+        mmvr::ApplyViewMode(1);
         EnMnk_Update(&monkey.picto.actor,play);
         bool nativeHeight=monkey.collider.dim.height==30;
         failures+=!nativeHeight;
         log<<"monkey native height restored="<<nativeHeight<<"\n";
-        mmvr::GetSettings().Set(mmvr::Setting::PhysicalSword,1);
+        mmvr::ApplyViewMode(2);
         EnMnk_Destroy(&monkey.picto.actor,play);
     }
     // Exercise the native dojo lesson and score consumers using tracked strokes.

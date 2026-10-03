@@ -5,6 +5,7 @@
 #include "solid_hull.h"
 #include "ItemUse.h"
 #include "Interactions.h"
+#include "HandGeometry.h"
 #include "NativeCombat.h"
 #include "Bow.h"
 #include "runtime.h"
@@ -293,7 +294,12 @@ bool TryGrabCarry(PlayState* play, Player* p, int controller, bool preview) {
     const auto palm=CarryPalmPose(sample.pose,controller);
     const Vec3f hand{ palm.m[3][0], palm.m[3][1], palm.m[3][2] };
     Actor* best = nullptr;
-    float nearest = mmvr::GetSettings().Get(mmvr::Setting::CarryGrabDistance) * 40;
+    // The constrained palm rests one hand radius away from the prop surface.
+    // The user's grab margin extends that contact envelope in physical units;
+    // it must not become smaller than a Goron hand under world calibration.
+    const float trackingScale=InteractionTrackingScale();
+    float nearest = HandContactRadius(p,trackingScale) +
+        mmvr::GetSettings().Get(mmvr::Setting::CarryGrabDistance) * 40 * trackingScale;
     for (auto& offer : offers) {
         if (!offer.actor || play->gameplayFrames - offer.frame > 2 || !Live(play, offer.actor))
             continue;

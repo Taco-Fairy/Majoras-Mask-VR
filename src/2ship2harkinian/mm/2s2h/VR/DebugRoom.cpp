@@ -38,6 +38,8 @@ Gfx *ResourceMgr_LoadGfxByName(const char *);
 #include "overlays/actors/ovl_En_Gs/z_en_gs.h"
 #include "overlays/actors/ovl_En_Kusa/z_en_kusa.h"
 #include "overlays/actors/ovl_En_Kusa2/z_en_kusa2.h"
+#include "overlays/actors/ovl_En_Ishi/z_en_ishi.h"
+#include "overlays/actors/ovl_Obj_Bombiwa/z_obj_bombiwa.h"
 #include "overlays/actors/ovl_En_Sellnuts/z_en_sellnuts.h"
 #include "overlays/actors/ovl_Obj_Bean/z_obj_bean.h"
 #include "overlays/actors/ovl_Obj_Tsubo/z_obj_tsubo.h"
@@ -1127,6 +1129,8 @@ extern "C" void MMVR_DebugRoomUpdate(PlayState *play) {
     MaybeStartTownPanorama(play);
     MaybePlaceKoumeCheckpoint(play);
     MaybePlaceInteractionRoomCheckpoint(play);
+    MaybePlaceGrottoRockCheckpoint(play);
+    MaybePlaceStageRehearsalCheckpoint(play);
     if (!MMVR_DebugRoomActive(play) || !GET_PLAYER(play))
         return;
     if (!ready) {

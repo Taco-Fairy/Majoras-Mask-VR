@@ -1,3 +1,4 @@
+#include "2s2h/Enhancements/Saving/SavingEnhancements.h"
 #ifdef MMVR_ENABLE
 #include "renderer_metrics.h"
 #endif
@@ -1025,6 +1026,7 @@ extern "C" void InitOTR(int argc, char* argv[]) {
     AudioCollection::Instance = new AudioCollection();
     LoadGuiTextures();
     ModMenu_LoadArchives();
+    SavingEnhancements_SetVRDefaults();
     BenGui::SetupGuiElements();
     ShipInit::InitAll();
     Rando::Init();
@@ -1283,6 +1285,7 @@ void RunCommands(Gfx* Commands, int time, int step, int denom, int count) {
     MMVR_RegisterCamera();
     MMVR_RegisterMenu();
     mmvr::SetNativePause(MMVR_NormalPause()!=0);
+    mmvr::SetNotebook(MMVR_NotebookBook()!=0);
     mmvr::SetScene(immersive,gPlayState?gPlayState->state.gfxCtx->overlayBuffer:nullptr,
         gPlayState?gPlayState->state.gfxCtx->workBuffer:nullptr);
 #endif
@@ -1456,7 +1459,9 @@ extern "C" void Graph_ProcessGfxCommands(Gfx* commands) {
 
     if (wnd != nullptr) {
 #ifdef MMVR_LOCAL_TEST_TOOLS
-        wnd->SetTargetFps(auditFast ? 10000 : fps);
+        const char* auditSpeed = std::getenv("MMVR_AUDIT_SPEED");
+        const int auditTarget = auditSpeed ? original_fps * std::clamp(std::atoi(auditSpeed), 1, 100) : 10000;
+        wnd->SetTargetFps(auditFast ? auditTarget : fps);
 #else
         wnd->SetTargetFps(fps);
 #endif

@@ -1,5 +1,6 @@
 #ifdef MMVR_ENABLE
 #include "PauseWheel.h"
+#include "ItemUse.h"
 #include "ui.h"
 #include "runtime.h"
 #include <cstdlib>
@@ -22,7 +23,7 @@ extern "C" int MMVR_DrawWheelOutlines(PlayState* play, int page) {
     OPEN_DISPS(play->state.gfxCtx);
     for (int i = 0; i < mmvr::ActiveItemSlots(mmvr::GetSettings()); ++i) {
         const int slot = mmvr::DisplaySlotAssignment(i);
-        if (slot < firstSlot || slot >= firstSlot + 24 || gSaveContext.save.saveInfo.inventory.items[slot] == ITEM_NONE)
+        if (slot < firstSlot || slot >= firstSlot + 24 || mmvrgame::InventorySlotItem(slot) == ITEM_NONE)
             continue;
         drawn |= 1u << i;
         const auto& origin = grid[(slot - firstSlot) * 4];

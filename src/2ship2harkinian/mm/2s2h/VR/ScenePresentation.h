@@ -237,6 +237,11 @@ inline mmvr::SceneFacts SceneFacts(PlayState* play) {
     const void* activeScript = entry && entry->scriptIndex >= 0 &&
         entry->scriptIndex < play->csCtx.scriptListCount && play->csCtx.scriptList
         ? play->csCtx.scriptList[entry->scriptIndex].script : nullptr;
+    const bool historicalFlashback = f.scripted &&
+        (SOH::Cutscene::IsHistoricalFlashback(activeScript) ||
+         (play->csCtx.state != CS_STATE_IDLE && SOH::Cutscene::IsHistoricalFlashback(play->csCtx.script)));
+    f.authoredTheater = f.authoredTheater || historicalFlashback;
+    f.remote = f.remote || historicalFlashback;
     // Script-level participation is evidence of Link's involvement, not an
     // active animation cue. Never reuse stale script metadata during gameplay.
     f.playerInScript = f.scripted && (SOH::Cutscene::HasPlayerParticipation(activeScript) ||
@@ -301,6 +306,7 @@ inline mmvr::SceneView SceneView(PlayState* play) {
     if (NativeViewfinderActive(play))
         return mmvr::SceneView::Player;
     if (play && (play->actorCtx.flags & ACTORCTX_FLAG_TELESCOPE_ON) &&
+        mmvr::GetSettings().Get(mmvr::Setting::TelescopeComfort) < .5f &&
         (play->csCtx.state == CS_STATE_IDLE || mmvr::GetSettings().Get(mmvr::Setting::ComfortHudEffects) < .5f))
         return mmvr::SceneView::Camera;
     return mmvr::ResolveSceneView(facts, mmvr::GetSettings().Get(mmvr::Setting::VrCameraCutscenes) > .5f);

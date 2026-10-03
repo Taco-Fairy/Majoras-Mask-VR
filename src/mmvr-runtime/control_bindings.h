@@ -14,6 +14,31 @@ inline Setting ControlSetting(int action) {
 inline bool BindingSetting(int id) {
     return id >= int(Setting::BindA) && id <= int(Setting::BindRightTrigger);
 }
+inline bool ValidControlBinding(int action, int source) {
+    return action >= 0 && action < ControlCount && source >= 0 && source < ControlCount &&
+           StickControl(action) == StickControl(source);
+}
+// Include inputs synthesized from pads/digital grips, not only direct action bindings.
+// With no active profile, allow offline configuration using the standard names.
+inline bool ControlAvailable(int source, const compat::Profile* left, const compat::Profile* right) {
+    if (source < 0 || source >= ControlCount) return false;
+    const bool isRight = source == 0 || source == 1 || source == 7 || source == 8 || source == 10 || source == 12;
+    const auto* profile = isRight ? right : left;
+    if (!profile) return true;
+    auto has = [&](int action) {
+        return std::any_of(profile->bindings.begin(), profile->bindings.end(),
+                           [&](const auto& binding) { return binding.action == action; });
+    };
+    if (source == 6 || source == 7) return has(source) || has(19 + (isRight ? 1 : 0));
+    if (profile->layout == compat::Layout::Wand) {
+        if (source == 0 || source == 1) return has(26);
+        if (source == 2 || source == 4 || source == 5) return has(25);
+        if (source == 9 || source == 10) return has(isRight ? 22 : 21) && has(isRight ? 24 : 23);
+    }
+    if (profile->layout == compat::Layout::Mixed && source <= 3) return has(isRight ? 26 : 25);
+    if (profile->layout == compat::Layout::Index && source == 4) return has(23) && has(27);
+    return has(source);
+}
 inline int ControlSource(const Settings& settings, int action) {
     return int(settings.Get(ControlSetting(action)));
 }
@@ -51,9 +76,9 @@ inline int BindingConflict(const Settings& settings, int action, int source) {
     return -1;
 }
 template <class Change> inline void AssignControl(const Settings& settings, int action, int source, Change change) {
-    const int previous = ControlSource(settings, action);
-    if (source < 0 || source >= ControlCount || StickControl(action) != StickControl(source))
+    if (!ValidControlBinding(action, source))
         return;
+    const int previous = ControlSource(settings, action);
     // Swap occupied inputs rather than silently disabling the previous action.
     for (int i = 0; i < ControlCount; ++i)
         if (i != action && StickControl(i) == StickControl(action) && ControlSource(settings, i) == source)
@@ -72,12 +97,12 @@ inline const char* ControlName(int source, const compat::Profile* left = nullptr
     auto profile = isRight ? right : left;
     if (!profile)
         return standard[source];
-    if (profile->layout == compat::Layout::Index) {
+    if (profile->layout == compat::Layout::Index || std::strstr(profile->path, "xr-4_controller")) {
         if (source == 2)
             return "Left A";
         if (source == 3)
             return "Left B";
-        if (source == 4)
+        if (source == 4 && profile->layout == compat::Layout::Index)
             return "Left pad pressure";
     }
     if (profile->layout == compat::Layout::Wand || profile->layout == compat::Layout::Mixed) {

@@ -12,12 +12,22 @@ void CollisionCheck_AC_CylVsQuad(PlayState*,CollisionCheckContext*,Collider*,Col
 }
 // Controlled gameplay pipeline checks run only in the existing isolated harness.
 #include "CombatPipelineTest.h"
+#include "QuickWheelTest.h"
+#include "MoonMaskTest.h"
+#include "NotebookTest.h"
+#include "FullBodyTest.h"
+#include "WeaponReachTest.h"
+#include "SwordChargeTest.h"
 #include "HeadAimTest.h"
 #ifdef MMVR_LOCAL_TEST_TOOLS
 #include "GoronRayReviewTest.h"
 #endif
 #include "NativeArmRunTest.h"
 #include "SwordMultiTest.h"
+#include "SavePropOwlTest.h"
+#include "SaveContinueTest.h"
+#include "ControllerBindingsTest.h"
+#include "LockOnOrbitTest.h"
 #include "DamageMatrixTest.h"
 #include "MessageLookupTest.h"
 #include "MessageDecodeTest.h"
@@ -27,6 +37,8 @@ void CollisionCheck_AC_CylVsQuad(PlayState*,CollisionCheckContext*,Collider*,Col
 #include "PuzzleRevealTest.h"
 #include "TowerMoonTest.h"
 #include "NativeTriggerTest.h"
+#include "GrottoCollisionTest.h"
+#include "RockPickupTest.h"
 #include "DebugLocations.h"
 #include "ElderLessonTest.h"
 #include "CrossPosts.h"
@@ -69,6 +81,7 @@ static void NativeCombatFixture(PlayState* play){
 #include "RewardReceiptTest.h"
 #include "ChestReceiptTest.h"
 #include "SongStaffLifecycleTest.h"
+#include "StageRehearsalTest.h"
 #include "FlowerLifecycleTest.h"
 #include "ClimbLifecycleTest.h"
 #include "RepairLifecycleTest.h"
@@ -128,6 +141,17 @@ static mmvr::Pad NativeTestInput(){
   log<<tick<<" file "<<fileTicks<<" index="<<file->buttonIndex<<" mode="<<file->menuMode<<" config="<<file->configMode<<" y="<<int(pad.y)<<"\n";
  }else if(gPlayState&&gSaveContext.gameMode==GAMEMODE_NORMAL){
   ++playTicks;
+  if(std::getenv("MMVR_INTERPOLATION_STACK_TEST")) {
+   if(playTicks==60){FrameInterpolation_VerifyScratch();Ship::Context::GetRawInstance()->GetWindow()->Close();}
+   return pad;
+  }
+  if(std::getenv("MMVR_SWORD_CHARGE_TEST")){if(playTicks==60)NativeSwordChargeTest(gPlayState);return pad;}
+  if(std::getenv("MMVR_QUICK_WHEEL_TEST")){if(playTicks==60)NativeQuickWheelTest(gPlayState);return pad;}
+  if(std::getenv("MMVR_MOON_MASK_TEST")){if(playTicks==60)NativeMoonMaskTest(gPlayState);return pad;}
+  if(std::getenv("MMVR_FULL_BODY_TEST")){NativeFullBodyTest(gPlayState,playTicks);return pad;}
+  if(std::getenv("MMVR_SAVE_CONTINUE_TEST")){if(playTicks==60)NativeSaveContinueTest(gPlayState);return pad;}
+  if(std::getenv("MMVR_NOTEBOOK_BOOK_TEST")){NativeNotebookTest(gPlayState,playTicks);return pad;}
+  if(std::getenv("MMVR_WEAPON_REACH_TEST")){if(playTicks==60)NativeWeaponReachTest(gPlayState);return pad;}
   if(std::getenv("MMVR_COMPONENT_AUDIT")) {
    if(playTicks==60) {
     auto* oldInput=sPlayerControlInput;sPlayerControlInput=CONTROLLER1(&gPlayState->state);
@@ -161,6 +185,7 @@ static mmvr::Pad NativeTestInput(){
    }
    return pad;
   }
+  if(std::getenv("MMVR_SAVE_PROP_OWL_TEST")){if(playTicks==60)NativeSavePropOwlTest(gPlayState);return pad;}
   if(std::getenv("MMVR_HEAD_AIM_TEST")){if(playTicks==60)NativeHeadAimTest(gPlayState);return pad;}
   if(std::getenv("MMVR_ENCOUNTER_TEST"))return NativeEncounterAudit(gPlayState,playTicks);
   if(std::getenv("MMVR_SCENE_RESOURCE_AUDIT")){if(playTicks==60)NativeSceneResourceAudit();return pad;}
@@ -180,6 +205,8 @@ static mmvr::Pad NativeTestInput(){
    }
    return pad;
   }
+  if(std::getenv("MMVR_VR_BINDINGS_TEST")){if(playTicks==60){NativeControllerBindingsTest();Ship::Context::GetRawInstance()->GetWindow()->Close();}return pad;}
+  if(std::getenv("MMVR_LOCK_ON_ORBIT_TEST")){if(playTicks==60){NativeLockOnOrbitTest(gPlayState);Ship::Context::GetRawInstance()->GetWindow()->Close();}return pad;}
   if(std::getenv("MMVR_NATIVE_OPTIONS_TEST")){if(playTicks==60){MMVR_VerifyNativeOptions();Ship::Context::GetRawInstance()->GetWindow()->Close();}return pad;}
   if(std::getenv("MMVR_ZELDA_LESSON_TEST")) return NativeLessonLifecycle(gPlayState,playTicks);
 #ifdef MMVR_STATE_NATIVE_BACKEND
@@ -254,12 +281,25 @@ static mmvr::Pad NativeTestInput(){
   }
 #endif
   if(std::getenv("MMVR_HOT_SPRING_SCOOP_TEST"))return NativeHotSpringScoopTest(gPlayState,playTicks);
+  if(std::getenv("MMVR_STAGE_REHEARSAL"))return NativeStageRehearsal(gPlayState,playTicks);
   if(std::getenv("MMVR_SONG_STAFF"))return NativeSongStaffLifecycle(gPlayState,playTicks);
   if(std::getenv("MMVR_CHEST_RECEIPT"))return NativeChestReceipt(gPlayState,playTicks);
   if(std::getenv("MMVR_REWARD_RECEIPT"))return NativeRewardReceipt(gPlayState,playTicks);
   if(std::getenv("MMVR_BOTTLE_CONTENTS_TEST")){if(playTicks==80)NativeBottleContentsTest(gPlayState);return pad;}
   if(std::getenv("MMVR_ELDER_LESSON_TEST"))return NativeElderLessonTest(gPlayState,playTicks);
   if(std::getenv("MMVR_HOT_SPRING_LANDING_TEST"))return NativeHotSpringLandingTest(gPlayState,playTicks);
+  if(std::getenv("MMVR_GROTTO_ROCK_LANDING_TEST"))return NativeGrottoRockLandingTest(gPlayState,playTicks);
+  if(std::getenv("MMVR_ROCK_PICKUP_TEST")) {
+    mmvr::ApplyViewMode(2);mmvr::SetNativeTestTracking(true);
+    if(playTicks==60) {std::ofstream log("native-rock-pickup.log");NativeRockPickupChecks(gPlayState,log);Ship::Context::GetRawInstance()->GetWindow()->Close();}
+    return pad;
+  }
+  if(std::getenv("MMVR_ROCK_PUNCH_TEST")) {
+    mmvr::ApplyViewMode(2);mmvr::SetNativeTestTracking(true);
+    if(playTicks==60) {std::ofstream log("native-rock-punch.log");NativeRockPunchChecks(gPlayState,log);Ship::Context::GetRawInstance()->GetWindow()->Close();}
+    return pad;
+  }
+  if(std::getenv("MMVR_GROTTO_COLLISION_TEST"))return NativeGrottoCollisionTest(gPlayState,playTicks);
   if(std::getenv("MMVR_WOODFALL_WEB_LANDING_TEST"))return NativeWoodfallWebLandingTest(gPlayState,playTicks);
   if(std::getenv("MMVR_WOODFALL_CRYSTAL_TEST"))return NativeWoodfallCrystalTest(gPlayState,playTicks);
   if(std::getenv("MMVR_SWORD_MULTI_TEST")){if(playTicks==60)NativeSwordMultiTest(gPlayState);return pad;}

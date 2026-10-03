@@ -3,6 +3,16 @@
 #include "projection.h"
 #include <cmath>
 namespace mmvr {
+// Small first-person reach aid for short swords; keep visible mesh, stick
+// flame and native magic disk unchanged. Input/output are native world units.
+inline float SwordCollisionLength(float bladeLength, float trackingScale, float hitboxPercent,
+                                  bool magicExtended) {
+    if (!std::isfinite(bladeLength) || bladeLength <= 0 || !std::isfinite(trackingScale) || trackingScale <= 0)
+        return 0;
+    const float assistance = magicExtended ? 0.f : std::min(bladeLength*.2f, 4.f*trackingScale);
+    const float multiplier = std::isfinite(hitboxPercent) ? std::clamp(hitboxPercent,100.f,200.f)/100.f : 1.f;
+    return (bladeLength+assistance)*multiplier;
+}
 class DoubleTap {
     double last = -100;
 

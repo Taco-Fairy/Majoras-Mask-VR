@@ -38,40 +38,40 @@
       "at": 19073
     },
     {
-      "name": "mmvr_local_222e60c92dfe0614",
+      "name": "mmvr_local_399e588c8157e20d",
       "original": "lastPauseWidth",
       "function": "Play_DrawMain",
       "line": 1280,
-      "at": 48314
+      "at": 48340
     },
     {
-      "name": "mmvr_local_611e2d661e3b6587",
+      "name": "mmvr_local_75dee80a6879120e",
       "original": "lastPauseHeight",
       "function": "Play_DrawMain",
       "line": 1281,
-      "at": 48346
+      "at": 48372
     },
     {
-      "name": "mmvr_local_3e960d5ea2af1905",
+      "name": "mmvr_local_b6df419022af9d74",
       "original": "lastAltAssets",
       "function": "Play_DrawMain",
       "line": 1282,
-      "at": 48380
+      "at": 48406
     },
     {
-      "name": "mmvr_local_f82c0d5a52d804ad",
+      "name": "mmvr_local_33f1cc4121222cee",
       "original": "hasCapturedPauseBuffer",
       "function": "Play_DrawMain",
       "line": 1283,
-      "at": 48412
+      "at": 48438
     },
     {
-      "name": "mmvr_local_37bd02a323bb4c9d",
+      "name": "mmvr_local_498329531a3500b5",
       "original": "prevInput",
       "function": "Play_Main",
-      "line": 1781,
-      "at": 71175
+      "line": 1806,
+      "at": 72314
     }
   ],
-  "sourceSha256": "953bc0e3ab1de377f1f714472da3ae9f54002cbe24ff761d1b3d42d2480f1907"
+  "sourceSha256": "1d33a22fa00d6b00f32f6e87d4aa6222790db91f23e581885771388ad447e6ab"
 }

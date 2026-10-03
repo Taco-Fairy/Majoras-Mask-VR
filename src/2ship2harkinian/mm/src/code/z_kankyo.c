@@ -1865,7 +1865,21 @@ void Environment_DrawSun(PlayState* play) {
                 gDPSetEnvColor(POLY_OPA_DISP++, 180, (u8)(sSunColor * 255.0f), (u8)(sSunColor * 200.0f), sSunEnvAlpha);
             }
             Matrix_Scale(sSunScale, sSunScale, sSunScale, MTXMODE_APPLY);
+#ifdef MMVR_ENABLE
+            // Own the complete sun billboard: a segment-only rotation is not
+            // registered for late stereo replay. Use the native matrix copy,
+            // since star drawing can temporarily replace billboardMtxF.
+            MtxF sunFacing;
+            Matrix_MtxToMtxF(play->billboardMtx, &sunFacing);
+            Matrix_ReplaceRotation(&sunFacing);
+            Mtx* sunMatrix = Matrix_Finalize(play->state.gfxCtx);
+            MMVR_SetBillboardMatrix(sunMatrix, &sunFacing.mf[0][0],
+                play->view.eye.x + play->envCtx.sunPos.x, play->view.eye.y + play->envCtx.sunPos.y,
+                play->view.eye.z + play->envCtx.sunPos.z);
+            gSPMatrix(POLY_OPA_DISP++, sunMatrix, G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+#else
             MATRIX_FINALIZE_AND_LOAD(POLY_OPA_DISP++, play->state.gfxCtx);
+#endif
             Gfx_SetupDL54_Opa(play->state.gfxCtx);
 
             // #region 2S2H [Port] The sun texture was originally broken up into 3 pieces, but this causes
@@ -1879,7 +1893,9 @@ void Environment_DrawSun(PlayState* play) {
                 VTX(32, 32, 0, 2016, 2016, 255, 255, 255, 255),
             };
 
+#ifndef MMVR_ENABLE
             gSPMatrix(POLY_OPA_DISP++, D_01000000_TO_SEGMENTED, G_MTX_NOPUSH | G_MTX_MUL | G_MTX_MODELVIEW);
+#endif
             gDPPipeSync(POLY_OPA_DISP++);
             gDPLoadTextureBlock_4b(POLY_OPA_DISP++, gSun1Tex, G_IM_FMT_I, 64, 64, 0, G_TX_NOMIRROR | G_TX_CLAMP,
                                    G_TX_NOMIRROR | G_TX_CLAMP, 6, 6, G_TX_NOLOD, G_TX_NOLOD);

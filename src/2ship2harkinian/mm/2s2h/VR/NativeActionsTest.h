@@ -67,14 +67,18 @@ static void NativeActionTest(PlayState* play,const Player& baseline,std::ostream
  for(int k=0;k<3;++k)photoAim&=std::abs(eye[k]-photo.m[3][k])<.001&&std::abs(at[k]-(photo.m[3][k]-photo.m[2][k]*1000))<.001;
  sPictoState=PICTO_BOX_STATE_SETUP_PHOTO;mmvrgame::RecordPhotoHead(play,mmvr::YawPose(-.3f,400,2000,600),mmvr::YawPose(0));
  bool frozen=MMVR_ViewToolCamera(play,cam,eye,at,up)&&std::abs(eye[0]-100)<.001&&mmvr::ViewToolKind()==3;
- prepare();play->actorCtx.flags|=ACTORCTX_FLAG_TELESCOPE_ON;p->actor.shape.rot.y=p->actor.focus.rot.y=p->actor.focus.rot.x=0;
+ prepare();mmvr::GetSettings().Set(mmvr::Setting::TelescopeComfort,0);play->actorCtx.flags|=ACTORCTX_FLAG_TELESCOPE_ON;p->actor.shape.rot.y=p->actor.focus.rot.y=p->actor.focus.rot.x=0;
  mmvr::TrackingFrame tracking{};tracking.head.orientation.w=tracking.origin.orientation.w=1;tracking.originEpoch=123456;tracking.timeSeconds=90000;
  mmvr::CameraFrame scope{};play->view.fovy=60;bool scopeActive=MMVR_ScopeEyeOverlay()&&mmvrgame::ViewToolCamera(tracking,scope)&&scope.exclusiveView&&std::abs(scope.projectionZoom-1)<.001;
  tracking.head.orientation={0,std::sin(1.f),0,std::cos(1.f)};tracking.timeSeconds+=.01;play->view.fovy=10;
  for(int i=0;i<45;++i){tracking.timeSeconds+=1./90;mmvrgame::ViewToolCamera(tracking,scope);}
  bool scopeZoom=mmvrgame::ViewToolCamera(tracking,scope)&&scope.projectionZoom>6&&MMVR_ScopeInput(play,p)&&std::abs(p->actor.focus.rot.y-16000)<2&&mmvr::ViewToolFade()>.9;
  play->csCtx.state=CS_STATE_RUN;bool nativeScript=mmvrgame::SceneView(play)==mmvr::SceneView::Camera&&MMVR_ScopeEyeOverlay()&&mmvrgame::ViewToolCamera(tracking,scope)&&!MMVR_ScopeInput(play,p)&&mmvr::ViewToolKind()==2;
- log<<",\"viewToolCameras\":{\"photoAim\":"<<photoAim<<",\"frozenCapture\":"<<frozen<<",\"scope\":"<<scopeActive<<",\"zoomAndBounds\":"<<scopeZoom<<",\"scriptOwnership\":"<<nativeScript<<"}";
+ mmvr::GetSettings().Set(mmvr::Setting::TelescopeComfort,1);
+ bool stableScreen=mmvrgame::SceneView(play)==mmvr::SceneView::Theater&&!MMVR_ScopeEyeOverlay()&&!mmvrgame::ViewToolCamera(tracking,scope)&&!MMVR_ScopeInput(play,p);
+ play->csCtx.state=CS_STATE_IDLE;
+ stableScreen&=mmvrgame::SceneView(play)==mmvr::SceneView::Theater&&!mmvrgame::ViewToolCamera(tracking,scope);
+ log<<",\"viewToolCameras\":{\"photoAim\":"<<photoAim<<",\"frozenCapture\":"<<frozen<<",\"scope\":"<<scopeActive<<",\"zoomAndBounds\":"<<scopeZoom<<",\"scriptOwnership\":"<<nativeScript<<",\"stableScreen\":"<<stableScreen<<"}";
  *cam=savedCam;play->view=savedView;play->csCtx.state=cs;mmvr::SetViewTool(0,1,0);
  sPlayerControlInput=oldControl;mmvr::GetSettings()=settings;*p=saved;gSaveContext=save;controls=input;play->interfaceCtx=savedInterface;play->actorCtx.flags=flags;sPictoState=picto;play->msgCtx=msg;mmvrgame::ClearItemSelection();
 }

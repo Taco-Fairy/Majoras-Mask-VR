@@ -3,75 +3,75 @@
   "include": "4af0c25e9382e31a.inc",
   "variables": [
     {
-      "name": "mmvr_local_ad42f82fcbfc6fd0",
+      "name": "mmvr_local_2214044dd892bc10",
       "original": "rooftopSkyCaptured",
       "function": "Environment_UpdateSkybox",
       "line": 1020,
-      "at": 43348
+      "at": 43378
     },
     {
-      "name": "mmvr_local_cd653a9fb21a02ba",
+      "name": "mmvr_local_0d921d287538aac1",
       "original": "rooftopSkyConfig",
       "function": "Environment_UpdateSkybox",
       "line": 1021,
-      "at": 43390
+      "at": 43421
     },
     {
-      "name": "mmvr_local_542a0369d29828dd",
+      "name": "mmvr_local_59d75f79cbcc886b",
       "original": "rooftopSkyTime",
       "function": "Environment_UpdateSkybox",
       "line": 1022,
-      "at": 43423
+      "at": 43455
     },
     {
-      "name": "mmvr_local_c7c44689a420db36",
+      "name": "mmvr_local_373c8c7002df216d",
       "original": "rooftopLastFrame",
       "function": "Environment_UpdateSkybox",
       "line": 1023,
-      "at": 43454
+      "at": 43487
     },
     {
-      "name": "mmvr_local_b34c529614a32c98",
+      "name": "mmvr_local_fc366c16cd4b96df",
       "original": "vertices",
       "function": "Environment_DrawSun",
-      "line": 1875,
-      "at": 85441
+      "line": 1889,
+      "at": 86311
     },
     {
-      "name": "mmvr_local_199893c4ab8f1d28",
+      "name": "mmvr_local_90d9862c3c953a41",
       "original": "origBillboardMtxF",
       "function": "Ship_DrawSkyboxStarInterpolated",
-      "line": 3261,
-      "at": 140223
+      "line": 3277,
+      "at": 141143
     },
     {
-      "name": "mmvr_local_0e9a145fa15ff54f",
+      "name": "mmvr_local_00acbda6acdcdb91",
       "original": "starVtxData",
       "function": "Ship_DrawSkyboxStarInterpolated",
-      "line": 3262,
-      "at": 140258
+      "line": 3278,
+      "at": 141178
     },
     {
-      "name": "mmvr_local_d821bc1326d72f57",
+      "name": "mmvr_local_728ef22255d1f1fe",
       "original": "D_801DD880",
       "function": "Environment_DrawSkyboxStarsImpl",
-      "line": 3330,
-      "at": 143297
+      "line": 3346,
+      "at": 144236
     },
     {
-      "name": "mmvr_local_7e479505f47fb970",
+      "name": "mmvr_local_d0b9b113e5b5d415",
       "original": "D_801DD8E0",
       "function": "Environment_DrawSkyboxStarsImpl",
-      "line": 3337,
-      "at": 143950
+      "line": 3353,
+      "at": 144889
     },
     {
-      "name": "mmvr_local_c11a3ddb91bb9984",
+      "name": "mmvr_local_dec0d762fa5606a4",
       "original": "D_801DD900",
       "function": "Environment_DrawSkyboxStarsImpl",
-      "line": 3343,
-      "at": 144349
+      "line": 3359,
+      "at": 145288
     }
   ],
-  "sourceSha256": "ee507c82a3440ff1056e1692d69b70fc3ee7c65b5fab2e8959a595430cc51659"
+  "sourceSha256": "ca86aa50b00b16c5016d9168d72e52652039ce070283fd63cdf1890a5822171d"
 }

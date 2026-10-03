@@ -11,12 +11,12 @@ void MMVR_StateVisit_4539cac1cb2049af(MMVR_StateSink* sink) {
     }
     sink->block(sink->context, "code/z_skelanime.c::sDisabledTransformTaskGroups", &sDisabledTransformTaskGroups, sizeof(sDisabledTransformTaskGroups));
     if(sink->layout) {
-    sink->layout(sink->context, "code/z_skelanime.c::AnimTaskQueue_Update::sAnimTaskFuncs::local0", "array:6:pointer:function:void (struct PlayState *, AnimTaskData *)", 0, sizeof(mmvr_local_21d22d03f66f1e14), MMVR_STATE_ALIGN_TYPE(void*), 6);
-    sink->layout(sink->context, "code/z_skelanime.c::AnimTaskQueue_Update::sAnimTaskFuncs::local0[]", "pointer:function:void (struct PlayState *, AnimTaskData *)", (size_t)((const unsigned char*)&(mmvr_local_21d22d03f66f1e14[0])-(const unsigned char*)&(mmvr_local_21d22d03f66f1e14)), sizeof(mmvr_local_21d22d03f66f1e14[0]), MMVR_STATE_ALIGN_TYPE(void*), 1);
+    sink->layout(sink->context, "code/z_skelanime.c::AnimTaskQueue_Update::sAnimTaskFuncs::local0", "array:6:pointer:function:void (struct PlayState *, AnimTaskData *)", 0, sizeof(mmvr_local_d411e767c6f6b630), MMVR_STATE_ALIGN_TYPE(void*), 6);
+    sink->layout(sink->context, "code/z_skelanime.c::AnimTaskQueue_Update::sAnimTaskFuncs::local0[]", "pointer:function:void (struct PlayState *, AnimTaskData *)", (size_t)((const unsigned char*)&(mmvr_local_d411e767c6f6b630[0])-(const unsigned char*)&(mmvr_local_d411e767c6f6b630)), sizeof(mmvr_local_d411e767c6f6b630[0]), MMVR_STATE_ALIGN_TYPE(void*), 1);
     }
-    sink->block(sink->context, "code/z_skelanime.c::AnimTaskQueue_Update::sAnimTaskFuncs::local0", &mmvr_local_21d22d03f66f1e14, sizeof(mmvr_local_21d22d03f66f1e14));
+    sink->block(sink->context, "code/z_skelanime.c::AnimTaskQueue_Update::sAnimTaskFuncs::local0", &mmvr_local_d411e767c6f6b630, sizeof(mmvr_local_d411e767c6f6b630));
     for (size_t mmvr_i0=0; mmvr_i0<6; ++mmvr_i0) {
-    sink->pointer(sink->context, (const void*)&(mmvr_local_21d22d03f66f1e14[mmvr_i0]), 1, "code/z_skelanime.c::AnimTaskQueue_Update::sAnimTaskFuncs::local0[]");
+    sink->pointer(sink->context, (const void*)&(mmvr_local_d411e767c6f6b630[mmvr_i0]), 1, "code/z_skelanime.c::AnimTaskQueue_Update::sAnimTaskFuncs::local0[]");
     }
     sink->function(sink->context, "code/z_skelanime.c::SkelAnime_DrawLimbLod", (void (*)(void))SkelAnime_DrawLimbLod);
     sink->function(sink->context, "code/z_skelanime.c::SkelAnime_DrawLod", (void (*)(void))SkelAnime_DrawLod);

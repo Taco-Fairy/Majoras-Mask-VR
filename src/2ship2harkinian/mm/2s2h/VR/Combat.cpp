@@ -20,6 +20,8 @@
 #include "runtime.h"
 #include "ui.h"
 #include "item_trigger.h"
+#include "2s2h/BenGui/CosmeticEditor.h"
+#include "2s2h/Enhancements/FrameInterpolation/FrameInterpolation.h"
 #include "form_presentation.h"
 #include <cstring>
 #include <atomic>
@@ -30,12 +32,17 @@
 #include <iomanip>
 extern "C" {
 #include "global.h"
+void MMVR_PrioritizeAC(CollisionCheckContext*, Collider*);
+void MMVR_RemoveACOverflow(CollisionCheckContext*, Collider*);
+int MMVR_CollisionACCount(CollisionCheckContext*);
+Collider* MMVR_CollisionACAt(CollisionCheckContext*, int);
 void MMVR_PlayerEquipSword(PlayState* play, Player* player, ItemId item);
 void CollisionCheck_AC(PlayState*, CollisionCheckContext*, Collider*);
 bool Player_IsZTargeting(Player*);
 #include "objects/object_link_child/object_link_child.h"
 #include "overlays/actors/ovl_En_M_Thunder/z_en_m_thunder.h"
 #include "objects/object_link_boy/object_link_boy.h"
+#include "objects/gameplay_keep/gameplay_keep.h"
 }
 // Shared tracked damage volumes and native shield geometry.
 #include "TrackedBody.h"
@@ -130,8 +137,8 @@ void CombatLog(const char* event, PlayState* play, Player* p) {
         float nearest = 100000;
         int target = -1;
         int eligible = 0;
-        for (int i = 0; i < play->colChkCtx.colACCount; ++i) {
-            auto* ac = play->colChkCtx.colAC[i];
+        for (int i = 0; i < MMVR_CollisionACCount(&play->colChkCtx); ++i) {
+            auto* ac = MMVR_CollisionACAt(&play->colChkCtx,i);
             if (!ac || !ac->actor || ac->actor == &p->actor || !(ac->acFlags & AC_ON))
                 continue;
             ++eligible;
@@ -543,10 +550,14 @@ void UpdateSwordDiagnostics(const mmvr::TrackingFrame& frame, mmvr::Matrix& left
     } else {
         float width = deity ? 500.f : weapon == PLAYER_MELEEWEAPON_SWORD_TWO_HANDED ? 340.f : 200.f;
         // Collision assistance never enlarges the rendered sword or flame tip.
-        const float hitScale = stick ? 1.f : settings.Get(mmvr::Setting::SwordHitboxScale) / 100.f;
-        Vec3f collisionTip{base.x+(tip.x-base.x)*hitScale, base.y+(tip.y-base.y)*hitScale,
-                           base.z+(tip.z-base.z)*hitScale};
-        if(hitScale>1.f){
+        const float hitScale = settings.Get(mmvr::Setting::SwordHitboxScale) / 100.f;
+        const float bladeLength = std::sqrt(SQ(tip.x-base.x)+SQ(tip.y-base.y)+SQ(tip.z-base.z));
+        const float collisionLength = stick ? bladeLength*hitScale : mmvr::SwordCollisionLength(
+            bladeLength, frame.trackingScale, settings.Get(mmvr::Setting::SwordHitboxScale), magicExtended);
+        const float lengthScale = bladeLength > .001f ? collisionLength/bladeLength : 1.f;
+        Vec3f collisionTip{base.x+(tip.x-base.x)*lengthScale, base.y+(tip.y-base.y)*lengthScale,
+                           base.z+(tip.z-base.z)*lengthScale};
+        if(lengthScale>1.f){
             Vec3f hit;CollisionPoly* poly=nullptr;int bg=BGCHECK_SCENE;
             if(BgCheck_EntityLineTest2(&play->colCtx,&base,&collisionTip,&hit,&poly,true,true,true,true,&bg,&p->actor))
                 collisionTip=hit;
@@ -617,6 +628,7 @@ void QueuePhysicalCombat(PlayState* play, Player* p) {
         p->shieldQuad.base.colMaterial = COL_MATERIAL_METAL;
         Collider_SetQuadVertices(&p->shieldQuad, &world[0], &world[1], &world[2], &world[3]);
         CollisionCheck_SetAC(play, &play->colChkCtx, &p->shieldQuad.base);
+        MMVR_PrioritizeAC(&play->colChkCtx, &p->shieldQuad.base);
         // Put the shield before the body so an intercepted attack cannot also hit it.
         auto& ctx = play->colChkCtx;
         for (int i = ctx.colACCount - 1; i > 0; --i)
@@ -757,6 +769,69 @@ void ProcessDeityTrigger(PlayState* play) {
         mmvr::HapticPulse(mmvr::SwordController(mmvr::GetSettings()), .2f);
     }
 }
+mmvr::SwordChargeVisual TrackedSwordCharge(PlayState* play) {
+    auto* player = play ? GET_PLAYER(play) : nullptr;
+    const int weapon = player ? Player_GetMeleeWeaponHeld(player) : 0;
+    if (!player || !CombatEligible(play, player) || !MMVR_IndependentSword(player) ||
+        player->transformation != PLAYER_FORM_HUMAN || weapon < 1 || weapon > 4 ||
+        !spin.held || !rawBladeValid || mmvr::GetCombatDiagnostics().blocked ||
+        !gSaveContext.save.saveInfo.playerData.isMagicAcquired ||
+        gSaveContext.save.saveInfo.playerData.magic < 2 || gSaveContext.magicState != MAGIC_STATE_IDLE)
+        return {};
+    return mmvr::SwordChargeEffect(spin.charge,
+        CHECK_WEEKEVENTREG(WEEKEVENTREG_RECEIVED_GREAT_SPIN_ATTACK), play->gameplayFrames);
+}
+
+bool DrawTrackedSwordCharge(PlayState* play, void* handMatrix, bool mirrored) {
+    const auto effect = TrackedSwordCharge(play);
+    if (!handMatrix || !effect.alpha) return false;
+    auto* player = GET_PLAYER(play);
+    // Same sword-local transform, colors, scroll and resource as native
+    // EnMThunder_Draw. Multiply beneath the hand's existing late XR matrix:
+    // there is no simulation-rate world attachment or extra gameplay actor.
+    GraphicsContext* __gfxCtx = play->state.gfxCtx;
+    ::FrameInterpolation_RecordOpenChild(__FILE__, __LINE__);
+    // This is sword-local data beneath a late hand matrix. Actor-relative
+    // adjustment would apply the player's movement a second time.
+    ::FrameInterpolation_IgnoreActorMtx();
+    Gfx* refs[3];
+    Gfx values[3];
+    Graph_OpenDisps(refs, values, __gfxCtx, __FILE__, __LINE__);
+    Matrix_Push();
+    Matrix_Translate(0.f, 220.f, 0.f, MTXMODE_NEW);
+    if (Player_GetMeleeWeaponHeld(player) == PLAYER_MELEEWEAPON_SWORD_GILDED)
+        Matrix_Scale(-1.2f, -.8f, -.6f, MTXMODE_APPLY);
+    else
+        Matrix_Scale(-.7f, -.6f, -.4f, MTXMODE_APPLY);
+    Matrix_RotateXS(0x4000, MTXMODE_APPLY);
+    Matrix_Scale(1.f, effect.pulse, effect.pulse, MTXMODE_APPLY);
+    auto* local = Matrix_Finalize(play->state.gfxCtx);
+    Matrix_Pop();
+    Gfx_SetupDL25_Xlu(__gfxCtx);
+    if (mirrored) gSPSetExtraGeometryMode(POLY_XLU_DISP++, G_EX_INVERT_CULLING);
+    gSPMatrix(POLY_XLU_DISP++, static_cast<Mtx*>(handMatrix), G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+    gSPMatrix(POLY_XLU_DISP++, local, G_MTX_NOPUSH | G_MTX_MUL | G_MTX_MODELVIEW);
+    const u32 frame = play->gameplayFrames;
+    const int y2Scroll = effect.great ? 40 : 20;
+    if (effect.great) {
+        gDPSetPrimColorOverride(POLY_XLU_DISP++, 0, 0x80, 255, 255, 170, effect.alpha,
+                               COSMETIC_ID("Effects.GreatSpinCharge"));
+        gDPSetEnvColor(POLY_XLU_DISP++, 255, 100, 0, 128);
+    } else {
+        gDPSetPrimColorOverride(POLY_XLU_DISP++, 0, 0x80, 170, 255, 255, effect.alpha,
+                               COSMETIC_ID("Effects.SpinSlashCharge"));
+        gDPSetEnvColor(POLY_XLU_DISP++, 0, 100, 255, 128);
+    }
+    gSPSegment(POLY_XLU_DISP++, 0x09,
+        reinterpret_cast<uintptr_t>(Gfx_TwoTexScrollEx(play->state.gfxCtx, 0, (frame * 5) & 0xFF, 0, 32, 32, 1,
+                          (frame * 20) & 0xFF, (frame * y2Scroll) & 0xFF, 8, 8, 5, 0, 20, y2Scroll)));
+    gSPDisplayList(POLY_XLU_DISP++, (Gfx*)gSpinAttackChargingDL);
+    if (mirrored) gSPClearExtraGeometryMode(POLY_XLU_DISP++, G_EX_INVERT_CULLING);
+    ::FrameInterpolation_RecordCloseChild();
+    Graph_CloseDisps(refs, values, __gfxCtx, __FILE__, __LINE__);
+    return true;
+}
+
 void ProcessCombatInput(PlayState* play) {
     if (spinMagicPending) {
         const int state = gSaveContext.magicState;
@@ -869,6 +944,7 @@ extern "C" void MMVR_FilterAttackCollisions(PlayState* play) {
             shieldQueued) {
             mmvr::RemoveQueued(context.colAT, context.colATCount, &p->shieldQuad.base);
             mmvr::RemoveQueued(context.colAC, context.colACCount, &p->shieldQuad.base);
+            MMVR_RemoveACOverflow(&context, &p->shieldQuad.base);
         }
     }
     physicalQuadQueued = shieldQueued = false;

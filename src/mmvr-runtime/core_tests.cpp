@@ -1,3 +1,7 @@
+#include "body_collision.h"
+#include "notebook_book.h"
+#include "body_ik.h"
+#include "body_roll.h"
 #include "interaction_view.h"
 #include "grab_shake.h"
 #include "arm_run_tests.h"
@@ -15,6 +19,7 @@
 #include "flower_camera.h"
 #include "walk_step_camera.h"
 #include "spin_attack.h"
+#include "sword_charge.h"
 #include "view_tools.h"
 #include "eye_resolution.h"
 #include "controller_profiles.h"
@@ -26,6 +31,7 @@
 #include "input.h"
 #include "control_bindings.h"
 #include "ui.h"
+#include "menu_search.h"
 #include "hud_layout.h"
 #include "motion.h"
 #include "throw_arc.h"
@@ -51,9 +57,69 @@ bool close(float a,float b){return std::abs(a-b)<.0001f;}
 #include "state_tracking_tests.h"
 #include "eye_facing_cache_tests.h"
 #include "fixed_history_tests.h"
+#include "lock_on_orbit_tests.h"
 namespace mmvr { Settings& GetSettings() noexcept { static Settings s; return s; } }
 #include "geometry_culling_tests.h"
 int main(){
+    check(mmvr::SwordChargeEffect(.1f,true,0).alpha==0);
+    check(mmvr::SwordChargeEffect(.125f,true,0).alpha==127);
+    check(mmvr::SwordChargeEffect(.16f,true,0).alpha==255);
+    check(!mmvr::SwordChargeEffect(.98f,true,0).great);
+    check(mmvr::SwordChargeEffect(.99f,true,0).great);
+    check(!mmvr::SwordChargeEffect(1.f,false,0).great);
+    check(!mmvr::SwordChargeEffect(std::numeric_limits<float>::infinity(),true,0).alpha);
+    constexpr float chargeWave[]={.1f,.15f,.2f,.25f,.3f,.25f,.2f,.15f};
+    for(unsigned frame=0;frame<32;++frame) {
+        check(close(mmvr::SwordChargeEffect(.5f,false,frame).pulse,1+chargeWave[frame&7]*2));
+        check(close(mmvr::SwordChargeEffect(1.f,true,frame).pulse,1+chargeWave[frame&7]*6));
+    }
+    check(mmvr::Settings{}.Get(mmvr::Setting::QuickWheelItems)==0);
+    check(mmvr::SettingTab(int(mmvr::Setting::QuickWheelItems))==mmvr::ItemsTab);
+    for(float scale : {.5f,1.f,2.f}) for(float blade : {13.77f,15.52f,29.98f,51.48f,47.f}) {
+        float length=blade*scale;
+        float assisted=mmvr::SwordCollisionLength(length,scale,100,false);
+        check(assisted>length && assisted<=length+4.f*scale+.0001f);
+        check(close(mmvr::SwordCollisionLength(length,scale,200,false),assisted*2));
+        check(close(mmvr::SwordCollisionLength(length,scale,100,true),length));
+    }
+    for(int hz : {72,80,90,120}) {
+        mmvr::MaskGesture wheel;
+        XrPosef head{{0,0,0,1},{}}, hand=head;
+        hand.position={0,-.4f,-.4f};
+        wheel.HoldFromWheel();
+        check(wheel.carrying);
+        bool worn=false;
+        for(int i=0;i<30;++i) {
+            if(i==8) hand.position={0,-.2f,-.25f};
+            if(i>=9) hand.position={0,-.12f,-.14f};
+            worn|=wheel.UpdateWheel(i/double(hz),1,true,true,0,hand,head,.2f);
+        }
+        check(worn&&!wheel.carrying);
+        wheel.HoldFromWheel();
+        check(!wheel.UpdateWheel(1,2,true,true,1,hand,head,.2f));
+        check(!wheel.UpdateWheel(1.01,2,true,true,1,hand,head,.2f)&&wheel.carrying);
+        check(!wheel.UpdateWheel(1.02,2,true,true,0,hand,head,.2f)&&wheel.carrying);
+        check(!wheel.UpdateWheel(1.03,2,true,true,1,hand,head,.2f)&&!wheel.carrying);
+        wheel.HoldFromWheel();
+        wheel.UpdateWheel(2,3,true,true,0,hand,head,.2f);
+        check(!wheel.UpdateWheel(2.01,4,true,true,0,hand,head,.2f)&&!wheel.carrying);
+    }
+    LockOnOrbitChecks();
+    // Body sweep covers small/silver/bombable/bronze/huge boulder radii,
+    // both travel directions, complete tunnelling, vertical clearance and
+    // recovery from a slight pre-existing native overlap.
+    for (float radius : {10.f, 50.f, 55.f, 75.f, 180.f}) {
+        const float edge = radius + 12;
+        check(mmvr::BodyCylinderSweep(-edge - 1, 0, 0, -edge + 3, 0, 0, 12, 45, 0, 0, 0, radius, 70));
+        check(mmvr::BodyCylinderSweep(edge + 1, 0, 0, edge - 3, 0, 0, 12, 45, 0, 0, 0, radius, 70));
+        check(mmvr::BodyCylinderSweep(-edge - 1, 0, 0, edge + 1, 0, 0, 12, 45, 0, 0, 0, radius, 70));
+        check(!mmvr::BodyCylinderSweep(-edge - 1, 0, edge + 1, edge + 1, 0, edge + 1, 12, 45, 0, 0, 0, radius, 70));
+        check(!mmvr::BodyCylinderSweep(-edge - 1, 71, 0, edge + 1, 71, 0, 12, 45, 0, 0, 0, radius, 70));
+        check(!mmvr::BodyCylinderSweep(-edge - 1, -46, 0, edge + 1, -46, 0, 12, 45, 0, 0, 0, radius, 70));
+        check(!mmvr::BodyCylinderSweep(-edge + 1, 0, 0, -edge - 3, 0, 0, 12, 45, 0, 0, 0, radius, 70));
+        check(mmvr::BodyCylinderSweep(-edge + 1, 0, 0, -edge + 3, 0, 0, 12, 45, 0, 0, 0, radius, 70));
+    }
+
     {
         const auto identity=mmvr::PoseMatrix({{0,0,0,1},{0,0,0}});
         const XrFovf fov{-.8f,.9f,.7f,-.65f};
@@ -550,6 +616,51 @@ int main(){
         check(!mmvr::MenuRowVisible(mmvr::SkipTwoHoursRow));
     }
     // Navigation walks every setting exactly once and debounces trigger holds.
+    {
+        mmvr::MenuState menu; menu.tab=mmvr::NativeTab; menu.open=true;
+        menu.exactStatesAvailable=true;
+        const auto entries=mmvr::VrMenuSearchEntries(menu);
+        int seen[mmvr::AssignmentFirst]{};
+        for (const auto& entry:entries) {
+            check(mmvr::VrMenuSearchMatch("VR menu",entry));
+            check(mmvr::VrMenuSearchMatch(entry.label,entry));
+            check(mmvr::VrMenuSearchMatch(mmvr::CompactSearchText(entry.label),entry));
+            check(!mmvr::VrMenuSearchMatch("no-such-option-zzzz",entry));
+            check(!mmvr::VrMenuSearchMatch("VR,-VR",entry));
+            check(mmvr::VrMenuSearchMatch("no-such-option-zzzz,VR",entry));
+            check(!mmvr::VrMenuSearchMatch("  , -  ",entry));
+            check(menu.FocusSearchRow(entry.row));
+            check(menu.tab==mmvr::MenuSections[entry.section].tab && menu.expanded[entry.section]);
+            check(menu.Selected()==entry.row);
+            check(menu.first<=menu.row && menu.row<menu.first+mmvr::MenuVisibleRows);
+            for(int i=0;i<mmvr::MenuSectionCount;++i)check(menu.expanded[i]==(i==entry.section));
+            mmvr::NativeMenuInput input{}; input.confirm=true;
+            check(menu.ConsumeSearchInput(input) && menu.searchInputRelease);
+            input.confirm=false; input.navigateY=1;
+            check(menu.ConsumeSearchInput(input) && menu.searchInputRelease);
+            input.navigateY=0;
+            check(menu.ConsumeSearchInput(input) && !menu.searchInputRelease);
+            check(!menu.ConsumeSearchInput(input));
+            if(entry.row<mmvr::AssignmentFirst)++seen[entry.row];
+        }
+        for(int row=0;row<mmvr::AssignmentFirst;++row)
+            check(seen[row]==(mmvr::MenuRowVisible(row)?1:0));
+        const auto oldTab=menu.tab, oldRow=menu.row;
+        for(int bad:{-1,mmvr::AssignmentFirst,mmvr::MenuRows+mmvr::MenuSectionCount,
+                     int(mmvr::Setting::PhysicalSword),int(mmvr::Setting::AreaPanoramaScreens)})
+            check(!menu.FocusSearchRow(bad) && menu.tab==oldTab && menu.row==oldRow);
+        if(!mmvr::PrivateDebugTools)check(!menu.FocusSearchRow(mmvr::MenuRows+33));
+        menu.gameplayAvailable=false;
+        check(!menu.FocusSearchRow(mmvr::MenuRows+35));
+        for(const auto& entry:mmvr::VrMenuSearchEntries(menu))check(entry.section!=35);
+        for(const auto& form:mmvr::FormProfiles) {
+            menu.playerForm=int(form.id);
+            for(const auto& entry:mmvr::VrMenuSearchEntries(menu))if(entry.row==int(mmvr::Setting::EyeHeight)) {
+                check(std::string(entry.label)==mmvr::SettingDefinitions[int(form.eyeHeight)].label);
+                check(menu.FocusSearchRow(entry.row) && menu.Selected()==int(form.eyeHeight));
+            }
+        }
+    }
     mmvr::MenuState tabs;int visits[mmvr::MenuRows]{};
     for(int t=0;t<mmvr::TabCount;++t){for(int row=0;row<mmvr::TabRows(t);++row)++visits[mmvr::TabSetting(t,row)];}
     for(int i=0;i<mmvr::MenuRows;++i)check(visits[i]==(mmvr::MenuRowVisible(i)?1:0));
@@ -1111,6 +1222,19 @@ int main(){
             if(mmvr::StickControl(action))check(output.sticks[action-9].x==raw.sticks[source-9].x);
             else check(output.value[action]==raw.value[source]);
         }
+        int invalidWrites=0;
+        for (auto pair : {std::pair{-1,0}, {13,0}, {0,-1}, {0,13}, {0,9}, {9,0}})
+            mmvr::AssignControl(defaults,pair.first,pair.second,[&](auto,float){++invalidWrites;});
+        check(invalidWrites==0);
+        for (const auto& profile : mmvr::compat::Profiles()) {
+            for(int source=0;source<mmvr::ControlCount;++source)
+                check(mmvr::ControlAvailable(source,&profile,&profile)==
+                      !(source==5 && profile.layout==mmvr::compat::Layout::Generic));
+            check(!mmvr::ControlAvailable(-1,&profile,&profile));
+            check(!mmvr::ControlAvailable(13,&profile,&profile));
+        }
+        for(int source=0;source<mmvr::ControlCount;++source)
+            check(mmvr::ControlAvailable(source,nullptr,nullptr));
         defaults.Set(mmvr::Setting::BindA,9);check(mmvr::ControlSource(defaults,0)==0);
         defaults.Set(mmvr::Setting::BindMove,std::numeric_limits<float>::quiet_NaN());check(mmvr::ControlSource(defaults,9)==9);
         mmvr::BindingEditor editor;mmvr::ControlSample input;
@@ -1319,8 +1443,135 @@ int main(){
         check(mmvr::HeadAimedPose(socket,mmvr::Matrix{},true).m[2][2]==socket.m[2][2]);
         check(mmvr::Settings{}.Get(mmvr::Setting::HeadItemAim)==0);
     }
+    {
+        mmvr::NotebookContact contact;
+        mmvr::TrackingFrame frame{};
+        frame.handTracked[0] = frame.handTracked[1] = true;
+        frame.hands[0].orientation.w = frame.hands[1].orientation.w = 1;
+        frame.originEpoch = 8;
+        for (int side = 0; side < 2; ++side) for (int rotation = 0; rotation < 40; ++rotation) {
+            const float yaw = float(rotation)*.15f;
+            frame.hands[side] = {{0,std::sin(yaw/2),0,std::cos(yaw/2)}, {1,1.2f,-2}};
+            auto paper = mmvr::NotebookPose(frame.hands[side]);
+            auto composed = mmvr::PoseMatrix(mmvr::NotebookPagePose(frame.hands[side]));
+            for(int r=0;r<4;++r)for(int c=0;c<4;++c)check(std::abs(paper.m[r][c]-composed.m[r][c])<.0001f);
+            for(int leaf=0;leaf<2;++leaf) for(float u:{-.12f,0.f,.12f}) {
+                const auto leafPose=mmvr::NotebookLeafPose(mmvr::NotebookPagePose(frame.hands[side]),leaf);
+                auto page=mmvr::PoseMatrix(leafPose);
+                auto freeHand = [&](float z) {
+                    auto tip = mmvr::Multiply(mmvr::YawPose(0,u,.07f,z),page);
+                    frame.hands[1-side] = {{0,0,0,1}, {tip.m[3][0],tip.m[3][1]-.015f,tip.m[3][2]+.09f}};
+                };
+                contact.Reset(); freeHand(.1f); check(!contact.Update(frame,side,true).active);
+                freeHand(.01f); auto hit=contact.Update(frame,side,true);
+                const float x=30+(u+(leaf?1.f:-1.f)*mmvr::NotebookWidth*.25f)/mmvr::NotebookWidth*576+288;
+                const float y=10+(.5f-.07f/mmvr::NotebookHeight)*454;
+                check(hit.active && std::abs(hit.x-x)<.01f && std::abs(hit.y-y)<.01f);
+                check(!contact.Update(frame,side,true).active);
+                frame.originEpoch++;check(!contact.Update(frame,side,true).active);
+                check(!contact.Update(frame,side,false).active);
+                // Both inner edges meet exactly at the palm spine.
+                auto edge=mmvr::Multiply(mmvr::YawPose(0,(leaf?-1.f:1.f)*mmvr::NotebookWidth*.25f),page);
+                for(int c=0;c<3;++c) check(std::abs(edge.m[3][c]-paper.m[3][c])<.0001f);
+            }
+        }
+        check(mmvr::Settings{}.Get(mmvr::Setting::TelescopeComfort)==1);
+    }
     ArmRunChecks();
+    {
+        using namespace mmvr;
+        using namespace mmvr::body;
+        for(int side:{-1,1}) for(float scale:{.5f,1.f,2.f}) for(int i=0;i<80;++i) {
+            auto shoulder=mmvr::YawPose(.13f*i,0,30,0);
+            for(int r=0;r<3;++r) for(int c=0;c<3;++c) shoulder.m[r][c]*=.01f*scale;
+            Vec elbowPos=Transform({float(side)*1000,0,0},shoulder);
+            Vec wristPos=Transform({float(side)*2000,0,0},shoulder);
+            auto elbow=shoulder,wrist=shoulder;
+            elbow.m[3][0]=elbowPos.x;elbow.m[3][1]=elbowPos.y;elbow.m[3][2]=elbowPos.z;
+            wrist.m[3][0]=wristPos.x;wrist.m[3][1]=wristPos.y;wrist.m[3][2]=wristPos.z;
+            auto target=mmvr::YawPose(.2f*i,scale*(5+22*std::sin(.17f*i)),30+scale*18*std::cos(.23f*i),scale*14*std::sin(.11f*i));
+            auto result=Solve(shoulder,elbow,wrist,target,{float(side)*.6f,-.85f,0});
+            check(result.valid);
+            check(Length(Transform({float(side)*1000,0,0},result.upper)-Position(result.lower))<.001f);
+            check(Length(Transform({float(side)*1000,0,0},result.lower)-Position(target))<.001f);
+            check(std::memcmp(&target,&result.wrist,sizeof(target))==0);
+            check(Finite(result.upper)&&Finite(result.lower));
+        }
+        // Animated root displacement, torso lean/turn, head yaw and world scale:
+        // the visible neck is fixed to the HMD target without stretching torso.
+        for(float scale:{.5f,1.f,2.f}) for(int i=0;i<80;++i) {
+            float yaw=.07f*i, lean=.4f*std::sin(i*.2f);
+            auto animation=mmvr::Multiply(mmvr::PoseMatrix({{std::sin(lean/2),0,0,std::cos(lean/2)},{0,0,0}}),
+                mmvr::YawPose(yaw,3.f*i,2.f*std::sin(i),-4.f*i));
+            mmvr::Matrix bones[mmvr::BodyBoneCount]{};
+            bones[0]=mmvr::Multiply(mmvr::YawPose(0,-8*scale,30*scale),animation);
+            bones[3]=mmvr::Multiply(mmvr::YawPose(0,8*scale,30*scale),animation);
+            bones[6]=mmvr::Multiply(mmvr::YawPose(0,0,34*scale),animation);
+            bones[7]=mmvr::Multiply(mmvr::YawPose(0,0,15*scale),animation);
+            auto target=mmvr::YawPose(-.11f*i,20,40*scale,30),correction=mmvr::Matrix{};
+            check(AnchorTorso(bones,yaw,target,correction));
+            check(Length(Transform(Position(bones[6]),correction)-Position(target))<.001f);
+            const auto waist=Transform(Position(bones[7]),correction);
+            check(std::abs(waist.x-20)<.001f && std::abs(waist.z-30)<.001f);
+            check(std::abs(Length(waist-Position(target))-19*scale)<.001f);
+            const auto shoulder=Transform(Position(bones[3]),correction)-Transform(Position(bones[0]),correction);
+            check(Length(shoulder-Vec{target.m[0][0],target.m[0][1],target.m[0][2]}*(16*scale))<.001f);
+        }
+        auto a=mmvr::YawPose(0),b=mmvr::YawPose(0,10),c=mmvr::YawPose(0,20);
+        check(!Solve(a,b,c,mmvr::YawPose(0,10000),{0,-1,0}).valid);
+        check(!Solve({},b,c,a,{0,-1,0}).valid);
+        Settings formSettings;
+        for(int form=0;form<5;++form) check(FullBodyForForm(formSettings,form)==(form>=2));
+        formSettings.Set(Setting::FullBody,0);
+        check(!FullBodyForForm(formSettings,4) && FullBodyForForm(formSettings,2));
+        formSettings.Set(Setting::GoronBody,1);
+        check(FullBodyForForm(formSettings,1));
+        check(!FullBodyForForm(formSettings,-1) && !FullBodyForForm(formSettings,5));
+        // Hold an upright render pose through a whole roll while native matrices
+        // rotate independently. Both translation and actor yaw remain supported.
+        RollPose roll;
+        int actor=0, address[24]{};
+        auto root=YawPose(.2f,100,40,70);
+        roll.Begin(true,false,&actor,1,4,root,0xFFFFFF);
+        for(unsigned limb=0;limb<24;++limb)
+            roll.Record(limb,&address[limb],Multiply(YawPose(0,float(limb),20,0),root));
+        for(int frame=0;frame<40;++frame) {
+            auto travel=YawPose(.2f+frame*.1f,100+frame*3.f,40+frame,70);
+            roll.Begin(true,true,&actor,1,4,travel,0xFFFFFF);
+            check(!roll.Waiting());
+            for(unsigned limb=0;limb<24;++limb) {
+                auto native=PoseMatrix({{std::sin(frame*.15f),0,0,std::cos(frame*.15f)},{0,0,0}});
+                auto unchanged=native;
+                roll.Record(limb,&address[limb],native);
+                const auto* held=roll.Find(&address[limb]);
+                check(held!=nullptr);
+                auto expected=Multiply(YawPose(0,float(limb),20,0),travel);
+                for(int row=0;row<4;++row) for(int col=0;col<4;++col)
+                    check(std::abs(held->m[row][col]-expected.m[row][col])<.001f);
+                check(std::memcmp(&native,&unchanged,sizeof(native))==0);
+            }
+        }
+        roll.Begin(true,false,&actor,1,4,root,0xFFFFFF);
+        check(!roll.Find(&address[0]) && !roll.Waiting());
+        roll.Begin(true,true,&actor,2,4,root,0xFFFFFF);
+        check(roll.Waiting() && !roll.Find(&address[0])); // Scene/load/recenter.
+        roll.Begin(true,false,&actor,2,4,root,1);
+        roll.Record(0,&address[0],root);
+        roll.Begin(true,true,&actor,2,2,root,1);
+        check(roll.Waiting()); // Never borrow a different form's pose.
+        roll.Begin(false,true,&actor,2,2,root,1);
+        check(!roll.Waiting() && !roll.Find(&address[0])); // Theater/disabled.
+        check(mmvr::Settings{}.Get(mmvr::Setting::FullBody)==1);
+        check(mmvr::Settings{}.Get(mmvr::Setting::MotionBlur)==0);
+        for (int alpha=0;alpha<256;++alpha) for (bool stereo:{false,true})
+            for (bool hud:{false,true}) for (bool enabled:{false,true}) {
+                const auto route=mmvr::RouteMotionBlur(alpha,true,stereo,hud,enabled);
+                check(route.eyeAlpha==(enabled?alpha:0));
+                check(route.consumeNative==(!enabled || (stereo && !hud)));
+                const auto flat=mmvr::RouteMotionBlur(alpha,false,false,hud,enabled);
+                check(flat.eyeAlpha==alpha && !flat.consumeNative);
+            }
+    }
     StateTrackingChecks();
     std::puts("Shared VR core checks passed");
 }
-

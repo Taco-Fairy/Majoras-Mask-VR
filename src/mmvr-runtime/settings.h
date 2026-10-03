@@ -198,6 +198,15 @@ enum class Setting {
     HideBunnyHood,
     ShieldVisualSize,
     BowHandSmoothing,
+    LockOnOrbit,
+    QuickWheelItems,
+    TelescopeComfort,
+    FullBody,
+    MotionBlur,
+    GoronBody,
+    ZoraBody,
+    DekuBody,
+    FierceDeityBody,
     AlwaysShield,
     Count
 };
@@ -400,6 +409,15 @@ inline constexpr SettingDefinition SettingDefinitions[] = {
     { "gVR.HideBunnyHood", "Hide worn Bunny Hood in first person", 1, 0, 1, 1, "off/on" },
     { "gVR.ShieldVisualSize", "Shield visual size", 100, 50, 200, 5, "%" },
     { "gVR.BowHandSmoothing", "Bow holding hand smoothing", 12, 0, 40, 1, "ms" },
+    { "gVR.LockOnOrbit", "Lock-on target camera orbit", 0, 0, 1, 1, "off/on" },
+    { "gVR.QuickWheelItems", "Ready masks and ocarina on selection", 0, 0, 1, 1, "off/on" },
+    { "gVR.TelescopeComfort", "Stable telescope screen", 1, 0, 1, 1, "off/on" },
+    { "gVR.FullBody", "Human body with tracked arms (Experimental)", 1, 0, 1, 1, "off/on" },
+    { "gVR.MotionBlur", "Motion blur", 0, 0, 1, 1, "off/on" },
+    { "gVR.GoronBody", "Goron body (Very experimental)", 0, 0, 1, 1, "off/on" },
+    { "gVR.ZoraBody", "Zora body (Experimental)", 1, 0, 1, 1, "off/on" },
+    { "gVR.DekuBody", "Deku body (Experimental)", 1, 0, 1, 1, "off/on" },
+    { "gVR.FierceDeityBody", "Fierce Deity body (Experimental)", 0, 0, 1, 1, "off/on" },
     { "gVR.AlwaysShield", "Always hold shield when sword is drawn", 0, 0, 1, 1, "off/on" },
 };
 static_assert(sizeof(SettingDefinitions) / sizeof(SettingDefinitions[0]) == size_t(Setting::Count));
@@ -433,6 +451,12 @@ struct Settings {
         values[size_t(id)] = BoundSetting(id, value);
     }
 };
+// Native PLAYER_FORM order: Fierce Deity, Goron, Zora, Deku, Human.
+inline bool FullBodyForForm(const Settings& settings, int form) {
+    constexpr Setting options[]{Setting::FierceDeityBody, Setting::GoronBody,
+        Setting::ZoraBody, Setting::DekuBody, Setting::FullBody};
+    return form >= 0 && form < 5 && settings.Get(options[form]) > .5f;
+}
 inline constexpr int MaxItemSlots = 8;
 inline int ActiveItemSlots(const Settings& s) {
     return int(s.Get(Setting::ItemSlotCount));

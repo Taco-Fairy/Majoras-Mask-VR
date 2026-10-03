@@ -1111,12 +1111,21 @@ s32 Collider_ResetLineOC(struct PlayState* play, OcLine* line) {
  * Initializes CollisionCheckContext.
  * Clears all collider arrays, disables SAC, and sets flags for drawing colliders.
  */
+#ifdef MMVR_ENABLE
+extern void MMVR_ClearACOverflow(CollisionCheckContext*);
+extern int MMVR_AddACOverflow(CollisionCheckContext*, Collider*);
+extern int MMVR_CollisionACCount(CollisionCheckContext*);
+extern Collider* MMVR_CollisionACAt(CollisionCheckContext*, int);
+#endif
 void CollisionCheck_InitContext(struct PlayState* play, CollisionCheckContext* colChkCtx) {
     colChkCtx->sacFlags = 0;
     CollisionCheck_ClearContext(play, colChkCtx);
 }
 
 void CollisionCheck_DestroyContext(struct PlayState* play, CollisionCheckContext* colChkCtx) {
+#ifdef MMVR_ENABLE
+    MMVR_ClearACOverflow(colChkCtx);
+#endif
 }
 
 /**
@@ -1130,6 +1139,9 @@ void CollisionCheck_ClearContext(struct PlayState* play, CollisionCheckContext* 
         return;
     }
 
+#ifdef MMVR_ENABLE
+    MMVR_ClearACOverflow(colChkCtx);
+#endif
     colChkCtx->colATCount = 0;
     colChkCtx->colACCount = 0;
     colChkCtx->colOCCount = 0;
@@ -1252,7 +1264,11 @@ s32 CollisionCheck_SetAC(struct PlayState* play, CollisionCheckContext* colChkCt
         return -1;
     }
     if (colChkCtx->colACCount >= ARRAY_COUNT(colChkCtx->colAC)) {
+#ifdef MMVR_ENABLE
+        return MMVR_AddACOverflow(colChkCtx, col);
+#else
         return -1;
+#endif
     }
     if (colChkCtx->sacFlags & SAC_ON) {
         return -1;
@@ -1311,6 +1327,9 @@ struct TriNorm2 D_801EE6C8;
 /**
  * Sets collider as an OC (object collider) for the current frame, allowing it to detect other OCs.
  */
+#ifdef MMVR_ENABLE
+extern int MMVR_ChooseOCOverflowSlot(struct PlayState*, CollisionCheckContext*, Collider*);
+#endif
 s32 CollisionCheck_SetOC(struct PlayState* play, CollisionCheckContext* colChkCtx, Collider* col) {
     s32 index;
 
@@ -1323,6 +1342,13 @@ s32 CollisionCheck_SetOC(struct PlayState* play, CollisionCheckContext* colChkCt
         return -1;
     }
     if (colChkCtx->colOCCount >= ARRAY_COUNT(colChkCtx->colOC)) {
+#ifdef MMVR_ENABLE
+        index = MMVR_ChooseOCOverflowSlot(play, colChkCtx, col);
+        if (index >= 0) {
+            colChkCtx->colOC[index] = col;
+            return index;
+        }
+#endif
         return -1;
     }
     if (colChkCtx->sacFlags & SAC_ON) {
@@ -1429,107 +1455,107 @@ void CollisionCheck_NoBlood(struct PlayState* play, Collider* col, Vec3f* v) {
  * Spawns blue blood drops.
  * Used by collider types HIT0 and HIT8.
  */
-static EffectSparkInit mmvr_local_97bfc3d6bdd861c2;
+static EffectSparkInit mmvr_local_7877ff9fd1d229be;
 void CollisionCheck_BlueBlood(struct PlayState* play, Collider* col, Vec3f* v) {
     /* persistent local storage is declared above */
     s32 effectIndex;
 
-    mmvr_local_97bfc3d6bdd861c2.position.x = v->x;
-    mmvr_local_97bfc3d6bdd861c2.position.y = v->y;
-    mmvr_local_97bfc3d6bdd861c2.position.z = v->z;
-    mmvr_local_97bfc3d6bdd861c2.uDiv = 5;
-    mmvr_local_97bfc3d6bdd861c2.vDiv = 5;
-    mmvr_local_97bfc3d6bdd861c2.colorStart[0].r = 10;
-    mmvr_local_97bfc3d6bdd861c2.colorStart[0].g = 10;
-    mmvr_local_97bfc3d6bdd861c2.colorStart[0].b = 200;
-    mmvr_local_97bfc3d6bdd861c2.colorStart[0].a = 255;
-    mmvr_local_97bfc3d6bdd861c2.colorStart[1].r = 0;
-    mmvr_local_97bfc3d6bdd861c2.colorStart[1].g = 0;
-    mmvr_local_97bfc3d6bdd861c2.colorStart[1].b = 128;
-    mmvr_local_97bfc3d6bdd861c2.colorStart[1].a = 255;
-    mmvr_local_97bfc3d6bdd861c2.colorStart[2].r = 0;
-    mmvr_local_97bfc3d6bdd861c2.colorStart[2].g = 0;
-    mmvr_local_97bfc3d6bdd861c2.colorStart[2].b = 128;
-    mmvr_local_97bfc3d6bdd861c2.colorStart[2].a = 255;
-    mmvr_local_97bfc3d6bdd861c2.colorStart[3].r = 0;
-    mmvr_local_97bfc3d6bdd861c2.colorStart[3].g = 0;
-    mmvr_local_97bfc3d6bdd861c2.colorStart[3].b = 128;
-    mmvr_local_97bfc3d6bdd861c2.colorStart[3].a = 255;
-    mmvr_local_97bfc3d6bdd861c2.colorEnd[0].r = 0;
-    mmvr_local_97bfc3d6bdd861c2.colorEnd[0].g = 0;
-    mmvr_local_97bfc3d6bdd861c2.colorEnd[0].b = 32;
-    mmvr_local_97bfc3d6bdd861c2.colorEnd[0].a = 0;
-    mmvr_local_97bfc3d6bdd861c2.colorEnd[1].r = 0;
-    mmvr_local_97bfc3d6bdd861c2.colorEnd[1].g = 0;
-    mmvr_local_97bfc3d6bdd861c2.colorEnd[1].b = 32;
-    mmvr_local_97bfc3d6bdd861c2.colorEnd[1].a = 0;
-    mmvr_local_97bfc3d6bdd861c2.colorEnd[2].r = 0;
-    mmvr_local_97bfc3d6bdd861c2.colorEnd[2].g = 0;
-    mmvr_local_97bfc3d6bdd861c2.colorEnd[2].b = 64;
-    mmvr_local_97bfc3d6bdd861c2.colorEnd[2].a = 0;
-    mmvr_local_97bfc3d6bdd861c2.colorEnd[3].r = 0;
-    mmvr_local_97bfc3d6bdd861c2.colorEnd[3].g = 0;
-    mmvr_local_97bfc3d6bdd861c2.colorEnd[3].b = 64;
-    mmvr_local_97bfc3d6bdd861c2.colorEnd[3].a = 0;
-    mmvr_local_97bfc3d6bdd861c2.timer = 0;
-    mmvr_local_97bfc3d6bdd861c2.duration = 16;
-    mmvr_local_97bfc3d6bdd861c2.speed = 8.0f;
-    mmvr_local_97bfc3d6bdd861c2.gravity = -1.0f;
+    mmvr_local_7877ff9fd1d229be.position.x = v->x;
+    mmvr_local_7877ff9fd1d229be.position.y = v->y;
+    mmvr_local_7877ff9fd1d229be.position.z = v->z;
+    mmvr_local_7877ff9fd1d229be.uDiv = 5;
+    mmvr_local_7877ff9fd1d229be.vDiv = 5;
+    mmvr_local_7877ff9fd1d229be.colorStart[0].r = 10;
+    mmvr_local_7877ff9fd1d229be.colorStart[0].g = 10;
+    mmvr_local_7877ff9fd1d229be.colorStart[0].b = 200;
+    mmvr_local_7877ff9fd1d229be.colorStart[0].a = 255;
+    mmvr_local_7877ff9fd1d229be.colorStart[1].r = 0;
+    mmvr_local_7877ff9fd1d229be.colorStart[1].g = 0;
+    mmvr_local_7877ff9fd1d229be.colorStart[1].b = 128;
+    mmvr_local_7877ff9fd1d229be.colorStart[1].a = 255;
+    mmvr_local_7877ff9fd1d229be.colorStart[2].r = 0;
+    mmvr_local_7877ff9fd1d229be.colorStart[2].g = 0;
+    mmvr_local_7877ff9fd1d229be.colorStart[2].b = 128;
+    mmvr_local_7877ff9fd1d229be.colorStart[2].a = 255;
+    mmvr_local_7877ff9fd1d229be.colorStart[3].r = 0;
+    mmvr_local_7877ff9fd1d229be.colorStart[3].g = 0;
+    mmvr_local_7877ff9fd1d229be.colorStart[3].b = 128;
+    mmvr_local_7877ff9fd1d229be.colorStart[3].a = 255;
+    mmvr_local_7877ff9fd1d229be.colorEnd[0].r = 0;
+    mmvr_local_7877ff9fd1d229be.colorEnd[0].g = 0;
+    mmvr_local_7877ff9fd1d229be.colorEnd[0].b = 32;
+    mmvr_local_7877ff9fd1d229be.colorEnd[0].a = 0;
+    mmvr_local_7877ff9fd1d229be.colorEnd[1].r = 0;
+    mmvr_local_7877ff9fd1d229be.colorEnd[1].g = 0;
+    mmvr_local_7877ff9fd1d229be.colorEnd[1].b = 32;
+    mmvr_local_7877ff9fd1d229be.colorEnd[1].a = 0;
+    mmvr_local_7877ff9fd1d229be.colorEnd[2].r = 0;
+    mmvr_local_7877ff9fd1d229be.colorEnd[2].g = 0;
+    mmvr_local_7877ff9fd1d229be.colorEnd[2].b = 64;
+    mmvr_local_7877ff9fd1d229be.colorEnd[2].a = 0;
+    mmvr_local_7877ff9fd1d229be.colorEnd[3].r = 0;
+    mmvr_local_7877ff9fd1d229be.colorEnd[3].g = 0;
+    mmvr_local_7877ff9fd1d229be.colorEnd[3].b = 64;
+    mmvr_local_7877ff9fd1d229be.colorEnd[3].a = 0;
+    mmvr_local_7877ff9fd1d229be.timer = 0;
+    mmvr_local_7877ff9fd1d229be.duration = 16;
+    mmvr_local_7877ff9fd1d229be.speed = 8.0f;
+    mmvr_local_7877ff9fd1d229be.gravity = -1.0f;
 
-    Effect_Add(play, &effectIndex, EFFECT_SPARK, 0, 1, &mmvr_local_97bfc3d6bdd861c2);
+    Effect_Add(play, &effectIndex, EFFECT_SPARK, 0, 1, &mmvr_local_7877ff9fd1d229be);
 }
 
 /**
  * Spawns green blood drops.
  * Used by collider types HIT2 and HIT6. No actor has type HIT2.
  */
-static EffectSparkInit mmvr_local_6817206e45c0c32c;
+static EffectSparkInit mmvr_local_851b0109aec5f861;
 void CollisionCheck_GreenBlood(struct PlayState* play, Collider* col, Vec3f* v) {
     /* persistent local storage is declared above */
     s32 effectIndex;
 
-    mmvr_local_6817206e45c0c32c.position.x = v->x;
-    mmvr_local_6817206e45c0c32c.position.y = v->y;
-    mmvr_local_6817206e45c0c32c.position.z = v->z;
-    mmvr_local_6817206e45c0c32c.uDiv = 5;
-    mmvr_local_6817206e45c0c32c.vDiv = 5;
-    mmvr_local_6817206e45c0c32c.colorStart[0].r = 10;
-    mmvr_local_6817206e45c0c32c.colorStart[0].g = 200;
-    mmvr_local_6817206e45c0c32c.colorStart[0].b = 10;
-    mmvr_local_6817206e45c0c32c.colorStart[0].a = 255;
-    mmvr_local_6817206e45c0c32c.colorStart[1].r = 0;
-    mmvr_local_6817206e45c0c32c.colorStart[1].g = 128;
-    mmvr_local_6817206e45c0c32c.colorStart[1].b = 0;
-    mmvr_local_6817206e45c0c32c.colorStart[1].a = 255;
-    mmvr_local_6817206e45c0c32c.colorStart[2].r = 0;
-    mmvr_local_6817206e45c0c32c.colorStart[2].g = 128;
-    mmvr_local_6817206e45c0c32c.colorStart[2].b = 0;
-    mmvr_local_6817206e45c0c32c.colorStart[2].a = 255;
-    mmvr_local_6817206e45c0c32c.colorStart[3].r = 0;
-    mmvr_local_6817206e45c0c32c.colorStart[3].g = 128;
-    mmvr_local_6817206e45c0c32c.colorStart[3].b = 0;
-    mmvr_local_6817206e45c0c32c.colorStart[3].a = 255;
-    mmvr_local_6817206e45c0c32c.colorEnd[0].r = 0;
-    mmvr_local_6817206e45c0c32c.colorEnd[0].g = 32;
-    mmvr_local_6817206e45c0c32c.colorEnd[0].b = 0;
-    mmvr_local_6817206e45c0c32c.colorEnd[0].a = 0;
-    mmvr_local_6817206e45c0c32c.colorEnd[1].r = 0;
-    mmvr_local_6817206e45c0c32c.colorEnd[1].g = 32;
-    mmvr_local_6817206e45c0c32c.colorEnd[1].b = 0;
-    mmvr_local_6817206e45c0c32c.colorEnd[1].a = 0;
-    mmvr_local_6817206e45c0c32c.colorEnd[2].r = 0;
-    mmvr_local_6817206e45c0c32c.colorEnd[2].g = 64;
-    mmvr_local_6817206e45c0c32c.colorEnd[2].b = 0;
-    mmvr_local_6817206e45c0c32c.colorEnd[2].a = 0;
-    mmvr_local_6817206e45c0c32c.colorEnd[3].r = 0;
-    mmvr_local_6817206e45c0c32c.colorEnd[3].g = 64;
-    mmvr_local_6817206e45c0c32c.colorEnd[3].b = 0;
-    mmvr_local_6817206e45c0c32c.colorEnd[3].a = 0;
-    mmvr_local_6817206e45c0c32c.timer = 0;
-    mmvr_local_6817206e45c0c32c.duration = 16;
-    mmvr_local_6817206e45c0c32c.speed = 8.0f;
-    mmvr_local_6817206e45c0c32c.gravity = -1.0f;
-    Effect_Add(play, &effectIndex, EFFECT_SPARK, 0, 1, &mmvr_local_6817206e45c0c32c);
+    mmvr_local_851b0109aec5f861.position.x = v->x;
+    mmvr_local_851b0109aec5f861.position.y = v->y;
+    mmvr_local_851b0109aec5f861.position.z = v->z;
+    mmvr_local_851b0109aec5f861.uDiv = 5;
+    mmvr_local_851b0109aec5f861.vDiv = 5;
+    mmvr_local_851b0109aec5f861.colorStart[0].r = 10;
+    mmvr_local_851b0109aec5f861.colorStart[0].g = 200;
+    mmvr_local_851b0109aec5f861.colorStart[0].b = 10;
+    mmvr_local_851b0109aec5f861.colorStart[0].a = 255;
+    mmvr_local_851b0109aec5f861.colorStart[1].r = 0;
+    mmvr_local_851b0109aec5f861.colorStart[1].g = 128;
+    mmvr_local_851b0109aec5f861.colorStart[1].b = 0;
+    mmvr_local_851b0109aec5f861.colorStart[1].a = 255;
+    mmvr_local_851b0109aec5f861.colorStart[2].r = 0;
+    mmvr_local_851b0109aec5f861.colorStart[2].g = 128;
+    mmvr_local_851b0109aec5f861.colorStart[2].b = 0;
+    mmvr_local_851b0109aec5f861.colorStart[2].a = 255;
+    mmvr_local_851b0109aec5f861.colorStart[3].r = 0;
+    mmvr_local_851b0109aec5f861.colorStart[3].g = 128;
+    mmvr_local_851b0109aec5f861.colorStart[3].b = 0;
+    mmvr_local_851b0109aec5f861.colorStart[3].a = 255;
+    mmvr_local_851b0109aec5f861.colorEnd[0].r = 0;
+    mmvr_local_851b0109aec5f861.colorEnd[0].g = 32;
+    mmvr_local_851b0109aec5f861.colorEnd[0].b = 0;
+    mmvr_local_851b0109aec5f861.colorEnd[0].a = 0;
+    mmvr_local_851b0109aec5f861.colorEnd[1].r = 0;
+    mmvr_local_851b0109aec5f861.colorEnd[1].g = 32;
+    mmvr_local_851b0109aec5f861.colorEnd[1].b = 0;
+    mmvr_local_851b0109aec5f861.colorEnd[1].a = 0;
+    mmvr_local_851b0109aec5f861.colorEnd[2].r = 0;
+    mmvr_local_851b0109aec5f861.colorEnd[2].g = 64;
+    mmvr_local_851b0109aec5f861.colorEnd[2].b = 0;
+    mmvr_local_851b0109aec5f861.colorEnd[2].a = 0;
+    mmvr_local_851b0109aec5f861.colorEnd[3].r = 0;
+    mmvr_local_851b0109aec5f861.colorEnd[3].g = 64;
+    mmvr_local_851b0109aec5f861.colorEnd[3].b = 0;
+    mmvr_local_851b0109aec5f861.colorEnd[3].a = 0;
+    mmvr_local_851b0109aec5f861.timer = 0;
+    mmvr_local_851b0109aec5f861.duration = 16;
+    mmvr_local_851b0109aec5f861.speed = 8.0f;
+    mmvr_local_851b0109aec5f861.gravity = -1.0f;
+    Effect_Add(play, &effectIndex, EFFECT_SPARK, 0, 1, &mmvr_local_851b0109aec5f861);
 }
 
 TriNorm D_801EF590;
@@ -2931,8 +2957,13 @@ ColChkApplyFunc sColChkApplyFuncs[COLSHAPE_MAX] = {
 void CollisionCheck_SetHitEffects(struct PlayState* play, CollisionCheckContext* colChkCtx) {
     Collider** acColP;
 
+#ifdef MMVR_ENABLE
+    for (s32 i=0; i<MMVR_CollisionACCount(colChkCtx); ++i) {
+        Collider* acCol = MMVR_CollisionACAt(colChkCtx, i);
+#else
     for (acColP = &colChkCtx->colAC[0]; acColP < &colChkCtx->colAC[colChkCtx->colACCount]; acColP++) {
         Collider* acCol = *acColP;
+#endif
 
         if ((acCol != NULL) && (acCol->acFlags & AC_ON)) {
             if ((acCol->actor != NULL) && (acCol->actor->update == NULL)) {
@@ -2992,8 +3023,13 @@ ColChkVsFunc sACVsFuncs[COLSHAPE_MAX][COLSHAPE_MAX] = {
 void CollisionCheck_AC(struct PlayState* play, CollisionCheckContext* colChkCtx, Collider* atCol) {
     Collider** acColP;
 
+#ifdef MMVR_ENABLE
+    for (s32 i=0; i<MMVR_CollisionACCount(colChkCtx); ++i) {
+        Collider* acCol = MMVR_CollisionACAt(colChkCtx, i);
+#else
     for (acColP = &colChkCtx->colAC[0]; acColP < &colChkCtx->colAC[colChkCtx->colACCount]; acColP++) {
         Collider* acCol = *acColP;
+#endif
 
         if ((acCol != NULL) && (acCol->acFlags & AC_ON)) {
             if ((acCol->actor != NULL) && (acCol->actor->update == NULL)) {
@@ -3450,13 +3486,13 @@ void CollisionCheck_OC(struct PlayState* play, CollisionCheckContext* colChkCtx)
 /**
  * Initializes CollisionCheckInfo to default values
  */
-static CollisionCheckInfo mmvr_local_bfb8f34cdd97fbd3 = {
+static CollisionCheckInfo mmvr_local_dac1261117033ef1 = {
         NULL, { 0.0f, 0.0f, 0.0f }, 10, 10, 0, MASS_IMMOVABLE, 8, 0, 0, 0, 0,
     };
 void CollisionCheck_InitInfo(CollisionCheckInfo* info) {
     /* persistent local storage is declared above */
 
-    *info = mmvr_local_bfb8f34cdd97fbd3;
+    *info = mmvr_local_dac1261117033ef1;
 }
 
 /**
@@ -3630,8 +3666,13 @@ ColChkApplyFunc sApplyDamageFuncs[COLSHAPE_MAX] = {
 void CollisionCheck_Damage(struct PlayState* play, CollisionCheckContext* colChkCtx) {
     s32 i;
 
+#ifdef MMVR_ENABLE
+    for (i = 0; i < MMVR_CollisionACCount(colChkCtx); i++) {
+        Collider* col = MMVR_CollisionACAt(colChkCtx, i);
+#else
     for (i = 0; i < colChkCtx->colACCount; i++) {
         Collider* col = colChkCtx->colAC[i];
+#endif
 
         if (col == NULL) {
             continue;
@@ -3832,8 +3873,8 @@ void Collider_SetTrisDim(struct PlayState* play, ColliderTris* dest, s32 elemInd
 /**
  * Updates the world spheres for all of the collider's JntSph elements attached to the specified limb
  */
-static Vec3f mmvr_local_a7a84cd8bddbbe4f;
-static Vec3f mmvr_local_b9caf0e012627e62;
+static Vec3f mmvr_local_610dc81c9b98dc6f;
+static Vec3f mmvr_local_217bbfab4f7de608;
 void Collider_UpdateSpheres(s32 limb, ColliderJntSph* jntSph) {
     /* persistent local storage is declared above */
     /* persistent local storage is declared above */
@@ -3841,13 +3882,13 @@ void Collider_UpdateSpheres(s32 limb, ColliderJntSph* jntSph) {
 
     for (i = 0; i < jntSph->count; i++) {
         if (limb == jntSph->elements[i].dim.limb) {
-            mmvr_local_a7a84cd8bddbbe4f.x = jntSph->elements[i].dim.modelSphere.center.x;
-            mmvr_local_a7a84cd8bddbbe4f.y = jntSph->elements[i].dim.modelSphere.center.y;
-            mmvr_local_a7a84cd8bddbbe4f.z = jntSph->elements[i].dim.modelSphere.center.z;
-            Matrix_MultVec3f(&mmvr_local_a7a84cd8bddbbe4f, &mmvr_local_b9caf0e012627e62);
-            jntSph->elements[i].dim.worldSphere.center.x = mmvr_local_b9caf0e012627e62.x;
-            jntSph->elements[i].dim.worldSphere.center.y = mmvr_local_b9caf0e012627e62.y;
-            jntSph->elements[i].dim.worldSphere.center.z = mmvr_local_b9caf0e012627e62.z;
+            mmvr_local_610dc81c9b98dc6f.x = jntSph->elements[i].dim.modelSphere.center.x;
+            mmvr_local_610dc81c9b98dc6f.y = jntSph->elements[i].dim.modelSphere.center.y;
+            mmvr_local_610dc81c9b98dc6f.z = jntSph->elements[i].dim.modelSphere.center.z;
+            Matrix_MultVec3f(&mmvr_local_610dc81c9b98dc6f, &mmvr_local_217bbfab4f7de608);
+            jntSph->elements[i].dim.worldSphere.center.x = mmvr_local_217bbfab4f7de608.x;
+            jntSph->elements[i].dim.worldSphere.center.y = mmvr_local_217bbfab4f7de608.y;
+            jntSph->elements[i].dim.worldSphere.center.z = mmvr_local_217bbfab4f7de608.z;
             jntSph->elements[i].dim.worldSphere.radius =
                 jntSph->elements[i].dim.modelSphere.radius * jntSph->elements[i].dim.scale;
         }
@@ -3873,20 +3914,20 @@ void Collider_UpdateSpheresElement(ColliderJntSph* jntSph, s32 elemIndex, Actor*
 /**
  * Updates the world sphere for the ColliderSphere if it is attached to the specified limb
  */
-static Vec3f mmvr_local_ac49b03241ed83f5;
-static Vec3f mmvr_local_d801ada01e0be304;
+static Vec3f mmvr_local_e38d8d5d4e70c272;
+static Vec3f mmvr_local_1e002354abb7303a;
 void Collider_UpdateSphere(s32 limb, ColliderSphere* sph) {
     /* persistent local storage is declared above */
     /* persistent local storage is declared above */
 
     if (limb == sph->dim.limb) {
-        mmvr_local_ac49b03241ed83f5.x = sph->dim.modelSphere.center.x;
-        mmvr_local_ac49b03241ed83f5.y = sph->dim.modelSphere.center.y;
-        mmvr_local_ac49b03241ed83f5.z = sph->dim.modelSphere.center.z;
-        Matrix_MultVec3f(&mmvr_local_ac49b03241ed83f5, &mmvr_local_d801ada01e0be304);
-        sph->dim.worldSphere.center.x = mmvr_local_d801ada01e0be304.x;
-        sph->dim.worldSphere.center.y = mmvr_local_d801ada01e0be304.y;
-        sph->dim.worldSphere.center.z = mmvr_local_d801ada01e0be304.z;
+        mmvr_local_e38d8d5d4e70c272.x = sph->dim.modelSphere.center.x;
+        mmvr_local_e38d8d5d4e70c272.y = sph->dim.modelSphere.center.y;
+        mmvr_local_e38d8d5d4e70c272.z = sph->dim.modelSphere.center.z;
+        Matrix_MultVec3f(&mmvr_local_e38d8d5d4e70c272, &mmvr_local_1e002354abb7303a);
+        sph->dim.worldSphere.center.x = mmvr_local_1e002354abb7303a.x;
+        sph->dim.worldSphere.center.y = mmvr_local_1e002354abb7303a.y;
+        sph->dim.worldSphere.center.z = mmvr_local_1e002354abb7303a.z;
         sph->dim.worldSphere.radius = sph->dim.modelSphere.radius * sph->dim.scale;
     }
 }
@@ -3895,114 +3936,114 @@ void Collider_UpdateSphere(s32 limb, ColliderSphere* sph) {
  * Spawns red blood droplets.
  * No actor has a collision type that spawns red blood.
  */
-static EffectSparkInit mmvr_local_beafd9b2dfcdd448;
+static EffectSparkInit mmvr_local_268b2fcb14f1cc09;
 void CollisionCheck_SpawnRedBlood(struct PlayState* play, Vec3f* v) {
     /* persistent local storage is declared above */
     s32 effectIndex;
 
-    mmvr_local_beafd9b2dfcdd448.position.x = v->x;
-    mmvr_local_beafd9b2dfcdd448.position.y = v->y;
-    mmvr_local_beafd9b2dfcdd448.position.z = v->z;
-    mmvr_local_beafd9b2dfcdd448.uDiv = 5;
-    mmvr_local_beafd9b2dfcdd448.vDiv = 5;
-    mmvr_local_beafd9b2dfcdd448.colorStart[0].r = 128;
-    mmvr_local_beafd9b2dfcdd448.colorStart[0].g = 0;
-    mmvr_local_beafd9b2dfcdd448.colorStart[0].b = 64;
-    mmvr_local_beafd9b2dfcdd448.colorStart[0].a = 255;
-    mmvr_local_beafd9b2dfcdd448.colorStart[1].r = 128;
-    mmvr_local_beafd9b2dfcdd448.colorStart[1].g = 0;
-    mmvr_local_beafd9b2dfcdd448.colorStart[1].b = 64;
-    mmvr_local_beafd9b2dfcdd448.colorStart[1].a = 255;
-    mmvr_local_beafd9b2dfcdd448.colorStart[2].r = 255;
-    mmvr_local_beafd9b2dfcdd448.colorStart[2].g = 128;
-    mmvr_local_beafd9b2dfcdd448.colorStart[2].b = 0;
-    mmvr_local_beafd9b2dfcdd448.colorStart[2].a = 255;
-    mmvr_local_beafd9b2dfcdd448.colorStart[3].r = 255;
-    mmvr_local_beafd9b2dfcdd448.colorStart[3].g = 128;
-    mmvr_local_beafd9b2dfcdd448.colorStart[3].b = 0;
-    mmvr_local_beafd9b2dfcdd448.colorStart[3].a = 255;
-    mmvr_local_beafd9b2dfcdd448.colorEnd[0].r = 64;
-    mmvr_local_beafd9b2dfcdd448.colorEnd[0].g = 0;
-    mmvr_local_beafd9b2dfcdd448.colorEnd[0].b = 32;
-    mmvr_local_beafd9b2dfcdd448.colorEnd[0].a = 0;
-    mmvr_local_beafd9b2dfcdd448.colorEnd[1].r = 64;
-    mmvr_local_beafd9b2dfcdd448.colorEnd[1].g = 0;
-    mmvr_local_beafd9b2dfcdd448.colorEnd[1].b = 32;
-    mmvr_local_beafd9b2dfcdd448.colorEnd[1].a = 0;
-    mmvr_local_beafd9b2dfcdd448.colorEnd[2].r = 128;
-    mmvr_local_beafd9b2dfcdd448.colorEnd[2].g = 0;
-    mmvr_local_beafd9b2dfcdd448.colorEnd[2].b = 64;
-    mmvr_local_beafd9b2dfcdd448.colorEnd[2].a = 0;
-    mmvr_local_beafd9b2dfcdd448.colorEnd[3].r = 128;
-    mmvr_local_beafd9b2dfcdd448.colorEnd[3].g = 0;
-    mmvr_local_beafd9b2dfcdd448.colorEnd[3].b = 64;
-    mmvr_local_beafd9b2dfcdd448.colorEnd[3].a = 0;
-    mmvr_local_beafd9b2dfcdd448.timer = 0;
-    mmvr_local_beafd9b2dfcdd448.duration = 16;
-    mmvr_local_beafd9b2dfcdd448.speed = 8.0f;
-    mmvr_local_beafd9b2dfcdd448.gravity = -1.0f;
+    mmvr_local_268b2fcb14f1cc09.position.x = v->x;
+    mmvr_local_268b2fcb14f1cc09.position.y = v->y;
+    mmvr_local_268b2fcb14f1cc09.position.z = v->z;
+    mmvr_local_268b2fcb14f1cc09.uDiv = 5;
+    mmvr_local_268b2fcb14f1cc09.vDiv = 5;
+    mmvr_local_268b2fcb14f1cc09.colorStart[0].r = 128;
+    mmvr_local_268b2fcb14f1cc09.colorStart[0].g = 0;
+    mmvr_local_268b2fcb14f1cc09.colorStart[0].b = 64;
+    mmvr_local_268b2fcb14f1cc09.colorStart[0].a = 255;
+    mmvr_local_268b2fcb14f1cc09.colorStart[1].r = 128;
+    mmvr_local_268b2fcb14f1cc09.colorStart[1].g = 0;
+    mmvr_local_268b2fcb14f1cc09.colorStart[1].b = 64;
+    mmvr_local_268b2fcb14f1cc09.colorStart[1].a = 255;
+    mmvr_local_268b2fcb14f1cc09.colorStart[2].r = 255;
+    mmvr_local_268b2fcb14f1cc09.colorStart[2].g = 128;
+    mmvr_local_268b2fcb14f1cc09.colorStart[2].b = 0;
+    mmvr_local_268b2fcb14f1cc09.colorStart[2].a = 255;
+    mmvr_local_268b2fcb14f1cc09.colorStart[3].r = 255;
+    mmvr_local_268b2fcb14f1cc09.colorStart[3].g = 128;
+    mmvr_local_268b2fcb14f1cc09.colorStart[3].b = 0;
+    mmvr_local_268b2fcb14f1cc09.colorStart[3].a = 255;
+    mmvr_local_268b2fcb14f1cc09.colorEnd[0].r = 64;
+    mmvr_local_268b2fcb14f1cc09.colorEnd[0].g = 0;
+    mmvr_local_268b2fcb14f1cc09.colorEnd[0].b = 32;
+    mmvr_local_268b2fcb14f1cc09.colorEnd[0].a = 0;
+    mmvr_local_268b2fcb14f1cc09.colorEnd[1].r = 64;
+    mmvr_local_268b2fcb14f1cc09.colorEnd[1].g = 0;
+    mmvr_local_268b2fcb14f1cc09.colorEnd[1].b = 32;
+    mmvr_local_268b2fcb14f1cc09.colorEnd[1].a = 0;
+    mmvr_local_268b2fcb14f1cc09.colorEnd[2].r = 128;
+    mmvr_local_268b2fcb14f1cc09.colorEnd[2].g = 0;
+    mmvr_local_268b2fcb14f1cc09.colorEnd[2].b = 64;
+    mmvr_local_268b2fcb14f1cc09.colorEnd[2].a = 0;
+    mmvr_local_268b2fcb14f1cc09.colorEnd[3].r = 128;
+    mmvr_local_268b2fcb14f1cc09.colorEnd[3].g = 0;
+    mmvr_local_268b2fcb14f1cc09.colorEnd[3].b = 64;
+    mmvr_local_268b2fcb14f1cc09.colorEnd[3].a = 0;
+    mmvr_local_268b2fcb14f1cc09.timer = 0;
+    mmvr_local_268b2fcb14f1cc09.duration = 16;
+    mmvr_local_268b2fcb14f1cc09.speed = 8.0f;
+    mmvr_local_268b2fcb14f1cc09.gravity = -1.0f;
 
-    Effect_Add(play, &effectIndex, EFFECT_SPARK, 0, 1, &mmvr_local_beafd9b2dfcdd448);
+    Effect_Add(play, &effectIndex, EFFECT_SPARK, 0, 1, &mmvr_local_268b2fcb14f1cc09);
 }
 
 /**
  * Spawns water droplets.
  * No actor has a collision type that spawns water droplets.
  */
-static EffectSparkInit mmvr_local_a6ff138765d6f1ca;
+static EffectSparkInit mmvr_local_670fb2f89876528a;
 void CollisionCheck_SpawnWaterDroplets(struct PlayState* play, Vec3f* v) {
     /* persistent local storage is declared above */
     s32 effectIndex;
 
-    mmvr_local_a6ff138765d6f1ca.position.x = v->x;
-    mmvr_local_a6ff138765d6f1ca.position.y = v->y;
-    mmvr_local_a6ff138765d6f1ca.position.z = v->z;
-    mmvr_local_a6ff138765d6f1ca.uDiv = 5;
-    mmvr_local_a6ff138765d6f1ca.vDiv = 5;
-    mmvr_local_a6ff138765d6f1ca.colorStart[0].r = 255;
-    mmvr_local_a6ff138765d6f1ca.colorStart[0].g = 255;
-    mmvr_local_a6ff138765d6f1ca.colorStart[0].b = 255;
-    mmvr_local_a6ff138765d6f1ca.colorStart[0].a = 255;
-    mmvr_local_a6ff138765d6f1ca.colorStart[1].r = 100;
-    mmvr_local_a6ff138765d6f1ca.colorStart[1].g = 100;
-    mmvr_local_a6ff138765d6f1ca.colorStart[1].b = 100;
-    mmvr_local_a6ff138765d6f1ca.colorStart[1].a = 100;
-    mmvr_local_a6ff138765d6f1ca.colorStart[2].r = 100;
-    mmvr_local_a6ff138765d6f1ca.colorStart[2].g = 100;
-    mmvr_local_a6ff138765d6f1ca.colorStart[2].b = 100;
-    mmvr_local_a6ff138765d6f1ca.colorStart[2].a = 100;
-    mmvr_local_a6ff138765d6f1ca.colorStart[3].r = 100;
-    mmvr_local_a6ff138765d6f1ca.colorStart[3].g = 100;
-    mmvr_local_a6ff138765d6f1ca.colorStart[3].b = 100;
-    mmvr_local_a6ff138765d6f1ca.colorStart[3].a = 100;
-    mmvr_local_a6ff138765d6f1ca.colorEnd[0].r = 50;
-    mmvr_local_a6ff138765d6f1ca.colorEnd[0].g = 50;
-    mmvr_local_a6ff138765d6f1ca.colorEnd[0].b = 50;
-    mmvr_local_a6ff138765d6f1ca.colorEnd[0].a = 50;
-    mmvr_local_a6ff138765d6f1ca.colorEnd[1].r = 50;
-    mmvr_local_a6ff138765d6f1ca.colorEnd[1].g = 50;
-    mmvr_local_a6ff138765d6f1ca.colorEnd[1].b = 50;
-    mmvr_local_a6ff138765d6f1ca.colorEnd[1].a = 50;
-    mmvr_local_a6ff138765d6f1ca.colorEnd[2].r = 50;
-    mmvr_local_a6ff138765d6f1ca.colorEnd[2].g = 50;
-    mmvr_local_a6ff138765d6f1ca.colorEnd[2].b = 50;
-    mmvr_local_a6ff138765d6f1ca.colorEnd[2].a = 50;
-    mmvr_local_a6ff138765d6f1ca.colorEnd[3].r = 0;
-    mmvr_local_a6ff138765d6f1ca.colorEnd[3].g = 0;
-    mmvr_local_a6ff138765d6f1ca.colorEnd[3].b = 0;
-    mmvr_local_a6ff138765d6f1ca.colorEnd[3].a = 0;
-    mmvr_local_a6ff138765d6f1ca.timer = 0;
-    mmvr_local_a6ff138765d6f1ca.duration = 16;
-    mmvr_local_a6ff138765d6f1ca.speed = 8.0f;
-    mmvr_local_a6ff138765d6f1ca.gravity = -1.0f;
+    mmvr_local_670fb2f89876528a.position.x = v->x;
+    mmvr_local_670fb2f89876528a.position.y = v->y;
+    mmvr_local_670fb2f89876528a.position.z = v->z;
+    mmvr_local_670fb2f89876528a.uDiv = 5;
+    mmvr_local_670fb2f89876528a.vDiv = 5;
+    mmvr_local_670fb2f89876528a.colorStart[0].r = 255;
+    mmvr_local_670fb2f89876528a.colorStart[0].g = 255;
+    mmvr_local_670fb2f89876528a.colorStart[0].b = 255;
+    mmvr_local_670fb2f89876528a.colorStart[0].a = 255;
+    mmvr_local_670fb2f89876528a.colorStart[1].r = 100;
+    mmvr_local_670fb2f89876528a.colorStart[1].g = 100;
+    mmvr_local_670fb2f89876528a.colorStart[1].b = 100;
+    mmvr_local_670fb2f89876528a.colorStart[1].a = 100;
+    mmvr_local_670fb2f89876528a.colorStart[2].r = 100;
+    mmvr_local_670fb2f89876528a.colorStart[2].g = 100;
+    mmvr_local_670fb2f89876528a.colorStart[2].b = 100;
+    mmvr_local_670fb2f89876528a.colorStart[2].a = 100;
+    mmvr_local_670fb2f89876528a.colorStart[3].r = 100;
+    mmvr_local_670fb2f89876528a.colorStart[3].g = 100;
+    mmvr_local_670fb2f89876528a.colorStart[3].b = 100;
+    mmvr_local_670fb2f89876528a.colorStart[3].a = 100;
+    mmvr_local_670fb2f89876528a.colorEnd[0].r = 50;
+    mmvr_local_670fb2f89876528a.colorEnd[0].g = 50;
+    mmvr_local_670fb2f89876528a.colorEnd[0].b = 50;
+    mmvr_local_670fb2f89876528a.colorEnd[0].a = 50;
+    mmvr_local_670fb2f89876528a.colorEnd[1].r = 50;
+    mmvr_local_670fb2f89876528a.colorEnd[1].g = 50;
+    mmvr_local_670fb2f89876528a.colorEnd[1].b = 50;
+    mmvr_local_670fb2f89876528a.colorEnd[1].a = 50;
+    mmvr_local_670fb2f89876528a.colorEnd[2].r = 50;
+    mmvr_local_670fb2f89876528a.colorEnd[2].g = 50;
+    mmvr_local_670fb2f89876528a.colorEnd[2].b = 50;
+    mmvr_local_670fb2f89876528a.colorEnd[2].a = 50;
+    mmvr_local_670fb2f89876528a.colorEnd[3].r = 0;
+    mmvr_local_670fb2f89876528a.colorEnd[3].g = 0;
+    mmvr_local_670fb2f89876528a.colorEnd[3].b = 0;
+    mmvr_local_670fb2f89876528a.colorEnd[3].a = 0;
+    mmvr_local_670fb2f89876528a.timer = 0;
+    mmvr_local_670fb2f89876528a.duration = 16;
+    mmvr_local_670fb2f89876528a.speed = 8.0f;
+    mmvr_local_670fb2f89876528a.gravity = -1.0f;
 
-    Effect_Add(play, &effectIndex, EFFECT_SPARK, 0, 1, &mmvr_local_a6ff138765d6f1ca);
+    Effect_Add(play, &effectIndex, EFFECT_SPARK, 0, 1, &mmvr_local_670fb2f89876528a);
 }
 
 /**
  * Spawns streaks of light from hits against solid objects
  */
-static EffectShieldParticleInit mmvr_local_3617a8ccc2cb8338 = {
+static EffectShieldParticleInit mmvr_local_b340b662dc06b4ca = {
         16,
         { 0, 0, 0 },
         { 0, 200, 255, 255 },
@@ -4022,14 +4063,14 @@ void CollisionCheck_SpawnShieldParticles(struct PlayState* play, Vec3f* v) {
     /* persistent local storage is declared above */
     s32 effectIndex;
 
-    mmvr_local_3617a8ccc2cb8338.position.x = v->x;
-    mmvr_local_3617a8ccc2cb8338.position.y = v->y;
-    mmvr_local_3617a8ccc2cb8338.position.z = v->z;
-    mmvr_local_3617a8ccc2cb8338.lightPoint.x = mmvr_local_3617a8ccc2cb8338.position.x;
-    mmvr_local_3617a8ccc2cb8338.lightPoint.y = mmvr_local_3617a8ccc2cb8338.position.y;
-    mmvr_local_3617a8ccc2cb8338.lightPoint.z = mmvr_local_3617a8ccc2cb8338.position.z;
+    mmvr_local_b340b662dc06b4ca.position.x = v->x;
+    mmvr_local_b340b662dc06b4ca.position.y = v->y;
+    mmvr_local_b340b662dc06b4ca.position.z = v->z;
+    mmvr_local_b340b662dc06b4ca.lightPoint.x = mmvr_local_b340b662dc06b4ca.position.x;
+    mmvr_local_b340b662dc06b4ca.lightPoint.y = mmvr_local_b340b662dc06b4ca.position.y;
+    mmvr_local_b340b662dc06b4ca.lightPoint.z = mmvr_local_b340b662dc06b4ca.position.z;
 
-    Effect_Add(play, &effectIndex, EFFECT_SHIELD_PARTICLE, 0, 1, &mmvr_local_3617a8ccc2cb8338);
+    Effect_Add(play, &effectIndex, EFFECT_SHIELD_PARTICLE, 0, 1, &mmvr_local_b340b662dc06b4ca);
 }
 
 /**
@@ -4058,7 +4099,7 @@ void CollisionCheck_SpawnShieldParticlesMetal2(struct PlayState* play, Vec3f* v)
 /**
  * Spawns streaks of light and makes a wooden sound
  */
-static EffectShieldParticleInit mmvr_local_54c92cb1cb07370a = {
+static EffectShieldParticleInit mmvr_local_92b458ef182eeea5 = {
         16,
         { 0, 0, 0 },
         { 0, 200, 255, 255 },
@@ -4078,14 +4119,14 @@ void CollisionCheck_SpawnShieldParticlesWood(struct PlayState* play, Vec3f* v, V
     /* persistent local storage is declared above */
     s32 effectIndex;
 
-    mmvr_local_54c92cb1cb07370a.position.x = v->x;
-    mmvr_local_54c92cb1cb07370a.position.y = v->y;
-    mmvr_local_54c92cb1cb07370a.position.z = v->z;
-    mmvr_local_54c92cb1cb07370a.lightPoint.x = mmvr_local_54c92cb1cb07370a.position.x;
-    mmvr_local_54c92cb1cb07370a.lightPoint.y = mmvr_local_54c92cb1cb07370a.position.y;
-    mmvr_local_54c92cb1cb07370a.lightPoint.z = mmvr_local_54c92cb1cb07370a.position.z;
+    mmvr_local_92b458ef182eeea5.position.x = v->x;
+    mmvr_local_92b458ef182eeea5.position.y = v->y;
+    mmvr_local_92b458ef182eeea5.position.z = v->z;
+    mmvr_local_92b458ef182eeea5.lightPoint.x = mmvr_local_92b458ef182eeea5.position.x;
+    mmvr_local_92b458ef182eeea5.lightPoint.y = mmvr_local_92b458ef182eeea5.position.y;
+    mmvr_local_92b458ef182eeea5.lightPoint.z = mmvr_local_92b458ef182eeea5.position.z;
 
-    Effect_Add(play, &effectIndex, EFFECT_SHIELD_PARTICLE, 0, 1, &mmvr_local_54c92cb1cb07370a);
+    Effect_Add(play, &effectIndex, EFFECT_SHIELD_PARTICLE, 0, 1, &mmvr_local_92b458ef182eeea5);
     Audio_PlaySfx_AtPos(pos, NA_SE_IT_REFLECTION_WOOD);
 }
 

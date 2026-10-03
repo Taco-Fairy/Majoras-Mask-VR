@@ -6167,6 +6167,19 @@ void Interpreter::RunGuiOnly() {
 void Interpreter::Run(Gfx* commands, const std::unordered_map<Mtx*, MtxF>& mtx_replacements) {
     CommandInterpreterScope commandScope(this);
 #ifdef MMVR_ENABLE
+    // Held paper is 576x454; its paused world still emits 320x240 viewports.
+    // Scope this to eye replays. Offscreen targets and the paper stay native.
+    struct NotebookWorldDimensions {
+        XYWidthHeight& value;
+        XYWidthHeight saved;
+        NotebookWorldDimensions(XYWidthHeight& dimensions) : value(dimensions), saved(dimensions) {
+            if (mmvr::NotebookActive() && mmvr::IsExtraPass() && !mmvr::IsHudPass()) {
+                value.width = SCREEN_WIDTH;
+                value.height = SCREEN_HEIGHT;
+            }
+        }
+        ~NotebookWorldDimensions() { value = saved; }
+    } notebookDimensions(mNativeDimensions);
     // A rejected fast replay restarts from precisely its incoming native state.
     // GPU binding caches continue describing actual GL state; only the pending
     // primitive stream is discarded, never submitted with the fallback stride.
@@ -6361,6 +6374,10 @@ void Interpreter::Run(Gfx* commands, const std::unordered_map<Mtx*, MtxF>& mtx_r
             mmvr::SetVisualAnchor(anchor==mtx_replacements.end()?nullptr:&anchor->second.mf[0][0]);
             auto headAnchor=mtx_replacements.find((Mtx*)mmvr::HeadAnchor());
             mmvr::SetVisualHeadAnchor(headAnchor==mtx_replacements.end()?nullptr:&headAnchor->second.mf[0][0]);
+            for(int bone=0;bone<mmvr::BodyBoneCount;++bone) {
+                auto pose=mtx_replacements.find((Mtx*)mmvr::BodyBoneAddress(bone));
+                mmvr::SetVisualBodyBone(bone,pose==mtx_replacements.end()?nullptr:&pose->second.mf[0][0]);
+            }
             auto physicalPushAnchor=mtx_replacements.find((Mtx*)mmvr::PhysicalPushAnchor());
             const bool hasPhysicalPushPose = physicalPushAnchor != mtx_replacements.end();
             mmvr::SetVisualPhysicalPushAnchor(hasPhysicalPushPose ? &physicalPushAnchor->second.mf[0][0] : nullptr,

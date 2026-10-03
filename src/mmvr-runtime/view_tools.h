@@ -2,6 +2,15 @@
 #include "projection.h"
 #include <algorithm>
 namespace mmvr {
+// Suppress both the native framebuffer and eye-history routes while VR is active.
+// Flat desktop rendering keeps native rules; enabling restores existing VR routing.
+struct MotionBlurRoute { unsigned char eyeAlpha; bool consumeNative; };
+inline MotionBlurRoute RouteMotionBlur(unsigned char alpha, bool vrActive, bool stereo,
+                                      bool hudEffects, bool enabled) {
+    if (vrActive && !enabled) return {0, true};
+    return {alpha, stereo && !hudEffects};
+}
+
 inline XrFovf MagnifiedFov(XrFovf f, float zoom) {
     zoom = std::clamp(zoom, .25f, 16.f);
     for (float* a : { &f.angleLeft, &f.angleRight, &f.angleDown, &f.angleUp })

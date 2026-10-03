@@ -3,6 +3,7 @@
 #include "settings.h"
 #include <cstdint>
 namespace mmvr {
+inline constexpr int BodyBoneCount = 8; // Six arm joints, neck (head joint), waist.
 struct TrackingFrame {
     XrPosef head{}, origin{};
     XrPosef hands[2]{}, aims[2]{};
@@ -27,6 +28,7 @@ struct TrackingFrame {
     Matrix physicalPushRenderPose{};
     const void* physicalPushRenderOwner = nullptr;
     bool physicalPushRenderPoseValid = false;
+    Matrix bodyBones[BodyBoneCount]{}; // Native joints at render cadence; no simulation changes.
 };
 struct CameraFrame {
     bool active = false, exclusiveView = false;
@@ -37,6 +39,8 @@ struct CameraFrame {
     Matrix formFins[2]{}, formEffectAnchor{}, shieldEffectAnchor{}, dekuGuard{}, dekuGuardCorrection{}, dekuBubble{};
     double trackingTime = 0;
     Matrix heldActorCorrection{}, rewardCorrection{};
+    Matrix bodyArms[6]{};
+    bool fullBodyArms = false;
     bool rewardActive = false;
     bool heldActorActive = false;
     const void* viewAddress = nullptr;
@@ -182,6 +186,7 @@ void SetDekuBubbleMatrix(const void* address) noexcept;
 void ResetFormEffectMatrices() noexcept;
 void SetFormEffectMatrix(const void* address, const Matrix& local, float spin = 0, double sampledTime = 0) noexcept;
 void SetShieldEffectMatrix(const void* address, const Matrix& local) noexcept;
+void SetNotebookModelMatrix(const void* address) noexcept;
 void SetBowStringMatrix(const void* address) noexcept;
 void SetBowArrowMatrix(const void* arrow) noexcept;
 void SetItemReticleMatrix(const void* reticle) noexcept;
@@ -206,6 +211,14 @@ void ClearHandSkeletonPalettes() noexcept;
 void SetHandSkeletonPalette(int hand, const void* base, unsigned stride, const Matrix* local, unsigned count);
 void SetHandExtraRange(int hand, const void* low, const void* high, int layer = 0) noexcept;
 void SetPlayerMatrixRange(const void* low, const void* high, const void* left, const void* right) noexcept;
+void ClearBodyBones() noexcept;
+void BeginBodyRollPose(bool enabled, bool rolling, const void* owner, uint64_t generation,
+                       int form, const Matrix& root, uint32_t requiredBones) noexcept;
+void RecordBodyRollLimb(unsigned limb, const void* address, const Matrix& native) noexcept;
+bool BodyRollPoseWaiting() noexcept;
+void SetBodyBone(int index, const void* address, const float* native) noexcept;
+const void* BodyBoneAddress(int index) noexcept;
+void SetVisualBodyBone(int index, const float* interpolated) noexcept;
 bool OverrideViewMatrix(const void* address, float matrix[4][4]) noexcept;
 bool OverrideBillboardMatrix(const void* address, float matrix[4][4],
                              const float nativeMatrix[4][4] = nullptr) noexcept;

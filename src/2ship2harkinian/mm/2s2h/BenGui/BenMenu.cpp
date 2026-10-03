@@ -1,3 +1,4 @@
+#include "2s2h/Enhancements/Saving/SavingEnhancements.h"
 #include "BenMenu.h"
 #include "BenGui.hpp"
 #include "UIWidgets.hpp"
@@ -1245,19 +1246,19 @@ void BenMenu::AddEnhancements() {
                      .DefaultValue(true));
     AddWidget(path, "Persistent Owl Saves", WIDGET_CVAR_CHECKBOX)
         .CVar("gEnhancements.Saving.PersistentOwlSaves")
-        .Options(CheckboxOptions().Tooltip("Continuing a save will not remove the owl save. Playing Song of "
+        .Options(CheckboxOptions().DefaultValue(SAVING_ENHANCEMENTS_DEFAULT_ENABLED).Tooltip("Continuing a save will not remove the owl save. Playing Song of "
                                            "Time, allowing the moon to crash or finishing the "
                                            "game will remove the owl save and become the new last save."));
     AddWidget(path, "Pause Menu Save", WIDGET_CVAR_CHECKBOX)
         .CVar("gEnhancements.Saving.PauseSave")
-        .Options(CheckboxOptions().Tooltip(
+        .Options(CheckboxOptions().DefaultValue(SAVING_ENHANCEMENTS_DEFAULT_ENABLED).Tooltip(
             "Re-introduce the pause menu save system. Pressing B in the pause menu will give you the "
             "option to create a persistent Owl Save from your current location.\n\nWhen loading back "
             "into the game, you will be placed either at the entrance of the dungeon you saved in, or "
             "in South Clock Town, unless Remember Save Location is enabled."));
     AddWidget(path, "Remember Save Location", WIDGET_CVAR_CHECKBOX)
         .CVar("gEnhancements.Saving.RememberSaveLocation")
-        .Options(CheckboxOptions().Tooltip("When loading a save, places Link at the last entrance he went through."));
+        .Options(CheckboxOptions().DefaultValue(SAVING_ENHANCEMENTS_DEFAULT_ENABLED).Tooltip("When loading a save, places Link at the last entrance he went through."));
     AddWidget(path, "Autosave", WIDGET_CVAR_CHECKBOX)
         .CVar("gEnhancements.Saving.Autosave")
         .Options(CheckboxOptions().Tooltip(
@@ -2223,9 +2224,9 @@ BenMenu::BenMenu(const std::string& consoleVariable, const std::string& name)
 void BenMenu::InitElement() {
     Ship::Menu::InitElement();
 #ifdef MMVR_ENABLE
-    AddMenuEntry("FullDiveGames Editions", "gSettings.Menu.FullDiveGamesSidebarSection");
-    AddSidebarEntry("FullDiveGames Editions", "Visuals", 1);
-    WidgetPath editionsPath = {"FullDiveGames Editions", "Visuals", SECTION_COLUMN_1};
+    AddMenuEntry("FullDiveGames Additions", "gSettings.Menu.FullDiveGamesSidebarSection");
+    AddSidebarEntry("FullDiveGames Additions", "Visuals", 1);
+    WidgetPath editionsPath = {"FullDiveGames Additions", "Visuals", SECTION_COLUMN_1};
     AddWidget(editionsPath, "Magic arrow draw effects", WIDGET_CVAR_CHECKBOX)
         .CVar("gEnhancements.FullDiveGames.MagicArrowDrawEffects")
         .Options(CheckboxOptions().DefaultValue(true).Tooltip(
@@ -2386,7 +2387,7 @@ bool BenMenu::DrawVrSection(const char* main, const char* sidebar, const char* s
     const std::string mainName(main);
     const std::string sidebarName(sidebar);
     const bool supportedSection =
-        (mainName == "FullDiveGames Editions" && sidebarName == "Visuals") ||
+        (mainName == "FullDiveGames Additions" && sidebarName == "Visuals") ||
         (mainName == "Settings" && sidebarName == "Audio") ||
         (mainName == "Enhancements" && (sidebarName == "Gameplay" || sidebarName == "Cheats" ||
                                          sidebarName == "Difficulty Options" || sidebarName == "Items/Songs" || sidebarName == "Graphics")) ||

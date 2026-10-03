@@ -1101,12 +1101,21 @@ s32 Collider_ResetLineOC(struct PlayState* play, OcLine* line) {
  * Initializes CollisionCheckContext.
  * Clears all collider arrays, disables SAC, and sets flags for drawing colliders.
  */
+#ifdef MMVR_ENABLE
+extern void MMVR_ClearACOverflow(CollisionCheckContext*);
+extern int MMVR_AddACOverflow(CollisionCheckContext*, Collider*);
+extern int MMVR_CollisionACCount(CollisionCheckContext*);
+extern Collider* MMVR_CollisionACAt(CollisionCheckContext*, int);
+#endif
 void CollisionCheck_InitContext(struct PlayState* play, CollisionCheckContext* colChkCtx) {
     colChkCtx->sacFlags = 0;
     CollisionCheck_ClearContext(play, colChkCtx);
 }
 
 void CollisionCheck_DestroyContext(struct PlayState* play, CollisionCheckContext* colChkCtx) {
+#ifdef MMVR_ENABLE
+    MMVR_ClearACOverflow(colChkCtx);
+#endif
 }
 
 /**
@@ -1120,6 +1129,9 @@ void CollisionCheck_ClearContext(struct PlayState* play, CollisionCheckContext* 
         return;
     }
 
+#ifdef MMVR_ENABLE
+    MMVR_ClearACOverflow(colChkCtx);
+#endif
     colChkCtx->colATCount = 0;
     colChkCtx->colACCount = 0;
     colChkCtx->colOCCount = 0;
@@ -1242,7 +1254,11 @@ s32 CollisionCheck_SetAC(struct PlayState* play, CollisionCheckContext* colChkCt
         return -1;
     }
     if (colChkCtx->colACCount >= ARRAY_COUNT(colChkCtx->colAC)) {
+#ifdef MMVR_ENABLE
+        return MMVR_AddACOverflow(colChkCtx, col);
+#else
         return -1;
+#endif
     }
     if (colChkCtx->sacFlags & SAC_ON) {
         return -1;
@@ -1301,6 +1317,9 @@ struct TriNorm2 D_801EE6C8;
 /**
  * Sets collider as an OC (object collider) for the current frame, allowing it to detect other OCs.
  */
+#ifdef MMVR_ENABLE
+extern int MMVR_ChooseOCOverflowSlot(struct PlayState*, CollisionCheckContext*, Collider*);
+#endif
 s32 CollisionCheck_SetOC(struct PlayState* play, CollisionCheckContext* colChkCtx, Collider* col) {
     s32 index;
 
@@ -1313,6 +1332,13 @@ s32 CollisionCheck_SetOC(struct PlayState* play, CollisionCheckContext* colChkCt
         return -1;
     }
     if (colChkCtx->colOCCount >= ARRAY_COUNT(colChkCtx->colOC)) {
+#ifdef MMVR_ENABLE
+        index = MMVR_ChooseOCOverflowSlot(play, colChkCtx, col);
+        if (index >= 0) {
+            colChkCtx->colOC[index] = col;
+            return index;
+        }
+#endif
         return -1;
     }
     if (colChkCtx->sacFlags & SAC_ON) {
@@ -2919,8 +2945,13 @@ ColChkApplyFunc sColChkApplyFuncs[COLSHAPE_MAX] = {
 void CollisionCheck_SetHitEffects(struct PlayState* play, CollisionCheckContext* colChkCtx) {
     Collider** acColP;
 
+#ifdef MMVR_ENABLE
+    for (s32 i=0; i<MMVR_CollisionACCount(colChkCtx); ++i) {
+        Collider* acCol = MMVR_CollisionACAt(colChkCtx, i);
+#else
     for (acColP = &colChkCtx->colAC[0]; acColP < &colChkCtx->colAC[colChkCtx->colACCount]; acColP++) {
         Collider* acCol = *acColP;
+#endif
 
         if ((acCol != NULL) && (acCol->acFlags & AC_ON)) {
             if ((acCol->actor != NULL) && (acCol->actor->update == NULL)) {
@@ -2980,8 +3011,13 @@ ColChkVsFunc sACVsFuncs[COLSHAPE_MAX][COLSHAPE_MAX] = {
 void CollisionCheck_AC(struct PlayState* play, CollisionCheckContext* colChkCtx, Collider* atCol) {
     Collider** acColP;
 
+#ifdef MMVR_ENABLE
+    for (s32 i=0; i<MMVR_CollisionACCount(colChkCtx); ++i) {
+        Collider* acCol = MMVR_CollisionACAt(colChkCtx, i);
+#else
     for (acColP = &colChkCtx->colAC[0]; acColP < &colChkCtx->colAC[colChkCtx->colACCount]; acColP++) {
         Collider* acCol = *acColP;
+#endif
 
         if ((acCol != NULL) && (acCol->acFlags & AC_ON)) {
             if ((acCol->actor != NULL) && (acCol->actor->update == NULL)) {
@@ -3617,8 +3653,13 @@ ColChkApplyFunc sApplyDamageFuncs[COLSHAPE_MAX] = {
 void CollisionCheck_Damage(struct PlayState* play, CollisionCheckContext* colChkCtx) {
     s32 i;
 
+#ifdef MMVR_ENABLE
+    for (i = 0; i < MMVR_CollisionACCount(colChkCtx); i++) {
+        Collider* col = MMVR_CollisionACAt(colChkCtx, i);
+#else
     for (i = 0; i < colChkCtx->colACCount; i++) {
         Collider* col = colChkCtx->colAC[i];
+#endif
 
         if (col == NULL) {
             continue;

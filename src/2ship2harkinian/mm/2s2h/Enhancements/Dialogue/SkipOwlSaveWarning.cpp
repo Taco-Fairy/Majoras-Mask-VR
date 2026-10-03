@@ -1,3 +1,4 @@
+#include "2s2h/Enhancements/Saving/SavingEnhancements.h"
 #include <libultraship/bridge/consolevariablebridge.h>
 #include "2s2h/CustomMessage/CustomMessage.h"
 #include "2s2h/GameInteractor/GameInteractor.h"
@@ -9,7 +10,7 @@ uint32_t ResourceMgr_GetGameVersion(int index);
 }
 
 #define CVAR_NAME "gEnhancements.Saving.PersistentOwlSaves"
-#define CVAR CVarGetInteger(CVAR_NAME, 0)
+#define CVAR CVarGetInteger(CVAR_NAME, SAVING_ENHANCEMENTS_DEFAULT_ENABLED)
 
 // "You can save your progress and quit here."
 static constexpr u16 TEXT_ID_OWL_SAVE = 0xC01;

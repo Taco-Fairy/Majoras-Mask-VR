@@ -24,9 +24,10 @@ inline constexpr int AssignmentFirst = int(Setting::Count), ResetSettingsRow = A
                      DiagnosticExportRow = NativeOptionsRow + 1,
                      SetupGuideRow = NativeOptionsRow + 2,
                      ReleaseNotesFirstRow = NativeOptionsRow + 3,
-                     ReleaseNotesCount = 25,
-                     MenuRows = ReleaseNotesFirstRow + ReleaseNotesCount;
-inline bool ReleaseNotesRow(int row) { return row >= ReleaseNotesFirstRow && row < MenuRows; }
+                     ReleaseNotesCount = 34,
+                     SaveGameRow = ReleaseNotesFirstRow + ReleaseNotesCount,
+                     MenuRows = SaveGameRow + 1;
+inline bool ReleaseNotesRow(int row) { return row >= ReleaseNotesFirstRow && row < ReleaseNotesFirstRow + ReleaseNotesCount; }
 inline bool TutorialRow(int row) { return row >= TutorialFirstRow && row < NativeOptionsRow; }
 inline bool ExactStateRow(int row) { return row >= SaveStateFirstRow && row < SaveStateFirstRow + 6; }
 enum MenuTab {
@@ -79,8 +80,8 @@ inline constexpr MenuSection MenuSections[] = {
     { SystemTab, "Release notes", false },
     { SystemTab, "v0.21 - Potion crash hotfix", false },
     { SystemTab, "v0.22 - Web and mask hotfix", false },
-    { SystemTab, "v2.3 - Interaction and settings update", false },
-    { SystemTab, "v2.4 - Bow and gameplay hotfixes", false },
+    { SystemTab, "v0.23 - Interaction and settings update", false },
+    { SystemTab, "v0.24 - Bow and gameplay hotfixes", false },
 };
 inline constexpr int MenuSectionCount = sizeof(MenuSections) / sizeof(MenuSections[0]);
 struct MenuEntry {
@@ -88,6 +89,17 @@ struct MenuEntry {
 };
 // Explicit presentation order is independent of persistent setting IDs.
 inline constexpr MenuEntry OrderedMenu[] = {
+    { ReleaseNotesFirstRow + 29, 39 },
+    { ReleaseNotesFirstRow + 30, 39 },
+    { ReleaseNotesFirstRow + 31, 39 },
+    { ReleaseNotesFirstRow + 32, 39 },
+    { ReleaseNotesFirstRow + 33, 39 },
+
+    { ReleaseNotesFirstRow + 25, 39 },
+    { ReleaseNotesFirstRow + 26, 39 },
+    { ReleaseNotesFirstRow + 27, 39 },
+    { ReleaseNotesFirstRow + 28, 39 },
+
     { ReleaseNotesFirstRow + 19, 39 },
     { ReleaseNotesFirstRow + 20, 39 },
     { ReleaseNotesFirstRow + 21, 39 },
@@ -142,15 +154,22 @@ inline constexpr MenuEntry OrderedMenu[] = {
     { int(Setting::MovementSpeed), 0 },
     { int(Setting::EyeHeight), 0 },
     { int(Setting::ComfortHudEffects), 1 },
+    { int(Setting::MotionBlur), 1 },
     { int(Setting::LockOnDim), 1 },
     { int(Setting::VrCameraCutscenes), 1 },
     { int(Setting::AreaPanoramaScreens), 1 }, // Retired setting ID, always hidden.
     { int(Setting::StableCutsceneHead), 1 },
+    { int(Setting::TelescopeComfort), 1 },
     { int(Setting::ExperimentalFirstPersonMotion), 1 },
     { int(Setting::ExperimentalFirstPersonIntro), 1 },
     { int(Setting::FlowerCameraSpin), 1 },
     { int(Setting::WaterWobble), 1 },
     { int(Setting::HideLegs), 2 },
+    { int(Setting::FullBody), 2 },
+    { int(Setting::GoronBody), 2 },
+    { int(Setting::ZoraBody), 2 },
+    { int(Setting::DekuBody), 2 },
+    { int(Setting::FierceDeityBody), 2 },
     { int(Setting::HideSheath), 2 },
     { int(Setting::HideShield), 2 },
     { int(Setting::HideBunnyHood), 2 },
@@ -166,6 +185,7 @@ inline constexpr MenuEntry OrderedMenu[] = {
     { int(Setting::RightYaw), 6 },
     { int(Setting::RightRoll), 6 },
     { int(Setting::ToggleLockOn), 7 },
+    { int(Setting::LockOnOrbit), 7 },
     { int(Setting::ThirdPersonToggleLockOn), 7 },
     { int(Setting::ThirdPersonOriginalControls), 7 },
     { int(Setting::TriggerSpinTurn), 7 },
@@ -257,6 +277,7 @@ inline constexpr MenuEntry OrderedMenu[] = {
     { int(Setting::BottleDistance), 16 },
     { int(Setting::BottleCooldown), 16 },
     { int(Setting::MaskSize), 16 },
+    { int(Setting::QuickWheelItems), 16 },
     { int(Setting::MaskFaceDistance), 16 },
     { int(Setting::MaskRemoveDistance), 16 },
     { int(Setting::ClimbGain), 17 },
@@ -296,6 +317,7 @@ inline constexpr MenuEntry OrderedMenu[] = {
     { SaveStateFirstRow, 35 }, { SaveStateFirstRow+1, 35 },
     { SaveStateFirstRow+2, 35 }, { SaveStateFirstRow+3, 35 },
     { SaveStateFirstRow+4, 35 }, { SaveStateFirstRow+5, 35 },
+    { SaveGameRow, 22 },
     { RecenterRow, 22 },
     { MainMenuRow, 22 },
     { DebugReturnRow, 33 },
@@ -380,6 +402,9 @@ inline constexpr MenuEntry OrderedMenu[] = {
     { TutorialFirstRow + 47, 36 },
     { TutorialFirstRow + 48, 36 },
     { TutorialFirstRow + 49, 36 },
+    { TutorialFirstRow + 50, 36 },
+    { TutorialFirstRow + 51, 36 },
+    { TutorialFirstRow + 52, 36 },
     { NativeOptionsRow, 37 },
 
 };
@@ -442,7 +467,7 @@ struct MenuState {
         return gameplayAvailable || (value != MainMenuRow && value != DebugReturnRow && value != SkipDayRow && value != SkipTwoHoursRow);
     }
     NativeMenuInput nativeInput;
-    bool nativeCloseRequested = false;
+    bool nativeCloseRequested = false, searchInputRelease = false;
     uint64_t nativeSession = 0;
     bool triggerHeld[2]{};
     bool expanded[MenuSectionCount]{};
@@ -497,11 +522,36 @@ struct MenuState {
         ++nativeSession;
         nativeInput = {};
         nativeCloseRequested = false;
+        searchInputRelease = false;
         for (auto& value : expanded) value = false;
         expandedModFolders.clear();
         row = first = 0;
         confirmMainMenu = false;
         confirmStateRow = -1;
+    }
+    bool FocusSearchRow(int value) {
+        // Search only navigates: commands still require their normal confirmation.
+        if (!MenuHeader(value) && (value < 0 || value >= AssignmentFirst)) return false;
+        const int section = MenuHeader(value) ? value - MenuRows : SettingSection(value);
+        if (section < 0 || section >= MenuSectionCount || MenuSections[section].tab == NativeTab ||
+            !MenuSectionVisible(section) || (!MenuHeader(value) && !MenuRowVisible(value)) ||
+            !RowAvailable(value) || (section == 35 && (!exactStatesAvailable || !gameplayAvailable))) return false;
+        CollapseAll();
+        tab = MenuSections[section].tab;
+        expanded[section] = true;
+        for (int i = 0; i < VisibleRows(); ++i)
+            if (VisibleSetting(i, false) == value) { row = i; break; }
+        Normalize();
+        open = true;
+        searchInputRelease = true;
+        return true;
+    }
+    bool ConsumeSearchInput(const NativeMenuInput& input) {
+        if (!searchInputRelease) return false;
+        if (!input.confirm && !input.back && !input.collapse &&
+            std::abs(input.navigateX) < .3f && std::abs(input.navigateY) < .3f &&
+            std::abs(input.pointerX) < .3f && std::abs(input.pointerY) < .3f) searchInputRelease = false;
+        return true; // Also consume the release frame before editing the destination.
     }
     void Close() {
         if (commitSettings && !commitSettings()) { saveFailed = true; return; }
